@@ -1,2 +1,2 @@
 # kwikEFIS
-Kwik Electronic Flight Information System
+Kwik Electronic Flight Information System for Android
