@@ -17,6 +17,7 @@
 
 package player.efis.pfd;
 
+
 import player.ulib.SensorComplementaryFilter;
 //b2b2 import player.ulib.SensorFusion;
 import player.ulib.DigitalFilter;
@@ -212,7 +213,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//b2b2 sensorFusion = new SensorFusion();
 		//b2b2 sensorFusion.setMode(SensorFusion.Mode.FUSION); //Mode.FUSION); //Mode.GYRO); //Mode.ACC_MAG);  //bad jitter   
 		
-		// testing for lightweigt -- may or may not use
+		// testing for lightweight -- may or may not use
 		sensorComplementaryFilter = new SensorComplementaryFilter();
 
 		// Location 
@@ -902,7 +903,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//mGLView.setServiceableDi();
 		}
 		
-
 		//
 		// Calculate the augmented bank angle and also the flight path vector 
 		//
@@ -911,7 +911,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			mode = 2;
 			rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
 
-			// the FPV
+			// the Flight Path Vector (FPV)
 			deltaA = compassRose180(gps_course - orientationAzimuth); 
 			fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // velocity of a point 100m ahead of nose 
 			fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);

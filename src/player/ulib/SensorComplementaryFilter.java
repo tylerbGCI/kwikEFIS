@@ -104,9 +104,10 @@ public class SensorComplementaryFilter
 	//
 	// Calculate augmented bank angle given rate of turn and velocity
 	//
-	DigitalFilter filterRollAcc = new DigitalFilter(64);
+	DigitalFilter filterRollAcc = new DigitalFilter(16); //64
+	
 	public float calculateBankAngle(float rot, float gps_speed)
-	{
+	{ 
 		float bank = 0;
 		
 		if (gps_speed > 2.0) {  
@@ -117,10 +118,9 @@ public class SensorComplementaryFilter
 
 			// Apply in a correction for any slip / skid
 			float roll_accel = filterRollAcc.runningAverage(this.getRollAcc());
-			//bank = roll_centripetal;  // no corrections
-		  //bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
 			
-			if (loadfactor > 1.02)
+			//if (loadfactor > 1.02)
+			if (Math.abs(roll_accel) > 20)
 			  bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
 			else
 				bank = roll_centripetal;  // no corrections

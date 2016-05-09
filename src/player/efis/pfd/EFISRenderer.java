@@ -66,7 +66,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAcraftModel = AircraftModel.PA28; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV6;
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV7;
-	private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
+	private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done  
 	//private final static AircraftModel mAcraftModel = AircraftModel.T18;
 	//private final static AircraftModel mAcraftModel = AircraftModel.W10; //done
 	
