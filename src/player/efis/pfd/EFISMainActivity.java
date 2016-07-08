@@ -106,10 +106,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private int gps_infix;
 	
 	// Digital filters
-	DigitalFilter filterRotGyro = new DigitalFilter(64);   //64
-	DigitalFilter filterSlip = new DigitalFilter(128);  //32
+	DigitalFilter filterRotGyro = new DigitalFilter(8);   //64
+	DigitalFilter filterSlip = new DigitalFilter(32);  //32
 	DigitalFilter filterRoll = new DigitalFilter(16);  //32 
-	DigitalFilter filterPitch = new DigitalFilter(32); //64 
+	DigitalFilter filterPitch = new DigitalFilter(16); //32 
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
 	DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
 	DigitalFilter filterfpvX = new DigitalFilter(128); //32
@@ -375,7 +375,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		gps_lon = (float) location.getLongitude();
 		
 		if (location.hasSpeed()) { 
-			gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
+			//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
+			gps_speed = location.getSpeed();
 			if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
 			mGLView.setServiceableAsi();
 			hasSpeed = true;
@@ -386,16 +387,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
 		if (location.hasAltitude()) {
-			gps_altitude = filterGpsAltitude.runningAverage(location.getAltitude());
+			//gps_altitude = filterGpsAltitude.runningAverage(location.getAltitude());
+			gps_altitude = (float) location.getAltitude();
 			gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
 			mGLView.setServiceableAlt();
 		}
 		else {
-			mGLView.setUnServiceableAlt();
+			mGLView.setUnServiceableAlt(); 
 		}
 
 		if (location.hasBearing()) {
-			gps_course = filterGpsCourse.runningAverage(Math.toRadians(location.getBearing()));
+			//gps_course = filterGpsCourse.runningAverage(Math.toRadians(location.getBearing()));
+			gps_course = (float) Math.toRadians(location.getBearing());
 			gps_rateOfTurn = calculateRateOfTurn(gps_course);
 			mGLView.setServiceableDi();
 		}
@@ -403,6 +406,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			gps_rateOfTurn = 0;
 			mGLView.setUnServiceableDi();
 		}
+
+		if (location.hasSpeed() && location.hasBearing() ) {
+			mGLView.setServiceableAh();
+		}
+		else {
+			mGLView.setUnServiceableAh();
+		}
+	
+		
 	}
 
 	
@@ -564,25 +576,29 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//-------------------------------------------------------------------------
 	// Utility function to calculate rate of turn
 	// Rate of turn in rad/s
-	private static float _course;   	// previous altitude
+	private static float _course;   	// previous course
 	private static  long   time_c, _time_c;			
+	private static  float   _rateOfTurn;			
 	private float calculateRateOfTurn(float course)
 	{
 		float rateOfTurn = 0;
 		long deltaT;
 		float deltaCrs = course - _course;  
 		
-		// Handle the case around 0
-		if (deltaCrs > Math.PI) deltaCrs -= (2*Math.PI);  
-		if (deltaCrs < -Math.PI) deltaCrs += (2*Math.PI);  
-
+ 		// Handle the case around 0
+		if (Math.abs(deltaCrs) > Math.PI/4) {
+			return _rateOfTurn; 
+		}
+		
 		time.setToNow();
 		time_c = time.toMillis(true); 
 		deltaT = time_c - _time_c; 
-		if (deltaT > 0) { 
-			rateOfTurn = 1000* filterRateOfTurn.runningAverage((float)(deltaCrs) / deltaT); // rad/s
-			_time_c = time_c; 
-			_course = course; // save the previous course
+		if (deltaT > 0) {
+			rateOfTurn = 1000 * (float)(deltaCrs) / deltaT; // rad/s
+			
+			_time_c = time_c; // save the previous time 
+			_course = course; // save the previous course 
+  		_rateOfTurn = rateOfTurn;
 		}
 		return rateOfTurn; 
 	}
@@ -613,18 +629,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//gps_insky = 0;
 			if (gps_infix > 3) return true;
 			else return false;
-		/*
-		time.setToNow();
-		long time_g = time.toMillis(true); 
-		if (time_g - time_a > 9999) {
-			hasSpeed = false;
-			gps_rateOfTurn = 0;
-			gps_rateOfClimb = 0;
-			return false;
-		}
-		else 
-			return true;
-		*/
 	}
 	
 	/*
@@ -697,7 +701,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		  }
 		  _cal_ms = cal_ms;
   		
-			mGLView.setUnServiceable(); 
+			//mGLView.setUnServiceable(); 
 			//PitchOffset = -pitch; 
 			//RollOffset  = -roll;
 			
@@ -730,8 +734,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			gps_speed = 0; 
 
 			calibrationCount++;
-			mGLView.setServiceable();
-			mGLView.setServiceableAh();
+			//mGLView.setServiceable();
+
 			mGLView.setMSG(0, null);
 			mGLView.setCalibratingMsg(false, "DONE");  
 			return true;
@@ -741,7 +745,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 	}
 	
-
 	//-------------------------------------------------------------------------
 	// Utility function to 
 	// do a simple simulation for demo mode
@@ -761,17 +764,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		
 		counter++; 
 		hasSpeed = false; 
-		//hasSpeed = true; 
 		hasGps = true;
 
-	
-/*		
-    // Free running speed - 0 to 200kts
-		float _gps_speed = ((float) counter/40f) % 200;  
-		if (_gps_speed < 100 ) gps_speed = _gps_speed;
-		else gps_speed = 200 - _gps_speed;
-*/
-			
  		final float setSpeed = 65; //m/s
 		if (Math.abs(pitchValue) > 5) {
 			_gps_speed += 0.01f * pitchValue;
@@ -784,13 +778,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		gps_speed = setSpeed + _gps_speed;
 		
 		gps_rateOfClimb = (-pitchValue * gps_speed / 50 );
-		//gps_rateOfClimb = (-(pitchValue + PitchOffset) * gps_speed / 50 );
 		
 		_gps_altitude += (gps_rateOfClimb / 10);  
 		if (_gps_altitude < -100) _gps_altitude = -100;   //m
 		if (_gps_altitude > 10000) _gps_altitude = 10000; //m 
 		gps_altitude = _gps_altitude;
-		
 		
 		if (gps_speed != 0) {
 			_gps_course += (rollValue * gps_speed / 1e6f ); 	
@@ -815,12 +807,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 		_sim_ms = sim_ms;
 		
-		//deltaT = 0.00000125f; // for debugging
-		//gps_course = (float) Math.PI / 2; // for debugging
-		
   	if (deltaT < 0.0000125) {
-			// gps_lon = _gps_lon += 0.00000125 * gps_speed * Math.sin(gps_course);
-			// gps_lat = _gps_lat += 0.00000125 * gps_speed * Math.cos(gps_course);
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
 			gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
 			
@@ -852,19 +839,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sensorComplementaryFilter.getGyro(gyro); 		// Use the gyroscopes for the attitude 
 		sensorComplementaryFilter.getAccel(accel);		// Use the accelerometer for G and slip
 
-		//float cfPitch = sensorComplementaryFilter.getPitch();
-		//float cfRoll = sensorComplementaryFilter.getRoll();
-		//pitchValue =  cfPitch; 
-		//rollValue =  -cfRoll;
 		pitchValue = sensorComplementaryFilter.getPitch();
 		rollValue = -sensorComplementaryFilter.getRoll();
 		
 		gyro_rateOfTurn = (float) filterRotGyro.runningAverage(-gyro[0]);  
 		slipValue  = filterSlip.runningAverage(accel[1]);
-		//loadfactor = (float) Math.sqrt(accel[0]*accel[0] + accel[1]*accel[1] + accel[2]*accel[2]) / SensorManager.GRAVITY_EARTH;
-		//loadfactor = filterG.runningAverage(loadfactor);
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
+		
+
+		// 
+		// Check if we have a valid GPS
+		//
+		hasGps = isGPSAvailable();
 		
 		// 
 		//Demo mode handler  
@@ -872,67 +859,59 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		if (bDemoMode) {
 			mGLView.setDemoMode(true, "DEMO");
 			Simulate();
-			// Set the GPS flag and 
+			// Set the GPS flag to true and 
 			// make all the instruments serviceable
-			hasGps = true;
+			hasGps = true; 
 			mGLView.setServiceableDi();
 			mGLView.setServiceableAsi();
 			mGLView.setServiceableAlt();
+			mGLView.setServiceableAh();
 		}
 		else { 
 			mGLView.setDemoMode(false, " ");
-			hasGps = isGPSAvailable();  
 		}
-
 		
 		//
 		// Set the user preferences
 		//
 		setUserPrefs(); 					
-		if (hasGps == false)	{
-			//mGLView.setFlightDirector(false, 0, 0);
-			mGLView.setDisplayAirport(false);		
-			mGLView.setUnServiceableAsi();
-			mGLView.setUnServiceableAlt();
-			mGLView.setUnServiceableDi();
-		}
-		else {
-			mGLView.setDisplayAirport(true);
-			//mGLView.setServiceableAsi();
-			//mGLView.setServiceableAlt();
-			//mGLView.setServiceableDi();
-		}
 		
 		//
 		// Calculate the augmented bank angle and also the flight path vector 
 		//
 		float deltaA, fpvX = 0, fpvY = 0; 
-		if ( hasSpeed && (gps_speed > 2.0)  ) {  
+		if ( hasSpeed ) {  
 			mode = 2;
 			rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
+			//rollValue = sensorComplementaryFilter.calculateBankAngle(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn, gps_speed);
 
 			// the Flight Path Vector (FPV)
 			deltaA = compassRose180(gps_course - orientationAzimuth); 
-			fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // velocity of a point 100m ahead of nose 
+			fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
 			fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
 		}
 		else {
 			mode = 0;
-			fpvX = 0;//180; 
-			fpvY = 0;//180;
+			fpvX = 0;//180;  
+			fpvY = 0;//180; 
+
+			/*
+			//
+			// Perform a simple calibration
+			// 
+			Calibrate(pitchValue, rollValue, slipValue); 
+	
+			// 
+			// Correct the pitch and G for the mounting angle of the device
+			//
+			rollValue  += RollOffset; // correct for mounting angle; 
+			pitchValue += PitchOffset;  
+			slipValue +=  SlipOffset;
+			*/
 		}
 
-		//
-		// Perform a simple calibration
-		// 
-		Calibrate(pitchValue, rollValue, slipValue); 
-
-		// 
-		// Correct the pitch and G for the mounting angle of the device
-		//
-		rollValue  += RollOffset; // correct for mounting angle; 
-		pitchValue += PitchOffset;  
-		slipValue +=  SlipOffset;
+		//gps_speed = 50;
+		//rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
 	
 		// Apply a little filtering to the bank
 		rollValue = filterRoll.runningAverage(compassRose180(rollValue));  
@@ -945,22 +924,43 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		float batteryPct = getRemainingBattery();
 		
+		
 		//
 		// Pass the values to mGLView for updating 
 		//
 		String s; // general purpose string    
 
-		if (mode > 0) {
-	  	// We have GPS augmentation. Use the fpvY for the pitch
-			// and the sensor for the birdie 
-			mGLView.setPitch(fpvY);  
-			mGLView.setFPV(fpvX, -pitchValue);
+
+		if (hasGps == false)	{
+			//
+			// The dreaded red crosses if required
+			//
+			//mGLView.setFlightDirector(false, 0, 0);
+			mGLView.setDisplayAirport(false);		
+			mGLView.setUnServiceableAsi();
+			mGLView.setUnServiceableAlt();
+			mGLView.setUnServiceableDi(); 
+			mGLView.setUnServiceableAh();
+			pitchValue = -270;
+			rollValue = 0;
+			mGLView.setPitch(-270); 
+  		mGLView.setRoll(0); 
 		}
-		else { 
-			mGLView.setPitch(-pitchValue);  
-			//mGLView.setFPV(fpvX, fpvY);
-			mGLView.setFPV(180, 180);  // no birdie
+		else {
+			// Pitch and birdie
+			mGLView.setDisplayAirport(true);
+			if (mode > 0) {
+		  	// We have GPS augmentation. Use the fpvY for the pitch
+				// and the sensor for the birdie 
+				mGLView.setPitch(fpvY);  
+				mGLView.setFPV(fpvX, -pitchValue);
+			}
+			else { 
+				mGLView.setPitch(-pitchValue);  
+				mGLView.setFPV(180, 180);  // no birdie 
+			}
 		}
+
 		
 		mGLView.setRoll(rollValue); 
 		mGLView.setBatteryPct(batteryPct); 
@@ -971,21 +971,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setASI(gps_speed * 1.94384449f);            	// in knots
 		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	// in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);		
-		mGLView.setTurn(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn); 
+		//mGLView.setTurn(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn); 
+		mGLView.setTurn(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn); 
 		
-		s = String.format("GPS: %d / %d", gps_infix, gps_insky);
+		
+		s = String.format("GPS: %d / %d", gps_infix, gps_insky); 		
 		mGLView.setMSG(4, s);
-		
-		//s = String.format("ROL:%3.0f COR:%3.0f ", rollValue, RollOffset);
-		//s = String.format("ROL:%3.0f PIT:%3.0f ", rollValue, pitchValue);
-		//s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000);
-		//mGLView.setMSG(3, s);
-
-		s = String.format("M: %d", mode);
-		mGLView.setMSG(2, s);
-		
-		s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
-		mGLView.setMSG(1, s);
+		// s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000); 
+		// mGLView.setMSG(3, s);
+	  s = String.format("M: %d", mode); 
+	  mGLView.setMSG(2, s);
+		s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon)); 
+	  mGLView.setMSG(1, s);
 	} 
 }
 
