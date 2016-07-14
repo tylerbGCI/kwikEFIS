@@ -19,7 +19,6 @@ package player.efis.pfd;
 
 
 import player.ulib.SensorComplementaryFilter;
-//b2b2 import player.ulib.SensorFusion;
 import player.ulib.DigitalFilter;
 import player.ulib.orientation_t;
 import android.app.Activity;
@@ -78,10 +77,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final int SLIP_SENS = 25; //50;	// Arbitrary choice
 	private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
 
-	int mode = 0;
-	float PitchOffset = 0; 
-	float RollOffset = 0; 
-	float RollSensorOffset = 0; 
 	float SlipOffset = 0;
 	float GmeterOffset = 0; 
 	float loadfactorCal = 0;
@@ -105,11 +100,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private int gps_insky;
 	private int gps_infix;
 	
+	private float sensorBias; 
+	
 	// Digital filters
 	DigitalFilter filterRotGyro = new DigitalFilter(8);   //64
 	DigitalFilter filterSlip = new DigitalFilter(32);  //32
-	DigitalFilter filterRoll = new DigitalFilter(16);  //32 
-	DigitalFilter filterPitch = new DigitalFilter(16); //32 
+	DigitalFilter filterRoll = new DigitalFilter(16);  //16 
+	DigitalFilter filterPitch = new DigitalFilter(16); //16 
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
 	DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
 	DigitalFilter filterfpvX = new DigitalFilter(128); //32
@@ -120,7 +117,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	DigitalFilter filterGpsCourse = new DigitalFilter(6); //4
 
 	//
-	//  Add the action bar buttons 
+	//  Add the action bar buttons   
 	//
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -245,6 +242,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
     mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
+
+    // Overall the device is now ready.
+    // The indivuidual elemets will be enabled or disabled by the location provided
+    // based on availability 
+		mGLView.setServiceableDevice();
 	}
 	
 	
@@ -475,7 +477,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("flightDirector", false));
 		bDemoMode = SP.getBoolean("demoMode", false);
 		bLockedMode = SP.getBoolean("lockedMode", false);
-		
+		//sensorBias = SP.getString("sensorBias", 0.05f);
+		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.95f") );
+		//sensorBias = 0.95f; 
+		 
 		// If we changed to or from HUD mode, a calibration is required
 		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0;
 		bHudMode = SP.getBoolean("displayMirror", false);
@@ -598,7 +603,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			
 			_time_c = time_c; // save the previous time 
 			_course = course; // save the previous course 
-  		_rateOfTurn = rateOfTurn;
+  		_rateOfTurn = rateOfTurn; // save the previous rate of turn
+		}
+		else {
+			return _rateOfTurn; 
 		}
 		return rateOfTurn; 
 	}
@@ -631,120 +639,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			else return false;
 	}
 	
-	/*
-	//-------------------------------------------------------------------------
-	// Utility function to calculate the bank angle
-	// Rate of climb in m/s.
-	// The input paramaters are the fused sensor values
-	//
-	// This function has been moved to SensorComplementaryFilter
-	// Left here for a while in case needed again, but will eventually be removed.
-	//
-	float calculateBankAngle(float roll, float rot, float accel)
-	// if we have some speed and/or G we can calculate bank
-	{
-		// There is some G therefore the accelerometer cannot be trusted 
-		// 10 m/s = 20kts. We assume that no flying is being done.
-		if ( hasSpeed && (gps_speed > 2.0)  ) {  
-			// Bank angle using the GPS derived speed
-			// For a coordinated turn:
-			//   tan (b) = w * v / g 
-			mGLView.setServiceableAh();
-			float roll_centripetal = (float) (Math.atan2(rot*gps_speed, SensorManager.GRAVITY_EARTH)* 180 / Math.PI);
-			mode = 2;
-
-			// Apply in a correction for any slip / skid
-			float roll_accel = sensorComplementaryFilter.getRollAcc();
-			//roll = compassRose180(roll_centripetal);  // no corrections
-			roll = compassRose180(roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
-		}
-		else  {
-			// We take the values from the complementary filter
-			// They are heavily biased to the gyros and will give
-			// a reasonably accurate result for a while.
-			mGLView.setServiceableAh();
-			roll = compassRose180(roll);
-			mode = 0;  
-		}
-//		else if (Math.abs(accel - 1.0f) < 0.05f) {
-//			// If there there small or no G, the accelerometer will give 
-//			// an fairly accurate result
-//			mGLView.setServiceableAh();
-//			roll = compassRose180(roll);
-//			mode = 0;  
-//		}
-//		else {
-//			// Too much G and no speed
-//			// nothing we can do
-//			mGLView.setUnServiceableAh();
-//			roll = 0;
-//			mode = -1;
-//		}
-		return roll; 
-	}
-*/	
-	
-	//-------------------------------------------------------------------------
-	// Utility function to 
-	// Perform a simple calibration
-	//
-	float _RollOffset = Float.MAX_VALUE;
-	float _PitchOffset = Float.MAX_VALUE;
-	long _cal_ms, cal_ms;
-	boolean Calibrate(float pitch, float roll, float slip)
-	{
-		if (calibrationCount < CAL_MAX) { 
-			time.setToNow();
-			cal_ms = time.toMillis(true);
-		  if ((double) cal_ms - (double) _cal_ms < 2000) {
-		  	return false;
-		  }
-		  _cal_ms = cal_ms;
-  		
-			//mGLView.setUnServiceable(); 
-			//PitchOffset = -pitch; 
-			//RollOffset  = -roll;
-			
-			PitchOffset = -sensorComplementaryFilter.getPitchAcc();
-			sensorComplementaryFilter.primePitch();
-			RollOffset = 0; //RollOffset  = sensorComplementaryFilter.getRollAcc(); 
-			SlipOffset  = -slip;
-			
-			if (Math.abs(PitchOffset) < 45) {  
-				mGLView.setCalibratingMsg(true, String.format("CALIBRATE %d", CAL_MAX-calibrationCount));  
-				calibrationCount++;  
-
-				if ((Math.abs(RollOffset - _RollOffset) < 0.1) 
-						&& (Math.abs(PitchOffset - _PitchOffset) < 0.1))  {
-					calibrationCount = CAL_MAX;
-				}
-			}  
-			else  { 
-				mGLView.setCalibratingMsg(true, "CHECK MOUNT ANGLE");
-				calibrationCount = 0;
-			}
-			
-			_RollOffset = RollOffset; 
-			_PitchOffset = PitchOffset; 
-			return false; 
-		}
-		else if (calibrationCount == CAL_MAX) {     
-			sensorComplementaryFilter.primePitch();
-			hasSpeed = false;
-			gps_speed = 0; 
-
-			calibrationCount++;
-			//mGLView.setServiceable();
-
-			mGLView.setMSG(0, null);
-			mGLView.setCalibratingMsg(false, "DONE");  
-			return true;
-		} 
-		else {
-			return false;
-		}
-	}
-	
+		
 	//-------------------------------------------------------------------------
 	// Utility function to 
 	// do a simple simulation for demo mode
@@ -760,15 +655,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 	private void Simulate()
 	{
-		float pitchValue = this.pitchValue + this.PitchOffset;  // hack to work around 
+		float pitchValue = this.pitchValue;// + this.PitchOffset;  // hack to work around 
 		
 		counter++; 
 		hasSpeed = false; 
 		hasGps = true;
 
- 		final float setSpeed = 65; //m/s
+ 		final float setSpeed = 65; // m/s
 		if (Math.abs(pitchValue) > 5) {
-			_gps_speed += 0.01f * pitchValue;
+			_gps_speed -= 0.01f * pitchValue;
 			if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
 			if (_gps_speed < -setSpeed) _gps_speed = -setSpeed;
 		}
@@ -776,8 +671,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			_gps_speed *= 0.9998;  // decay to zero
 		}
 		gps_speed = setSpeed + _gps_speed;
-		
-		gps_rateOfClimb = (-pitchValue * gps_speed / 50 );
+		gps_rateOfClimb = (pitchValue * gps_speed / 50 );
 		
 		_gps_altitude += (gps_rateOfClimb / 10);  
 		if (_gps_altitude < -100) _gps_altitude = -100;   //m
@@ -817,13 +711,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
-	//for landscape mode       
+	//for landscape mode        
 	private float azimuthValue;
 	private float rollValue;   
 	private float pitchValue;
 	private float gyro_rateOfTurn;  
-	private float loadfactor; 
+	private float loadfactor;  
 	private float slipValue;
+	
+	
+	
 	private void update(float[] vectors)  
 	{
 		float[] gyro =  new float[3]; // gyroscope vector
@@ -839,7 +736,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sensorComplementaryFilter.getGyro(gyro); 		// Use the gyroscopes for the attitude 
 		sensorComplementaryFilter.getAccel(accel);		// Use the accelerometer for G and slip
 
-		pitchValue = sensorComplementaryFilter.getPitch();
+		pitchValue = -sensorComplementaryFilter.getPitch();
 		rollValue = -sensorComplementaryFilter.getRoll();
 		
 		gyro_rateOfTurn = (float) filterRotGyro.runningAverage(-gyro[0]);  
@@ -847,21 +744,30 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
 		
-
 		// 
 		// Check if we have a valid GPS
 		//
 		hasGps = isGPSAvailable();
 		
+		// debug
+		/*
+		hasGps = true; //debug
+		hasSpeed = true; //debug
+		gps_speed = 60; //m/s debug
+		*/
+		// debug
+		
 		// 
 		//Demo mode handler  
 		//
 		if (bDemoMode) {
-			mGLView.setDemoMode(true, "DEMO");
+			mGLView.setDemoMode(true, "DEMO"); 
 			Simulate();
 			// Set the GPS flag to true and 
 			// make all the instruments serviceable
-			hasGps = true; 
+			hasGps = true;
+			hasSpeed = true;
+			mGLView.setServiceableDevice();
 			mGLView.setServiceableDi();
 			mGLView.setServiceableAsi();
 			mGLView.setServiceableAlt();
@@ -869,99 +775,73 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		else { 
 			mGLView.setDemoMode(false, " ");
-		}
-		
-		//
-		// Set the user preferences
-		//
-		setUserPrefs(); 					
-		
-		//
-		// Calculate the augmented bank angle and also the flight path vector 
-		//
-		float deltaA, fpvX = 0, fpvY = 0; 
-		if ( hasSpeed ) {  
-			mode = 2;
-			rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
-			//rollValue = sensorComplementaryFilter.calculateBankAngle(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn, gps_speed);
-
-			// the Flight Path Vector (FPV)
-			deltaA = compassRose180(gps_course - orientationAzimuth); 
-			fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
-			fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
-		}
-		else {
-			mode = 0;
-			fpvX = 0;//180;  
-			fpvY = 0;//180; 
-
-			/*
+			 
 			//
-			// Perform a simple calibration
-			// 
-			Calibrate(pitchValue, rollValue, slipValue); 
+			// Calculate the augmented bank angle and also the flight path vector 
+			//
+			float deltaA, fpvX = 0, fpvY = 0; 
+			if ( hasGps && hasSpeed  && (gps_speed > 5)) { 
+				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
+				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn, gps_speed);
+				// Testing shows that a good value is sensorBias of 0.25
+				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
 	
-			// 
-			// Correct the pitch and G for the mounting angle of the device
-			//
-			rollValue  += RollOffset; // correct for mounting angle; 
-			pitchValue += PitchOffset;  
-			slipValue +=  SlipOffset;
-			*/
+				// the Flight Path Vector (FPV)
+				deltaA = compassRose180(gps_course - orientationAzimuth); 
+				fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
+				fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+				
+				// Pitch and birdie
+				mGLView.setDisplayAirport(true);
+		  	// We have valid GPS augmentation. Use the fpvY for the pitch
+				// and the sensor for the birdie 
+				pitchValue = fpvY; //mGLView.setPitch(fpvY);
+				mGLView.setFPV(fpvX, pitchValue); // need to clean this up
+			}
+			else {
+				fpvX = 0;//180;  
+				fpvY = 0;//180; 
+				
+				//
+				// The dreaded red crosses if required
+				//
+				//mGLView.setFlightDirector(false, 0, 0);
+				mGLView.setDisplayAirport(false);		
+				mGLView.setUnServiceableAsi();
+				mGLView.setUnServiceableAlt();
+				mGLView.setUnServiceableDi(); 
+				mGLView.setUnServiceableAh();
+				pitchValue = -270;
+				rollValue = 0;
+				pitchValue = -270;  
+	  		mGLView.setRoll(0); 
+				mGLView.setFPV(180, 180);  // no birdie 
+			}
 		}
 
-		//gps_speed = 50;
-		//rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
+		//
+		// Set the user preferences 
+		//
+		setUserPrefs();
+		
 	
 		// Apply a little filtering to the bank
 		rollValue = filterRoll.runningAverage(compassRose180(rollValue));  
 
 		// Apply a little filtering to the pitch
-		pitchValue 	 = filterPitch.runningAverage(pitchValue); 
+		pitchValue = filterPitch.runningAverage(pitchValue); 
 
 		//
-		// Get the battery percentage
+		// Get the battery percentage 
 		//
 		float batteryPct = getRemainingBattery();
-		
-		
+
 		//
 		// Pass the values to mGLView for updating 
 		//
 		String s; // general purpose string    
-
-
-		if (hasGps == false)	{
-			//
-			// The dreaded red crosses if required
-			//
-			//mGLView.setFlightDirector(false, 0, 0);
-			mGLView.setDisplayAirport(false);		
-			mGLView.setUnServiceableAsi();
-			mGLView.setUnServiceableAlt();
-			mGLView.setUnServiceableDi(); 
-			mGLView.setUnServiceableAh();
-			pitchValue = -270;
-			rollValue = 0;
-			mGLView.setPitch(-270); 
-  		mGLView.setRoll(0); 
-		}
-		else {
-			// Pitch and birdie
-			mGLView.setDisplayAirport(true);
-			if (mode > 0) {
-		  	// We have GPS augmentation. Use the fpvY for the pitch
-				// and the sensor for the birdie 
-				mGLView.setPitch(fpvY);  
-				mGLView.setFPV(fpvX, -pitchValue);
-			}
-			else { 
-				mGLView.setPitch(-pitchValue);  
-				mGLView.setFPV(180, 180);  // no birdie 
-			}
-		}
-
 		
+		mGLView.setPitch(pitchValue); 
 		mGLView.setRoll(rollValue); 
 		mGLView.setBatteryPct(batteryPct); 
 		mGLView.setGForce(loadfactor);  
@@ -971,16 +851,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setASI(gps_speed * 1.94384449f);            	// in knots
 		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	// in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);		
+		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn); 
 		//mGLView.setTurn(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn); 
-		mGLView.setTurn(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn); 
-		
-		
 		s = String.format("GPS: %d / %d", gps_infix, gps_insky); 		
 		mGLView.setMSG(4, s);
 		// s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000); 
 		// mGLView.setMSG(3, s);
-	  s = String.format("M: %d", mode); 
-	  mGLView.setMSG(2, s);
+	  s = String.format("BIAS: %d", (int) (sensorBias*100));  
+	   mGLView.setMSG(2, s);
+
 		s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon)); 
 	  mGLView.setMSG(1, s);
 	} 

@@ -23,7 +23,7 @@
         <CheckBoxPreference
             android:defaultValue="false"  
             android:key="displayMirror"
-            android:summary="Mirror image for HUD usage"
+            android:summary="Mirror image for HUD usage" 
             android:title="Mirror HUD" />
     </PreferenceCategory>
 
@@ -46,7 +46,27 @@
             android:key="lockedMode"
             android:summary="Lock the exit on back button" 
             android:title="Locked Mode" />
-        </PreferenceCategory>
+
+        <!--
+					<ListPreference
+						android:defaultValue="1"
+						android:entries="@array/ac_list_names"
+						android:entryValues="@array/ac_list_values"
+						android:key="acProfile" 
+						android:summary="Select the aircraft profile" 
+						android:title="Aircraft Profile" />
+						-->
+		
+  	   		<ListPreference
+						android:defaultValue="1"
+						android:entries="@array/pref_example_list_names"
+						android:entryValues="@array/pref_example_list_values"
+						android:key="sensorBias" 
+						android:summary="Select the sensor/gps bias" 
+						android:title="Sensor bias" />
+    </PreferenceCategory>
+
+
 </PreferenceScreen>    
     
     

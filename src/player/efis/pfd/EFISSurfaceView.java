@@ -211,16 +211,16 @@ public class EFISSurfaceView extends GLSurfaceView
 	// Red X's
 	//
 
-	// EFIS
-	public void setUnServiceable()
+	// The entire EFIS
+	public void setUnServiceableDevice()
 	{
-		mRenderer.setUnServiceable();
+		mRenderer.setUnServiceableDevice();
 		requestRender();
 	}
 
-	public void setServiceable()
+	public void setServiceableDevice()
 	{
-		mRenderer.setServiceable();
+		mRenderer.setServiceableDevice();
 		requestRender();
 	}
 
@@ -233,10 +233,9 @@ public class EFISSurfaceView extends GLSurfaceView
 
 	public void setServiceableAh()
 	{
-		mRenderer.setServiceableAh();
+		mRenderer.setServiceableAh(); 
 		requestRender();
 	}
-
 
 	// ALtimeter
 	public void setUnServiceableAlt()
@@ -247,7 +246,7 @@ public class EFISSurfaceView extends GLSurfaceView
 
 	public void setServiceableAlt()
 	{
-		mRenderer.setServiceableAlt();
+		mRenderer.setServiceableAlt(); 
 		requestRender();
 	}
 
@@ -314,7 +313,7 @@ public class EFISSurfaceView extends GLSurfaceView
 		mRenderer.setDemoMode(demo, msg);
 		requestRender();
 	}
-
+ 
 
 	public void setPrefs(prefs_t pref, boolean value)
 	{
