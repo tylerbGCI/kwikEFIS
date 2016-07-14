@@ -66,7 +66,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAcraftModel = AircraftModel.PA28; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV6;
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV7;
-	private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done  
+	private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
 	//private final static AircraftModel mAcraftModel = AircraftModel.T18;
 	//private final static AircraftModel mAcraftModel = AircraftModel.W10; //done
 	
@@ -149,7 +149,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private boolean displayMirror;
 	private boolean displayFPV;
 
-	private boolean Serviceable;	
+	private boolean ServiceableDevice;	
 	private boolean ServiceableAh;	
 	private boolean ServiceableAlt;	
 	private boolean ServiceableAsi;	
@@ -430,7 +430,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			renderMSGValue(mMVPMatrix);
 		}
 
-		if (!Serviceable)    renderUnserviceable(mMVPMatrix);
+		if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
 		if (!ServiceableAh)  renderUnserviceableAh(mMVPMatrix);		
 		if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);		
 		if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);		
@@ -711,10 +711,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			//		-4.0f * pixPerDegree, -2.0f * pixPerDegree, z,
 			//		 4.0f * pixPerDegree, -2.0f * pixPerDegree, z);
 			//mTriangle.draw(mMVPMatrix);
-
-
 		}
-
 
 		// The fixed roll marker (roll circle marker radius is 15 degrees of pitch, with fixed markers on the outside)
 		mTriangle.SetColor(0.9f, 0.9f, 0.0f, 0); //yellow
@@ -792,7 +789,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(mMVPMatrix);
 			_sinI = sinI; _cosI = cosI;
 		}
-	}
+		
+	} //renderFixedHorizonMarkers
 
 	private void renderRollMarkers(float[] matrix)
 	{
@@ -1675,7 +1673,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	// EFIS serviceability ... aka the Red X's
 	// 
 
-	void renderUnserviceable(float[] matrix)
+	void renderUnserviceableDevice(float[] matrix)
 	{
 		renderUnserviceableAh(matrix);
 		renderUnserviceableDi(matrix);
@@ -1772,14 +1770,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	// Overall PFD serviceability
-	void setServiceable()
+	void setServiceableDevice()
 	{
-		Serviceable = true;	
+		ServiceableDevice = true;	
 	}
 
-	void setUnServiceable()
+	void setUnServiceableDevice()
 	{
-		Serviceable = false;	
+		ServiceableDevice = false;	
 	}
 
 	// Artificial Horizon serviceability
