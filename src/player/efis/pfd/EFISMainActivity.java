@@ -837,7 +837,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float batteryPct = getRemainingBattery();
 
 		//
-		// Pass the values to mGLView for updating 
+		// Pass the values to mGLView for updating  
 		//
 		String s; // general purpose string    
 		
