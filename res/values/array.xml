@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string-array name="pref_example_list_names">
+    <item>95%</item>
+    <item>75%</item>
+    <item>50%</item>
+    <item>25%</item>
+    <item> 5%</item>
+</string-array>
+<string-array name="pref_example_list_values">
+    <item>0.95f</item>
+    <item>0.75f</item>
+    <item>0.50f</item>
+    <item>0.25f</item>
+    <item>0.05f</item>
+</string-array>
+
+
+
+<string-array name="ac_list_names">
+    <item></item>
+    <item>GENERIC</item>
+    <item>AZTEC</item>
+    <item>CRICRI</item>
+    <item>CRUZ</item>
+    <item>J160</item>
+    <item>LGEZ</item>
+    <item>PA28</item>
+    <item>RV6</item>
+    <item>RV7</item>
+    <item>RV8</item>
+    <item>T18</item>
+    <item>W10</item>
+</string-array>
+<string-array name="ac_list_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+    <item>7</item>
+    <item>8</item>
+    <item>9</item>
+    <item>10</item>
+    <item>11</item>
+</string-array>
+
+
+</resources>
