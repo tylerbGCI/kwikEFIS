@@ -48,22 +48,22 @@
             android:title="Locked Mode" />
 
         <!--
-					<ListPreference
-						android:defaultValue="1"
-						android:entries="@array/ac_list_names"
-						android:entryValues="@array/ac_list_values"
-						android:key="acProfile" 
-						android:summary="Select the aircraft profile" 
-						android:title="Aircraft Profile" />
-						-->
+		<ListPreference
+			android:defaultValue="1"
+			android:entries="@array/ac_list_names"
+			android:entryValues="@array/ac_list_values"
+			android:key="acProfile" 
+			android:summary="Select the aircraft profile" 
+			android:title="Aircraft Profile" />
+		-->
 		
-  	   		<ListPreference
-						android:defaultValue="1"
-						android:entries="@array/pref_example_list_names"
-						android:entryValues="@array/pref_example_list_values"
-						android:key="sensorBias" 
-						android:summary="Select the sensor/gps bias" 
-						android:title="Sensor bias" />
+   		<ListPreference
+			android:defaultValue="0.75f"
+			android:entries="@array/sensor_bias_names"
+			android:entryValues="@array/sensor_bias_values"
+			android:key="sensorBias" 
+			android:summary="Select the sensor/gps bias" 
+			android:title="Sensor bias" />
     </PreferenceCategory>
 
 

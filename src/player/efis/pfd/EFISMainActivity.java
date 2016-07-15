@@ -477,9 +477,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("flightDirector", false));
 		bDemoMode = SP.getBoolean("demoMode", false);
 		bLockedMode = SP.getBoolean("lockedMode", false);
-		//sensorBias = SP.getString("sensorBias", 0.05f);
-		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.95f") );
-		//sensorBias = 0.95f; 
+		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.75f") );
 		 
 		// If we changed to or from HUD mode, a calibration is required
 		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0;
@@ -772,6 +770,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			mGLView.setServiceableAsi();
 			mGLView.setServiceableAlt();
 			mGLView.setServiceableAh();
+			mGLView.setDisplayAirport(true);
 		}
 		else { 
 			mGLView.setDemoMode(false, " ");
@@ -783,7 +782,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			if ( hasGps && hasSpeed  && (gps_speed > 5)) { 
 				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
 				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn, gps_speed);
-				// Testing shows that a good value is sensorBias of 0.25
+				// Testing shows that a good value is sensorBias of 75% gyro and 25% gps on most devices
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
 	
 				// the Flight Path Vector (FPV)

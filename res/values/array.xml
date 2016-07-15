@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<string-array name="pref_example_list_names">
+<string-array name="sensor_bias_names">
     <item>95%</item>
     <item>75%</item>
     <item>50%</item>
     <item>25%</item>
     <item> 5%</item>
 </string-array>
-<string-array name="pref_example_list_values">
+<string-array name="sensor_bias_values">
     <item>0.95f</item>
     <item>0.75f</item>
     <item>0.50f</item>

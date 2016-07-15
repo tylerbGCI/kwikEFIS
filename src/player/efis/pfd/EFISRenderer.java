@@ -714,7 +714,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 
 		// The fixed roll marker (roll circle marker radius is 15 degrees of pitch, with fixed markers on the outside)
-		mTriangle.SetColor(0.9f, 0.9f, 0.0f, 0); //yellow
+		mTriangle.SetColor(0.9f, 0.9f, 0.0f, 1); //yellow
 		mTriangle.SetVerts(0.035f * pixW2, 16.5f * pixPerDegree, z,
 											-0.035f * pixW2, 16.5f * pixPerDegree, z,
 											 0.0f, 15f * pixPerDegree, z);
