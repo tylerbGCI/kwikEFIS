@@ -1995,6 +1995,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// 0.16667 deg lat  = 10 nm
 		// 0.1 approx 5nm
 		double d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft 
+		double _d = 6080000; // 1,000 nm 
 		double relBrg = 0;    // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 		double _relBrg = 180; // Assume the worst
 		int nrAptsFound = 0;
@@ -2043,12 +2044,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.drawCY(t, x1, y1 + glText.getCharHeight()/2 );        
 			glText.end(); 
 
-			if (Math.abs(relBrg) < Math.abs(_relBrg)) {
-				// closest on the nose bearing
+			/*if (Math.abs(relBrg) < Math.abs(_relBrg)) {
+					// closest on the nose bearing
+					setWPTAutoValue(wptId); 
+					setDME((float) d/6080);  // 1nm = 6080ft
+					setRelBrg((float) relBrg);
+					_relBrg = relBrg;
+			}*/ 
+			if (Math.abs(d) < Math.abs(_d)) {
+				// closest apt (dme)
 				setWPTAutoValue(wptId); 
 				setDME((float) d/6080);  // 1nm = 6080ft
 				setRelBrg((float) relBrg);
-				_relBrg = relBrg;
+				_d = d;
 			}
 		} 
 

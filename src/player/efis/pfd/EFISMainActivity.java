@@ -475,6 +475,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.MIRROR,  SP.getBoolean("displayMirror", false));
 		mGLView.setPrefs(prefs_t.INFO_PAGE, SP.getBoolean("infoPage", true));
 		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("flightDirector", false));
+		
 		bDemoMode = SP.getBoolean("demoMode", false);
 		bLockedMode = SP.getBoolean("lockedMode", false);
 		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.75f") );
@@ -590,6 +591,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		
  		// Handle the case around 0
 		if (Math.abs(deltaCrs) > Math.PI/4) {
+			_course = course; // save the previous course 
 			return _rateOfTurn; 
 		}
 		
@@ -598,14 +600,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		deltaT = time_c - _time_c; 
 		if (deltaT > 0) {
 			rateOfTurn = 1000 * (float)(deltaCrs) / deltaT; // rad/s
-			
-			_time_c = time_c; // save the previous time 
-			_course = course; // save the previous course 
-  		_rateOfTurn = rateOfTurn; // save the previous rate of turn
+  		_time_c = time_c; // save the previous time 
 		}
 		else {
-			return _rateOfTurn; 
+			rateOfTurn = _rateOfTurn; 
 		}
+
+		_course = course;         // save the previous course 
+		_rateOfTurn = rateOfTurn; // save the previous rate of turn
 		return rateOfTurn; 
 	}
 	
@@ -656,7 +658,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float pitchValue = this.pitchValue;// + this.PitchOffset;  // hack to work around 
 		
 		counter++; 
-		hasSpeed = false; 
+		//hasSpeed = false; 
 		hasGps = true;
 
  		final float setSpeed = 65; // m/s
@@ -698,8 +700,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 		_sim_ms = sim_ms;
-		
-  	if (deltaT < 0.0000125) {
+		if ((deltaT > 0) && (deltaT < 0.0000125)) {
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
 			gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
 			
@@ -779,42 +780,44 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			// Calculate the augmented bank angle and also the flight path vector 
 			//
 			float deltaA, fpvX = 0, fpvY = 0; 
-			if ( hasGps && hasSpeed  && (gps_speed > 5)) { 
-				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn, gps_speed);
-				//rollValue = sensorComplementaryFilter.calculateBankAngle(0.25f*gyro_rateOfTurn + 0.75f*gps_rateOfTurn, gps_speed);
-				// Testing shows that a good value is sensorBias of 75% gyro and 25% gps on most devices
-				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
-	
-				// the Flight Path Vector (FPV)
-				deltaA = compassRose180(gps_course - orientationAzimuth); 
-				fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
-				fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
-				
-				// Pitch and birdie
-				mGLView.setDisplayAirport(true);
-		  	// We have valid GPS augmentation. Use the fpvY for the pitch
-				// and the sensor for the birdie 
-				pitchValue = fpvY; //mGLView.setPitch(fpvY);
-				mGLView.setFPV(fpvX, pitchValue); // need to clean this up
+			if ( hasGps && hasSpeed) {
+				if (gps_speed > 5) {
+					// Testing shows that a good value is sensorBias of 75% gyro and 25% gps on most devices
+					rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
+		
+					// the Flight Path Vector (FPV)
+					deltaA = compassRose180(gps_course - orientationAzimuth); 
+					fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
+					fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+					
+					// Pitch and birdie
+					mGLView.setDisplayAirport(true);
+			  	// We have valid GPS augmentation. Use the fpvY for the pitch
+					// and the sensor for the birdie 
+					pitchValue = fpvY; //mGLView.setPitch(fpvY);
+					mGLView.setFPV(fpvX, pitchValue); // need to clean this up
+				}
+				else {
+					pitchValue = 0;
+				}
 			}
 			else {
 				fpvX = 0;//180;  
 				fpvY = 0;//180; 
 				
-				//
 				// The dreaded red crosses if required
-				//
 				//mGLView.setFlightDirector(false, 0, 0);
 				mGLView.setDisplayAirport(false);		
 				mGLView.setUnServiceableAsi();
 				mGLView.setUnServiceableAlt();
 				mGLView.setUnServiceableDi(); 
 				mGLView.setUnServiceableAh();
-				pitchValue = -270;
-				rollValue = 0;
+
+				// Force a black screen and no birdie
+				rollValue = 0;      
 				pitchValue = -270;  
 	  		mGLView.setRoll(0); 
-				mGLView.setFPV(180, 180);  // no birdie 
+				mGLView.setFPV(180, 180);   
 			}
 		}
 
