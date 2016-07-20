@@ -162,20 +162,20 @@ public class EFISSurfaceView extends GLSurfaceView
 
 	public void setWPT(String wpt)
 	{
-		mRenderer.setWPTAutoValue(wpt);
+		mRenderer.setAutoWptValue(wpt);
 		requestRender();
 	}
 
 	public void setDME(float dme)
 	{
-		mRenderer.setDME(dme);
+		mRenderer.setAutoWptDme(dme);
 		requestRender();
 	}
 
 	public void setGS(float gs)
 	{
-		mRenderer.setRelBrg(gs);
-		requestRender();
+		//mRenderer.setAutoWptRelBrg(gs);
+		//requestRender();
 	}
 
 	// Message

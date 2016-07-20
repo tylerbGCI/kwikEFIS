@@ -83,7 +83,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private final float[] mProjectionMatrix = new float[16];
 	private final float[] mViewMatrix = new float[16];
 	private final float[] mRotationMatrix = new float[16];
-	private final float[] mFdRotationMatrix = new float[16];
+	private final float[] mFdRotationMatrix = new float[16];  // for Flight Director
+	private final float[] mRmiRotationMatrix = new float[16]; // for RMI / Compass Rose
 
 	private float mAngle; 
 
@@ -142,6 +143,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	float FDRotation;// = 20;  // command 20 deg roll
 	boolean displayInfoPage;
 	boolean displayFlightDirector;
+	//RMI
+	boolean displayRMI;
+	float RMIRotation;
+	
 	boolean displayAirport;
 
 	private boolean displayTerrain;
@@ -347,7 +352,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float[] scratch2 = new float[16]; // moved to class scope
 		float[] altMatrix = new float[16]; // moved to class scope
 		float[] iasMatrix = new float[16]; // moved to class scope
-		float[] fdMatrix = new float[16]; // moved to class scope
+		float[] fdMatrix = new float[16];  // moved to class scope
+		float[] rmiMatrix = new float[16]; // moved to class scope
 
 		// Draw background color
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -406,6 +412,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			renderAltSelValue(mMVPMatrix);
 		}
 		
+		// This will have to be on its own page or portrait mode like Garmin
+		// Leave it out for now
+		/*
+		if (displayRMI) {
+			// Create a rotation for the RMI
+			Matrix.setRotateM(mRmiRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // compass rose rotation
+			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
+			// Slide FD to current value
+			Matrix.translateM(rmiMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
+			renderCompassRose(rmiMatrix);  
+		}
+		*/
+		
 		renderFixedHorizonMarkers();
 
 		if (displayTape == true) renderALTMarkers(altMatrix);  		
@@ -424,9 +443,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		renderGForceValue(mMVPMatrix);
 
 		if (displayInfoPage) { 
-			renderWptAutoValue(mMVPMatrix);
-			renderDMEValue(mMVPMatrix);		
-			renderRLBValue(mMVPMatrix);
+			renderAutoWptValue(mMVPMatrix);
+			renderAutoWptDme(mMVPMatrix);		
+			//renderAutoWptRlb(mMVPMatrix);
+			renderAutoWptBrg(mMVPMatrix);
 			renderMSGValue(mMVPMatrix);
 		}
 
@@ -1672,7 +1692,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//---------------------------------------------------------------------------
 	// EFIS serviceability ... aka the Red X's
 	// 
-
 	void renderUnserviceableDevice(float[] matrix)
 	{
 		renderUnserviceableAh(matrix);
@@ -1865,9 +1884,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 	void renderSlipBall(float[] matrix)
 	{
-		float z, pixPerUnit;
+		float z;
 
-		pixPerUnit = pixH2/DIInView;
 		z = zfloat;
 
 		float radius = 10*pixH/736;
@@ -2051,11 +2069,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 					setRelBrg((float) relBrg);
 					_relBrg = relBrg;
 			}*/ 
+			
+			double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
+			while (absBrg < 0) absBrg += 360;
 			if (Math.abs(d) < Math.abs(_d)) {
 				// closest apt (dme)
-				setWPTAutoValue(wptId); 
-				setDME((float) d/6080);  // 1nm = 6080ft
-				setRelBrg((float) relBrg);
+				setAutoWptValue(wptId); 
+				setAutoWptDme((float) d/6080);  // 1nm = 6080ft
+				setAutoWptBrg((float) absBrg); 
 				_d = d;
 			}
 		} 
@@ -2069,8 +2090,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
 		MX_RANGE = Math.min(MX_RANGE, 100);
 
-		setMSG(6, String.format("RNG %d", MX_RANGE));  //3 
-		setMSG(5, String.format("#AP %d", nrAptsFound)); //2
+		setMSG(6, String.format("RNG %d", MX_RANGE));     
+		setMSG(5, String.format("#AP %d", nrAptsFound)); 
 	}
 
 	void setLatLon(float lat, float lon)
@@ -2085,9 +2106,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	void renderTurnMarkers(float[] matrix)
 	{
 		final float STD_RATE = 0.0524f; // = rate 1 = 3deg/s
-		float z, pixPerUnit;
+		float z;
 
-		pixPerUnit = pixH2/DIInView;
 		z = zfloat;
 
 		// rate of turn box
@@ -2163,25 +2183,44 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		GForceValue = value;
 	}
 
-	String mWptAuto; 
-	void renderWptAutoValue(float[] matrix)
+	String mAutoWpt; 
+	void renderAutoWptValue(float[] matrix)
 	{
 		float z, pixPerUnit;
 		pixPerUnit = pixH2/DIInView;
 		z = zfloat;
 
-		String t = String.format("WPT %s", mWptAuto);
+		String t = String.format("WPT %s", mAutoWpt);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
 		glText.draw(t, -0.97f*pixW2, 0.9f*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();                                    
 	}
 
-	void setWPTAutoValue(String wpt)
+	void setAutoWptValue(String wpt)
 	{
-		mWptAuto = wpt;
+		mAutoWpt = wpt;
 	}
 
+	float mAutoWptBrg;
+	void renderAutoWptBrg(float[] matrix)
+	{
+		float z;
+		z = zfloat;
+
+		String t = String.format("BRG  %03.0f", mAutoWptBrg);
+		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
+		glText.setScale(2.0f); 							// 
+		glText.draw(t, -0.97f*pixW2, 0.7f*pixH2 - glText.getCharHeight()/2 );            // Draw  String
+		glText.end();                                    
+	}
+
+	void setAutoWptBrg(float brg)
+	{
+		mAutoWptBrg = brg;
+	}
+	
+	
 	/*
 	String mWptSelName = "YAAA";
 	String mWptSelComment = "   ";
@@ -2276,7 +2315,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//if (IASValue < Vs0) commandPitch = -MAX_COMMAND;  
 
 		// update the flight director data
-		setFlightDirector(true, commandPitch, (float) relBrg); //eek
+		setFlightDirector(true, commandPitch, (float) relBrg); 
 
 		// the next two will be moved to their own methods ... TODO
 		// DME
@@ -2470,46 +2509,47 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-	float mDme; 
-	void renderDMEValue(float[] matrix)
+	float mAutoWptDme; 
+	void renderAutoWptDme(float[] matrix)
 	{
 		float z, pixPerUnit;
 
 		pixPerUnit = pixH2/DIInView;
 		z = zfloat;
 
-		String t = String.format("DME %03.1f", mDme);
+		String t = String.format("DME %03.1f", mAutoWptDme);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
 		glText.draw(t, -0.97f*pixW2, 0.8f*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();                                    
 	}
 
-	void setDME(float dme)
+	void setAutoWptDme(float dme)
 	{
-		mDme = dme;
+		mAutoWptDme = dme;
 	}
 
-	float mRlb; 
-	void renderRLBValue(float[] matrix)
+	float mAutoWptRlb; 
+	void renderAutoWptRlb(float[] matrix)
 	{
 		float z, pixPerUnit;
 
 		pixPerUnit = pixH2/DIInView;
 		z = zfloat;
 
-		String t = String.format("RLB  %03.0f", mRlb);
+		String t = String.format("RLB  %03.0f", mAutoWptRlb);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
 		glText.draw(t, -0.97f*pixW2, 0.7f*pixH2 - glText.getCharHeight()/2 );            // Draw  String
 		glText.end();                                    
 	}
 
-	void setRelBrg(float rlb)
+	void setAutoWptRelBrg(float rlb)
 	{
-		mRlb = rlb;
+		mAutoWptRlb = rlb;
 	}
 
+	
 
 	static String mMsg[] = new String[10]; 
 	static float lineNr;
@@ -2606,10 +2646,103 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 	}
 
+	
+	//-----------------------------------------------------------------------------
+	//	
+	//  HSI
+	//
+	//-----------------------------------------------------------------------------
+	// todo - render fixed HSI markers
+	
+	private void renderCompassRose(float[] matrix)
+	{
+		float tapeShade = 0.6f;
+		int i, j;
+		float innerTic, outerTic, pixPerDegree, iPix;
+		float z, sinI, cosI;
+		String t;
+
+		float roseRadius = 9.0f; 												
+		float x1= -0.75f*pixW2;
+		float y1=  0.60f*pixH2;
+
+		pixPerDegree = pixM2 / pitchInView;
+		z = zfloat;
+
+		mLine.SetWidth(2);  //3
+		mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
+		
+		// The rose degree tics
+	  for (i = 0; i <= 330; i=i+30) {
+			sinI = UTrig.isin( (450-i) % 360 );  
+			cosI = UTrig.icos( (450-i) % 360 );
+			mLine.SetVerts(
+					x1 + 0.9f * pixPerDegree * roseRadius * cosI, y1 + 0.9f * pixPerDegree * roseRadius * sinI, z,
+					x1 + 1.0f * pixPerDegree * roseRadius * cosI, y1 + 1.0f * pixPerDegree * roseRadius * sinI, z
+					);
+			mLine.draw(mMVPMatrix);
+			
+			switch( i ) {
+				case 0 : t = "N";
+				break;
+				case 30 : t = "30";
+				break;
+				case 60 : t = "60";
+				break;
+				case 90 : t = "E";
+				break;
+				case 120 : t = "120";
+				break;
+				case 150 : t = "150";
+				break;
+				case 180 : t = "S";
+				break;
+				case 220 : t = "210";
+				break;
+				case 240 : t = "240";
+				break;
+				case 270 : t = "W";
+				break;
+				case 300 : t = "300";
+				break;
+				case 330 : t = "330";
+				break;
+				//t = String.format("%03.0f",(float) MSLValue % 1000);
+				//default : t = (QString( "%1" ).arg( i/10, -2 ));
+				//default : t = String.format("%03.0f", (float) i/10);
+				default : t = "";
+				break;
+			}
+
+			glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
+			glText.setScale(1.0f); // seems to have a weird effect here?
+			glText.drawC(t, x1 + 0.75f * pixPerDegree * roseRadius * cosI, y1 + 0.75f * pixPerDegree * roseRadius * sinI);             
+			glText.end();                                   
+			for (j = 10; j <=20; j=j+10) {
+	      sinI = UTrig.isin( (i+j) );
+	      cosI = UTrig.icos( (i+j) );
+				mLine.SetVerts(
+						x1 + 0.93f * pixPerDegree * roseRadius * cosI, y1 + 0.93f * pixPerDegree * roseRadius * sinI, z,
+						x1 + 1.00f * pixPerDegree * roseRadius * cosI, y1 + 1.00f * pixPerDegree * roseRadius * sinI, z
+						);
+				mLine.draw(mMVPMatrix);
+			}
+			for (j = 5; j <=25; j=j+10) {
+	      sinI = UTrig.isin( (i+j) );
+	      cosI = UTrig.icos( (i+j) );
+				mLine.SetVerts(
+						x1 + 0.96f * pixPerDegree * roseRadius * cosI, y1 + 0.96f * pixPerDegree * roseRadius * sinI, z,
+						x1 + 1.00f * pixPerDegree * roseRadius * cosI, y1 + 1.00f * pixPerDegree * roseRadius * sinI, z
+						);
+				mLine.draw(mMVPMatrix);
+			}
+		}
+	}
+	
+	
 
 
-	/*
-
+/*
 //-------------------------------------------------
 // todo move to individual and populate
 t = (QString( "%1" ).sprintf("WPT: %s", "YABA")); // todo ... demo
@@ -2739,11 +2872,6 @@ void GLPFD::setBearing(int degrees)
   baroPressure = degrees;
 	updateGL();
 }
-
-
-
-
-
 
 	 */
 

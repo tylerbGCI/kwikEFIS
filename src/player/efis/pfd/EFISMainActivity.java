@@ -188,8 +188,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		
-		
 
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
@@ -230,8 +228,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		
 		// Set the window to be full brightness
 		WindowManager.LayoutParams layout = getWindow().getAttributes();
-	    layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
-	    getWindow().setAttributes(layout);		
+    layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
+    getWindow().setAttributes(layout);		
 		
 		// Instantiate a new apts gpx/xml
 		Gpx gpx = new Gpx(this);
@@ -476,9 +474,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.INFO_PAGE, SP.getBoolean("infoPage", true));
 		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("flightDirector", false));
 		
-		bDemoMode = SP.getBoolean("demoMode", false);
 		bLockedMode = SP.getBoolean("lockedMode", false);
 		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.75f") );
+
+		// If we changed to Demo mode, use the current GPS as seed
+		if (bDemoMode != SP.getBoolean("demoMode", false)) {
+			if (gps_lon != 0 && gps_lat != 0) {
+			  _gps_lon = gps_lon;  
+			  _gps_lat = gps_lat;
+			}
+		}
+		bDemoMode = SP.getBoolean("demoMode", false);
 		 
 		// If we changed to or from HUD mode, a calibration is required
 		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0;
@@ -591,8 +597,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		
  		// Handle the case around 0
 		if (Math.abs(deltaCrs) > Math.PI/4) {
-			_course = course; // save the previous course 
-			return _rateOfTurn; 
+			_course = course;   // save the previous course 
+			return _rateOfTurn; // result would be rubbish, just return the previous rot
 		}
 		
 		time.setToNow();
@@ -634,20 +640,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//
 	boolean isGPSAvailable() 
 	{
-			//gps_insky = 0;
-			if (gps_infix > 3) return true;
-			else return false;
+		if (gps_infix > 3) return true;
+		else return false;
 	}
 	
 		
 	//-------------------------------------------------------------------------
-	// Utility function to 
-	// do a simple simulation for demo mode
+	// Utility function to do a simple simulation for demo mode
+	// It acts like a very simple flight simulator
 	//
 	static int counter;
 	DigitalFilter filterTestAlt = new DigitalFilter(128); //32
-	float _gps_lon = 0; 
-	float	_gps_lat = 0;
+	float _gps_lon = 116; //0; 
+	float	_gps_lat = -32; //0;
 	float _gps_course = 0;
 	float _gps_altitude = 0;
 	float _gps_speed = 0;
@@ -657,8 +662,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	{
 		float pitchValue = this.pitchValue;// + this.PitchOffset;  // hack to work around 
 		
-		counter++; 
-		//hasSpeed = false; 
+		hasSpeed = true; 
 		hasGps = true;
 
  		final float setSpeed = 65; // m/s
@@ -685,17 +689,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		gps_course = _gps_course;
 		
-		// Grab the first valid gps fix we get and use
-		// that as the initial point for the simulation 
-		if ((gps_lat == 0) 	&& (_gps_lat == 0) && 
-		    (gps_lon == 0) && (_gps_lon == 0)) {
-			return;
-		}
-		else if ((_gps_lon == 0) && (_gps_lat == 0)) {
-			_gps_lon = gps_lon;
-			_gps_lat = gps_lat;
-		}
-
 		time.setToNow();
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
@@ -806,7 +799,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				fpvY = 0;//180; 
 				
 				// The dreaded red crosses if required
-				//mGLView.setFlightDirector(false, 0, 0);
 				mGLView.setDisplayAirport(false);		
 				mGLView.setUnServiceableAsi();
 				mGLView.setUnServiceableAlt();
@@ -822,16 +814,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
 		//
-		// Set the user preferences 
+		// Read and Set the user preferences 
 		//
 		setUserPrefs();
 		
-	
-		// Apply a little filtering to the bank
-		rollValue = filterRoll.runningAverage(compassRose180(rollValue));  
-
-		// Apply a little filtering to the pitch
+		// Apply a little filtering to the pitch and bank
 		pitchValue = filterPitch.runningAverage(pitchValue); 
+		rollValue = filterRoll.runningAverage(compassRose180(rollValue));  
 
 		//
 		// Get the battery percentage 

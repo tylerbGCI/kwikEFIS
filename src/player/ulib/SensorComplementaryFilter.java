@@ -106,15 +106,15 @@ public class SensorComplementaryFilter
 	//
 	DigitalFilter filterRollAcc = new DigitalFilter(4); //16//64
 	
-	public float calculateBankAngle(float rot, float gps_speed)
+	public float calculateBankAngle(float rot, float speed)
 	{ 
 		float bank = 0;
 		
-		if (gps_speed > 2.0) {  
+		if (speed > 2.0) {  
 			// Bank angle using the speed
 			// For a coordinated turn:
 			//   tan (b) = w * v / g 
-			float roll_centripetal = (float) (Math.atan2(rot*gps_speed, SensorManager.GRAVITY_EARTH)* 180 / Math.PI);
+			float roll_centripetal = (float) (Math.atan2(rot*speed, SensorManager.GRAVITY_EARTH)* 180 / Math.PI);
 
 			bank = roll_centripetal;  // no corrections
 			/*
@@ -125,7 +125,7 @@ public class SensorComplementaryFilter
 			  bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
 			else
 				bank = roll_centripetal;  // no corrections
-				*/
+			*/
 				
 		}
 		return bank;
