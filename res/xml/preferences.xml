@@ -30,12 +30,18 @@
     <PreferenceCategory android:title="NAVIGATION" > 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="flightDirector"
+            android:key="displayFlightDirector"
             android:summary="Engage Flight Director"
             android:title="Flight Director" />
         
-    </PreferenceCategory>
-    <PreferenceCategory>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="displayRmi"
+            android:summary="Engage Remote Indicator display"
+            android:title="Remote Indicator" />
+        
+        </PreferenceCategory>
+    <PreferenceCategory  android:title="SYSTEM" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="demoMode"

@@ -144,7 +144,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	boolean displayInfoPage;
 	boolean displayFlightDirector;
 	//RMI
-	boolean displayRMI;
+	boolean displayRMI;  // debug
 	float RMIRotation;
 	
 	boolean displayAirport;
@@ -412,18 +412,23 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			renderAltSelValue(mMVPMatrix);
 		}
 		
-		// This will have to be on its own page or portrait mode like Garmin
-		// Leave it out for now
-		/*
+		// This may have to be on its own page or portrait mode like Garmin
 		if (displayRMI) {
+			float xlx = +0.8f*pixW2;
+			float xly = -0.33f*pixH2;
+
+			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
+			
 			// Create a rotation for the RMI
-			Matrix.setRotateM(mRmiRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // compass rose rotation
+			Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
 			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-			// Slide FD to current value
-			Matrix.translateM(rmiMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
-			renderCompassRose(rmiMatrix);  
+			
+			Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+		
+			renderCompassRose(rmiMatrix);
+			renderBearing(rmiMatrix);
 		}
-		*/
+		//*/
 		
 		renderFixedHorizonMarkers();
 
@@ -2072,6 +2077,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			
 			double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
 			while (absBrg < 0) absBrg += 360;
+			
 			if (Math.abs(d) < Math.abs(_d)) {
 				// closest apt (dme)
 				setAutoWptValue(wptId); 
@@ -2220,6 +2226,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mAutoWptBrg = brg;
 	}
 	
+	float mSelWptBrg;
+	void setSelWptBrg(float brg)
+	{
+		mSelWptBrg = brg;
+	}
+	
 	
 	/*
 	String mWptSelName = "YAAA";
@@ -2280,12 +2292,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			} 
 		}
 
-		// draw the apt description string 
-		glText.begin( 1.0f, 1f, 1.0f, 1.0f, matrix ); // 
-		glText.setScale(2.1f);
-		String s = mWptSelComment;
-		glText.draw(s, leftC * pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end(); 
 
 		// Calculate the relative bearing to the selected wpt
 		double deltaLat = mWptSelLat - LatValue;
@@ -2318,21 +2324,29 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		setFlightDirector(true, commandPitch, (float) relBrg); 
 
 		// the next two will be moved to their own methods ... TODO
+		glText.begin( 1.0f, 1f, 1.0f, 1.0f, matrix ); // 
+		glText.setScale(2.1f);
+		String s = mWptSelComment;
+		glText.draw(s, leftC * pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );            
+		glText.end(); 
+		float lineC;
+		lineC =  0.35f;
 		// DME
 		String t = String.format("DME %03.1f", d / 6080);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.5f); 							// 
-		glText.draw(t, 0.6f*pixW2, 0.4f*pixH2 - glText.getCharHeight()/2 );            
+		glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();                                    
 
 		// BRG
 		double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
 		while (absBrg < 0) absBrg += 360;
+		setSelWptBrg((float) absBrg);
 
 		t = String.format("BRG  %03.0f", absBrg);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.5f); 							// 
-		glText.draw(t, 0.6f*pixW2, 0.3f*pixH2 - glText.getCharHeight()/2 );            
+		glText.draw(t, leftC*pixW2, (lineC+0.05f)*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();                                    
 
 		// HWY
@@ -2639,6 +2653,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		case FLIGHT_DIRECTOR:
 			displayFlightDirector = value;
 			break;
+		case REMOTE_INDICATOR:
+			displayRMI = value;
+			break;
 		case AIRPORT:
 			displayAirport = value;
 			break;
@@ -2649,24 +2666,23 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	
 	//-----------------------------------------------------------------------------
 	//	
-	//  HSI
+	//  Remote Indicator
 	//
 	//-----------------------------------------------------------------------------
-	// todo - render fixed HSI markers
+	// todo - render fixed RMI markers
+	
+	float roseScale = 0.30f; //0.33f; //0.5f
 	
 	private void renderCompassRose(float[] matrix)
 	{
 		float tapeShade = 0.6f;
 		int i, j;
-		float innerTic, outerTic, pixPerDegree, iPix;
+		float innerTic, outerTic, iPix;
 		float z, sinI, cosI;
 		String t;
 
-		float roseRadius = 9.0f; 												
-		float x1= -0.75f*pixW2;
-		float y1=  0.60f*pixH2;
+		float roseRadius = roseScale * pixM2;
 
-		pixPerDegree = pixM2 / pitchInView;
 		z = zfloat;
 
 		mLine.SetWidth(2);  //3
@@ -2677,66 +2693,135 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			sinI = UTrig.isin( (450-i) % 360 );  
 			cosI = UTrig.icos( (450-i) % 360 );
 			mLine.SetVerts(
-					x1 + 0.9f * pixPerDegree * roseRadius * cosI, y1 + 0.9f * pixPerDegree * roseRadius * sinI, z,
-					x1 + 1.0f * pixPerDegree * roseRadius * cosI, y1 + 1.0f * pixPerDegree * roseRadius * sinI, z
+					0.9f * roseRadius * cosI, 0.9f * roseRadius * sinI, z,
+					1.0f * roseRadius * cosI, 1.0f * roseRadius * sinI, z
 					);
-			mLine.draw(mMVPMatrix);
+			mLine.draw(matrix);
 			
 			switch( i ) {
-				case 0 : t = "N";
-				break;
-				case 30 : t = "30";
-				break;
-				case 60 : t = "60";
-				break;
-				case 90 : t = "E";
-				break;
-				case 120 : t = "120";
-				break;
-				case 150 : t = "150";
-				break;
-				case 180 : t = "S";
-				break;
-				case 220 : t = "210";
-				break;
-				case 240 : t = "240";
-				break;
-				case 270 : t = "W";
-				break;
-				case 300 : t = "300";
-				break;
-				case 330 : t = "330";
-				break;
+				case 0 : t = "N"; break;
+				case 30 : t = "3";	break;
+				case 60 : t = "6";	break;
+				case 90 : t = "E"; break;
+				case 120 : t = "12";	break;
+				case 150 : t = "15";	break;
+				case 180 : t = "S";	break;
+				case 220 : t = "21";	break;
+				case 240 : t = "24";	break;
+				case 270 : t = "W";	break;
+				case 300 : t = "30";	break;
+				case 330 : t = "33";	break;
 				//t = String.format("%03.0f",(float) MSLValue % 1000);
 				//default : t = (QString( "%1" ).arg( i/10, -2 ));
 				//default : t = String.format("%03.0f", (float) i/10);
-				default : t = "";
-				break;
+				default : t = ""; break;
 			}
 
 			glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
-			glText.setScale(1.0f); // seems to have a weird effect here?
-			glText.drawC(t, x1 + 0.75f * pixPerDegree * roseRadius * cosI, y1 + 0.75f * pixPerDegree * roseRadius * sinI);             
+			glText.setScale(1.5f); // seems to have a weird effect here?
+			glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, 90-i);             
 			glText.end();                                   
 			for (j = 10; j <=20; j=j+10) {
 	      sinI = UTrig.isin( (i+j) );
 	      cosI = UTrig.icos( (i+j) );
 				mLine.SetVerts(
-						x1 + 0.93f * pixPerDegree * roseRadius * cosI, y1 + 0.93f * pixPerDegree * roseRadius * sinI, z,
-						x1 + 1.00f * pixPerDegree * roseRadius * cosI, y1 + 1.00f * pixPerDegree * roseRadius * sinI, z
+						0.93f * roseRadius * cosI, 0.93f * roseRadius * sinI, z,
+						1.00f * roseRadius * cosI, 1.00f * roseRadius * sinI, z
 						);
-				mLine.draw(mMVPMatrix);
+				mLine.draw(matrix);
 			}
 			for (j = 5; j <=25; j=j+10) {
 	      sinI = UTrig.isin( (i+j) );
 	      cosI = UTrig.icos( (i+j) );
 				mLine.SetVerts(
-						x1 + 0.96f * pixPerDegree * roseRadius * cosI, y1 + 0.96f * pixPerDegree * roseRadius * sinI, z,
-						x1 + 1.00f * pixPerDegree * roseRadius * cosI, y1 + 1.00f * pixPerDegree * roseRadius * sinI, z
+						0.96f * roseRadius * cosI, 0.96f * roseRadius * sinI, z,
+						1.00f * roseRadius * cosI, 1.00f * roseRadius * sinI, z
 						);
-				mLine.draw(mMVPMatrix);
+				mLine.draw(matrix);
 			}
 		}
+	}
+	
+	void renderBearing(float[] matrix)
+	{
+		
+		float z, sinI, cosI, _sinI, _cosI;
+		float roseRadius = roseScale * pixM2;
+
+		mLine.SetWidth(5); 
+		z = zfloat;
+		mLine.SetColor(0, 0.7f, 0, 1);  // green
+
+		// Bearing to Selected Waypoint
+    sinI = UTrig.isin(90-(int)mSelWptBrg);
+    cosI = UTrig.icos(90-(int)mSelWptBrg);
+    _sinI = 0.5f*UTrig.isin(90-(int)mSelWptBrg);
+    _cosI = 0.5f*UTrig.icos(90-(int)mSelWptBrg);
+		mLine.SetVerts(
+				-roseRadius * _cosI, -roseRadius * _sinI, z,
+				-roseRadius * cosI,  -roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * cosI,  roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+
+		// point
+    _sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg + 6);
+    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg + 6);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * cosI,  roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		_sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg - 5);
+    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg - 5);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * cosI,  roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		
+		/*
+		// Bearing to Automatic Waypoint
+		mLine.SetColor(0.7f, 0.7f, 0.0f, 1);  // 
+		
+    sinI = UTrig.isin(90-(int)mAutoWptBrg);
+    cosI = UTrig.icos(90-(int)mAutoWptBrg);
+    _sinI = 0.5f*UTrig.isin(90-(int)mAutoWptBrg);
+    _cosI = 0.5f*UTrig.icos(90-(int)mAutoWptBrg);
+		mLine.SetVerts(
+				x1 - roseRadius * _cosI, y1 - roseRadius * _sinI, z,
+				x1 - roseRadius * cosI, y1 - roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		
+		mLine.SetVerts(
+				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
+				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+   
+		//point
+    _sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg + 6);
+    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg + 6);
+		mLine.SetVerts(
+				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
+				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+
+		_sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg - 5);
+    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg - 5);
+		mLine.SetVerts(
+				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
+				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		*/
+
 	}
 	
 	

@@ -116,15 +116,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	DigitalFilter filterGpsAltitude = new DigitalFilter(6); //4
 	DigitalFilter filterGpsCourse = new DigitalFilter(6); //4
 
+	
+	
 	//
-	//  Add the action bar buttons   
+	//  Add the action bar buttons     
 	//
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
-		//inflater.inflate(R.menu.main_activity_actions, menu);
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -151,11 +152,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			Intent i = new Intent(this, AppPreferences.class);
 			startActivity(i); 
 			break;
-			// more code...
+			// more code...  
 		}
-		return true; 
+		return true;     
 	}  
 
+	/*  
+	It causes problems with the new "improved" Samsung devices.
+	
 	// This code will catch the actual keypress.
 	// for now we will leave the menu bar in case it is needed later 
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
@@ -163,15 +167,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			//do your work ...
 			// Launch settings activity
-			Intent i = new Intent(this, AppPreferences.class);
+			Intent i = new Intent(this, AppPreferences.class); 
 			startActivity(i); 
 			return true;
 		}
 		return super.onKeyDown(keyCode, event); 
 	} 
+	*/
+	
 
 
-	/* This does not seem to do anything
+	/* This does not seem to do anything 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
@@ -205,9 +211,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			Toast.makeText(this, "Hardware compatibility issue", Toast.LENGTH_LONG).show();
 		}
 
-		//b2b2 sensorFusion = new SensorFusion();
-		//b2b2 sensorFusion.setMode(SensorFusion.Mode.FUSION); //Mode.FUSION); //Mode.GYRO); //Mode.ACC_MAG);  //bad jitter   
-		
 		// testing for lightweight -- may or may not use
 		sensorComplementaryFilter = new SensorComplementaryFilter();
 
@@ -472,7 +475,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.TAPE,    SP.getBoolean("displayTape", true));
 		mGLView.setPrefs(prefs_t.MIRROR,  SP.getBoolean("displayMirror", false));
 		mGLView.setPrefs(prefs_t.INFO_PAGE, SP.getBoolean("infoPage", true));
-		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("flightDirector", false));
+		mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("displayFlightDirector", false));
+		mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, SP.getBoolean("displayRmi", false));
 		
 		bLockedMode = SP.getBoolean("lockedMode", false);
 		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.75f") );
@@ -665,14 +669,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		hasSpeed = true; 
 		hasGps = true;
 
- 		final float setSpeed = 65; // m/s
-		if (Math.abs(pitchValue) > 5) {
+ 		final float setSpeed = 85; // m/s
+		if (Math.abs(pitchValue) > 10) {
 			_gps_speed -= 0.01f * pitchValue;
 			if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
 			if (_gps_speed < -setSpeed) _gps_speed = -setSpeed;
 		}
 		else {
-			_gps_speed *= 0.9998;  // decay to zero
+			_gps_speed *= 0.99998;  // decay to zero
 		}
 		gps_speed = setSpeed + _gps_speed;
 		gps_rateOfClimb = (pitchValue * gps_speed / 50 );
