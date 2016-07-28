@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="AIRCRAFT" style="?android:attr/listSeparatorTextViewStyle">
+   		<ListPreference
+			android:defaultValue="0.75f"
+			android:entries="@array/ac_list_names"
+			android:entryValues="@array/ac_list_values"
+			android:key="AircraftModel" 
+			android:summary="Select active aircraft model" 
+			android:title="Aircraft" />
+ 		</PreferenceCategory>
+   		
+    <PreferenceCategory  android:title="SYSTEM" >
+    	<ListPreference
+			android:defaultValue="0.75f"
+			android:entries="@array/sensor_bias_names"
+			android:entryValues="@array/sensor_bias_values"
+			android:key="sensorBias" 
+			android:summary="Select the sensor/gps bias" 
+			android:title="Sensor bias" />
+ 			</PreferenceCategory>
+ 			
+    
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="demoMode"
+            android:summary="Simulate GPS movement for demonstration"
+            android:title="Demo Mode" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="lockedMode"
+            android:summary="Lock the exit on back button" 
+            android:title="Locked Mode" />
+    
+    
+    		
+</PreferenceScreen>    
+
+<!--    
+	CRICRI,
+	CRUZ,
+	J160,
+	LGEZ,
+	PA28,
+	RV6,
+	RV7,
+	RV8,
+	T18,
+	W10
+
+
+        <Preference
+            android:key="pref_key_sms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:summary="summary"
+            android:title="title" />
+
+
+-->
