@@ -17,9 +17,21 @@
 </string-array>
 
 
-
 <string-array name="ac_list_names">
-    <item></item>
+    <item>GENERIC - Generic / Ultralight</item>
+    <item>AZTEC - Piper Aztec</item>
+    <item>CRICRI - Colomban CriCri</item>
+    <item>CRUZ - Piper Cruiser</item>
+    <item>J160 - Jabiru</item>
+    <item>LGEZ - Rutan Long EZ</item>
+    <item>PA28 - Piper Cherokee</item>
+    <item>RV6 - Vans</item>
+    <item>RV7 - Vans</item>
+    <item>RV8 - Vans</item>
+    <item>T18 - Thorp</item>
+    <item>W10 - Wittman Tailwind</item>
+</string-array>
+<string-array name="ac_list_values">
     <item>GENERIC</item>
     <item>AZTEC</item>
     <item>CRICRI</item>
@@ -33,6 +45,8 @@
     <item>T18</item>
     <item>W10</item>
 </string-array>
+
+<!--
 <string-array name="ac_list_values">
     <item>0</item>
     <item>1</item>
@@ -47,6 +61,7 @@
     <item>10</item>
     <item>11</item>
 </string-array>
+-->
 
 
 </resources>

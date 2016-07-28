@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<!-- THE MENU IS NOT ACTUALLY USED -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item android:id="@+id/preferences"
-          android:title="Preferences"
-          android:icon="@drawable/ic_settings"
-          android:showAsAction="ifRoom"/>
-<!--    <item android:id="@+id/help"
+          android:icon="@drawable/ic_settings" 
+          android:title="Preferences"/> 
+   
+    <item android:id="@+id/airplane"
+          android:icon="@drawable/ic_lock_airplane_mode"
+          android:title="Select" /> 
+<!--
+    <item android:id="@+id/help"
           android:icon="@drawable/ic_menu_help"
-          android:title="help" /> -->
+          android:title="help" />
+          --> 
 </menu>
  
 <!--  

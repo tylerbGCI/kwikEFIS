@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package player.efis.pfd;
-import java.util.Iterator;
+import java.util.Iterator; 
 
 import player.ulib.*;
 
@@ -44,6 +44,7 @@ enum AircraftModel
 	T18,
 	W10
 }
+
   
 
 /**
@@ -66,9 +67,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAcraftModel = AircraftModel.PA28; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV6;
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV7;
-	private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
+	//private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
 	//private final static AircraftModel mAcraftModel = AircraftModel.T18;
 	//private final static AircraftModel mAcraftModel = AircraftModel.W10; //done
+
+	private static AircraftModel mAcraftModel = AircraftModel.RV8;  
+	
 	
 	private static final String TAG = "EFISRenderer"; //"MyGLRenderer";
 	 
@@ -199,129 +203,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//displayMirror  = false;
 		displayFPV = true;
 
-		// Generic - Ultralight
-		Vs0 = 30;  // Stall, flap extended
-		Vs1 = 40;  // Stall, flap retracted
-		Vx  = 50;  // Best angle climb
-		Vy  = 60;  // Best rate climb 
-		Vfe = 70;  // Flaps extension
-		Va  = 80;  // Maneuvering
-		Vno = 100; // Max structural cruise
-		Vne = 120; // Never exceed
-		
-		// White Arc  Vs0 - Vfe
-		// Green Arc  Vs1 - Vno
-		// Yellow Arc Vno - Vne
-		
-		// "Conditional" compiles for various aircraft models
-		if (mAcraftModel == AircraftModel.GENERIC) {
-			// Ultralight
-			Vs0 = 30;
-			Vs1 = 40;
-			Vx  = 50;
-			Vy  = 60;
-			Vfe = 60;
-			Va  = 80;
-			Vno = 100;
-			Vne = 120;
-		}
-
-		if (mAcraftModel == AircraftModel.AZTEC) {
-			// Colomban CriCri
-			Vs0 = 61;
-			Vs1 = 66;
-			Vx  = 93; 
-			Vy  = 102; 
-			Vfe = 140;
-			Va  = 129;
-			Vno = 172;
-			Vne = 216;
-		}
-		
-		if (mAcraftModel == AircraftModel.CRICRI) {
-			// Colomban CriCri
-			Vs0 = 39;
-			Vs1 = 49;
-			Vx  = 56; // 62mph
-			Vy  = 68; // 75mph
-			Vfe = 70;
-			Va  = 85;
-			Vno = 100;
-			Vne = 140;
-		}
-		
-		if (mAcraftModel == AircraftModel.CRUZ) {
-			// PiperSport Cruzer
-			Vs0 = 32;  // Stall, flap extended
-			Vs1 = 39;  // Stall, flap retracted
-			Vx  = 56;  // Best angle climb
-			Vy  = 62;  // Best rate climb 
-			Vfe = 75;  // Flaps extension
-			Va  = 88;  // Maneuvering
-			Vno = 108; // Max structural cruise
-			Vne = 138; // Never exceed
-		}
-		
-		if (mAcraftModel == AircraftModel.J160) {
-			// Jabiru J160-C
-			Vs0 = 40;
-			Vs1 = 45;
-			Vx  = 65; 
-			Vy  = 68; 
-			Vfe = 80;
-			Va  = 90;
-			Vno = 108;
-			Vne = 140;
-		}
-		
-		
-		if (mAcraftModel == AircraftModel.LGEZ) {
-			// RV-8A
-			Vs0 = 56;
-			Vs1 = 56;
-			Vx  = 72;
-			Vy  = 90;
-			Vfe = 85;
-			Va  = 120;
-			Vno = 161;
-			Vne = 200;
-		}
-			
-		if (mAcraftModel == AircraftModel.PA28) {
-			// Piper PA28 Archer II
-			Vs0 = 49;
-			Vs1 = 55;
-			Vx  = 64;
-			Vy  = 76;
-			Vfe = 102;
-			Va  = 89;
-			Vno = 125;
-			Vne = 154;
-		}
-			
-		if (mAcraftModel == AircraftModel.RV8) {
-			// RV-8A
-			Vs0 = 51;
-			Vs1 = 56;
-			Vx  = 72;
-			Vy  = 90;
-			Vfe = 85;
-			Va  = 120;
-			Vno = 165;
-			Vne = 200;
-		}
-
-		if (mAcraftModel == AircraftModel.W10) {
-			// Witttman Tailwind
-			Vs0 = 48;  // Stall, flap extended
-			Vs1 = 55;  // Stall, flap retracted
-			Vx  = 90;  // Best angle climb - tbd
-			Vy  = 104;  // Best rate climb 
-			Vfe = 91;  // Flaps extension
-			Va  = 130;  // Maneuvering
-			Vno = 155; // Max structural cruise - tbd
-			Vne = 174; // Never exceed
-		}
 		
 		
 	}
@@ -401,6 +282,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		if (displayFPV) renderFPV(scratch1);  // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch		
 
+		
 		if (displayFlightDirector) {  
 			// Create a rotation for the Flight director
 			Matrix.setRotateM(mFdRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // fd rotation
@@ -414,21 +296,21 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		// This may have to be on its own page or portrait mode like Garmin
 		if (displayRMI) {
-			float xlx = +0.8f*pixW2;
-			float xly = -0.33f*pixH2;
+			float xlx = -0.77f*pixW2;
+			float xly = -0.40f*pixH2; 
 
 			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
-			
 			// Create a rotation for the RMI
 			Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
 			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-			
+			renderBearingTxt(mMVPMatrix);
 			Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-		
 			renderCompassRose(rmiMatrix);
 			renderBearing(rmiMatrix);
 		}
-		//*/
+
+		if (displayFlightDirector || displayRMI)   
+		  renderWptSelValue(mMVPMatrix);
 		
 		renderFixedHorizonMarkers();
 
@@ -575,6 +457,157 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	public void setAngle(float angle) 
 	{
 		mAngle = angle;
+	}
+
+	
+	
+	public void setAircraftData(String model)
+	{
+		try {
+			mAcraftModel = AircraftModel.valueOf(model);
+		}
+		//catch (IllegalArgumentException e) {
+		catch (Exception e) {
+			mAcraftModel = AircraftModel.RV8;
+		}
+		
+		
+		// Generic - Ultralight
+		Vs0 = 30;  // Stall, flap extended
+		Vs1 = 40;  // Stall, flap retracted
+		Vx  = 50;  // Best angle climb
+		Vy  = 60;  // Best rate climb 
+		Vfe = 70;  // Flaps extension
+		Va  = 80;  // Maneuvering
+		Vno = 100; // Max structural cruise
+		Vne = 120; // Never exceed
+		
+		// White Arc  Vs0 - Vfe
+		// Green Arc  Vs1 - Vno
+		// Yellow Arc Vno - Vne
+		
+		switch (mAcraftModel) {
+		// "Conditional" compiles for various aircraft models
+		case GENERIC: 
+			// Ultralight
+			Vs0 = 30;
+			Vs1 = 40;
+			Vx  = 50;
+			Vy  = 60;
+			Vfe = 60;
+			Va  = 80;
+			Vno = 100;
+			Vne = 120;
+			break;
+
+		case AZTEC:
+			// Colomban CriCri
+			Vs0 = 61;
+			Vs1 = 66;
+			Vx  = 93; 
+			Vy  = 102; 
+			Vfe = 140;
+			Va  = 129;
+			Vno = 172;
+			Vne = 216;
+			break;
+		
+		case CRICRI:
+			// Colomban CriCri
+			Vs0 = 39;
+			Vs1 = 49;
+			Vx  = 56; // 62mph
+			Vy  = 68; // 75mph
+			Vfe = 70;
+			Va  = 85;
+			Vno = 100;
+			Vne = 140;
+			break;
+		
+		case CRUZ:
+			// PiperSport Cruzer
+			Vs0 = 32;  // Stall, flap extended
+			Vs1 = 39;  // Stall, flap retracted
+			Vx  = 56;  // Best angle climb
+			Vy  = 62;  // Best rate climb 
+			Vfe = 75;  // Flaps extension
+			Va  = 88;  // Maneuvering
+			Vno = 108; // Max structural cruise
+			Vne = 138; // Never exceed
+			break;
+		
+		case J160:
+			// Jabiru J160-C
+			Vs0 = 40;
+			Vs1 = 45;
+			Vx  = 65; 
+			Vy  = 68; 
+			Vfe = 80;
+			Va  = 90;
+			Vno = 108;
+			Vne = 140;
+			break;
+		
+		case LGEZ:
+			// RV-8A
+			Vs0 = 56;
+			Vs1 = 56;
+			Vx  = 72;
+			Vy  = 90;
+			Vfe = 85;
+			Va  = 120;
+			Vno = 161;
+			Vne = 200;
+			break;
+			
+		case PA28:
+			// Piper PA28 Archer II
+			Vs0 = 49;
+			Vs1 = 55;
+			Vx  = 64;
+			Vy  = 76;
+			Vfe = 102;
+			Va  = 89;
+			Vno = 125;
+			Vne = 154;
+			break;
+			
+		case RV6: RV7: RV8:
+			// RV-8A
+			Vs0 = 51;
+			Vs1 = 56;
+			Vx  = 72;
+			Vy  = 90;
+			Vfe = 85;
+			Va  = 120;
+			Vno = 165;
+			Vne = 200;
+			break;
+	
+		case W10:
+			// Witttman Tailwind
+			Vs0 = 48;  // Stall, flap extended
+			Vs1 = 55;  // Stall, flap retracted
+			Vx  = 90;  // Best angle climb - tbd
+			Vy  = 104;  // Best rate climb 
+			Vfe = 91;  // Flaps extension
+			Va  = 130;  // Maneuvering
+			Vno = 155; // Max structural cruise - tbd
+			Vne = 174; // Never exceed
+			break;
+		
+		default:
+			// RV-8A
+			Vs0 = 51;
+			Vs1 = 56;
+			Vx  = 72;
+			Vy  = 90;
+			Vfe = 85;
+			Va  = 120;
+			Vno = 165;
+			Vne = 200;
+			break;
+		}
 	}
 
 
@@ -2161,7 +2194,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		if (BatteryPct > 0.1) glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		else glText.begin( 0.0f, 1.0f, 1.0f, 1.0f, matrix ); // red
 		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, -0.7f*pixH2 - glText.getCharHeight()/2 );            
+		//glText.draw(t, -0.97f*pixW2, -0.8f*pixH2 - glText.getCharHeight()/2 );            
+		glText.draw(t, -0.97f*pixW2, 0.2f*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();                                    
 	}
 
@@ -2189,7 +2223,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		GForceValue = value;
 	}
 
-	String mAutoWpt; 
+	String mAutoWpt = "YSEN"; 
 	void renderAutoWptValue(float[] matrix)
 	{
 		float z, pixPerUnit;
@@ -2291,8 +2325,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				glText.end();
 			} 
 		}
-
-
+		
 		// Calculate the relative bearing to the selected wpt
 		double deltaLat = mWptSelLat - LatValue;
 		double deltaLon = mWptSelLon - LonValue;
@@ -2321,7 +2354,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//if (IASValue < Vs0) commandPitch = -MAX_COMMAND;  
 
 		// update the flight director data
-		setFlightDirector(true, commandPitch, (float) relBrg); 
+		setFlightDirector(displayFlightDirector, commandPitch, (float) relBrg); 
 
 		// the next two will be moved to their own methods ... TODO
 		glText.begin( 1.0f, 1f, 1.0f, 1.0f, matrix ); // 
@@ -2748,20 +2781,83 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, sinI, cosI, _sinI, _cosI;
 		float roseRadius = roseScale * pixM2;
 
-		mLine.SetWidth(5); 
 		z = zfloat;
-		mLine.SetColor(0, 0.7f, 0, 1);  // green
+		
+		//
+		// Bearing to Automatic Waypoint
+		//
+		mLine.SetWidth(3); 
+		mLine.SetColor(0.7f, 0.7f, 0.0f, 1);  // yellow 
 
-		// Bearing to Selected Waypoint
-    sinI = UTrig.isin(90-(int)mSelWptBrg);
-    cosI = UTrig.icos(90-(int)mSelWptBrg);
-    _sinI = 0.5f*UTrig.isin(90-(int)mSelWptBrg);
-    _cosI = 0.5f*UTrig.icos(90-(int)mSelWptBrg);
+    sinI = UTrig.isin(90-(int)mAutoWptBrg);
+    cosI = UTrig.icos(90-(int)mAutoWptBrg);
+    _sinI = 0.5f*UTrig.isin(90-(int)mAutoWptBrg);
+    _cosI = 0.5f*UTrig.icos(90-(int)mAutoWptBrg);
+    
+    //tail
 		mLine.SetVerts(
 				-roseRadius * _cosI, -roseRadius * _sinI, z,
 				-roseRadius * cosI,  -roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
+    // head
+		// point L
+    _sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg + 6);
+    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg + 6);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * cosI,  roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		
+		// prallel
+		float parr = 0.40f;
+		
+    float __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg + 12);
+    float __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg + 12);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * __cosI,  roseRadius * __sinI, z
+				);
+		mLine.draw(matrix);
+    
+		// point R
+		_sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg - 5);
+    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg - 5);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * cosI,  roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+
+		// prallel
+     __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg - 12);
+     __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg - 12);
+		mLine.SetVerts(
+				roseRadius * _cosI, roseRadius * _sinI, z,
+				roseRadius * __cosI,  roseRadius * __sinI, z
+				);
+		mLine.draw(matrix);
+
+		//
+		// Bearing to Selected Waypoint
+		//
+		mLine.SetWidth(6); 
+		//mLine.SetColor(0, 0.7f, 0, 1);  // green
+		mLine.SetColor(0.99f, 0.5f, 0.99f, 1); // purple'ish
+
+    sinI = UTrig.isin(90-(int)mSelWptBrg);
+    cosI = UTrig.icos(90-(int)mSelWptBrg);
+    _sinI = 0.5f*UTrig.isin(90-(int)mSelWptBrg);
+    _cosI = 0.5f*UTrig.icos(90-(int)mSelWptBrg);
+
+    //tail
+		mLine.SetVerts(
+				-roseRadius * _cosI, -roseRadius * _sinI, z,
+				-roseRadius * cosI,  -roseRadius * sinI, z
+				);
+		mLine.draw(matrix);
+		//head
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
@@ -2783,49 +2879,34 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				roseRadius * cosI,  roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
-		
-		/*
-		// Bearing to Automatic Waypoint
-		mLine.SetColor(0.7f, 0.7f, 0.0f, 1);  // 
-		
-    sinI = UTrig.isin(90-(int)mAutoWptBrg);
-    cosI = UTrig.icos(90-(int)mAutoWptBrg);
-    _sinI = 0.5f*UTrig.isin(90-(int)mAutoWptBrg);
-    _cosI = 0.5f*UTrig.icos(90-(int)mAutoWptBrg);
-		mLine.SetVerts(
-				x1 - roseRadius * _cosI, y1 - roseRadius * _sinI, z,
-				x1 - roseRadius * cosI, y1 - roseRadius * sinI, z
-				);
-		mLine.draw(matrix);
-		
-		mLine.SetVerts(
-				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
-				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
-				);
-		mLine.draw(matrix);
-   
-		//point
-    _sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg + 6);
-    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg + 6);
-		mLine.SetVerts(
-				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
-				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
-				);
-		mLine.draw(matrix);
-
-		_sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg - 5);
-    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg - 5);
-		mLine.SetVerts(
-				x1 + roseRadius * _cosI, y1 + roseRadius * _sinI, z,
-				x1 + roseRadius * cosI, y1 + roseRadius * sinI, z
-				);
-		mLine.draw(matrix);
-		*/
-
+	
+	
 	}
 	
-	
 
+	void renderBearingTxt(float[] matrix)
+	{
+		float roseRadius = roseScale * pixM2;
+		float scale = 1.6f;  // not sure why this is > 1.0 Does not really make sense
+                         // it is somehow related to which matrix it is drawn on  
+		
+		//
+		// Bearing to Selected Waypoint
+		//
+		glText.begin( 0.99f, 0.5f, 0.99f, 1.0f, matrix ); // purple'ish
+		glText.setScale(scale);
+		glText.drawC(mWptSelName , 0, 0.1f*roseRadius, 0);             
+		glText.end();                                   
+		
+		//
+		// Bearing to Automatic Waypoint
+		//
+		glText.begin( 0.7f, 0.7f, 0, 1.0f, matrix ); // yellow
+		glText.setScale(scale);
+		glText.drawC(mAutoWpt , 0, -0.1f*roseRadius, 0);             
+		glText.end();                                   
+	}
+	
 
 /*
 //-------------------------------------------------

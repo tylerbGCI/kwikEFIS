@@ -15,7 +15,7 @@
  */
 
 
-package player.efis.pfd;
+package player.efis.pfd; 
 
 
 import player.ulib.SensorComplementaryFilter;
@@ -110,15 +110,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
 	DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
 	DigitalFilter filterfpvX = new DigitalFilter(128); //32
-	DigitalFilter filterfpvY = new DigitalFilter(32); //32
+	DigitalFilter filterfpvY = new DigitalFilter(128); //32
 	DigitalFilter filterG = new DigitalFilter(32); //32
 	DigitalFilter filterGpsSpeed = new DigitalFilter(6); //4
 	DigitalFilter filterGpsAltitude = new DigitalFilter(6); //4
 	DigitalFilter filterGpsCourse = new DigitalFilter(6); //4
-
 	
 	
-	//
+	// 
 	//  Add the action bar buttons     
 	//
 	@Override
@@ -129,6 +128,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+
 	
 	@Override
 	public void onBackPressed() 
@@ -152,9 +152,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			Intent i = new Intent(this, AppPreferences.class);
 			startActivity(i); 
 			break;
+		case R.id.airplane:   
+			// Launch airplane activity  
+			Intent j = new Intent(this, AppSettings.class);  
+			startActivity(j);   
+			break;
 			// more code...  
+		default:
+      return super.onOptionsItemSelected(item);			
 		}
-		return true;     
+		return true;      
 	}  
 
 	/*  
@@ -168,10 +175,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//do your work ...
 			// Launch settings activity
 			Intent i = new Intent(this, AppPreferences.class); 
-			startActivity(i); 
+			startActivity(i);  
 			return true;
 		}
-		return super.onKeyDown(keyCode, event); 
+		return super.onKeyDown(keyCode, event);  
 	} 
 	*/
 	
@@ -228,6 +235,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Preferences
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		PreferenceManager.setDefaultValues(this, R.xml.airplane , false);
 		
 		// Set the window to be full brightness
 		WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -244,8 +252,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
 
+    // restore the aircraft model
+    //mGLView.mRenderer.mAcraftModel = mGLView.mRenderer.mAcraftModel.valueOf(settings.getString("AircraftModel", "RV8"));
+    //mGLView.mRenderer.setAircraftData();
+    
     // Overall the device is now ready.
-    // The indivuidual elemets will be enabled or disabled by the location provided
+    // The individual elements will be enabled or disabled by the location provided
     // based on availability 
 		mGLView.setServiceableDevice();
 	}
@@ -263,6 +275,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
     editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
     editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
+    
+    // need to add the aircraft --- todo
+    //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
+    
     // Commit the edits
     editor.commit();
   }
@@ -374,50 +390,50 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	@Override
 	public void onLocationChanged(Location location)
 	{
-		gps_lat =  (float) location.getLatitude();
-		gps_lon = (float) location.getLongitude();
-		
-		if (location.hasSpeed()) { 
-			//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
-			gps_speed = location.getSpeed();
-			if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
-			mGLView.setServiceableAsi();
-			hasSpeed = true;
-		}
-		else {
-			mGLView.setUnServiceableAsi();
-			hasSpeed = false;
-		}
-
-		if (location.hasAltitude()) {
-			//gps_altitude = filterGpsAltitude.runningAverage(location.getAltitude());
-			gps_altitude = (float) location.getAltitude();
-			gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
-			mGLView.setServiceableAlt();
-		}
-		else {
-			mGLView.setUnServiceableAlt(); 
-		}
-
-		if (location.hasBearing()) {
-			//gps_course = filterGpsCourse.runningAverage(Math.toRadians(location.getBearing()));
-			gps_course = (float) Math.toRadians(location.getBearing());
-			gps_rateOfTurn = calculateRateOfTurn(gps_course);
-			mGLView.setServiceableDi();
-		}
-		else {
-			gps_rateOfTurn = 0;
-			mGLView.setUnServiceableDi();
-		}
-
-		if (location.hasSpeed() && location.hasBearing() ) {
-			mGLView.setServiceableAh();
-		}
-		else {
-			mGLView.setUnServiceableAh();
-		}
+		if (!bDemoMode) {
+			gps_lat =  (float) location.getLatitude();
+			gps_lon = (float) location.getLongitude();
+			
+			if (location.hasSpeed()) { 
+				//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
+				gps_speed = location.getSpeed();
+				if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
+				mGLView.setServiceableAsi();
+				hasSpeed = true;
+			}
+			else {
+				mGLView.setUnServiceableAsi();
+				hasSpeed = false;
+			}
 	
-		
+			if (location.hasAltitude()) {
+				//gps_altitude = filterGpsAltitude.runningAverage(location.getAltitude());
+				gps_altitude = (float) location.getAltitude();
+				gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
+				mGLView.setServiceableAlt();
+			}
+			else {
+				mGLView.setUnServiceableAlt(); 
+			}
+	
+			if (location.hasBearing()) {
+				//gps_course = filterGpsCourse.runningAverage(Math.toRadians(location.getBearing()));
+				gps_course = (float) Math.toRadians(location.getBearing());
+				gps_rateOfTurn = calculateRateOfTurn(gps_course);
+				mGLView.setServiceableDi();
+			}
+			else {
+				gps_rateOfTurn = 0;
+				mGLView.setUnServiceableDi();
+			}
+	
+			if (location.hasSpeed() && location.hasBearing() ) {
+				mGLView.setServiceableAh();
+			}
+			else {
+				mGLView.setUnServiceableAh();
+			}
+		}
 	}
 
 	
@@ -491,10 +507,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		bDemoMode = SP.getBoolean("demoMode", false);
 		 
 		// If we changed to or from HUD mode, a calibration is required
-		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0;
+		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0; 
 		bHudMode = SP.getBoolean("displayMirror", false);
-	}
 
+		// If the aircraft is changed, update the paramaters
+    String s = SP.getString("AircraftModel", "RV8"); 
+    mGLView.mRenderer.setAircraftData(s);
+	}
+ 
  
 	private void intro()  
 	{
@@ -723,17 +743,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float[] accel = new float[3]; // accelerometer vector
 
 		//
-		// Read the Sensors
-		//
+		// Read the Sensors    
+		// 
 		//sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
 		if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_LANDSCAPE); 
 		else sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE); 
 		
-		sensorComplementaryFilter.getGyro(gyro); 		// Use the gyroscopes for the attitude 
-		sensorComplementaryFilter.getAccel(accel);		// Use the accelerometer for G and slip
+		sensorComplementaryFilter.getGyro(gyro); 		// Use the gyroscopes for the attitude  
+		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
 		pitchValue = -sensorComplementaryFilter.getPitch();
-		rollValue = -sensorComplementaryFilter.getRoll();
+		rollValue = -sensorComplementaryFilter.getRoll(); 
 		
 		gyro_rateOfTurn = (float) filterRotGyro.runningAverage(-gyro[0]);  
 		slipValue  = filterSlip.runningAverage(accel[1]);
@@ -745,7 +765,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		hasGps = isGPSAvailable();
 		
-		// debug
+		// debug 
 		/*
 		hasGps = true; //debug
 		hasSpeed = true; //debug
@@ -782,17 +802,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 					// Testing shows that a good value is sensorBias of 75% gyro and 25% gps on most devices
 					rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
 		
-					// the Flight Path Vector (FPV)
+					// the Flight Path Vector (FPV) 
 					deltaA = compassRose180(gps_course - orientationAzimuth); 
 					fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
-					fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+					fpvY = (float) filterfpvY.runningAverage(-sensorComplementaryFilter.getPitchRate()*100);
+					
+			  	// We have valid GPS augmentation. Use the gps roc for the pitch
+					// and the gyro sensor for the birdie  
+					pitchValue = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI); 
 					
 					// Pitch and birdie
 					mGLView.setDisplayAirport(true);
-			  	// We have valid GPS augmentation. Use the fpvY for the pitch
-					// and the sensor for the birdie 
-					pitchValue = fpvY; //mGLView.setPitch(fpvY);
-					mGLView.setFPV(fpvX, pitchValue); // need to clean this up
+					mGLView.setFPV(fpvX, fpvY); // need to clean this up
 				}
 				else {
 					pitchValue = 0;
@@ -829,7 +850,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		// Get the battery percentage 
 		//
-		float batteryPct = getRemainingBattery();
+		float batteryPct = getRemainingBattery(); 
 
 		//
 		// Pass the values to mGLView for updating  
@@ -852,8 +873,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setMSG(4, s);
 		// s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000); 
 		// mGLView.setMSG(3, s);
-	  s = String.format("BIAS: %d", (int) (sensorBias*100));  
-	   mGLView.setMSG(2, s);
+	  //s = String.format("BIAS: %d", (int) (sensorBias*100));  
+	   //mGLView.setMSG(1, s);
 
 		s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon)); 
 	  mGLView.setMSG(1, s);

@@ -70,6 +70,22 @@ public class SensorComplementaryFilter
 		return pitch;
 	}
 	
+	public float getPitchRate() 
+	{
+		switch (orientation) {
+		case HORIZONTAL_LANDSCAPE:  
+			return (gyrData[1] * 180f / M_PI) * dt;  // Angle around the Y-axis 
+
+		case VERTICAL_LANDSCAPE: 
+			return (gyrData[1] * 180f / M_PI) * dt; // Angle around the X-axis
+			
+		default:
+			return 0;
+			
+		}
+	}
+
+	
 	public float getRoll()
 	{
 		return roll;
@@ -129,9 +145,9 @@ public class SensorComplementaryFilter
 				
 		}
 		return bank;
-	}
+	} 
 	
-	
+	 
 	class calculateFilterTask extends TimerTask
 	{
 		public void run()
@@ -140,8 +156,8 @@ public class SensorComplementaryFilter
 			switch (orientation) {
 			case HORIZONTAL_LANDSCAPE:  
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
-				 roll += ((float)gyrData[0] * 180 / M_PI) * dt; // Angle around the X-axis
-				 pitch -= ((float)gyrData[1] * 180 / M_PI) * dt;  // Angle around the Y-axis
+				 roll += (gyrData[0] * 180 / M_PI) * dt; // Angle around the X-axis
+				 pitch -= (gyrData[1] * 180 / M_PI) * dt;  // Angle around the Y-axis 
 
 				// Turning around the X axis results in a vector on the Y-axis
 				rollAcc = (float) (Math.atan2((float)accData[1], (float)accData[2]) * 180 / M_PI);
