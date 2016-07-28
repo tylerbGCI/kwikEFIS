@@ -17,7 +17,7 @@ import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import player.efis.pfd.EFISRenderer;
+//import player.efis.pfd.EFISRenderer;
 import player.gles20.programs.BatchTextProgram;
 import player.gles20.programs.Program;
 

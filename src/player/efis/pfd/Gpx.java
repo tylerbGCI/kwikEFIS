@@ -27,7 +27,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
-import android.util.Log;
+//import android.util.Log;
 
 class Apt
 {
@@ -119,7 +119,6 @@ class Gpx
 			double deltaLon = lon - currProduct.lon;
 			//double d =  Math.hypot(deltaLon, deltaLat);  // in degree, 1 deg = 60 nm 
 			double d =  Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // faster then hypot, see www 
-		
 			
 			if (d < range) {
 				nearestAptList.add(currProduct);

@@ -39,7 +39,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
-import android.view.KeyEvent;
+//import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;

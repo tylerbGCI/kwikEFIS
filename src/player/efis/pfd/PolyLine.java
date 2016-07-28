@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import android.opengl.GLES20;
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * A two-dimensional line for use as a drawn object in OpenGL ES 2.0.

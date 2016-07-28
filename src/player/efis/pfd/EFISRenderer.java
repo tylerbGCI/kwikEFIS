@@ -572,8 +572,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Vne = 154;
 			break;
 			
-		case RV6: RV7: RV8:
-			// RV-8A
+		case RV6:
+		case RV7: 
+		case RV8:
+			// RV-6,7,8
 			Vs0 = 51;
 			Vs1 = 56;
 			Vx  = 72;
