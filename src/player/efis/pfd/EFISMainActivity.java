@@ -203,7 +203,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState); 
 
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        

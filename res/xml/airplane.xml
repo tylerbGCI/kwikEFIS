@@ -20,7 +20,6 @@
 			android:key="sensorBias" 
 			android:summary="Select the sensor/gps bias" 
 			android:title="Sensor bias" />
- 			</PreferenceCategory>
  			
     
         <CheckBoxPreference
@@ -33,8 +32,9 @@
             android:key="lockedMode"
             android:summary="Lock the exit on back button" 
             android:title="Locked Mode" />
-    
-    
+ 		
+        	</PreferenceCategory>
+        
     		
 </PreferenceScreen>    
 
