@@ -44,9 +44,12 @@ import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
 
@@ -204,12 +207,25 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
-
+		
 		// Create a GLSurfaceView instance and set it
 		// as the ContentView for this Activity  
 		mGLView = new EFISSurfaceView(this);
 		setContentView(mGLView);
 
+		// Get the version number of the app
+		PackageInfo pInfo = null;
+		try {
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		}
+		catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		String version = pInfo.versionName; 
+		//TextView versionText = (TextView) findViewById(R.id.versionName);
+		//versionText.setText("Version: " + version);	
+		Toast.makeText(this, "kwik EFIS version: " + version, Toast.LENGTH_LONG).show(); 
+		
 		try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
 			registerSensorManagerListeners();
