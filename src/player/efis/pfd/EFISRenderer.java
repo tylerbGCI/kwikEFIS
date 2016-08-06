@@ -2733,28 +2733,48 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 					);
 			mLine.draw(matrix);
 			
+			glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // grey
+			glText.setScale(1.5f); 
+			float angleDeg = 90-i;
 			switch( i ) {
-				case 0 : t = "N"; break;
-				case 30 : t = "3";	break;
+				case 0 :  
+					t = "N";
+					angleDeg = -i;
+					glText.begin( 1, 1, 1, 1.0f, matrix ); // white
+					glText.setScale(2.0f); 
+					break;
+				case 30 :	t = "3";	break;
 				case 60 : t = "6";	break;
-				case 90 : t = "E"; break;
+				case 90 : 
+					t = "E"; 
+					angleDeg = -i;
+					glText.begin( 1, 1, 1, 1.0f, matrix ); // white
+					glText.setScale(1.5f); 
+					break;
 				case 120 : t = "12";	break;
 				case 150 : t = "15";	break;
-				case 180 : t = "S";	break;
+				case 180 : 
+					t = "S";	
+					angleDeg = -i;
+					glText.begin( 1, 1, 1, 1.0f, matrix ); // white
+					glText.setScale(1.5f); 
+					break;
 				case 220 : t = "21";	break;
 				case 240 : t = "24";	break;
-				case 270 : t = "W";	break;
+				case 270 : 
+					t = "W";	
+					angleDeg = -i;
+					glText.begin( 1, 1, 1, 1.0f, matrix ); // white
+					glText.setScale(1.5f); 
+					break;
 				case 300 : t = "30";	break;
 				case 330 : t = "33";	break;
-				//t = String.format("%03.0f",(float) MSLValue % 1000);
-				//default : t = (QString( "%1" ).arg( i/10, -2 ));
-				//default : t = String.format("%03.0f", (float) i/10);
 				default : t = ""; break;
 			}
 
-			glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
-			glText.setScale(1.5f); // seems to have a weird effect here?
-			glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, 90-i);             
+			//glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
+			//glText.setScale(1.5f); // seems to have a weird effect here?
+			glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); //90-i             
 			glText.end();                                   
 			for (j = 10; j <=20; j=j+10) {
 	      sinI = UTrig.isin( (i+j) );
@@ -2866,16 +2886,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				);
 		mLine.draw(matrix);
 
+		mLine.SetWidth(3); 
 		// point
-    _sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg + 6);
-    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg + 6);
+    _sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg + 9); //6
+    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg + 9);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
-		_sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg - 5);
-    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg - 5);
+		_sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg - 8);  //5
+    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg - 8);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
