@@ -36,20 +36,25 @@ class Apt
 	public  float lat;
 	public  float lon;
 	public  float elev;
-}
+} 
 
 class Gpx
 {
+	public String region = "zar.aus";
+	//String region = "usa.can"; 
+			
 	static ArrayList<Apt> aptList = null;
 	
+	/*
 	public Gpx(Context context) 
 	{
-		XmlPullParserFactory pullParserFactory;
+		XmlPullParserFactory pullParserFactory; 
 		try {
 			pullParserFactory = XmlPullParserFactory.newInstance();
 			XmlPullParser parser = pullParserFactory.newPullParser();
 
-			    InputStream in_s = context.getAssets().open("airport.gpx.xml");
+			    //InputStream in_s = context.getAssets().open("airport.gpx.xml");
+			    InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
 		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	            parser.setInput(in_s, null);
 	            parseXML(parser);
@@ -59,6 +64,38 @@ class Gpx
 			e.printStackTrace();
 		}
 	}
+	*/
+	
+	Context context;
+	
+	public Gpx(Context context) 
+	{
+		this.context = context;
+		//loadDatabase(context);
+	}
+	
+	
+	public void loadDatabase(String database)
+	{
+		region = database;
+		
+		XmlPullParserFactory pullParserFactory; 
+		try {
+			pullParserFactory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = pullParserFactory.newPullParser();
+
+			    //InputStream in_s = context.getAssets().open("airport.gpx.xml");
+			    InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
+		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+	            parser.setInput(in_s, null);
+	            parseXML(parser);
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
 	{
@@ -94,7 +131,11 @@ class Gpx
         	
         	case XmlPullParser.END_TAG: 
         		txt = parser.getName();
-        		if (txt.equalsIgnoreCase("wpt") && currentWpt != null) {
+        		// Only add non null wpt's that contain exactly 4 upper-case letters
+        		if (txt.equalsIgnoreCase("wpt") && 
+        				currentWpt != null && 
+        				currentWpt.name.length() == 4 &&
+        				currentWpt.name.matches("[A-Z]+") ) {
         			aptList.add(currentWpt);
         		} 
         	}

@@ -104,6 +104,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private int gps_infix;
 	
 	private float sensorBias; 
+
+	private Gpx mGpx;  // wpt database
 	
 	// Digital filters
 	DigitalFilter filterRotGyro = new DigitalFilter(8);   //64
@@ -258,8 +260,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
     getWindow().setAttributes(layout);		
 		
-		// Instantiate a new apts gpx/xml
-		Gpx gpx = new Gpx(this);
 		
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -268,9 +268,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
 
-    // restore the aircraft model
-    //mGLView.mRenderer.mAcraftModel = mGLView.mRenderer.mAcraftModel.valueOf(settings.getString("AircraftModel", "RV8"));
-    //mGLView.mRenderer.setAircraftData();
+    // This should never happen but we catch and force
+    // it to something known it just in case
+    if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";  
+    
+    String region = settings.getString("RegionDatabase", "zar.aus");
+    //String region = settings.getString("RegionDatabase", "usa.can");
+
+		// Instantiate a new apts gpx/xml
+		mGpx = new Gpx(this);
+		mGpx.loadDatabase(region);
     
     // Overall the device is now ready.
     // The individual elements will be enabled or disabled by the location provided
@@ -294,6 +301,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     
     // need to add the aircraft --- todo
     //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
+    
+    editor.putString("RegionDatabase", mGpx.region);
     
     // Commit the edits
     editor.commit();
@@ -523,12 +532,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		bDemoMode = SP.getBoolean("demoMode", false);
 		 
 		// If we changed to or from HUD mode, a calibration is required
-		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0; 
+		// not needed anymore?? if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0; 
 		bHudMode = SP.getBoolean("displayMirror", false);
 
 		// If the aircraft is changed, update the paramaters
     String s = SP.getString("AircraftModel", "RV8"); 
     mGLView.mRenderer.setAircraftData(s);
+    
+    // If the database changed it needs to be re-loaded.
+    s = SP.getString("regionDatabase", "zar.aus");
+    if (mGpx.region != s)   
+ 		  mGpx.loadDatabase(s);
+
 	}
  
  

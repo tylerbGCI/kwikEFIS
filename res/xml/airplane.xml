@@ -12,6 +12,17 @@
             android:summary="Select active aircraft model"
             android:title="Aircraft" />
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="DATABASE" >
+        <ListPreference
+            android:defaultValue="zar.aus"
+            android:entries="@array/region_names"
+            android:entryValues="@array/region_values"
+            android:key="regionDatabase"
+            android:summary="Select the operational database"
+            android:title="Georaphic Region" />
+    </PreferenceCategory>
+        
     <PreferenceCategory android:title="SYSTEM" >
         <ListPreference
             android:defaultValue="0.75f"
