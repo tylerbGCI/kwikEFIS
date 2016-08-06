@@ -2129,10 +2129,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//
 		if ((nrAptsFound < MX_NR_APT-2) && (counter++ % 10 == 0)) MX_RANGE += 1; 
 		else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
-		MX_RANGE = Math.min(MX_RANGE, 100);
+		MX_RANGE = Math.min(MX_RANGE, 99);
 
-		setMSG(6, String.format("RNG %d", MX_RANGE));     
-		setMSG(5, String.format("#AP %d", nrAptsFound)); 
+		//setMSG(6, String.format("RNG %d", MX_RANGE));     
+		//setMSG(5, String.format("#AP %d", nrAptsFound)); 
+		setMSG(5, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); 
 	}
 
 	void setLatLon(float lat, float lon)
@@ -2319,7 +2320,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mTriangle.draw(matrix);
 
 			// Draw the individual select characters  
-			if (mWptSelName != null) { 
+			if (mWptSelName != null) {
 				glText.begin( 1.0f, 0.8f, 1.0f, 1.0f, matrix ); //
 				glText.setScale(3f);
 				String s = String.format("%c", mWptSelName.charAt(i));
@@ -2476,7 +2477,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		int ina = 0;  //initialise to 0, also acts as a flag
 		char[] wpt = mWptSelName.toCharArray();
 		char[] alt = mAltSelName.toCharArray();
-
+		
 		// Determine if we are counting up or down? 
 		// wpt character
 		if      (Math.abs(mY - 0.9) < 0.15) inc = -1;
@@ -2548,7 +2549,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 					// No match at all
 					else {
 						mWptSelName = String.valueOf(wpt);
-						mWptSelComment = " ";
+						mWptSelComment = " "; 
 						mWptSelLat = 0;
 						mWptSelLon = 0;
 					}
@@ -2918,7 +2919,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//
 		glText.begin( 0.99f, 0.5f, 0.99f, 1.0f, matrix ); // purple'ish
 		glText.setScale(scale);
-		glText.drawC(mWptSelName , 0, 0.1f*roseRadius, 0);             
+		glText.drawC(mWptSelName , 0, 0.12f*roseRadius, 0);             
 		glText.end();                                   
 		
 		//
@@ -2926,7 +2927,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//
 		glText.begin( 0.7f, 0.7f, 0, 1.0f, matrix ); // yellow
 		glText.setScale(scale);
-		glText.drawC(mAutoWpt , 0, -0.1f*roseRadius, 0);             
+		glText.drawC(mAutoWpt , 0, -0.12f*roseRadius, 0);             
 		glText.end();                                   
 	}
 	
