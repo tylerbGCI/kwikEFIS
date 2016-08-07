@@ -273,7 +273,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";  
     
     String region = settings.getString("RegionDatabase", "zar.aus");
-    //String region = settings.getString("RegionDatabase", "usa.can");
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -301,8 +300,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     
     // need to add the aircraft --- todo
     //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-    
-    editor.putString("RegionDatabase", mGpx.region);
+    // editor.putString("RegionDatabase", mGpx.region);  // happens automatically ?
     
     // Commit the edits
     editor.commit();
@@ -408,7 +406,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			break;
 
 		}
-		update(event.values);
+		update(event.values); 
 	}
 	
 

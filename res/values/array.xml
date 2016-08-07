@@ -3,7 +3,7 @@
 
     <string-array name="sensor_bias_names">
         <item>95%</item>
-        <item>75%</item>
+        <item>75% (recommended)</item>
         <item>50%</item>
         <item>25%</item>
         <item> 5%</item>

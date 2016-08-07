@@ -2060,8 +2060,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		Iterator <Apt> it = Gpx.aptList.iterator(); 
 		while (it.hasNext()) {
-			Apt currApt  = it.next(); 
-
+			Apt currApt;//  = it.next();
+			try {
+				currApt  = it.next();
+			}
+		  //catch (ConcurrentModificationException e) {
+		  catch (Exception e) {
+		  	break;
+			}
+			
 			String wptId = currApt.name;
 
 			double deltaLat = currApt.lat - LatValue;

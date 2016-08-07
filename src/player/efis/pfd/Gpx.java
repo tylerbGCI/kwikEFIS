@@ -40,12 +40,14 @@ class Apt
 
 class Gpx
 {
+	Context context;
 	public String region = "zar.aus";
-	//String region = "usa.can"; 
-			
 	static ArrayList<Apt> aptList = null;
 	
 	/*
+	
+	// Replace with individual methods for instantiate and loading
+	
 	public Gpx(Context context) 
 	{
 		XmlPullParserFactory pullParserFactory; 
@@ -66,82 +68,87 @@ class Gpx
 	}
 	*/
 	
-	Context context;
 	
 	public Gpx(Context context) 
 	{
 		this.context = context;
-		//loadDatabase(context);
+	  aptList = new ArrayList();
 	}
 	
 	
 	public void loadDatabase(String database)
 	{
 		region = database;
+		//while (aptList.isEmpty() == false)
+		//  aptList.clear();
+		aptList.clear();
 		
-		XmlPullParserFactory pullParserFactory; 
+		XmlPullParserFactory pullParserFactory;
 		try {
 			pullParserFactory = XmlPullParserFactory.newInstance();
 			XmlPullParser parser = pullParserFactory.newPullParser();
 
-			    //InputStream in_s = context.getAssets().open("airport.gpx.xml");
-			    InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
-		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-	            parser.setInput(in_s, null);
-	            parseXML(parser);
-		} catch (XmlPullParserException e) {
+			//InputStream in_s = context.getAssets().open("airport.gpx.xml");
+			InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
+			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			parser.setInput(in_s, null);
+			parseXML(parser);
+		}
+		catch (XmlPullParserException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-	private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
+	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
 	{
 		//ArrayList<Wpt> gpx = null;
-        int eventType = parser.getEventType();
-        Apt currentWpt = null;
+		int eventType = parser.getEventType();
+		Apt currentWpt = null;
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-        	String txt = null;
-        	switch (eventType) {
-        	case XmlPullParser.START_DOCUMENT:
-        		aptList = new ArrayList();
-        		break;
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			String txt = null;
+			switch (eventType) {
+			case XmlPullParser.START_DOCUMENT:
+			  // aptList = new ArrayList();
+				// To avoid the ConcurrentModificationException
+				aptList.clear();
+				break;
 
-        	case XmlPullParser.START_TAG:
-        		txt = parser.getName();
-           		if (txt.equals("wpt")) { 
-        			currentWpt = new Apt();
-        			if (parser.getAttributeCount() == 2) {
-        				String sLat = parser.getAttributeValue(0);
-        				String sLon = parser.getAttributeValue(1);
-        				currentWpt.lat = Float.valueOf(parser.getAttributeValue(0));
-        				currentWpt.lon = Float.valueOf(parser.getAttributeValue(1));
-        			}
-        		} else if (currentWpt != null) {
-        			if (txt.equals("name")) {
-        				currentWpt.name = parser.nextText(); 
-        			} else if (txt.equals("cmt")) {
-        				currentWpt.cmt = parser.nextText();
-        			} 
-        		}
-        		break;
-        	
-        	case XmlPullParser.END_TAG: 
-        		txt = parser.getName();
-        		// Only add non null wpt's that contain exactly 4 upper-case letters
-        		if (txt.equalsIgnoreCase("wpt") && 
-        				currentWpt != null && 
-        				currentWpt.name.length() == 4 &&
-        				currentWpt.name.matches("[A-Z]+") ) {
-        			aptList.add(currentWpt);
-        		} 
-        	}
-        	eventType = parser.next();
-        }
-        //printProducts(aptList);
+			case XmlPullParser.START_TAG:
+				txt = parser.getName();
+				if (txt.equals("wpt")) {
+					currentWpt = new Apt();
+					if (parser.getAttributeCount() == 2) {
+						String sLat = parser.getAttributeValue(0);
+						String sLon = parser.getAttributeValue(1);
+						currentWpt.lat = Float.valueOf(parser.getAttributeValue(0));
+						currentWpt.lon = Float.valueOf(parser.getAttributeValue(1));
+					}
+				}
+				else if (currentWpt != null) {
+					if (txt.equals("name")) {
+						currentWpt.name = parser.nextText();
+					}
+					else if (txt.equals("cmt")) {
+						currentWpt.cmt = parser.nextText();
+					}
+				}
+				break;
+
+			case XmlPullParser.END_TAG:
+				txt = parser.getName();
+				// Only add non null wpt's that contain exactly 4 upper-case letters
+				if (txt.equalsIgnoreCase("wpt") && currentWpt != null && currentWpt.name.length() == 4 && currentWpt.name.matches("[A-Z]+")) {
+					aptList.add(currentWpt);
+				}
+			}
+			eventType = parser.next();
+		}
+		// printProducts(aptList); // only used for debugging
 	}
 	
 	public static ArrayList<Apt> getAptSelect(float lat, float lon, int range, int nr) 
