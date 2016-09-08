@@ -42,7 +42,14 @@
             android:key="lockedMode"
             android:summary="Lock the exit on back button"
             android:title="Locked Mode" />
-    </PreferenceCategory>
+
+        <ListPreference
+            android:key="version"
+            android:summary="1.0.0"
+            android:title="kwikEFIS version" />
+        
+        
+      </PreferenceCategory>
 
 </PreferenceScreen>
 <!--
