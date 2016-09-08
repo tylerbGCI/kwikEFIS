@@ -226,8 +226,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			e.printStackTrace();
 		}
 		String version = pInfo.versionName; 
-		//TextView versionText = (TextView) findViewById(R.id.versionName);
-		//versionText.setText("Version: " + version);	
 		Toast.makeText(this, "kwik EFIS version: " + version, Toast.LENGTH_LONG).show(); 
 		
 		try {
@@ -255,7 +253,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Preferences
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-		PreferenceManager.setDefaultValues(this, R.xml.airplane , false);
+		PreferenceManager.setDefaultValues(this, R.xml.manage , false);
 		
 		// Set the window to be full brightness
 		WindowManager.LayoutParams layout = getWindow().getAttributes();

@@ -17,6 +17,8 @@
 package player.efis.pfd;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
@@ -31,7 +33,7 @@ public class EFISPrefManage extends PreferenceActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.airplane); 
+		addPreferencesFromResource(R.xml.manage); 
 		updateSummary();
 	}
 	
@@ -50,6 +52,23 @@ public class EFISPrefManage extends PreferenceActivity
 		
 	  lp = (ListPreference) findPreference("sensorBias"); 
 	  lp.setSummary(lp.getEntry()); 
+	  
+
+		// Get the version number of the app
+		PackageInfo pInfo = null;
+		try {
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		}
+		catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		String version = pInfo.versionName; 
+		
+	  lp = (ListPreference) findPreference("version"); 
+	  lp.setSummary(version); 
+	  
+	  
+	  
 	}
  	
 	
