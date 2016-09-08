@@ -2,13 +2,13 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/airplane"
+    <item android:id="@+id/manage"
           android:icon="@drawable/ic_menu_manage"
           android:title="Manage" />
      
-    <item android:id="@+id/preferences"
+    <item android:id="@+id/settings"
           android:icon="@drawable/ic_settings" 
-          android:title="Preferences"/> 
+          android:title="Settings"/> 
    
 <!--
     <item android:id="@+id/help"

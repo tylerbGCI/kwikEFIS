@@ -296,7 +296,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		// This may have to be on its own page or portrait mode like Garmin
 		if (displayRMI) {
-			float xlx = -0.77f*pixW2;
+			float xlx = -0.78f*pixW2;
 			float xly = -0.40f*pixH2; 
 
 			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
@@ -941,7 +941,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 
 		// horizon line - longer and thicker
-		mLine.SetWidth(4);
+		mLine.SetWidth(6); //4
 		mLine.SetVerts(-0.95f  * pixW2, 0.0f, z,
 				0.95f  * pixW2, 0.0f, z);
 		mLine.draw(matrix);
@@ -2714,7 +2714,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//-----------------------------------------------------------------------------
 	// todo - render fixed RMI markers
 	
-	float roseScale = 0.30f; //0.33f; //0.5f
+	float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
 	
 	private void renderCompassRose(float[] matrix)
 	{

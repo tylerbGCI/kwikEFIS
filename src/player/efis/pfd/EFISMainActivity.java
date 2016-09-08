@@ -154,12 +154,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//updateMenuTitles();
 		
 		switch (item.getItemId()) {
-		case R.id.preferences:
+		case R.id.settings:
 			// Launch settings activity
 			Intent i = new Intent(this, EFISPrefSettings.class);
 			startActivity(i); 
 			break;
-		case R.id.airplane:   
+		case R.id.manage:   
 			// Launch manage activity  
 			Intent j = new Intent(this, EFISPrefManage.class);  
 			startActivity(j);   
@@ -188,8 +188,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return super.onKeyDown(keyCode, event);  
 	} 
 	*/
-	
-
 
 	/* This does not seem to do anything 
 	@Override
