@@ -156,12 +156,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		switch (item.getItemId()) {
 		case R.id.preferences:
 			// Launch settings activity
-			Intent i = new Intent(this, EFISPreferences.class);
+			Intent i = new Intent(this, EFISPrefSettings.class);
 			startActivity(i); 
 			break;
 		case R.id.airplane:   
 			// Launch manage activity  
-			Intent j = new Intent(this, EFISManage.class);  
+			Intent j = new Intent(this, EFISPrefManage.class);  
 			startActivity(j);   
 			break;
 			// more code...  
@@ -254,7 +254,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// end location
 
 		// Preferences
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 		PreferenceManager.setDefaultValues(this, R.xml.airplane , false);
 		
 		// Set the window to be full brightness

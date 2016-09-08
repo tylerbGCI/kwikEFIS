@@ -32,7 +32,7 @@ public class SettingsActivity extends PreferenceActivity implements
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    addPreferencesFromResource(R.xml.preferences);
+    addPreferencesFromResource(R.xml.settings);
     
     // show the current value in the settings screen
     for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
