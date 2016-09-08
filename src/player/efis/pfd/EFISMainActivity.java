@@ -44,7 +44,6 @@ import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import android.content.SharedPreferences;
@@ -108,12 +107,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private Gpx mGpx;  // wpt database
 	
 	// Digital filters
-	DigitalFilter filterRotGyro = new DigitalFilter(8);   //64
+	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
 	DigitalFilter filterSlip = new DigitalFilter(32);  //32
 	DigitalFilter filterRoll = new DigitalFilter(16);  //16 
 	DigitalFilter filterPitch = new DigitalFilter(16); //16 
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
-	DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
+	//not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
 	DigitalFilter filterfpvX = new DigitalFilter(128); //32
 	DigitalFilter filterfpvY = new DigitalFilter(128); //32
 	DigitalFilter filterG = new DigitalFilter(32); //32
@@ -125,16 +124,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// 
 	//  Add the action bar buttons     
 	//
+	//Menu menu;
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
+		//this.menu = menu;
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	
 	@Override
 	public void onBackPressed() 
 	{
@@ -151,15 +151,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{
+		//updateMenuTitles();
+		
 		switch (item.getItemId()) {
 		case R.id.preferences:
 			// Launch settings activity
-			Intent i = new Intent(this, AppPreferences.class);
+			Intent i = new Intent(this, EFISPreferences.class);
 			startActivity(i); 
 			break;
 		case R.id.airplane:   
-			// Launch airplane activity  
-			Intent j = new Intent(this, AppSettings.class);  
+			// Launch manage activity  
+			Intent j = new Intent(this, EFISManage.class);  
 			startActivity(j);   
 			break;
 			// more code...  
@@ -406,7 +408,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			break;
 
 		}
-		update(event.values); 
+		update(/*event.values*/); 
 	}
 	
 
@@ -457,7 +459,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setUnServiceableAh();
 			}
 		}
-	}
+		update(/*event.values*/); 
+}
 
 	
 	@Override
@@ -766,7 +769,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	
 	
 	
-	private void update(float[] vectors)  
+	private void update(/*float[] vectors*/)  
 	{
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
@@ -784,7 +787,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		pitchValue = -sensorComplementaryFilter.getPitch();
 		rollValue = -sensorComplementaryFilter.getRoll(); 
 		
-		gyro_rateOfTurn = (float) filterRotGyro.runningAverage(-gyro[0]);  
+		gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);  
 		slipValue  = filterSlip.runningAverage(accel[1]);
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
@@ -827,26 +830,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//
 			float deltaA, fpvX = 0, fpvY = 0; 
 			if ( hasGps && hasSpeed) {
-				if (gps_speed > 5) {
-					// Testing shows that a good value is sensorBias of 75% gyro and 25% gps on most devices
-					rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
-		
-					// the Flight Path Vector (FPV) 
-					deltaA = compassRose180(gps_course - orientationAzimuth); 
-					fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
-					fpvY = (float) filterfpvY.runningAverage(-sensorComplementaryFilter.getPitchRate()*100);
-					
-			  	// We have valid GPS augmentation. Use the gps roc for the pitch
-					// and the gyro sensor for the birdie  
-					pitchValue = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI); 
-					
-					// Pitch and birdie
-					mGLView.setDisplayAirport(true);
-					mGLView.setFPV(fpvX, fpvY); // need to clean this up
-				}
-				else {
-					pitchValue = 0;
-				}
+				// Testing shows that reasonable value is sensorBias of 75% gyro and 25% gps on most devices
+				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
+	
+				// the Flight Path Vector (FPV) 
+				deltaA = compassRose180(gps_course - orientationAzimuth); 
+				fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
+				fpvY = (float) (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+				
+				// Pitch and birdie
+				mGLView.setDisplayAirport(true);
+				mGLView.setFPV(fpvX, fpvY); // need to clean this up
 			}
 			else {
 				fpvX = 0;//180;  

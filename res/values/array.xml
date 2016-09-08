@@ -2,19 +2,19 @@
 <resources>
 
     <string-array name="sensor_bias_names">
-        <item>95%</item>
-        <item>75% (recommended)</item>
-        <item>50%</item>
-        <item>25%</item>
-        <item> 5%</item>
-    </string-array>
+        <item>100</item>
+        <item> 75 (recommended)</item>
+        <item> 50</item>
+        <item> 25</item>
+        <item>  0</item>
+        </string-array>
     <string-array name="sensor_bias_values">
-        <item>0.95f</item>
+        <item>1.0f</item>
         <item>0.75f</item>
         <item>0.50f</item>
         <item>0.25f</item>
-        <item>0.05f</item>
-    </string-array>
+        <item>0.00f</item>
+        </string-array>
     
     <string-array name="region_names">
         <item>South Africa / Australia</item>
@@ -33,9 +33,9 @@
         <item>J160 - Jabiru</item>
         <item>LGEZ - Rutan Long EZ</item>
         <item>PA28 - Piper Cherokee</item>
-        <item>RV6 - Vans</item>
-        <item>RV7 - Vans</item>
-        <item>RV8 - Vans</item>
+        <item>RV6 - Vans RV-6</item>
+        <item>RV7 - Vans RV-7</item>
+        <item>RV8 - Vans RV-8</item>
         <item>T18 - Thorp</item>
         <item>W10 - Wittman Tailwind</item>
     </string-array>
