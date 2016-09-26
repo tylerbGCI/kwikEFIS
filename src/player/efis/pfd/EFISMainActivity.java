@@ -780,8 +780,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sensorComplementaryFilter.getGyro(gyro); 		// Use the gyroscopes for the attitude  
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
-		pitchValue = -sensorComplementaryFilter.getPitch();
-		rollValue = -sensorComplementaryFilter.getRoll(); 
+		//pitchValue = -sensorComplementaryFilter.getPitch();
+		//rollValue = -sensorComplementaryFilter.getRoll(); 
+		pitchValue = -sensorComplementaryFilter.getPitchAcc();
+		rollValue = -sensorComplementaryFilter.getRollAcc(); 
 		
 		gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);  
 		slipValue  = filterSlip.runningAverage(accel[1]);
