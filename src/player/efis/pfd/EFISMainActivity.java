@@ -110,7 +110,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
 	DigitalFilter filterSlip = new DigitalFilter(32);  //32
 	DigitalFilter filterRoll = new DigitalFilter(16);  //16 
-	DigitalFilter filterPitch = new DigitalFilter(16); //16 
+	DigitalFilter filterPitch = new DigitalFilter(32); //16 
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
 	//not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
 	DigitalFilter filterfpvX = new DigitalFilter(128); //32
@@ -696,7 +696,53 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		else return false;
 	}
 	
-		
+
+	//-------------------------------------------------------------------------
+	// Utility function to 
+	// Perform a simple calibration
+	//
+	float pitchOffset = 0; 
+	//float _RollOffset = Float.MAX_VALUE;
+	float _PitchOffset = Float.MAX_VALUE;
+	long _cal_ms, cal_ms;
+	boolean CalibratePitch() 
+	{
+		if (calibrationCount < CAL_MAX) { 
+			// wait 2 seconds between calibrations
+			time.setToNow();
+			cal_ms = time.toMillis(true);
+		  if ((double) cal_ms - (double) _cal_ms < 2000) {
+		  	return false;   // 2 seconds have not elapsed yet
+		  }
+		  _cal_ms = cal_ms; 
+  		
+			pitchOffset = sensorComplementaryFilter.getPitchAcc();
+			
+			// the the pitch is sensible, ie < 25 degrees    
+			if (Math.abs(pitchOffset) < 25) {  
+				mGLView.setCalibratingMsg(true, String.format("CALIBRATE %d", CAL_MAX-calibrationCount));  
+				calibrationCount++;  
+			}  
+			else  { 
+				mGLView.setCalibratingMsg(true, "CHECK MOUNT ANGLE");
+				calibrationCount = 0;
+			}
+			
+			_PitchOffset = pitchOffset;  
+			return false; 
+		}
+		else if (calibrationCount == CAL_MAX) {     
+			calibrationCount++;
+			mGLView.setMSG(0, null);
+			mGLView.setCalibratingMsg(false, "DONE");  
+			return false; //true;
+		} 
+		else {
+			return true; //false;
+		}
+	}
+	
+	
 	//-------------------------------------------------------------------------
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a very simple flight simulator
@@ -770,6 +816,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
 
+		CalibratePitch();
+		
 		//
 		// Read the Sensors    
 		// 
@@ -789,6 +837,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		slipValue  = filterSlip.runningAverage(accel[1]);
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
+
+		// Apply the pitch mounting offset
+		pitchValue += pitchOffset;
 		
 		// 
 		// Check if we have a valid GPS
@@ -867,7 +918,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Apply a little filtering to the pitch and bank
 		pitchValue = filterPitch.runningAverage(pitchValue); 
 		rollValue = filterRoll.runningAverage(compassRose180(rollValue));  
-
+		
 		//
 		// Get the battery percentage 
 		//
@@ -878,7 +929,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		String s; // general purpose string    
 		
-		mGLView.setPitch(pitchValue); 
+		mGLView.setPitch(pitchValue);  
 		mGLView.setRoll(rollValue); 
 		mGLView.setBatteryPct(batteryPct); 
 		mGLView.setGForce(loadfactor);  
