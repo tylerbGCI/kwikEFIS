@@ -880,6 +880,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		innerTic = 0.10f * pixW2; 
 		outerTic = 0.13f * pixW2;
 
+		// top
 		for (i = 90 ; i > 0; i=i-10) {      
 			iPix = (float) i * pixPerDegree;
 			String t = Integer.toString(i); 
@@ -917,7 +918,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 			glText.drawC(t, 0.2f * pixW2, iPix + glText.getCharHeight() / 2);             
 			glText.end();                                   
-
 		}
 
 		mLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // grey
@@ -929,8 +929,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 		}
 
-		mLine.SetVerts( -0.1f  * pixW2, 5.0f * pixPerDegree*2, z,
-				             0.1f  * pixW2, 5.0f * pixPerDegree*2, z);
+		mLine.SetVerts( -0.1f  * pixW2, 5.0f * pixPerDegree, z,
+				             0.1f  * pixW2, 5.0f * pixPerDegree, z);
 		mLine.draw(matrix);
 
 		for (i = 4; i >=1; i=i-1) {
@@ -955,7 +955,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 		}
 
-
 		mLine.SetVerts(-0.1f  * pixW2, -5.0f * pixPerDegree, z,
 				0.1f  * pixW2, -5.0f * pixPerDegree, z);
 		mLine.draw(matrix);
@@ -967,6 +966,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 		}
 
+		// bottom
 		//for (i = -10; i>=-270; i=i-10) { 
 		for (i = -10; i >= -90; i=i-10) {
 			iPix = (float) i * pixPerDegree;
