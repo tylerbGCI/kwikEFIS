@@ -266,8 +266,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
 
-    // This should never happen but we catch and force
-    // it to something known it just in case
+    // This should never happen but we catch and force it to something known it just in case
     if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";  
     
     String region = settings.getString("RegionDatabase", "zar.aus");
@@ -517,7 +516,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, SP.getBoolean("displayRmi", false));
 		
 		bLockedMode = SP.getBoolean("lockedMode", false);
-		sensorBias = Float.valueOf( SP.getString("sensorBias", "0.75f") );
+		sensorBias = Float.valueOf( SP.getString("sensorBias", "1.0f") ); 
 
 		// If we changed to Demo mode, use the current GPS as seed
 		if (bDemoMode != SP.getBoolean("demoMode", false)) {
