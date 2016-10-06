@@ -15,7 +15,7 @@
             android:title="Tapes" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="infoPage"
             android:summary="Automatic details page"
             android:title="Details" />
