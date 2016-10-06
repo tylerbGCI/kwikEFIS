@@ -32,7 +32,7 @@ import android.util.Log;
 enum AircraftModel 
 {
 	GENERIC,
-	AZTEC,
+	AZTEC, 
 	CRICRI,
 	CRUZ,
 	J160,
@@ -278,7 +278,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		renderPitchMarkers(scratch1);
 
 		// FPV only means anything if we have speed and rate of climb, ie altitude
-		// displayFPV = displayFPV && ServiceableAlt && ServiceableAsi;
 		if (displayFPV) renderFPV(scratch1);  // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch		
 
@@ -372,9 +371,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		pixM2 = pixM/2;
 
 		// Set the window size specific scales, positions and sizes (nothing dynamic yet...)
-		pitchInView = 25;//25.0f;	// degrees to display from horizon to top of viewport
-		IASInView   = 40;//25.0f;    // IAS units to display from center to top of viewport
-		MSLInView   = 300;//250.0f;	// IAS units to display from center to top of viewport
+		pitchInView = 25.0f; //12.5f;//25.0f;	// degrees to display from horizon to top of viewport
+		IASInView   = 40.0f;//25.0f;    // IAS units to display from center to top of viewport
+		MSLInView   = 300.0f;//250.0f;	// IAS units to display from center to top of viewport
 
 		//Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest  
 		Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 2.99f, 7f); //hack for Samsung G2
@@ -657,7 +656,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, pixPerDegree;
 
 		z = zfloat;
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM2 / 25;
 
 		// fwd triangles
 		mTriangle.SetWidth(1); 
@@ -701,7 +701,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float _sinI, _cosI;
 
 		z = zfloat;
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM2 / 25;
 
 		// The lubber line - W style
 		if (false) {
@@ -857,7 +858,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, pixPerDegree;
 
 		z = zfloat;
-		pixPerDegree = pixM2 / pitchInView;							// Put the markers in open space at zero pitch
+		//pixPerDegree = pixM2 / pitchInView;							// Put the markers in open space at zero pitch
+		pixPerDegree = pixM2 / 25;							// Put the markers in open space at zero pitch
 
 		mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
 		mTriangle.SetVerts(-0.02f  * pixW2, 14 * pixPerDegree, z,
@@ -871,14 +873,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		int i;
 		float innerTic, outerTic, z, pixPerDegree, iPix;
 
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView*2;
+		pixPerDegree = pixM / pitchInView;
 		z = zfloat;
 
 		innerTic = 0.10f * pixW2; 
 		outerTic = 0.13f * pixW2;
 
-
-		//for (i = 270; i > 0; i=i-10) {
 		for (i = 90 ; i > 0; i=i-10) {      
 			iPix = (float) i * pixPerDegree;
 			String t = Integer.toString(i); 
@@ -924,12 +925,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		for (i = 9; i >= 6; i=i-1) {
 			iPix = (float) i * pixPerDegree;
 			mLine.SetVerts(-0.03f  * pixW2, iPix, z, 
-					0.03f  * pixW2, iPix, z);
+				            	0.03f  * pixW2, iPix, z);
 			mLine.draw(matrix);
 		}
 
-		mLine.SetVerts( -0.1f  * pixW2, 5.0f * pixPerDegree, z,
-				0.1f  * pixW2, 5.0f * pixPerDegree, z);
+		mLine.SetVerts( -0.1f  * pixW2, 5.0f * pixPerDegree*2, z,
+				             0.1f  * pixW2, 5.0f * pixPerDegree*2, z);
 		mLine.draw(matrix);
 
 		for (i = 4; i >=1; i=i-1) {
@@ -1020,7 +1021,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			be ovesized, hence the multiplier 90/ pitchInView.
 		 */
 
-		pixPitchViewMultiplier = 90.0f / pitchInView * pixH2;
+		//pixPitchViewMultiplier = 90.0f / pitchInView * pixH2;
+		pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
 		pixOverWidth = pixW2 * 1.42f;
 		z = zfloat;
 
@@ -1123,9 +1125,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	public void setPitch( float degrees )
 	{
 		pitch = (float) -degrees;
-
-		pitchTranslation = pitch / pitchInView * pixH2;
-		//updateGL();
+		//pitchTranslation = pitch / pitchInView*2 * pixH2;
+		pitchTranslation = pitch / pitchInView * pixH;
 	}
 
 	/*!
@@ -1983,7 +1984,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		float z, pixPerDegree;
 
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM2 / 25;
 		z = zfloat;
 
 		float radius = 10*pixH/736;  //12
@@ -2047,7 +2049,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, pixPerDegree, x1, y1;
 		float radius = 5;
 
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM / pitchInView;
 		z = zfloat;
 
 		// 0.16667 deg lat  = 10 nm
@@ -2309,7 +2312,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//double acLat, acLon, alt;
 		//float radius = 5;
 
-		pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM2 / 25;
 
 		z = zfloat;
 		// Draw the selecting triangle spinner buttons
@@ -2410,6 +2414,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		float z, pixPerDegree, x1, y1;
 		pixPerDegree = pixM2 / pitchInView;
+		pixPerDegree = pixM2 / 25;
 		z = zfloat;
 
 		// Draw the selecting triangle spinner buttons
