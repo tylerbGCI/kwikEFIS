@@ -78,6 +78,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final int CAL_MAX = 6;//500;//350;
 	private static final int SLIP_SENS = 25; //50;	// Arbitrary choice
 	private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
+	
+	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
+	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
 	float SlipOffset = 0;
 	float GmeterOffset = 0; 
@@ -244,7 +247,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//Criteria criteria = new Criteria();
 		//provider = locationManager.getBestProvider(criteria, false);
 		provider = LocationManager.GPS_PROVIDER;
-		locationManager.requestLocationUpdates(provider, 400, 1, this);  // 400ms or 1m
+		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		locationManager.addGpsStatusListener(this);
 		Location location = locationManager.getLastKnownLocation(provider);
 		// end location
@@ -347,8 +350,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// this is a good place to re-allocate them.
 		mGLView.onResume();
 
-		locationManager.requestLocationUpdates(provider, 400, 1, this);  // 400ms or 1m
-		//locationManager .addNmeaListener(this);
+		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+		//locationManager.addNmeaListener(this);
 		
 		registerSensorManagerListeners();
 	}
@@ -403,7 +406,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			break;
 
 		}
-		update(/*event.values*/); 
+		updateEFIS(/*event.values*/); 
 	}
 	
 
@@ -454,7 +457,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setUnServiceableAh();
 			}
 		}
-		update(/*event.values*/); 
+		updateEFIS(/*event.values*/); 
 }
 
 	
@@ -686,7 +689,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//-------------------------------------------------------------------------
 	// Utility function to Check GPS status
 	//
-	// We assume no GPS is availaible if there has not been a valid
+	// We assume no GPS is available if there has not been a valid
 	// altitude update in 10 seconds
 	//
 	boolean isGPSAvailable() 
@@ -809,8 +812,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float slipValue;
 	
 	
-	
-	private void update(/*float[] vectors*/)  
+	//-------------------------------------------------------------------------
+	// Effectively the main execution loop. updateEFIS will get called when 
+	// something changes, eg a sensor has new data or new gps fix becomes available. 
+	// 
+	private void updateEFIS(/*float[] vectors*/)  
 	{
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
@@ -878,7 +884,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//
 			float deltaA, fpvX = 0, fpvY = 0; 
 			if ( hasGps && hasSpeed) {
-				// Testing shows that reasonable value is sensorBias of 75% gyro and 25% gps on most devices
+				// Testing shows that reasonable value is sensorBias of 75% gyro and 25% gps on most older devices,
+				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100% 
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
 	
 				// the Flight Path Vector (FPV) 
@@ -928,20 +935,21 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		String s; // general purpose string    
 		
-		mGLView.setPitch(pitchValue);  
-		mGLView.setRoll(rollValue); 
-		mGLView.setBatteryPct(batteryPct); 
-		mGLView.setGForce(loadfactor);  
+		mGLView.setPitch(pitchValue);                           // in degrees 
+		mGLView.setRoll(rollValue);                             // in degrees 
+		mGLView.setBatteryPct(batteryPct);                      // in percentage 
+		mGLView.setGForce(loadfactor);                          // in gunits
 		mGLView.setSlip(SLIP_SENS * slipValue); 
 		mGLView.setHeading((float) Math.toDegrees(gps_course)); // in degrees
-		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	    // in feet
-		mGLView.setASI(gps_speed * 1.94384449f);            	// in knots
-		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	// in fpm
+		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
+		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
+		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);		
 		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn); 
-		//mGLView.setTurn(0.95f*gyro_rateOfTurn + 0.05f*gps_rateOfTurn); 
 		s = String.format("GPS: %d / %d", gps_infix, gps_insky); 		
 		mGLView.setMSG(4, s);
+
+		// used for debugging
 		// s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000); 
 		// mGLView.setMSG(3, s);
 	  //s = String.format("BIAS: %d", (int) (sensorBias*100));  
