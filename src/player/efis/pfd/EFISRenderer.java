@@ -873,7 +873,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		int i;
 		float innerTic, outerTic, z, pixPerDegree, iPix;
 
-		//pixPerDegree = pixM2 / pitchInView*2;
 		pixPerDegree = pixM / pitchInView;
 		z = zfloat;
 
@@ -1021,7 +1020,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			be ovesized, hence the multiplier 90/ pitchInView.
 		 */
 
-		//pixPitchViewMultiplier = 90.0f / pitchInView * pixH2;
 		pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
 		pixOverWidth = pixW2 * 1.42f;
 		z = zfloat;
@@ -1078,8 +1076,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		{
 			float[] squarePoly = {
 					-pixOverWidth, 0.0f + 1.0f/pixH2, z,
-					pixOverWidth,  0.0f + 1.0f/pixH2, z,
-					pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth, 0.0f + 1.0f/pixH2, z,
+					 pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
 					-pixOverWidth, 1.0f * pixPitchViewMultiplier, z
 			};
 			mSquare.SetVerts(squarePoly);
@@ -1093,8 +1091,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		{
 			float[] squarePoly = {
 					-pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
-					pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
-					pixOverWidth,  2.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth,  2.0f * pixPitchViewMultiplier, z,
 					-pixOverWidth,  2.0f * pixPitchViewMultiplier, z
 			};
 			mSquare.SetVerts(squarePoly);
@@ -1120,12 +1118,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	/*!
-	Set the pitch
+	Set the pitch angle
 	 */
 	public void setPitch( float degrees )
 	{
 		pitch = (float) -degrees;
-		//pitchTranslation = pitch / pitchInView*2 * pixH2;
 		pitchTranslation = pitch / pitchInView * pixH;
 	}
 
@@ -1134,17 +1131,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	 */
 	void setRoll( float degrees )
 	{
-		//roll = (GLfloat)(degrees % 360);
 		roll = (float) degrees;
 		rollRotation = roll;
-		//updateGL();
 	}
 
 
 	//-------------------------------------------------------------------------
 	// Altimeter Indicator
 	//
-
 	void renderFixedALTMarkers(float[] matrix)
 	{
 		float z;
@@ -1233,7 +1227,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		int i, j;
 		float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
 
-		pixPerUnit = pixM2/MSLInView ;
+		pixPerUnit = pixM2 / MSLInView ;
 		z = zfloat;
 
 		innerTic = 0.70f * pixM2;	// inner & outer are relative to the vertical scale line
@@ -2049,7 +2043,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, pixPerDegree, x1, y1;
 		float radius = 5;
 
-		//pixPerDegree = pixM2 / pitchInView;
 		pixPerDegree = pixM / pitchInView;
 		z = zfloat;
 
