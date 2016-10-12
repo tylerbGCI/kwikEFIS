@@ -112,12 +112,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
 	DigitalFilter filterSlip = new DigitalFilter(32);  //32
-	DigitalFilter filterRoll = new DigitalFilter(16);  //16 
-	DigitalFilter filterPitch = new DigitalFilter(32); //16 
+	DigitalFilter filterRoll = new DigitalFilter(8);   //16 
+	DigitalFilter filterPitch = new DigitalFilter(8); //16 
 	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
 	//not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
-	DigitalFilter filterfpvX = new DigitalFilter(128); //32
-	DigitalFilter filterfpvY = new DigitalFilter(128); //32
+	DigitalFilter filterfpvX = new DigitalFilter(256); //128
+	DigitalFilter filterfpvY = new DigitalFilter(256); //128
 	DigitalFilter filterG = new DigitalFilter(32); //32
 	DigitalFilter filterGpsSpeed = new DigitalFilter(6); //4
 	DigitalFilter filterGpsAltitude = new DigitalFilter(6); //4
@@ -531,7 +531,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		bDemoMode = SP.getBoolean("demoMode", false);
 		 
 		// If we changed to or from HUD mode, a calibration is required
-		// not needed anymore?? if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0; 
+		if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0; 
 		bHudMode = SP.getBoolean("displayMirror", false);
 
 		// If the aircraft is changed, update the paramaters
@@ -720,8 +720,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
   		
 			pitchOffset = sensorComplementaryFilter.getPitchAcc();
 			
-			// the the pitch is sensible, ie < 25 degrees    
-			if (Math.abs(pitchOffset) < 25) {  
+			// the the pitch is sensible, ie <  45 degrees    
+			if (Math.abs(pitchOffset) < 45) {  
 				mGLView.setCalibratingMsg(true, String.format("CALIBRATE %d", CAL_MAX-calibrationCount));  
 				calibrationCount++;  
 			}  
@@ -821,7 +821,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
 
-		CalibratePitch();
+		//CalibratePitch();
 		
 		//
 		// Read the Sensors    
@@ -844,7 +844,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		loadfactor = filterG.runningAverage(loadfactor);
 
 		// Apply the pitch mounting offset
-		pitchValue += pitchOffset;
+		// pitchValue += pitchOffset;
 		
 		// 
 		// Check if we have a valid GPS
@@ -856,6 +856,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		hasGps = true; //debug
 		hasSpeed = true; //debug
 		gps_speed = 60; //m/s debug
+		gps_rateOfClimb = 1.0f; //m/s debug
 		*/
 		// debug
 		
@@ -884,14 +885,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			//
 			float deltaA, fpvX = 0, fpvY = 0; 
 			if ( hasGps && hasSpeed) {
-				// Testing shows that reasonable value is sensorBias of 75% gyro and 25% gps on most older devices,
+				// Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
 				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100% 
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
+				pitchValue = (float) (Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
 	
 				// the Flight Path Vector (FPV) 
 				deltaA = compassRose180(gps_course - orientationAzimuth); 
 				fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose 
-				fpvY = (float) (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+				fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / Math.PI);    // simple RA of the two velocities
 				
 				// Pitch and birdie
 				mGLView.setDisplayAirport(true);
@@ -901,7 +903,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				fpvX = 0;//180;  
 				fpvY = 0;//180; 
 				
-				// The dreaded red crosses if required
+				// The dreaded red crosses are required
 				mGLView.setDisplayAirport(false);		
 				mGLView.setUnServiceableAsi();
 				mGLView.setUnServiceableAlt();
