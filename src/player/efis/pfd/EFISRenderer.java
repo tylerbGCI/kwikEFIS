@@ -2302,8 +2302,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	void renderWptSelValue(float[] matrix)
 	{
 		float z, pixPerDegree, x1, y1;
-		//double acLat, acLon, alt;
-		//float radius = 5;
 
 		//pixPerDegree = pixM2 / pitchInView;
 		pixPerDegree = pixM2 / 25;
@@ -2471,7 +2469,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-
+	//---------------------------------------------------------------------------
+	// Handle the tap events
+	//
 	void setActionDown(float x, float y)
 	{
 		// 0,0 is top left in landscape
@@ -2495,7 +2495,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// Determine which digit is changing
 		for (int i = 0; i < 4; i++) {
-			//float xPos = (leftC + (float) i/10f);
 			if (Math.abs(mX - (leftC + 0.0f)) < 0.05) {  //0.6
 				pos = 0;
 			} 
