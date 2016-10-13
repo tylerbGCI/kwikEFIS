@@ -29,7 +29,7 @@
 
     <PreferenceCategory android:title="NAVIGATION" > 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="displayFlightDirector"
             android:summary="Engage Flight Director"
             android:title="Flight Director" />
