@@ -852,12 +852,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		hasGps = isGPSAvailable();
 		
 		// debug 
-		/*
-		hasGps = true; //debug
-		hasSpeed = true; //debug
-		gps_speed = 60; //m/s debug
-		gps_rateOfClimb = 1.0f; //m/s debug
-		*/
+		if (false) {
+			hasGps = true; //debug
+			hasSpeed = true; //debug
+			gps_speed = 3;//60; //m/s debug
+			gps_rateOfClimb = 1.0f; //m/s debug
+		}
 		// debug
 		
 		// 
@@ -884,7 +884,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			// Calculate the augmented bank angle and also the flight path vector 
 			//
 			float deltaA, fpvX = 0, fpvY = 0; 
-			if ( hasGps && hasSpeed) {
+			//if (hasGps && hasSpeed) {
+			if (hasGps && gps_speed > 5) {
 				// Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
 				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100% 
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
@@ -899,7 +900,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setDisplayAirport(true);
 				mGLView.setFPV(fpvX, fpvY); // need to clean this up
 			}
+			else if (hasGps && gps_speed < 5) {
+				// taxi mode
+				rollValue = 0;      
+				pitchValue = 0;  
+			}
 			else {
+				// No GPS no speed ... no idea what the AH is :-(
 				fpvX = 0;//180;  
 				fpvY = 0;//180; 
 				
@@ -910,10 +917,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setUnServiceableDi(); 
 				mGLView.setUnServiceableAh();
 
-				// Force a black screen and no birdie
+				// Force a blank screen and no birdie
 				rollValue = 0;      
 				pitchValue = -270;  
-	  		mGLView.setRoll(0); 
 				mGLView.setFPV(180, 180);   
 			}
 		}
