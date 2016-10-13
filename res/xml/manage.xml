@@ -29,8 +29,8 @@
             android:entries="@array/sensor_bias_names"
             android:entryValues="@array/sensor_bias_values"
             android:key="sensorBias"
-            android:summary="Select the sensor/gps bias"
-            android:title="Sensor bias" />
+            android:summary="Select the bank sensor/gps bias"
+            android:title="Bank Sensor" />
 
         <CheckBoxPreference
             android:defaultValue="false"
