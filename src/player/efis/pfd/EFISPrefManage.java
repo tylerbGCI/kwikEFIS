@@ -67,6 +67,15 @@ public class EFISPrefManage extends PreferenceActivity
 	  lp = (ListPreference) findPreference("version"); 
 	  lp.setSummary(version); 
 	  
+            //CharSequence[] entries = { "English", "French" };
+            //CharSequence[] entryValues = {"1" , "2"};
+            CharSequence[] entries = { version };
+            CharSequence[] entryValues = {"1"};
+            lp.setEntries(entries);
+            lp.setDefaultValue("1");
+            lp.setEntryValues(entryValues);
+  	  
+	  
 	  
 	  
 	}
