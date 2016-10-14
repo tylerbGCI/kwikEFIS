@@ -44,8 +44,13 @@
             android:title="Locked Mode" />
 
         <ListPreference
+            android:defaultValue="0.0.0"
             android:key="version"
-            android:summary="1.0.0"
+
+            android:entries="@array/version_names"
+            android:entryValues="@array/version_values"
+            
+            android:summary="0.0.0"
             android:title="kwikEFIS version" />
         
         
