@@ -760,7 +760,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 	private void Simulate()
 	{
-		float pitchValue = this.pitchValue;// + this.PitchOffset;  // hack to work around 
+		pitchValue = -sensorComplementaryFilter.getPitch();
+		rollValue = -sensorComplementaryFilter.getRoll(); 
+		//float pitchValue = this.pitchValue;// + this.PitchOffset;  // hack to work around 
 		
 		hasSpeed = true; 
 		hasGps = true;
