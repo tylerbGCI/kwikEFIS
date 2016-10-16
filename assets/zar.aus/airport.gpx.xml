@@ -19107,12 +19107,6 @@
 		<cmt>Lake Cargelligo, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
-	<wpt lat="-31.016700" lon="115.333000">
-		<magvar>1.4</magvar>
-		<name>YLCI</name>
-		<cmt>Lancelin,WA, AU</cmt>
-		<type>AIRPORT</type>
-	</wpt>
 	<wpt lat="-36.815000" lon="145.348000">
 		<ele>50.292</ele>
 		<magvar>348.6</magvar>
