@@ -12336,8 +12336,7 @@
 		<ele>862.2792</ele>
 		<magvar>18.1</magvar>
 		<name>FAKN</name>
-		<cmt>Kruger Mpumalanga International,KRUGER MPUMALANGA,SF
-		</cmt>
+		<cmt>Kruger Mpumalanga International,KRUGER MPUMALANGA,SF</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.081000" lon="27.725700">
@@ -16041,7 +16040,6 @@
 		<name>YARA</name>
 		<cmt>Ararat, AU</cmt>
 		<type>AIRPORT</type>
-					
 	</wpt>
 	<wpt lat="-21.676700" lon="136.678000">
 		<magvar>354.5</magvar>
