@@ -133,18 +133,10 @@ public class SensorComplementaryFilter
 			float roll_centripetal = (float) (Math.atan2(rot*speed, SensorManager.GRAVITY_EARTH)* 180 / Math.PI);
 
 			bank = roll_centripetal;  // no corrections
-			///*
+
 			// Apply in a correction for any slip / skid
 			float roll_accel = filterRollAcc.runningAverage(this.getRollAcc());
-			
 		  bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
-			/*if (Math.abs(roll_accel) > 5)
-			  bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
-			else
-				bank = roll_centripetal;  // no corrections
-				*/
-			//*/
-				
 		}
 		return bank;
 	} 
