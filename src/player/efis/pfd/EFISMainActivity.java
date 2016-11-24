@@ -902,7 +902,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setDisplayAirport(true);
 				mGLView.setFPV(fpvX, fpvY); // need to clean this up
 			}
-			else if (hasGps && gps_speed < 5) {
+			else if (hasGps && gps_speed < 9) {
 				// taxi mode
 				rollValue = 0;      
 				pitchValue = 0;  
