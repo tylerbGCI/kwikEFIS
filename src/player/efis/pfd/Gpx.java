@@ -79,8 +79,6 @@ class Gpx
 	public void loadDatabase(String database)
 	{
 		region = database;
-		//while (aptList.isEmpty() == false)
-		//  aptList.clear();
 		aptList.clear();
 		
 		XmlPullParserFactory pullParserFactory;
@@ -88,7 +86,6 @@ class Gpx
 			pullParserFactory = XmlPullParserFactory.newInstance();
 			XmlPullParser parser = pullParserFactory.newPullParser();
 
-			//InputStream in_s = context.getAssets().open("airport.gpx.xml");
 			InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			parser.setInput(in_s, null);
@@ -105,7 +102,6 @@ class Gpx
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
 	{
-		//ArrayList<Wpt> gpx = null;
 		int eventType = parser.getEventType();
 		Apt currentWpt = null;
 
@@ -114,7 +110,7 @@ class Gpx
 			switch (eventType) {
 			case XmlPullParser.START_DOCUMENT:
 			  // aptList = new ArrayList();
-				// To avoid the ConcurrentModificationException
+				// To help avoid the ConcurrentModificationException
 				aptList.clear();
 				break;
 
