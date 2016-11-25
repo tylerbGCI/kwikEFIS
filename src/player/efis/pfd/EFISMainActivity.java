@@ -818,7 +818,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Effectively the main execution loop. updateEFIS will get called when 
 	// something changes, eg a sensor has new data or new gps fix becomes available. 
 	// 
-	private void updateEFIS(/*float[] vectors*/)  
+	private void updateEFIS()  
 	{
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
