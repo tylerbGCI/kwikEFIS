@@ -9,7 +9,7 @@ import android.hardware.SensorManager;
 public class SensorComplementaryFilter
 {
 	private final float ALPHA = 0.998f; //0.9998f; //0.98f is the default 
-	orientation_t orientation = orientation_t.VERTICAL_LANDSCAPE; 
+	orientation_t orientation = orientation_t.VERTICAL_LANDSCAPE;
 
 	private final float ACCELEROMETER_SENSITIVITY = 1.0f; //8192.0f; 
 	private final float GYROSCOPE_SENSITIVITY = 1.0f;  //65.536f;
@@ -165,7 +165,7 @@ public class SensorComplementaryFilter
 			case VERTICAL_LANDSCAPE: 
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
 				roll  += (gyrData[2] * 180 / M_PI) * dt;  // Angle around the Z-axis
-				pitch += (gyrData[1] * 180 / M_PI) * dt; // Angle around the X-axis
+				pitch += (gyrData[1] * 180 / M_PI) * dt; // Angle around the Y-axis
 				
 				//String s = String.format("pitch:%3.4f g[0]:%3.4f", pitch, gyrData[0]);
 				//System.out.println(s); 
@@ -179,10 +179,25 @@ public class SensorComplementaryFilter
 				pitch = pitch * ALPHA + pitchAcc * (1 - ALPHA);
 				break;
 
-			case VERTICAL_PORTRAIT: 
-				// TODO
+			//--------------------------------------------------------------------------------------
+			case VERTICAL_PORTRAIT:
+				// Integrate the gyroscope data -> int(angularSpeed) = angle
+				roll  += (gyrData[2] * 180 / M_PI) * dt;  // Angle around the Z-axis
+				pitch -= (gyrData[0] * 180 / M_PI) * dt; // Angle around the X-axis
+
+				//String s = String.format("pitch:%3.4f g[0]:%3.4f", pitch, gyrData[0]);
+				//System.out.println(s);
+
+				// Turning around the Z axis results in a vector on the X-axis
+				rollAcc = (float) + (Math.atan2((float)accData[0], (float)accData[1]) * 180 / M_PI);
+				roll = roll * ALPHA + rollAcc * (1 - ALPHA);
+
+				// Turning around the X axis results in a vector on the Y-axis
+				pitchAcc = (float) (Math.atan2((float)accData[2], (float)accData[1]) * 180 / M_PI);
+				pitch = pitch * ALPHA + pitchAcc * (1 - ALPHA);
+
 				break;
-				
+
 			case HORIZONTAL_PORTRAIT:
 			default:
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
