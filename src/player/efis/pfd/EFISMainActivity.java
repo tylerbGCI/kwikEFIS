@@ -165,7 +165,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		case R.id.manage:   
 			// Launch manage activity  
 			Intent j = new Intent(this, EFISPrefManage.class);  
-			startActivity(j);   
+			startActivity(j);
 			break;
 			// more code...  
 		default:
