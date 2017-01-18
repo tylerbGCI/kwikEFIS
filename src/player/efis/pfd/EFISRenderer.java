@@ -361,13 +361,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		//b2 start
 		// Capture the window scaling for use by the rendering functions
-		pixW = width; //(int) (width*0.5);
+		pixW = width; 
 		pixH = height;
 		pixW2 = pixW/2;
 		pixH2 = pixH/2;
 
 		if (pixW < pixH) pixM = pixW; 
 		else pixM = pixH;
+		
 		pixM2 = pixM/2;
 
 		// Set the window size specific scales, positions and sizes (nothing dynamic yet...)
