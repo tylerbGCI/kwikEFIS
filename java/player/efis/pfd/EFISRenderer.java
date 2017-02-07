@@ -98,6 +98,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private  int pixW2, pixH2;       // Half Width & Height of window in pixels
 	private  int pixM;               // The smallest dimension of pixH or pixM
 	private  int pixM2;              // The smallest dimension of pixH2 or pixM2
+    private float pixAspect;         // Usable screen aspect ratio
 	private  float zfloat;           // A Z to use for layering of ortho projected markings*/
 
 	//b2
@@ -167,7 +168,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private String  CalibratingMsg;
 
 	// kepress location
-	private float mX, mY; 
+	private float mX, mY;
+
+    // the magic number for portrait offset
+    float portraitOffset = 0.40f; // 40f / 100f  aka 40%
 
 	//Demo Modes
 	private boolean bDemoMode;
@@ -178,7 +182,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private GLText glText;                             // A GLText Instance
 	private Context context;                           // Context (from Activity)
 
-	public EFISRenderer(Context context)  
+	public enum layout_t
+	{
+		PORTRAIT,
+		LANDSCAPE
+	}
+	//layout_t Layout = layout_t.PORTRAIT;
+	layout_t Layout = layout_t.LANDSCAPE;
+
+	public EFISRenderer(Context context)
 	{
 		super();
 		this.context = context;                         // Save Specified Context
@@ -202,13 +214,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//displayTape    = true;
 		//displayMirror  = false;
 		displayFPV = true;
-
-		
-		
 	}
 
 	@Override
-	public void onSurfaceCreated(GL10 unused, EGLConfig config) 
+	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -236,6 +245,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float[] fdMatrix = new float[16];  // moved to class scope
 		float[] rmiMatrix = new float[16]; // moved to class scope
 
+
 		// Draw background color
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -251,7 +261,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// Create a rotation for the horizon
 		Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
 
-
 		// Combine the rotation matrix with the projection and camera view
 		// Note that the mMVPMatrix factor *must be first* in order
 		// for the matrix multiplication product to be correct.
@@ -261,8 +270,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		//??Matrix.multiplyMM(altMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0); ??
 
-		// Slide pitch to current value
-		Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
+        // Pitch
+        if (Layout == layout_t.LANDSCAPE) {
+            // Slide pitch to current value
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
+        }
+        else {
+            // Slide pitch to current value adj for portrait
+            float Adjust = pixH2 * portraitOffset;
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
+        }
 
 		// Slide ALT to current value
 		Matrix.translateM(altMatrix, 0, mMVPMatrix, 0, 0, -MSLTranslation, 0); // apply the altitude
@@ -270,33 +287,57 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// Slide IAS to current value
 		Matrix.translateM(iasMatrix, 0, mMVPMatrix, 0, 0, -IASTranslation, 0); // apply the altitude
 
-
 		zfloat = 0;
 
-		if (displayTerrain == true) renderTerrain(scratch1);
-		renderRollMarkers(scratch2);
-		renderPitchMarkers(scratch1);
+        if (displayTerrain == true) renderTerrain(scratch1);
+        renderRollMarkers(scratch2);
+        renderPitchMarkers(scratch1);
 
 		// FPV only means anything if we have speed and rate of climb, ie altitude
 		if (displayFPV) renderFPV(scratch1);  // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch		
 
-		
+
+        // Flight Director - FD
 		if (displayFlightDirector) {  
 			// Create a rotation for the Flight director
 			Matrix.setRotateM(mFdRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // fd rotation
 			Matrix.multiplyMM(fdMatrix, 0, mMVPMatrix, 0, mFdRotationMatrix, 0);
-			// Slide FD to current value
-			Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
+
+            if (Layout == layout_t.LANDSCAPE) {
+                // Slide FD to current value
+                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
+            }
+            else {
+                //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
+                // Slide pitch to current value adj for portrait
+                float Adjust = pixH2 * portraitOffset;
+                // Slide FD to current value
+                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
+            }
 			renderFlightDirector(fdMatrix);
-			renderWptSelValue(mMVPMatrix);
-			renderAltSelValue(mMVPMatrix);
+			renderSelWptValue(mMVPMatrix);
+			renderSelAltValue(mMVPMatrix);
 		}
 		
-		// This may have to be on its own page or portrait mode like Garmin
+		// Remote Magnetic Inidicator - RMI
 		if (displayRMI) {
-			float xlx = -0.78f*pixW2;
-			float xly = -0.40f*pixH2; 
+			float xlx; // = -0.78f*pixW2;
+			float xly; // = -0.40f*pixH2;
+
+			// Add switch for orientation
+			if (Layout == layout_t.LANDSCAPE) {
+				// Landscape
+				xlx = -0.73f * pixW2; //-0.78f * pixW2;
+				xly = -0.40f * pixH2;
+				roseScale = 0.45f; //0.34f; //0.30f; //0.33f; //0.5f
+			}
+			else {
+				//Portrait
+				xlx = -0.00f * pixW2;
+				xly = -0.45f * pixH2;
+				roseScale = 0.45f; //0.50f;
+			}
 
 			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
 			// Create a rotation for the RMI
@@ -309,22 +350,49 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 
 		if (displayFlightDirector || displayRMI)   
-		  renderWptSelValue(mMVPMatrix);
-		
-		renderFixedHorizonMarkers();
+		  renderSelWptValue(mMVPMatrix);
 
-		if (displayTape == true) renderALTMarkers(altMatrix);  		
-		renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
+        if (Layout == layout_t.LANDSCAPE) {
+            ; //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+        }
+        else {
+            // Slide pitch to current value adj for portrait
+            //GLES20.glViewport(0, pixH2 * 40 / 100, pixW, pixH); // Portrait //
+            float Adjust = pixH2 * portraitOffset;
+            GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
+        }
+        renderFixedHorizonMarkers();
 
-		//if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
-		renderVSIMarkers(mMVPMatrix); 
+        //-----------------------------
+        {
+            if (Layout == layout_t.LANDSCAPE)
+                GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
+            else
+                GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
 
-		if (displayTape == true) renderASIMarkers(iasMatrix);
-		renderFixedASIMarkers(mMVPMatrix); // this could be empty argument 
-		renderFixedDIMarkers(mMVPMatrix);  
-		renderTurnMarkers(mMVPMatrix);
-		renderHDGValue(mMVPMatrix);       
-		renderSlipBall(mMVPMatrix);		
+            if (displayTape == true) {
+                renderALTMarkers(altMatrix);
+                renderASIMarkers(iasMatrix);
+            }
+
+            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
+            renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
+            renderFixedASIMarkers(mMVPMatrix); // this could be empty argument
+            renderVSIMarkers(mMVPMatrix);
+
+            renderFixedDIMarkers(mMVPMatrix);
+            renderHDGValue(mMVPMatrix);
+
+            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+        }
+        //-----------------------------
+
+        //renderFixedDIMarkers(mMVPMatrix);
+        //renderHDGValue(mMVPMatrix);
+
+
+        renderTurnMarkers(mMVPMatrix);
+		renderSlipBall(mMVPMatrix);
 		renderBatteryPct(mMVPMatrix);
 		renderGForceValue(mMVPMatrix);
 
@@ -353,9 +421,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// Adjust the viewport based on geometry changes, such as screen rotation
 		GLES20.glViewport(0, 0, width, height);
 
-		float ratio = (float) width / height;
-
-		// this projection matrix is applied to object coordinates in the onDrawFrame() method
+		// this projection matrix is applied to  object coordinates in the onDrawFrame() method
 		//b2 Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
 		//Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 2, 7); // - this apparently fixed for the Samsung?		
 
@@ -365,18 +431,39 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		pixH = height;
 		pixW2 = pixW/2;
 		pixH2 = pixH/2;
+        pixAspect = width / height;
 
 		if (pixW < pixH) pixM = pixW; 
 		else pixM = pixH;
-		
-		pixM2 = pixM/2;
+
+        // because the ascpect ratio is different in landscape and portrait (due to menu bar)
+        // we just fudge it as 85% throughout,  looks OK in landscape as well
+        pixM = pixM * 88 / 100;
+        pixM2 = pixM/2;
+
+        if (Layout == layout_t.LANDSCAPE) {
+            // Landscape
+            selWptDec =  0.90f * pixH2;
+            selWptInc =  0.74f * pixH2;
+            selAltDec = -0.74f * pixH2;
+            selAltInc = -0.90f * pixH2;
+        }
+        else {
+            // Portrait
+            selWptDec = -0.30f * pixH2;
+            selWptInc = -0.41f * pixH2;
+            selAltDec = -0.80f * pixH2;
+            selAltInc = -0.91f * pixH2;
+        }
+
 
 		// Set the window size specific scales, positions and sizes (nothing dynamic yet...)
-		pitchInView = 25.0f; //12.5f;//25.0f;	// degrees to display from horizon to top of viewport
-		IASInView   = 40.0f;//25.0f;    // IAS units to display from center to top of viewport
-		MSLInView   = 300.0f;//250.0f;	// IAS units to display from center to top of viewport
+		pitchInView = 25.0f;  //12.5f;//25.0f;	// degrees to display from horizon to top of viewport
+		IASInView   = 40.0f;  //25.0f;    // IAS units to display from center to top of viewport
+		MSLInView   = 300.0f; //250.0f;	  // IAS units to display from center to top of viewport
 
-		//Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest  
+        float ratio = (float) width / height;
+		//Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest
 		Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 2.99f, 7f); //hack for Samsung G2
 
 		// Create the GLText
@@ -460,7 +547,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 	
-	
+	//-------------------------------------------------------------------------
+    // Define the various built-in arcraft definitions
+    //
 	public void setAircraftData(String model)
 	{
 		try {
@@ -470,8 +559,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		catch (Exception e) {
 			mAcraftModel = AircraftModel.RV8;
 		}
-		
-		
+
 		// Generic - Ultralight
 		Vs0 = 30;  // Stall, flap extended
 		Vs1 = 40;  // Stall, flap retracted
@@ -591,9 +679,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Vs0 = 48;  // Stall, flap extended
 			Vs1 = 55;  // Stall, flap retracted
 			Vx  = 90;  // Best angle climb - tbd
-			Vy  = 104;  // Best rate climb 
+			Vy  = 104; // Best rate climb
 			Vfe = 91;  // Flaps extension
-			Va  = 130;  // Maneuvering
+			Va  = 130; // Maneuvering
 			Vno = 155; // Max structural cruise - tbd
 			Vne = 174; // Never exceed
 			break;
@@ -651,14 +739,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//-------------------------------------------------------------------------
 	// Flight Director
 	//
-	private void renderFlightDirector(float[] matrix)  
+
+	float PPD_DIV = 30; // for landscape
+	//float PPD_DIV = 25; // for landscape
+	//float PPD_DIV = 50; // for portrait
+
+	private void renderFlightDirector(float[] matrix)
 	{	
 		int i;
 		float z, pixPerDegree;
 
 		z = zfloat;
 		//pixPerDegree = pixM2 / pitchInView;
-		pixPerDegree = pixM2 / 25;
+		pixPerDegree = pixM2 / PPD_DIV;
 
 		// fwd triangles
 		mTriangle.SetWidth(1); 
@@ -703,7 +796,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		z = zfloat;
 		//pixPerDegree = pixM2 / pitchInView;
-		pixPerDegree = pixM2 / 25;
+        pixPerDegree = pixM2 / PPD_DIV;
 
 		// The lubber line - W style
 		if (false) {
@@ -860,7 +953,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		z = zfloat;
 		//pixPerDegree = pixM2 / pitchInView;							// Put the markers in open space at zero pitch
-		pixPerDegree = pixM2 / 25;							// Put the markers in open space at zero pitch
+		pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
 
 		mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
 		mTriangle.SetVerts(-0.02f  * pixW2, 14 * pixPerDegree, z,
@@ -873,9 +966,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		int i;
 		float innerTic, outerTic, z, pixPerDegree, iPix;
-
-		pixPerDegree = pixM / pitchInView;
+        pixPerDegree = pixH / pitchInView;
 		z = zfloat;
+
+        if (Layout == layout_t.LANDSCAPE) {
+            pixPerDegree = pixH / pitchInView;
+        }
+        else {
+            pixPerDegree = pixH / pitchInView / 2;
+        }
+
+
 
 		innerTic = 0.10f * pixW2; 
 		outerTic = 0.13f * pixW2;
@@ -944,7 +1045,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// horizon line - longer and thicker
 		mLine.SetWidth(6); //4
 		mLine.SetVerts(-0.95f  * pixW2, 0.0f, z,
-				0.95f  * pixW2, 0.0f, z);
+				        0.95f  * pixW2, 0.0f, z);
 		mLine.draw(matrix);
 
 		mLine.SetWidth(2);
@@ -1137,15 +1238,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
+/*
+    //innerTic = 0.70f * pixM2;	// inner & outer are relative to the vertical scale line
+    //midTic   = 0.75f * pixM2;
+    //outerTic = 0.80f * pixM2;
+    innerTic = 1.10f * pixM2;	// inner & outer are relative to the vertical scale line
+    midTic   = 1.20f * pixM2;
+    outerTic = 1.26f * pixM2;
+*/
+
 	//-------------------------------------------------------------------------
 	// Altimeter Indicator
 	//
 	void renderFixedALTMarkers(float[] matrix)
 	{
-		float z;
+		float z = zfloat;
 		String t;
 
-		z = zfloat;
+        float left =  0.80f * pixM2;
+        float right = 1.14f * pixM2;
+        float apex =  0.75f * pixM2;
 
 		// The tapes are positioned left & right of the roll circle, occupying the space based
 		// on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
@@ -1155,7 +1267,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// Do a dummy glText so that the Heights are correct for the masking box
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(1.5f); 
+		glText.setScale(2.5f);  //was 1.5
 		glText.end();                                
 
 		// Mask over the moving tape for the value display box
@@ -1163,10 +1275,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mSquare.SetWidth(2);
 		{
 			float[] squarePoly = {
-					1.15f * pixM2, -glText.getCharHeight(), z,//+0.1f,
-					1.15f * pixM2,  glText.getCharHeight(), z,//+0.1f,
-					0.80f * pixM2,  glText.getCharHeight(), z,//+0.1f,
-					0.80f * pixM2, -glText.getCharHeight(), z,//+0.1f
+                    right,-glText.getCharHeight(), z,//+0.1f,
+                    right, glText.getCharHeight(), z,//+0.1f,
+                    left,  glText.getCharHeight(), z,//+0.1f,
+                    left, -glText.getCharHeight(), z,//+0.1f
 			};
 			mSquare.SetVerts(squarePoly);
 			mSquare.draw(matrix);
@@ -1178,41 +1290,40 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		t = Integer.toString(MSLValue / 1000);
 		float margin;
+	    float colom = 0.83f;
 
 		// draw the thousands digits larger
-		glText.setScale(3f);  //2.5 
-		if (MSLValue > 1000) glText.draw(t, 0.84f * pixM2, -glText.getCharHeight() / 2);
-
+		glText.setScale(3.5f);  //3  2.5
+        if (MSLValue > 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
 		if (MSLValue < 10000) margin = 0.6f*glText.getCharWidthMax(); // because of the differing sizes
 		else margin = 1.1f*glText.getCharWidthMax();                 	// we have to deal with the margin ourselves  
 
 		//draw the hundreds digits smaller
 		t = String.format("%03.0f",(float) MSLValue % 1000);
-		glText.setScale(2.5f); // was 2.5 
-		glText.draw(t, 0.84f * pixM2 + margin, -glText.getCharHeight() / 2);            
-
-		glText.setScale(1.5f); 
-		glText.end();                                   
-
+		glText.setScale(2.5f); // was 2.5
+        glText.draw(t, colom * pixM2 + margin, -glText.getCharHeight() / 2);
+		glText.end();
 
 		mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
-		mTriangle.SetVerts(0.80f * pixM2, glText.getCharHeight()/2, z,//+.1,
-				0.75f * pixM2, 0.0f, z,
-				0.80f * pixM2, -glText.getCharHeight()/2, z///+.1
+		mTriangle.SetVerts(
+                left, glText.getCharHeight()/2, z,//+.1,
+				apex, 0.0f, z,
+                left, -glText.getCharHeight()/2, z///+.1
 				);
 		mTriangle.draw(mMVPMatrix);
-		{
+
+        {
 			mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
 			mPolyLine.SetWidth(2); 
 			float[] vertPoly = {
-					1.15f * pixM2, -glText.getCharHeight(), z,//+.2);
-					1.15f * pixM2,  glText.getCharHeight(), z,//+.2);
-					0.80f * pixM2,  glText.getCharHeight(), z,//+.2);
-					0.80f * pixM2,  glText.getCharHeight()/2, z,//+.2);
-					0.75f * pixM2, 0.0f, z,//+.2);
-					0.80f * pixM2, -glText.getCharHeight()/2, z,//+.2);
-					0.80f * pixM2, -glText.getCharHeight(), z,//+.2);
-					1.15f * pixM2, -glText.getCharHeight(), z //+.2);
+                    right, -glText.getCharHeight(), z,//+.2);
+                    right,  glText.getCharHeight(), z,//+.2);
+                    left,   glText.getCharHeight(), z,//+.2);
+                    left,   glText.getCharHeight()/2, z,//+.2);
+					apex,   0.0f, z,//+.2);
+                    left,  -glText.getCharHeight()/2, z,//+.2);
+                    left,  -glText.getCharHeight(), z,//+.2);
+                    right, -glText.getCharHeight(), z //+.2);
 			};
 
 			mPolyLine.VertexCount = 8;  	
@@ -1222,15 +1333,34 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-	void renderALTMarkers(float[] matrix)
+/* saved
+    innerTic = -0.70f * pixM2;	// inner & outer are relative to the vertical scale line
+    outerTic = -0.80f * pixM2;
+    midTic   = -0.77f * pixM2;
+    topTic =  0.9f * pixM2;
+    botTic = -0.9f * pixM2;
+*/
+/*
+    // Landscape
+    innerTic = -1.10f * pixM2;	// inner & outer are relative to the vertical scale line
+    midTic   = -1.20f * pixM2;
+    outerTic = -1.26f * pixM2;
+*/
+
+
+	private void renderALTMarkers(float[] matrix)
 	{
 		float tapeShade = 0.6f; // for grey
 		int i, j;
 		float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
 
-		pixPerUnit = pixM2 / MSLInView ;
+		//pixPerUnit = pixM2 / MSLInView; //b2 landscape
+		pixPerUnit = pixH2 / MSLInView; //portrait
 		z = zfloat;
 
+		//innerTic = 0.70f * pixM2;	// inner & outer are relative to the vertical scale line
+		//midTic   = 0.75f * pixM2;
+		//outerTic = 0.80f * pixM2;
 		innerTic = 0.70f * pixM2;	// inner & outer are relative to the vertical scale line
 		midTic   = 0.75f * pixM2;
 		outerTic = 0.80f * pixM2;
@@ -1258,16 +1388,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			float margin;
 
 			// draw the thousands digits larger
-			glText.setScale(2.5f); 
-			if (i >= 1000) glText.draw(t, outerTic, iPix - glText.getCharHeight() / 2);
+			glText.setScale(3.0f);
+            //glText.setScale(4.0f, 2.5f);
+            if (i >= 1000) glText.draw(t, outerTic, iPix - glText.getCharHeight() / 2);
 
-			if (i < 10000) margin = 0.6f*glText.getCharWidthMax();  // because of the differing sizes
-			else margin = 1.1f*glText.getCharWidthMax();            // we have to deal with the margin ourselves  
+            if (i < 10000) margin = 0.6f*glText.getCharWidthMax();  // because of the differing sizes
+			else margin = 1.1f*glText.getCharWidthMax();            // we have to deal with the margin ourselves
 
 			//draw the hundreds digits smaller
 			t = String.format("%03.0f",(float) i % 1000);
-			glText.setScale(1.5f); // was 1.5 
-			glText.draw(t, outerTic + margin, iPix - glText.getCharHeight() / 2);            
+			glText.setScale(2.0f); // was 1.5
+            //glText.setScale(2.4f, 1.5f); // was 1.5
+			glText.draw(t, outerTic + margin, iPix - glText.getCharHeight() / 2);
 			glText.end();                                   
 
 			for (j = i + 20; j < i+90; j=j+20) {
@@ -1416,16 +1548,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 	// Airspeed Indicator
 	//
 	void renderFixedASIMarkers(float[] matrix)
 	{
-		float z;
+		float z = zfloat;
 		String t;
 
-		z = zfloat;
+        float left  = -1.10f * pixM2;
+        float right = -0.80f * pixM2;
+        float apex  = -0.75f * pixM2;
 
 		// The tapes are positioned left & right of the roll circle, occupying the space based
 		// on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
@@ -1433,78 +1566,94 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// Do a dummy glText so that the Heights are correct for the masking box
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(1.5f); // was 1.2
-		glText.end();                                    
+		glText.setScale(2.5f); // was 1.5
+		glText.end();
 
 		// Mask over the moving tape for the value display box
 		mSquare.SetColor(0.0f, 0.0f, 0.0f, 1); //black 
 		mSquare.SetWidth(2);
 		{
 			float[] squarePoly = {
-					-1.05f * pixM2, -glText.getCharHeight(), z,//+0.1f,
-					-1.05f * pixM2,  glText.getCharHeight(), z,//+0.1f,
-					-0.80f * pixM2,  glText.getCharHeight(), z,//+0.1f,
-					-0.80f * pixM2, -glText.getCharHeight(), z,//+0.1f
+					left,  -glText.getCharHeight(), z,//+0.1f,
+                    left,   glText.getCharHeight(), z,//+0.1f,
+                    right,  glText.getCharHeight(), z,//+0.1f,
+                    right, -glText.getCharHeight(), z,//+0.1f
 			};
 			mSquare.SetVerts(squarePoly);
 			mSquare.draw(matrix);
 		}
 
-		t = Integer.toString(Math.round(IASValue));
-		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(3.0f); 							// was 2.5
-		glText.drawC(t, -0.85f * pixM2, glText.getCharHeight()/2 );            
-		glText.setScale(1.5f); 							// was 1.2
-		glText.end();                                    
-
 		mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
 		mTriangle.SetVerts(
-				-0.80f * pixM2, glText.getCharHeight()/2, z,//+.1,
-				-0.75f * pixM2, 0.0f, z,
-				-0.80f * pixM2, -glText.getCharHeight()/2, z///+.1
+                right, glText.getCharHeight()/2, z,//+.1,
+                apex,  0.0f, z,
+                right, -glText.getCharHeight()/2, z///+.1
 				);
 		mTriangle.draw(mMVPMatrix);
+
 		{
 			mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
 			mPolyLine.SetWidth(2); 
 			float[] vertPoly = {
-					-1.05f * pixM2, -glText.getCharHeight(), z,//+.2);
-					-1.05f * pixM2,  glText.getCharHeight(), z,//+.2);
-					-0.80f * pixM2,  glText.getCharHeight(), z,//+.2);
-					-0.80f * pixM2,  glText.getCharHeight()/2, z,//+.2);
-					-0.75f * pixM2, 0.0f, z,//+.2);
-					-0.80f * pixM2, -glText.getCharHeight()/2, z,//+.2);
-					-0.80f * pixM2, -glText.getCharHeight(), z,//+.2);
-					-1.05f * pixM2, -glText.getCharHeight(), z //+.2);
+                    left, -glText.getCharHeight(), z,//+.2);
+                    left,  glText.getCharHeight(), z,//+.2);
+                    right, glText.getCharHeight(), z,//+.2);
+                    right, glText.getCharHeight()/2, z,//+.2);
+                    apex,  0.0f, z,//+.2);
+                    right, -glText.getCharHeight()/2, z,//+.2);
+                    right, -glText.getCharHeight(), z,//+.2);
+                    left,  -glText.getCharHeight(), z //+.2);
 			};
 
 			mPolyLine.VertexCount = 8;  	
 			mPolyLine.SetVerts(vertPoly);
 			mPolyLine.draw(matrix);
 		}
+        t = Integer.toString(Math.round(IASValue));
+        glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
+        glText.setScale(3.5f); 							// was 2.5
+        glText.drawC(t, -0.85f * pixM2, glText.getCharHeight()/2 );
+        glText.end();
 	}
 
 
-	void renderASIMarkers(float[] matrix)
+	private void renderASIMarkers(float[] matrix)
 	{
 		float tapeShade = 0.6f; // for grey
 		int i, j;
-		float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
+		float innerTic, midTic, outerTic, topTic, botTic;
+		float z, pixPerUnit, iPix;
 
 		//glLineWidth( 2 );
 		z = zfloat;
 		pixPerUnit = pixH2/IASInView ;
 
+//        /* saved
 		innerTic = -0.70f * pixM2;	// inner & outer are relative to the vertical scale line
 		outerTic = -0.80f * pixM2;
 		midTic   = -0.77f * pixM2;
+		//topTic =  0.9f * pixM2;
+		//botTic = -0.9f * pixM2;
+//		*/
+/*
+        if (Layout == layout_t.LANDSCAPE) {
+            // Landscape
+            pixPerUnit = pixM2 / IASInView;
+            innerTic = -1.10f * pixM2;    // inner & outer are relative to the vertical scale line
+            outerTic = -1.26f * pixM2;
+            midTic = -1.20f * pixM2;
+        }
+        else {
+            // Portrait
+            pixPerUnit = pixM2 / (IASInView / 2);
+            innerTic = -0.60f * pixM2;    // inner & outer are relative to the vertical scale line
+            outerTic = -0.70f * pixM2;
+            midTic = -0.67f * pixM2;
+        }
+*/
 
 		// The numbers & tics for the tape
 		for (i = IASMaxDisp; i >= 0; i = i - 10) {
-			// Ugly hack but helps with performance - Not needed and appears to case a bug 
-			//if (i < IASValue - IASInView) continue;
-			//if (i > IASValue + IASInView) continue; 
-
 			iPix = (float) i * pixPerUnit;
 			String t = Integer.toString(i);
 
@@ -1517,8 +1666,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 
 			glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // grey
-			glText.setScale(2f); // was 1.5 
-			glText.draw(t, outerTic - 1.5f * glText.getLength(t), iPix - glText.getCharHeight() / 2);            
+			glText.setScale(2.5f); // was 2
+            //glText.setScale(3.2f, 2f);  // screen ratio is 1.6 on Nexus 2 x 1.6 = 3.2
+			glText.draw(t, outerTic - 1.5f * glText.getLength(t), iPix - glText.getCharHeight() / 2);
 			glText.end();                                    
 
 			for (j = i + 2; j < i+9; j=j+2) {
@@ -1532,15 +1682,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 
 		// The vertical scale bar
+		///*
 		mLine.SetVerts(
-				innerTic,  0 , z,  // IASMinDisp - no longer used, set to 0                     
-				innerTic, (IASMaxDisp + 100) * pixPerUnit, z		
-				);
+				innerTic, 0, z,  // IASMinDisp - no longer used, set to 0
+				innerTic, (IASMaxDisp + 100) * pixPerUnit, z
+		);
 		mLine.draw(matrix);
+		//*/
 
 		// For monochrome display (displayTerrain false) do not use any color
-		if (displayTerrain) {
-			//
+        if (displayTerrain) {
+            //
 			// Special Vspeed markers
 			//
 			String t;
@@ -1585,7 +1737,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.end();                                    
 
 			// Tape markings for V speeds
+            // Re use midTic ... maybe not such a good idea ...
 			midTic = -0.75f * pixM2;													// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
+			//midTic = -1.17f * pixM2;	// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
 			mSquare.SetColor(0, 0.5f, 0, 1);  // dark green;
 			mSquare.SetWidth(1);
 			{
@@ -1637,6 +1791,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				mSquare.SetVerts(squarePoly);
 				mSquare.draw(matrix);
 
+                /*
 				float[] squarePoly2 = { 
 						innerTic, (float) Vne * pixPerUnit, z, //-.2);
 						innerTic, (float) (IASMaxDisp + 10) * pixPerUnit, z, //-.2);
@@ -1645,6 +1800,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				};
 				mSquare.SetVerts(squarePoly2);
 				mSquare.draw(matrix);
+				*/
 			}
 		}
 	}
@@ -1660,14 +1816,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 	//-------------------------------------------------------------------------
 	// Direction Indicator
-	//   Also contains the slip and turn indications
+	//   Just a simple text box
 	//
 	void renderFixedDIMarkers(float[] matrix)
 	{
-		float z;
+		float z = zfloat;
 		String t;
 
-		z = zfloat;
+        float left =  -0.15f * pixM2;
+        float right =  0.15f * pixM2;
+        float apex =   0.000f * pixM2;
 
 		// The tapes are positioned left & right of the roll circle, occupying the space based
 		// on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
@@ -1675,7 +1833,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// Do a dummy glText so that the Heights are correct for the masking box
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(1.5f); // was 1.2
+		glText.setScale(2.5f); // was 1.5
 		glText.end();                                    
 
 		// Mask over the moving tape for the value display box
@@ -1683,10 +1841,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mSquare.SetWidth(2);
 		{
 			float[] squarePoly = {
-					0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
-					0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-					-0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-					-0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
+                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
+                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    left, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    left, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
 			};
 			mSquare.SetVerts(squarePoly);
 			mSquare.draw(matrix); 
@@ -1705,17 +1863,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
 			mPolyLine.SetWidth(2); 
 			float[] vertPoly = {
-					0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-					-0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-					-0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
-					0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
-					0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    left,  0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    left,  0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
+                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
+                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
 
 					// for some reason this causes a crash on restart if there are not 8 vertexes
 					// most probably a a bug in PolyLine
-					-0.175f * pixH2, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-					-0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
-					0.175f * pixH2, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
+                    left,  0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    left,  0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
+                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
 
 			};
 			mPolyLine.VertexCount = 8;  	
@@ -1904,11 +2062,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//int rd = (int) 5 * Math.round(2 * DIValue / 10); // round to nearest 5
 		int rd = (int) Math.round(DIValue); // round to nearest integer
 
-		String t = Integer.toString(rd); 
+		String t = Integer.toString(rd);
 		glText.begin( 1, 1, 1, 1, matrix ); 			// white
-		glText.setScale(2.5f); 							// was 1.2
+		glText.setScale(3.5f); //2.5f); 							// was 1.2
 		glText.drawCX(t, 0, 0.9f*pixH2 - glText.getCharHeight()/2 );   // Draw String
-		glText.setScale(1.5f); 							// was 1.2
+		//glText.setScale(1.5f); 							// was 1.2
 		glText.end();                                    
 	}
 
@@ -1924,7 +2082,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		z = zfloat;
 
-		float radius = 10*pixH/736;
+		float radius = 10*pixM/736;
 		float x1= SlipValue;
 		float y1= -0.9f*pixH2;
 
@@ -1933,14 +2091,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mLine.SetColor(1, 1, 0, 1);
 		mLine.SetWidth(4);
 		mLine.SetVerts(
-				-0.07f * pixH2, -0.9f*pixH2 - 0.8f*glText.getCharHeight(), z,                     
-				-0.07f * pixH2, -0.9f*pixH2 + 0.8f*glText.getCharHeight(), z		
+				-0.07f * pixM2, y1 - 0.4f*glText.getCharHeight(), z,
+				-0.07f * pixM2, y1 + 0.4f*glText.getCharHeight(), z
 				);
 		mLine.draw(matrix);
 
 		mLine.SetVerts(
-				0.07f * pixH2, -0.9f*pixH2 - 0.8f*glText.getCharHeight(), z,                     
-				0.07f * pixH2, -0.9f*pixH2 + 0.8f*glText.getCharHeight(), z		
+				0.07f * pixM2, y1 - 0.4f*glText.getCharHeight(), z,
+				0.07f * pixM2, y1 + 0.4f*glText.getCharHeight(), z
 				);
 		mLine.draw(matrix);
 
@@ -1980,7 +2138,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float z, pixPerDegree;
 
 		//pixPerDegree = pixM2 / pitchInView;
-		pixPerDegree = pixM2 / 25;
+		pixPerDegree = pixM2 / PPD_DIV;
 		z = zfloat;
 
 		float radius = 10*pixH/736;  //12
@@ -2039,7 +2197,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	static int MX_RANGE = 20;   //nm
 	static int counter = 0;
 
-	void renderAPT(float[] matrix)
+	private void renderAPT(float[] matrix)
 	{
 		float z, pixPerDegree, x1, y1;
 		float radius = 5;
@@ -2135,9 +2293,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
 		MX_RANGE = Math.min(MX_RANGE, 99);
 
-		//setMSG(6, String.format("RNG %d", MX_RANGE));     
-		//setMSG(5, String.format("#AP %d", nrAptsFound)); 
-		setMSG(5, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); 
+		setMSG(5, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound));
 	}
 
 	void setLatLon(float lat, float lon)
@@ -2240,8 +2396,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = String.format("WPT %s", mAutoWpt);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.9f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
+        glText.draw(t, -0.97f*pixW2, 0.9f*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(t, -0.97f*pixW2, -0.7f*pixM2 - glText.getCharHeight()/2 );
+        glText.end();
 	}
 
 	void setAutoWptValue(String wpt)
@@ -2250,7 +2407,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 	float mAutoWptBrg;
-	void renderAutoWptBrg(float[] matrix)
+	private void renderAutoWptBrg(float[] matrix)
 	{
 		float z;
 		z = zfloat;
@@ -2258,8 +2415,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = String.format("BRG  %03.0f", mAutoWptBrg);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.7f*pixH2 - glText.getCharHeight()/2 );            // Draw  String
-		glText.end();                                    
+        glText.draw(t, -0.97f*pixW2, 0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
+        glText.draw(t, -0.97f*pixW2, -0.9f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
+		glText.end();
 	}
 
 	void setAutoWptBrg(float brg)
@@ -2295,31 +2453,33 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	String mWptSelComment = "Serpentine";
 	float mWptSelLat = -32.395000f;
 	float mWptSelLon = 115.871000f;
-	
 	String mAltSelName = "00000";
 	float mAltSelValue = 0;
-
 	float leftC = 0.6f;
-	void renderWptSelValue(float[] matrix)
+    float selWptDec; // = 0.90f * pixH2;
+    float selWptInc; // = 0.74f * pixH2;
+
+
+	void renderSelWptValue(float[] matrix)
 	{
 		float z, pixPerDegree, x1, y1;
-
-		//pixPerDegree = pixM2 / pitchInView;
-		pixPerDegree = pixM2 / 25;
+        pixPerDegree = pixH2 / PPD_DIV;
 
 		z = zfloat;
 		// Draw the selecting triangle spinner buttons
 		mTriangle.SetColor(0.6f, 0.6f, 0.6f, 0);  // gray
 		for (int i = 0; i < 4; i++) {
 			float xPos = (leftC + (float) i/10f);
-			mTriangle.SetVerts((xPos - 0.02f) * pixW2, 0.90f * pixM2, z,  //0.02
-					(xPos + 0.02f) * pixW2, 0.90f * pixM2, z,
-					(xPos + 0.00f) * pixW2, 0.94f * pixM2, z);
+			mTriangle.SetVerts((xPos - 0.02f) * pixW2, selWptDec, z,  //0.02
+                               (xPos + 0.02f) * pixW2, selWptDec, z,
+                               (xPos + 0.00f) * pixW2, selWptDec + 0.04f * pixM2, z);
+                               //(xPos + 0.00f) * pixW2, 0.94f * pixH2, z);
 			mTriangle.draw(matrix);
 
-			mTriangle.SetVerts((xPos - 0.02f) * pixW2, 0.74f * pixM2, z,  //0.02
-					(xPos + 0.02f) * pixW2, 0.74f * pixM2, z,
-					(xPos + 0.00f) * pixW2, 0.70f * pixM2, z);
+			mTriangle.SetVerts((xPos - 0.02f) * pixW2, selWptInc, z,  //0.02
+					           (xPos + 0.02f) * pixW2, selWptInc, z,
+                               (xPos + 0.00f) * pixW2, selWptInc - 0.04f * pixM2, z);
+         	    			   //(xPos + 0.00f) * pixW2, 0.70f * pixH2, z);
 			mTriangle.draw(matrix);
 
 			// Draw the individual select characters  
@@ -2327,8 +2487,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				glText.begin( 1.0f, 0.8f, 1.0f, 1.0f, matrix ); //
 				glText.setScale(3f);
 				String s = String.format("%c", mWptSelName.charAt(i));
-				glText.drawCX(s, xPos * pixW2, 0.81f*pixH2 - glText.getCharHeight()/2 );            
-				glText.end();
+				//glText.drawCX(s, xPos * pixW2, 0.81f*pixH2 - glText.getCharHeight()/2 );
+                glText.drawCX(s, xPos * pixW2, ((selWptInc + selWptDec) / 2) - (glText.getCharHeight() / 2));
+                glText.end();
 			} 
 		}
 		
@@ -2362,20 +2523,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// update the flight director data
 		setFlightDirector(displayFlightDirector, commandPitch, (float) relBrg); 
 
-		// the next two will be moved to their own methods ... TODO
+		// the next two will be moved to their own methods ? ... TODO
+        //float lineC =  0.35f;  // landscape
+        //float lineC =  -0.50f;  // Also OK for Landscape
+        float lineC =  selWptInc / pixM2 - 0.35f;  //
+
 		glText.begin( 1.0f, 1f, 1.0f, 1.0f, matrix ); // 
 		glText.setScale(2.1f);
 		String s = mWptSelComment;
-		glText.draw(s, leftC * pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end(); 
-		float lineC;
-		lineC =  0.35f;
+		//glText.draw(s, leftC * pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );
+        glText.draw(s, leftC * pixW2, (lineC+0.15f)*pixM2 - glText.getCharHeight()/2 );
+        glText.end();
+
+
 		// DME
 		String t = String.format("DME %03.1f", d / 6080);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.5f); 							// 
-		glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
+		//glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixH2 - glText.getCharHeight()/2 );
+        glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixM2 - glText.getCharHeight()/2 );
+        glText.end();
 
 		// BRG
 		double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
@@ -2385,8 +2552,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		t = String.format("BRG  %03.0f", absBrg);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.5f); 							// 
-		glText.draw(t, leftC*pixW2, (lineC+0.05f)*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
+		//glText.draw(t, leftC*pixW2, (lineC+0.05f)*pixH2 - glText.getCharHeight()/2 );
+        glText.draw(t, leftC*pixW2, (lineC+0.05f)*pixM2 - glText.getCharHeight()/2 );
+        glText.end();
 
 		// HWY
 		/*
@@ -2402,25 +2570,30 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-	void renderAltSelValue(float[] matrix)
+    float selAltInc; // = -0.90f * pixH2;
+    float selAltDec; // = -0.74f * pixH2;
+
+	private void renderSelAltValue(float[] matrix)
 	{
 		float z, pixPerDegree, x1, y1;
-		pixPerDegree = pixM2 / pitchInView;
-		pixPerDegree = pixM2 / 25;
+		//pixPerDegree = pixM2 / pitchInView;
+		//pixPerDegree = pixM2 / PPD_DIV;
 		z = zfloat;
 
 		// Draw the selecting triangle spinner buttons
 		mTriangle.SetColor(0.6f, 0.6f, 0.6f, 0);  // gray
 		for (int i = 0; i < 3; i++) {
 			float xPos = (leftC + (float) i/10f);
-			mTriangle.SetVerts((xPos - 0.02f) * pixW2, -0.90f * pixM2, z,  //0.02
-					(xPos + 0.02f) * pixW2, -0.90f * pixM2, z,
-					(xPos + 0.00f) * pixW2, -0.94f * pixM2, z);
+			mTriangle.SetVerts((xPos - 0.02f) * pixW2, selAltDec, z,  //0.02
+					           (xPos + 0.02f) * pixW2, selAltDec, z,
+                               (xPos + 0.00f) * pixW2, selAltDec + 0.04f * pixM2, z);
+					           //(xPos + 0.00f) * pixW2, -0.94f * pixH2, z);
 			mTriangle.draw(matrix);
 
-			mTriangle.SetVerts((xPos - 0.02f) * pixW2, -0.74f * pixM2, z,  //0.02
-					(xPos + 0.02f) * pixW2, -0.74f * pixM2, z,
-					(xPos + 0.00f) * pixW2, -0.70f * pixM2, z);
+			mTriangle.SetVerts((xPos - 0.02f) * pixW2, selAltInc, z,  //0.02
+					           (xPos + 0.02f) * pixW2, selAltInc, z,
+                               (xPos + 0.00f) * pixW2, selAltInc - 0.04f * pixM2, z);
+					           //(xPos + 0.00f) * pixW2, -0.70f * pixH2, z);
 			mTriangle.draw(matrix);
 
 			// Draw the individual select characters  
@@ -2428,7 +2601,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				glText.begin( 1.0f, 0.8f, 1.0f, 1.0f, matrix ); //
 				glText.setScale(3f);
 				String s = String.format("%c", mAltSelName.charAt(i));
-				glText.drawCX(s, xPos * pixW2, -0.83f*pixH2 - glText.getCharHeight()/2 );            
+				//glText.drawCX(s, xPos * pixW2, -0.83f*pixH2 - glText.getCharHeight()/2 );
+                glText.drawCX(s, xPos * pixW2, ((selAltInc + selAltDec) / 2) - glText.getCharHeight()/2 );
 				glText.end();
 			} 
 		}
@@ -2477,7 +2651,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		// 0,0 is top left in landscape
 		mX =  (x / pixW - 0.5f) * 2;
-		mY = -(y / pixH - 0.5f) * 2;  
+		mY = -(y / pixH - 0.5f) * 2;
+
 		int pos = -1; // set to invalid / no selection
 		int inc = 0;  //initialise to 0, also acts as a flag 
 		int ina = 0;  //initialise to 0, also acts as a flag
@@ -2486,13 +2661,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		// Determine if we are counting up or down? 
 		// wpt character
-		if      (Math.abs(mY - 0.9) < 0.15) inc = -1;
-		else if (Math.abs(mY - 0.6) < 0.15) inc = +1;
+        //selWptDec
+        if      (Math.abs(mY - selWptDec / pixH2) < 0.10) inc = -1;
+        else if (Math.abs(mY - selWptInc / pixH2) < 0.10) inc = +1;
+		//if      (Math.abs(mY - 0.9) < 0.15) inc = -1;
+		//else if (Math.abs(mY - 0.6) < 0.15) inc = +1;
 
 		// Determine if we are counting up or down?
 		// altitude number
-		else if (Math.abs(mY + 0.6) < 0.15) ina = -1;
-		else if (Math.abs(mY + 0.9) < 0.15) ina = +1;
+        else if (Math.abs(mY - selAltDec / pixH2) < 0.10) ina = -1;
+        else if (Math.abs(mY - selAltInc / pixH2) < 0.10) ina = +1;
+		//else if (Math.abs(mY + 0.6) < 0.15) ina = -1;
+		//else if (Math.abs(mY + 0.9) < 0.15) ina = +1;
 
 		// Determine which digit is changing
 		for (int i = 0; i < 4; i++) {
@@ -2565,7 +2745,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	float mAutoWptDme; 
-	void renderAutoWptDme(float[] matrix)
+	private void renderAutoWptDme(float[] matrix)
 	{
 		float z, pixPerUnit;
 
@@ -2575,8 +2755,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = String.format("DME %03.1f", mAutoWptDme);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.8f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
+        glText.draw(t, -0.97f*pixW2, 0.8f*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(t, -0.97f*pixW2, -0.8f*pixM2 - glText.getCharHeight()/2 );
+        glText.end();
 	}
 
 	void setAutoWptDme(float dme)
@@ -2585,7 +2766,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 	float mAutoWptRlb; 
-	void renderAutoWptRlb(float[] matrix)
+	private void renderAutoWptRlb(float[] matrix)
 	{
 		float z, pixPerUnit;
 
@@ -2595,8 +2776,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = String.format("RLB  %03.0f", mAutoWptRlb);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.7f*pixH2 - glText.getCharHeight()/2 );            // Draw  String
-		glText.end();                                    
+        glText.draw(t, -0.97f*pixW2, 0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
+        glText.draw(t, -0.97f*pixW2, -0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
+		glText.end();
 	}
 
 	void setAutoWptRelBrg(float rlb)
@@ -2721,7 +2903,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float innerTic, outerTic, iPix;
 		float z, sinI, cosI;
 		String t;
-
 		float roseRadius = roseScale * pixM2;
 
 		z = zfloat;
@@ -2730,7 +2911,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
 		
 		// The rose degree tics
-	  for (i = 0; i <= 330; i=i+30) {
+        for (i = 0; i <= 330; i=i+30) {
 			sinI = UTrig.isin( (450-i) % 360 );  
 			cosI = UTrig.icos( (450-i) % 360 );
 			mLine.SetVerts(
@@ -2783,8 +2964,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); //90-i             
 			glText.end();                                   
 			for (j = 10; j <=20; j=j+10) {
-	      sinI = UTrig.isin( (i+j) );
-	      cosI = UTrig.icos( (i+j) );
+                sinI = UTrig.isin( (i+j) );
+	            cosI = UTrig.icos( (i+j) );
 				mLine.SetVerts(
 						0.93f * roseRadius * cosI, 0.93f * roseRadius * sinI, z,
 						1.00f * roseRadius * cosI, 1.00f * roseRadius * sinI, z
@@ -2792,8 +2973,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				mLine.draw(matrix);
 			}
 			for (j = 5; j <=25; j=j+10) {
-	      sinI = UTrig.isin( (i+j) );
-	      cosI = UTrig.icos( (i+j) );
+	            sinI = UTrig.isin( (i+j) );
+	            cosI = UTrig.icos( (i+j) );
 				mLine.SetVerts(
 						0.96f * roseRadius * cosI, 0.96f * roseRadius * sinI, z,
 						1.00f * roseRadius * cosI, 1.00f * roseRadius * sinI, z

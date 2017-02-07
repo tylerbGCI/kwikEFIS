@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <PreferenceCategory
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:title="AIRCRAFT" >
+<!--
+    <PreferenceCategory android:title="AIRCRAFT" >
         <ListPreference
             android:defaultValue="0.75f"
             android:entries="@array/ac_list_names"
@@ -12,8 +10,17 @@
             android:summary="Select active aircraft model"
             android:title="Aircraft" />
     </PreferenceCategory>
+    -->
     
     <PreferenceCategory android:title="DATABASE" >
+        <ListPreference
+            android:defaultValue="0.75f"
+            android:entries="@array/ac_list_names"
+            android:entryValues="@array/ac_list_values"
+            android:key="AircraftModel"
+            android:summary="Select active aircraft model"
+            android:title="Aircraft" />
+
         <ListPreference
             android:defaultValue="zar.aus"
             android:entries="@array/region_names"
@@ -29,7 +36,7 @@
             android:entries="@array/sensor_bias_names"
             android:entryValues="@array/sensor_bias_values"
             android:key="sensorBias"
-            android:summary="Select the bank sensor/gps bias"
+            android:summary="Select the bank sensor/GPS bias"
             android:title="Bank Sensor" />
 
         <CheckBoxPreference
@@ -43,18 +50,23 @@
             android:summary="Lock the exit on back button"
             android:title="Locked Mode" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="landscapeMode"
+            android:summary="Select Landscape display"
+            android:title="Landscape Mode" />
+
+
+      </PreferenceCategory>
+    <PreferenceCategory android:title="ABOUT" >
         <ListPreference
             android:defaultValue="0.0.0"
             android:key="version"
-
             android:entries="@array/version_names"
             android:entryValues="@array/version_values"
-            
             android:summary="0.0.0"
             android:title="kwikEFIS version" />
-        
-        
-      </PreferenceCategory>
+    </PreferenceCategory>
 
 </PreferenceScreen>
 <!--
@@ -74,5 +86,6 @@
             android:key="pref_key_sms_delete_limit"
             android:dependency="pref_key_auto_delete"
             android:summary="summary"
-            android:title="title" />
+            android:title="title" />
+
 -->
