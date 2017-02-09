@@ -2156,7 +2156,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		pixPerDegree = pixM2 / PPD_DIV;
 		z = zfloat;
 
-		float radius = 10*pixH/736;  //12
+		float radius = 10*pixM/736;  //12
 
 		float x1 = fpvX * pixPerDegree;
 		float y1 = fpvY * pixPerDegree;
