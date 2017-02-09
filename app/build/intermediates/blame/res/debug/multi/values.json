@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+        "outputFile": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
         "map": [
             {
                 "to": {
@@ -12,7 +12,7 @@
                     "endOffset": 599
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 27,
                         "startColumn": 4,
@@ -33,7 +33,7 @@
                     "endOffset": 973
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 41,
                         "startColumn": 4,
@@ -54,7 +54,7 @@
                     "endOffset": 1112
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 18,
                         "startColumn": 4,
@@ -75,7 +75,7 @@
                     "endOffset": 1230
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 22,
                         "startColumn": 4,
@@ -96,7 +96,7 @@
                     "endOffset": 1354
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 57,
                         "startColumn": 4,
@@ -117,7 +117,7 @@
                     "endOffset": 1446
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 62,
                         "startColumn": 4,
@@ -138,7 +138,7 @@
                     "endOffset": 1665
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -159,7 +159,7 @@
                     "endOffset": 1868
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
@@ -180,7 +180,7 @@
                     "endOffset": 1955
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 67,
                         "startColumn": 4,
@@ -201,7 +201,7 @@
                     "endOffset": 2016
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\array.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\array.xml",
                     "position": {
                         "startLine": 70,
                         "startColumn": 4,
@@ -221,7 +221,7 @@
                     "endOffset": 2063
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\strings.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\strings.xml",
                     "position": {
                         "startLine": 19,
                         "startColumn": 4,
@@ -240,7 +240,7 @@
                     "endOffset": 2117
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\strings.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\strings.xml",
                     "position": {
                         "startLine": 20,
                         "startColumn": 4,
@@ -259,7 +259,7 @@
                     "endOffset": 2173
                 },
                 "from": {
-                    "file": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\values\\strings.xml",
+                    "file": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\values\\strings.xml",
                     "position": {
                         "startLine": 18,
                         "startColumn": 4,

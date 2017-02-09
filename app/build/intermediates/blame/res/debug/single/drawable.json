@@ -1,34 +1,34 @@
 [
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_lock_airplane_mode.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_lock_airplane_mode.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_settings.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_settings.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_manage.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_menu_manage.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_mark.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_menu_mark.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_launcher.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_launcher.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ah_icon.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ah_icon.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_settings.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_settings.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_lock_airplane_mode.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_lock_airplane_mode.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_help.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_menu_help.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_view.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_menu_view.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ah_icon.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ah_icon.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_launcher.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_launcher.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_view.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_menu_view.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_help.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_menu_help.png"
     },
     {
-        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_mark.png",
-        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\drawable\\ic_menu_mark.png"
+        "merged": "H:\\SRC\\kwikEFIS\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_menu_manage.png",
+        "source": "H:\\SRC\\kwikEFIS\\app\\src\\main\\res\\drawable\\ic_menu_manage.png"
     }
 ]

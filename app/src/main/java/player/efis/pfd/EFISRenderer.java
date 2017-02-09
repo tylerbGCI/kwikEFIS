@@ -288,7 +288,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		zfloat = 0;
 
         if (displayTerrain == true) renderTerrain(scratch1);
-        renderRollMarkers(scratch2);
         renderPitchMarkers(scratch1);
 
 		// FPV only means anything if we have speed and rate of climb, ie altitude
@@ -360,6 +359,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
         }
         renderFixedHorizonMarkers();
+        renderRollMarkers(scratch2);
 
         //-----------------------------
         {
@@ -886,9 +886,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// The fixed roll marker (roll circle marker radius is 15 degrees of pitch, with fixed markers on the outside)
 		mTriangle.SetColor(0.9f, 0.9f, 0.0f, 1); //yellow
-		mTriangle.SetVerts(0.035f * pixW2, 16.5f * pixPerDegree, z,
-											-0.035f * pixW2, 16.5f * pixPerDegree, z,
-											 0.0f, 15f * pixPerDegree, z);
+		mTriangle.SetVerts(0.035f * pixM2, 16.5f * pixPerDegree, z,
+  						  -0.035f * pixM2, 16.5f * pixPerDegree, z,
+						   0.0f, 15f * pixPerDegree, z);
 		mTriangle.draw(mMVPMatrix);
 
 		mLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // grey
@@ -972,9 +972,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
 
 		mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
-		mTriangle.SetVerts(-0.02f  * pixW2, 14 * pixPerDegree, z,
-				0.02f * pixW2, 14 * pixPerDegree, z,
-				0.0f, 15 * pixPerDegree, z);
+		/*mTriangle.SetVerts(
+		       -0.02f  * pixM, 14 * pixPerDegree, z,
+				0.02f * pixM, 14 * pixPerDegree, z,
+				0.0f, 15 * pixPerDegree, z);*/
+        mTriangle.SetVerts(
+                 0.035f * pixM2, 13.5f * pixPerDegree, z,
+                -0.035f * pixM2, 13.5f * pixPerDegree, z,
+                 0.0f, 15f * pixPerDegree, z);
 		mTriangle.draw(matrix);
 	}
 
@@ -1138,7 +1143,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		 */
 
 		pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
-		pixOverWidth = pixW2 * 1.42f;
+		pixOverWidth = pixW2 * 1.80f; //1.42f;
 		z = zfloat;
 
 		// Earth
