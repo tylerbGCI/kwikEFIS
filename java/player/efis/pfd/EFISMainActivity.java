@@ -562,20 +562,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
             }
-            //int orientation = getResources().getConfiguration().orientation;
-            //if (orientation == Configuration.ORIENTATION_LANDSCAPE) mGLView.mRenderer.Layout = EFISRenderer.layout_t.LANDSCAPE;
-            //else mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
-
-        //b2 add switch for bOrientation -
-        if (false) {
-            if (bHudMode)
-                sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_PORTRAIT);
-            else sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
-
-        }
-
     }
 
 
@@ -796,9 +784,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		pitchValue = -sensorComplementaryFilter.getPitch();
 		rollValue = -sensorComplementaryFilter.getRoll();
 
-        pitchValue = 0.5f; // TODO: 2017-01-29
-        rollValue = 3.0f;
-
 		hasSpeed = true;
 		hasGps = true;
 
@@ -863,9 +848,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		// Read the Sensors
 		//
-		//sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
-		if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_LANDSCAPE);
-		else sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
+        if (bLandscapeMode) {
+            if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_LANDSCAPE);
+            else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
+        }
+        else {
+            if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_PORTRAIT);
+            else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
+        }
 
 		sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
@@ -1002,17 +992,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
-		s = String.format("GPS: %d / %d", gps_infix, gps_insky);
-		mGLView.setMSG(4, s);
 
-		// used for debugging
-		// s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000);
-		// mGLView.setMSG(3, s);
-	  //s = String.format("BIAS: %d", (int) (sensorBias*100));
-	   //mGLView.setMSG(1, s);
+        s = String.format("GPS: %d / %d", gps_infix, gps_insky);
+        mGLView.setGpsStatus(s);
 
-		s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
-	  mGLView.setMSG(1, s);
+        //s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
+        //mGLView.setMSG(5, s);
+
+        // used for debugging
+        // s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000);
+        // mGLView.setMSG(3, s);
+        //s = String.format("BIAS: %d", (int) (sensorBias*100));
+        //mGLView.setMSG(1, s);
+
 	}
 }
 

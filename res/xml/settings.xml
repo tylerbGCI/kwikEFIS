@@ -37,8 +37,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayRmi"
-            android:summary="Engage Remote Indicator display"
-            android:title="Remote Indicator" />
+            android:summary="Engage Compass and Bearing Indicator"
+            android:title="Compass Rose" />
         
         </PreferenceCategory>
         
@@ -136,7 +136,8 @@
     <!--
   <EditTextPreference android:title="Your Name"
                       android:key="username"
-                      android:summary="Please provide your username"></EditTextPreference>
+                      android:summary="Please provide your username"></EditTextPreference>
+
     -->
     <!--
   <EditTextPreference android:title="Your Name"
@@ -151,6 +152,7 @@
                       android:key="downloadType"
                       android:defaultValue="1"
                       android:entries="@array/listArray"
-                      android:entryValues="@array/listValues" />
+                      android:entryValues="@array/listValues" />
+
     -->
 

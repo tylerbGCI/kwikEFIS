@@ -282,8 +282,13 @@ public class EFISSurfaceView extends GLSurfaceView
 		requestRender();
 	}
 
+    void setGpsStatus(String gpsstatus)
+    {
+        mRenderer.setGpsStatus(gpsstatus);
+        requestRender();
+    }
 
-	void setDisplayFPV(boolean display)
+    void setDisplayFPV(boolean display)
 	{
 		mRenderer.setDisplayFPV(display);
 		requestRender();
