@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ac_list_names">
+        <item>GENERIC - Generic / Ultralight</item>
+        <item>AZTEC - Piper Aztec</item>
+        <item>CRICRI - Colomban CriCri</item>
+        <item>CRUZ - Piper Cruiser</item>
+        <item>J160 - Jabiru</item>
+        <item>LGEZ - Rutan Long EZ</item>
+        <item>PA28 - Piper Cherokee</item>
+        <item>RV6 - Vans RV-6</item>
+        <item>RV7 - Vans RV-7</item>
+        <item>RV8 - Vans RV-8</item>
+        <item>T18 - Thorp</item>
+        <item>W10 - Wittman Tailwind</item>
+    </string-array>
+    <string-array name="ac_list_values">
+        <item>GENERIC</item>
+        <item>AZTEC</item>
+        <item>CRICRI</item>
+        <item>CRUZ</item>
+        <item>J160</item>
+        <item>LGEZ</item>
+        <item>PA28</item>
+        <item>RV6</item>
+        <item>RV7</item>
+        <item>RV8</item>
+        <item>T18</item>
+        <item>W10</item>
+    </string-array>
+    <string-array name="region_names">
+        <item>South Africa / Australia</item>
+        <item>USA / Canada</item>
+    </string-array>
+    <string-array name="region_values">
+        <item>zar.aus</item>
+        <item>usa.can</item>
+    </string-array>
+    <string-array name="screen_mode_names">
+        <item>Locked</item>
+        <item>Landscape</item>
+
+    </string-array>
+    <string-array name="screen_mode_values">
+        <item>0.0.0</item>
+    </string-array>
+    <string-array name="sensor_bias_names">
+        <item>All Gyro</item>
+        <item>Favour Gyro</item>
+        <item>50/50</item>
+        <item>Favour GPS</item>
+        <item>All GPS</item>
+        </string-array>
+    <string-array name="sensor_bias_values">
+        <item>1.0f</item>
+        <item>0.85f</item>
+        <item>0.50f</item>
+        <item>0.15f</item>
+        <item>0.00f</item>
+        </string-array>
+    <string-array name="version_names">
+        <item>0.0.0</item>
+    </string-array>
+    <string-array name="version_values">
+    </string-array>
+    <string name="app_name">Kwik EFIS</string>
+    <string name="copyright">Nine Lima, 2017</string>
+    <string name="hello">Hello, OpenGL ES 2.0!</string>
+</resources>

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\xml\\settings.xml",
+        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\xml\\settings.xml"
+    },
+    {
+        "merged": "H:\\SRC\\kwikEFIS\\android\\build\\intermediates\\res\\merged\\debug\\xml\\manage.xml",
+        "source": "H:\\SRC\\kwikEFIS\\android\\src\\main\\res\\xml\\manage.xml"
+    }
+]
