@@ -243,7 +243,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		float[] fdMatrix = new float[16];  // moved to class scope
 		float[] rmiMatrix = new float[16]; // moved to class scope
 
-
 		// Draw background color
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -328,9 +327,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				//xly = -0.40f * pixH2; // bottom left
                 //xlx = 0.75f * pixW2; // top right
                 //xly = 0.55f * pixH2; // top right
-                xlx = -0.75f * pixW2; // top left
-                xly =  0.55f * pixH2; // top left
-				roseScale = 0.45f;
+                xlx = -0.74f * pixW2; // top left -0.75
+                xly =  0.50f * pixH2; // top left  0.55
+				roseScale = 0.44f;
 			}
 			else {
 				//Portrait
@@ -344,11 +343,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
 			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
 			renderBearingTxt(mMVPMatrix);
+            renderFixedCompassMarkers(mMVPMatrix);
 			Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedCompassMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            //Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            //renderFixedCompassMarkers(mMVPMatrix);
+            //Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
 
             renderCompassRose(rmiMatrix);
@@ -451,7 +451,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (Layout == layout_t.LANDSCAPE) {
             // Landscape
             lineC =  0.50f;
-            lineB =  0.10f;
+            lineB =  0.00f;
 
             // Top
             selWptDec =  0.90f * pixH2;
@@ -2442,7 +2442,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Display all the relevant auto wpt information with
     // A combo function to replace the individual ones
     //
-    float lineB = 0.50f;  // Auto Wpt
+    float lineB;  // Auto Wpt - Set in onSurfaceChanged
     private void renderAutoWptDetails(float[] matrix)
     {
         //float z, pixPerUnit;
@@ -2523,10 +2523,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	float mWptSelLon = 115.871000f;
 	String mAltSelName = "00000";
 	float mAltSelValue = 0;
-	float leftC = 0.6f;
-    float lineC = 0.50f;
-    float selWptDec; // = 0.90f * pixH2;
-    float selWptInc; // = 0.74f * pixH2;
+	float leftC = 0.6f;   // Selected Wpt
+    float lineC;          // Selected Wpt - Set in onSurfaceChanged
+    float selWptDec;      // = 0.90f * pixH2;
+    float selWptInc;      // = 0.74f * pixH2;
 
 
 	private void renderSelWptValue(float[] matrix)
@@ -2980,7 +2980,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mLine.SetWidth(2);  //3
         //mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
         //mLine.SetColor(1, 1, 0, 1);  // light yellow
-        mLine.SetColor(0.9f, 0.9f, 0.0f, 1);
+        mLine.SetColor(0.9f, 0.9f, 0.9f, 1);
         for (i = 0; i <= 315; i=i+45) {
 
             if (i % 90 == 0) mLine.SetWidth(4);
@@ -2989,22 +2989,22 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             sinI = UTrig.isin((450 - i) % 360);
             cosI = UTrig.icos((450 - i) % 360);
             mLine.SetVerts(
-                    1.05f * roseRadius * cosI, 1.05f * roseRadius * sinI, z,
-                    1.20f * roseRadius * cosI, 1.20f * roseRadius * sinI, z
+                    1.005f * roseRadius * cosI, 1.005f * roseRadius * sinI, z,
+                    1.120f * roseRadius * cosI, 1.120f * roseRadius * sinI, z
             );
             mLine.draw(matrix);
         }
 
         // Apex marker
         float pixPerDegree;
-        //pixPerDegree = pixM2 / pitchInView;					// Put the markers in open space at zero pitch
-        pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
+        //pixPerDegree = pixM2 / pitchInView;
+        pixPerDegree = pixM2 / PPD_DIV;
 
-        mTriangle.SetColor(0.9f, 0.9f, 0.0f, 0);
+        mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
         mTriangle.SetVerts(
-                0.035f * pixM2, 16.5f * pixPerDegree, z,
-                -0.035f * pixM2, 16.5f * pixPerDegree, z,
-                0.0f, 15f * pixPerDegree, z);
+                0.035f * pixM2, 15.0f * pixPerDegree, z,
+               -0.035f * pixM2, 15.0f * pixPerDegree, z,
+                0.0f, 14.0f * pixPerDegree, z);
         mTriangle.draw(matrix);
 
 
