@@ -1486,7 +1486,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 
 			glText.begin( 0.5f, 0.5f, 0.5f, 1.0f, matrix ); // white
-			glText.setScale(1.5f); // was 1.2 
+			glText.setScale(1.5f); // was 1.2
 			glText.draw(t, outerTic + glText.getCharWidthMax()/2, iPix - glText.getCharHeight() / 2);   // Draw String
 			glText.end();                                    
 
@@ -1521,7 +1521,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		int i, j;
 		float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
 
-		pixPerUnit =  0.75f* pixM2 / VSIInView ;
+		pixPerUnit =  1.0f* pixM2 / VSIInView ;
 		z = zfloat;
 
 		innerTic = 0.64f * pixM2;	// inner & outer are relative to the vertical scale line
@@ -1530,7 +1530,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 		// VSI box
-		for (i = -2; i<=2; i += 1) { 
+		for (i = -2; i <= 2; i += 1) {
 			mLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // grey
 			mLine.SetWidth(4);
 			mLine.SetVerts(
@@ -1540,10 +1540,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mLine.draw(matrix);
 
 			if (i != 0) {
-				String t = Integer.toString(Math.abs(i));
+				String s = Integer.toString(Math.abs(i));
 				glText.begin( 0.75f, 0.75f, 0.75f, 1.0f, matrix ); // light grey
-				glText.setScale(1.75f);  
-				glText.draw(t, innerTic - 1.5f * glText.getLength(t), i*1000*pixPerUnit - glText.getCharHeight() / 2);           
+				glText.setScale(3.0f);   //1.75f
+				glText.draw(s, innerTic - 1.5f * glText.getLength(s), i*1000*pixPerUnit - glText.getCharHeight() / 2);
 				glText.end();                                   
 			}
 		}
