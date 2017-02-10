@@ -345,7 +345,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
 			renderBearingTxt(mMVPMatrix);
 			Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-			renderCompassRose(rmiMatrix);
+
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedCompassMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+
+            renderCompassRose(rmiMatrix);
 			renderBearing(rmiMatrix);
 		}
 
@@ -967,9 +973,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private void renderRollMarkers(float[] matrix)
 	{
 		float z, pixPerDegree;
-
 		z = zfloat;
-		//pixPerDegree = pixM2 / pitchInView;							// Put the markers in open space at zero pitch
+		//pixPerDegree = pixM2 / pitchInView;					// Put the markers in open space at zero pitch
 		pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
 
 		mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
@@ -2959,8 +2964,66 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//
 	//-----------------------------------------------------------------------------
 	// todo - render fixed RMI markers
-	
 	float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
+
+    private void renderFixedCompassMarkers(float[] matrix)
+    {
+        float tapeShade = 0.6f;
+        int i, j;
+        //float innerTic, outerTic, iPix;
+        float z, sinI, cosI;
+        String t;
+        float roseRadius = roseScale * pixM2;
+
+        z = zfloat;
+
+        mLine.SetWidth(2);  //3
+        //mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
+        //mLine.SetColor(1, 1, 0, 1);  // light yellow
+        mLine.SetColor(0.9f, 0.9f, 0.0f, 1);
+        for (i = 0; i <= 315; i=i+45) {
+
+            if (i % 90 == 0) mLine.SetWidth(4);
+            else mLine.SetWidth(2);
+
+            sinI = UTrig.isin((450 - i) % 360);
+            cosI = UTrig.icos((450 - i) % 360);
+            mLine.SetVerts(
+                    1.05f * roseRadius * cosI, 1.05f * roseRadius * sinI, z,
+                    1.20f * roseRadius * cosI, 1.20f * roseRadius * sinI, z
+            );
+            mLine.draw(matrix);
+        }
+
+        // Apex marker
+        float pixPerDegree;
+        //pixPerDegree = pixM2 / pitchInView;					// Put the markers in open space at zero pitch
+        pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
+
+        mTriangle.SetColor(0.9f, 0.9f, 0.0f, 0);
+        mTriangle.SetVerts(
+                0.035f * pixM2, 16.5f * pixPerDegree, z,
+                -0.035f * pixM2, 16.5f * pixPerDegree, z,
+                0.0f, 15f * pixPerDegree, z);
+        mTriangle.draw(matrix);
+
+
+    }
+
+    /*
+		float z, pixPerDegree;
+		z = zfloat;
+		//pixPerDegree = pixM2 / pitchInView;					// Put the markers in open space at zero pitch
+		pixPerDegree = pixM2 / PPD_DIV;							// Put the markers in open space at zero pitch
+
+		mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
+        mTriangle.SetVerts(
+            0.035f * pixM2, 13.5f * pixPerDegree, z,
+        -0.035f * pixM2, 13.5f * pixPerDegree, z,
+        0.0f, 15f * pixPerDegree, z);
+        mTriangle.draw(matrix);
+    */
+
 	
 	private void renderCompassRose(float[] matrix)
 	{
