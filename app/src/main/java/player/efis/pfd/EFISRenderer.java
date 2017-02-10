@@ -735,11 +735,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 	private void renderDemoMode(float[] matrix)
 	{
-		String t = sDemoMsg; //"demo mode";
+		String s = sDemoMsg; //"demo mode";
 		glText.begin( 1.0f, 0f, 0f, 1.0f, matrix ); // Red
-		glText.setScale(5.0f); 							// 
-		//glText.drawCX(t, 0, - pixM2 / 2);            // Draw  String
-        glText.drawCX(t, 0, - pixH2 / 2);            // Draw  String
+		glText.setScale(10.0f); 							//
+		//glText.drawCX(t, 0, - pixM2 / 2);
+        glText.drawCX(s, 0, 0);
 		glText.end();
 	}
 
@@ -3049,10 +3049,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			}
 		}
 	}
-	
+
+    //-------------------------------------------------------------------------
+    // Render the two RMI needles
+    //
 	void renderBearing(float[] matrix)
 	{
-		
 		float z, sinI, cosI, _sinI, _cosI;
 		float roseRadius = roseScale * pixM2;
 
@@ -3061,24 +3063,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//
 		// Bearing to Automatic Waypoint
 		//
-		mLine.SetWidth(3); 
+		mLine.SetWidth(5); //3);
 		mLine.SetColor(0.7f, 0.7f, 0.0f, 1);  // yellow 
 
-    sinI = UTrig.isin(90-(int)mAutoWptBrg);
-    cosI = UTrig.icos(90-(int)mAutoWptBrg);
-    _sinI = 0.5f*UTrig.isin(90-(int)mAutoWptBrg);
-    _cosI = 0.5f*UTrig.icos(90-(int)mAutoWptBrg);
+        sinI = 0.9f*UTrig.isin(90-(int)mAutoWptBrg);
+        cosI = 0.9f*UTrig.icos(90-(int)mAutoWptBrg);
+        _sinI = 0.5f*UTrig.isin(90-(int)mAutoWptBrg);
+        _cosI = 0.5f*UTrig.icos(90-(int)mAutoWptBrg);
     
-    //tail
+        //tail
 		mLine.SetVerts(
 				-roseRadius * _cosI, -roseRadius * _sinI, z,
 				-roseRadius * cosI,  -roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
-    // head
+        // head
 		// point L
-    _sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg + 6);
-    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg + 6);
+        _sinI = 0.80f * UTrig.isin(90-(int)mAutoWptBrg + 6);
+        _cosI = 0.80f * UTrig.icos(90-(int)mAutoWptBrg + 6);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
@@ -3088,8 +3090,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// prallel
 		float parr = 0.40f;
 		
-    float __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg + 12);
-    float __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg + 12);
+        float __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg + 12);
+        float __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg + 12);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * __cosI,  roseRadius * __sinI, z
@@ -3097,8 +3099,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mLine.draw(matrix);
     
 		// point R
-		_sinI = 0.85f * UTrig.isin(90-(int)mAutoWptBrg - 5);
-    _cosI = 0.85f * UTrig.icos(90-(int)mAutoWptBrg - 5);
+		_sinI = 0.80f * UTrig.isin(90-(int)mAutoWptBrg - 5);
+        _cosI = 0.80f * UTrig.icos(90-(int)mAutoWptBrg - 5);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
@@ -3106,8 +3108,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mLine.draw(matrix);
 
 		// prallel
-     __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg - 12);
-     __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg - 12);
+         __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg - 12);
+         __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg - 12);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * __cosI,  roseRadius * __sinI, z
@@ -3117,16 +3119,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//
 		// Bearing to Selected Waypoint
 		//
-		mLine.SetWidth(6); 
+		mLine.SetWidth(8); //6
 		//mLine.SetColor(0, 0.7f, 0, 1);  // green
 		mLine.SetColor(0.99f, 0.5f, 0.99f, 1); // purple'ish
 
-    sinI = UTrig.isin(90-(int)mSelWptBrg);
-    cosI = UTrig.icos(90-(int)mSelWptBrg);
-    _sinI = 0.5f*UTrig.isin(90-(int)mSelWptBrg);
-    _cosI = 0.5f*UTrig.icos(90-(int)mSelWptBrg);
+        sinI = 0.9f*UTrig.isin(90-(int)mSelWptBrg);
+        cosI = 0.9f*UTrig.icos(90-(int)mSelWptBrg);
+        _sinI = 0.5f*UTrig.isin(90-(int)mSelWptBrg);
+        _cosI = 0.5f*UTrig.icos(90-(int)mSelWptBrg);
 
-    //tail
+        //tail
 		mLine.SetVerts(
 				-roseRadius * _cosI, -roseRadius * _sinI, z,
 				-roseRadius * cosI,  -roseRadius * sinI, z
@@ -3139,24 +3141,22 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				);
 		mLine.draw(matrix);
 
-		mLine.SetWidth(3); 
+		mLine.SetWidth(6); //3
 		// point
-    _sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg + 9); //6
-    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg + 9);
+        _sinI = 0.80f * UTrig.isin(90-(int)mSelWptBrg + 9); //6
+        _cosI = 0.80f * UTrig.icos(90-(int)mSelWptBrg + 9);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
-		_sinI = 0.85f * UTrig.isin(90-(int)mSelWptBrg - 8);  //5
-    _cosI = 0.85f * UTrig.icos(90-(int)mSelWptBrg - 8);
+		_sinI = 0.80f * UTrig.isin(90-(int)mSelWptBrg - 8);  //5
+        _cosI = 0.80f * UTrig.icos(90-(int)mSelWptBrg - 8);
 		mLine.SetVerts(
 				roseRadius * _cosI, roseRadius * _sinI, z,
 				roseRadius * cosI,  roseRadius * sinI, z
 				);
 		mLine.draw(matrix);
-	
-	
 	}
 	
 
@@ -3164,7 +3164,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		float roseRadius = roseScale * pixM2;
 		float scale = 1.6f;  // not sure why this is > 1.0 Does not really make sense
-                         // it is somehow related to which matrix it is drawn on  
+                             // it is somehow related to which matrix it is drawn on
 		
 		//
 		// Bearing to Selected Waypoint
@@ -3182,7 +3182,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		glText.drawC(mAutoWpt , 0, -0.12f*roseRadius, 0);             
 		glText.end();                                   
 	}
-	
+}
+
+
 
 /*
 //-------------------------------------------------
@@ -3196,13 +3198,10 @@ QGLWidget::renderText (-0.97*pixW2, 0.80*pixH2, z+.1, t, font, 2000 ) ;
 
 t = (QString( "%1" ).sprintf("GS: %03.1f", GSValue )); // todo ... demo
 QGLWidget::renderText (-0.97*pixW2, 0.60*pixH2, z+.1, t, font, 2000 ) ;
-	 */
+*/
 
 
-	/*
-
-
-
+/*
 void GLPFD::renderDIMarkers()
 {
 	GLint i, j;
@@ -3306,7 +3305,7 @@ void GLPFD::setROT(float rot)
 }
 
 //
-//	Set the bearing (to steer) 
+//	Set the bearing (to steer)
 //
 
 void GLPFD::setBearing(int degrees)
@@ -3315,12 +3314,7 @@ void GLPFD::setBearing(int degrees)
 	updateGL();
 }
 
-	 */
-
-
-
-}
-
+*/
 
 
 
