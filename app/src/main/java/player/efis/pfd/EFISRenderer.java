@@ -65,10 +65,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAcraftModel = AircraftModel.J160; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.LGEZ; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.PA28; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.RV6;
-	//private final static AircraftModel mAcraftModel = AircraftModel.RV7;
+	//private final static AircraftModel mAcraftModel = AircraftModel.RV6; //done
+	//private final static AircraftModel mAcraftModel = AircraftModel.RV7; //done
 	//private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
-	//private final static AircraftModel mAcraftModel = AircraftModel.T18;
+	//private final static AircraftModel mAcraftModel = AircraftModel.T18; // removed
 	//private final static AircraftModel mAcraftModel = AircraftModel.W10; //done
 
 	private static AircraftModel mAcraftModel = AircraftModel.RV8;  
@@ -150,19 +150,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//RMI
 	boolean displayRMI;  // debug
 	float RMIRotation;
-	
+	//3D map display
 	boolean displayAirport;
-
 	private boolean displayTerrain;
 	private boolean displayTape;
 	private boolean displayMirror;
 	private boolean displayFPV;
 
-	private boolean ServiceableDevice;	
-	private boolean ServiceableAh;	
-	private boolean ServiceableAlt;	
-	private boolean ServiceableAsi;	
-	private boolean ServiceableDi;
+	private boolean ServiceableDevice;	// Flag to indicate no faults
+	private boolean ServiceableAh;	    // Flag to indicate AH failure
+	private boolean ServiceableAlt;	    // Flag to indicate Altimeter failure
+	private boolean ServiceableAsi;   	// Flag to indicate Airspeed failure
+	private boolean ServiceableDi;      // Flag to indicate DI failure
 	private boolean Calibrating;
 	private String  CalibratingMsg;
 
@@ -739,8 +738,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = sDemoMsg; //"demo mode";
 		glText.begin( 1.0f, 0f, 0f, 1.0f, matrix ); // Red
 		glText.setScale(5.0f); 							// 
-		glText.drawCX(t, 0, - pixM2 / 2);            // Draw  String
-		glText.end();                                    
+		//glText.drawCX(t, 0, - pixM2 / 2);            // Draw  String
+        glText.drawCX(t, 0, - pixH2 / 2);            // Draw  String
+		glText.end();
 	}
 
 
@@ -815,6 +815,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// The lubber line - W style
         // We might make this configurable in future
+        // for now force it to false
 		if (false) {
 			mPolyLine.SetColor(1, 1, 0, 1);
 			mPolyLine.SetWidth(6); 
@@ -2278,10 +2279,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				mPolyLine.draw(matrix);
 			}
 
-			String t = wptId;
+			String s = wptId;
 			glText.begin( 1.0f, 0.5f, 1.0f , 0, matrix);  // purple
 			glText.setScale(2.0f); 	
-			glText.drawCY(t, x1, y1 + glText.getCharHeight()/2 );        
+			glText.drawCY(s, x1, y1 + glText.getCharHeight()/2 );
 			glText.end(); 
 
 			/*if (Math.abs(relBrg) < Math.abs(_relBrg)) {
