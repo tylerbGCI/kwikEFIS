@@ -346,11 +346,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderFixedCompassMarkers(mMVPMatrix);
 			Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            //Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            //renderFixedCompassMarkers(mMVPMatrix);
-            //Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-
-
             renderCompassRose(rmiMatrix);
 			renderBearing(rmiMatrix);
 		}
@@ -568,8 +563,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 	
 	//-------------------------------------------------------------------------
-    // Define the various built-in arcraft definitions
-    //
+  // Define the various built-in arcraft definitions
+  //
 	public void setAircraftData(String model)
 	{
 		try {
@@ -580,56 +575,57 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mAcraftModel = AircraftModel.RV8;
 		}
 
+
 		// Generic - Ultralight
-		Vs0 = 30;  // Stall, flap extended
-		Vs1 = 40;  // Stall, flap retracted
-		Vx  = 50;  // Best angle climb
-		Vy  = 60;  // Best rate climb 
-		Vfe = 70;  // Flaps extension
-		Va  = 80;  // Maneuvering
-		Vno = 100; // Max structural cruise
-		Vne = 120; // Never exceed
-		
+		// Vs0 = 30;  // Stall, flap extended
+		// Vs1 = 40;  // Stall, flap retracted
+		// Vx  = 50;  // Best angle climb
+		// Vy  = 60;  // Best rate climb
+		// Vfe = 70;  // Flaps extension
+		// Va  = 80;  // Maneuvering
+		// Vno = 100; // Max structural cruise
+		// Vne = 120; // Never exceed
+		//
 		// White Arc  Vs0 - Vfe
 		// Green Arc  Vs1 - Vno
 		// Yellow Arc Vno - Vne
 		
 		switch (mAcraftModel) {
-		// "Conditional" compiles for various aircraft models
+		// V Speeds for various aircraft models
 		case GENERIC: 
 			// Ultralight
-			Vs0 = 30;
-			Vs1 = 40;
-			Vx  = 50;
-			Vy  = 60;
-			Vfe = 60;
-			Va  = 80;
-			Vno = 100;
-			Vne = 120;
+			Vs0 = 30;  // Stall, flap extended 
+			Vs1 = 40;  // Stall, flap retracted
+			Vx  = 50;  // Best angle climb     
+			Vy  = 60;  // Best rate climb      
+			Vfe = 60;  // Flaps extension      
+			Va  = 80;  // Maneuvering          
+			Vno = 100; // Max structural cruise
+			Vne = 120; // Never exceed         
 			break;
 
 		case AZTEC:
 			// Colomban CriCri
-			Vs0 = 61;
-			Vs1 = 66;
-			Vx  = 93; 
-			Vy  = 102; 
-			Vfe = 140;
-			Va  = 129;
-			Vno = 172;
-			Vne = 216;
+			Vs0 = 61;   // Stall, flap extended 
+			Vs1 = 66;   // Stall, flap retracted
+			Vx  = 93;   // Best angle climb     
+			Vy  = 102;  // Best rate climb      
+			Vfe = 140;  // Flaps extension      
+			Va  = 129;  // Maneuvering          
+			Vno = 172;  // Max structural cruise
+			Vne = 216;  // Never exceed         
 			break;
 		
 		case CRICRI:
 			// Colomban CriCri
-			Vs0 = 39;
-			Vs1 = 49;
-			Vx  = 56; // 62mph
-			Vy  = 68; // 75mph
-			Vfe = 70;
-			Va  = 85;
-			Vno = 100;
-			Vne = 140;
+			Vs0 = 39;  // Stall, flap extended
+			Vs1 = 49;  // Stall, flap retracted
+			Vx  = 56;  // Best angle climb
+			Vy  = 68;  // Best rate climb
+			Vfe = 70;  // Flaps extension
+			Va  = 85;  // Maneuvering
+			Vno = 100; // Max structural cruise
+			Vne = 140; // Never exceed  
 			break;
 		
 		case CRUZ:
@@ -646,52 +642,52 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		case J160:
 			// Jabiru J160-C
-			Vs0 = 40;
-			Vs1 = 45;
-			Vx  = 65; 
-			Vy  = 68; 
-			Vfe = 80;
-			Va  = 90;
-			Vno = 108;
-			Vne = 140;
+			Vs0 = 40;   // Stall, flap extended 
+			Vs1 = 45;   // Stall, flap retracted
+			Vx  = 65;   // Best angle climb     
+			Vy  = 68;   // Best rate climb      
+			Vfe = 80;   // Flaps extension      
+			Va  = 90;   // Maneuvering          
+			Vno = 108;  // Max structural cruise
+			Vne = 140;  // Never exceed         
 			break;
 		
 		case LGEZ:
 			// RV-8A
-			Vs0 = 56;
-			Vs1 = 56;
-			Vx  = 72;
-			Vy  = 90;
-			Vfe = 85;
-			Va  = 120;
-			Vno = 161;
-			Vne = 200;
+			Vs0 = 56;   // Stall, flap extended 
+			Vs1 = 56;   // Stall, flap retracted
+			Vx  = 72;   // Best angle climb     
+			Vy  = 90;   // Best rate climb      
+			Vfe = 85;   // Flaps extension      
+			Va  = 120;  // Maneuvering          
+			Vno = 161;  // Max structural cruise
+			Vne = 200;  // Never exceed         
 			break;
 			
 		case PA28:
 			// Piper PA28 Archer II
-			Vs0 = 49;
-			Vs1 = 55;
-			Vx  = 64;
-			Vy  = 76;
-			Vfe = 102;
-			Va  = 89;
-			Vno = 125;
-			Vne = 154;
+			Vs0 = 49;   // Stall, flap extended 
+			Vs1 = 55;   // Stall, flap retracted
+			Vx  = 64;   // Best angle climb     
+			Vy  = 76;   // Best rate climb      
+			Vfe = 102;  // Flaps extension      
+			Va  = 89;   // Maneuvering          
+			Vno = 125;  // Max structural cruise
+			Vne = 154;  // Never exceed         
 			break;
 			
 		case RV6:
 		case RV7: 
 		case RV8:
 			// RV-6,7,8
-			Vs0 = 51;
-			Vs1 = 56;
-			Vx  = 72;
-			Vy  = 90;
-			Vfe = 85;
-			Va  = 120;
-			Vno = 165;
-			Vne = 200;
+			Vs0 = 51;    // Stall, flap extended 
+			Vs1 = 56;    // Stall, flap retracted
+			Vx  = 72;    // Best angle climb     
+			Vy  = 90;    // Best rate climb      
+			Vfe = 85;    // Flaps extension      
+			Va  = 120;   // Maneuvering          
+			Vno = 165;   // Max structural cruise
+			Vne = 200;   // Never exceed         
 			break;
 	
 		case W10:
@@ -708,14 +704,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		default:
 			// RV-8A
-			Vs0 = 51;
-			Vs1 = 56;
-			Vx  = 72;
-			Vy  = 90;
-			Vfe = 85;
-			Va  = 120;
-			Vno = 165;
-			Vne = 200;
+			Vs0 = 51;    // Stall, flap extended 
+			Vs1 = 56;    // Stall, flap retracted
+			Vx  = 72;    // Best angle climb     
+			Vy  = 90;    // Best rate climb      
+			Vfe = 85;    // Flaps extension      
+			Va  = 120;   // Maneuvering          
+			Vno = 165;   // Max structural cruise
+			Vne = 200;   // Never exceed         
 			break;
 		}
 	}
@@ -1764,41 +1760,41 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 			// Tape markings for V speeds
             // Re use midTic ... maybe not such a good idea ...
-			midTic = -0.75f * pixM2;													// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
+			midTic = -0.75f * pixM2;					// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
 			//midTic = -1.17f * pixM2;	// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
-			mSquare.SetColor(0, 0.5f, 0, 1);  // dark green;
+			mSquare.SetColor(0, 0.5f, 0, 1);  // dark green arc
 			mSquare.SetWidth(1);
 			{
 				float[] squarePoly = {
 						innerTic, (float) Vs1 * pixPerUnit, z, //-.2);
 						innerTic, (float) Vno * pixPerUnit, z, //-.2);
-						midTic, (float) Vno * pixPerUnit, z, //-.2);
-						midTic, (float) Vs1 * pixPerUnit, z //-.2);
+						midTic,   (float) Vno * pixPerUnit, z, //-.2);
+						midTic,   (float) Vs1 * pixPerUnit, z  //-.2);
 				};
 				mSquare.SetVerts(squarePoly);
-				mSquare.draw(matrix);
+			mSquare.draw(matrix);
 			}
-			mSquare.SetColor(0.5f, 0.5f, 0.5f, 1);  // white
+			mSquare.SetColor(0.5f, 0.5f, 0.5f, 1);  // white arc
 			mSquare.SetWidth(1);
 			{
 				float[] squarePoly = {
 						innerTic, (float) Vs0 * pixPerUnit, z, //-.2);
 						innerTic, (float) Vfe * pixPerUnit, z, //-.2);
-						midTic, (float) Vfe * pixPerUnit, z, //-.2);
-						midTic, (float) Vs0 * pixPerUnit, z //-.2);
+						midTic,   (float) Vfe * pixPerUnit, z, //-.2);
+						midTic,   (float) Vs0 * pixPerUnit, z  //-.2);
 				};
 				mSquare.SetVerts(squarePoly);
 				mSquare.draw(matrix);
 			}
 
-			mSquare.SetColor(0.9f, 0.9f, 0, 1);  // yellow
+			mSquare.SetColor(0.9f, 0.9f, 0, 1);  // yellow arc
 			mSquare.SetWidth(1);
 			{
 				float[] squarePoly = {
 						innerTic, (float) Vno * pixPerUnit, z, //-.2);
 						innerTic, (float) Vne * pixPerUnit, z, //-.2);
-						midTic, (float) Vne * pixPerUnit, z, //-.2);
-						midTic, (float) Vno * pixPerUnit, z //-.2);
+						midTic,   (float) Vne * pixPerUnit, z, //-.2);
+						midTic,   (float) Vno * pixPerUnit, z  //-.2);
 				};
 				mSquare.SetVerts(squarePoly);
 				mSquare.draw(matrix);
