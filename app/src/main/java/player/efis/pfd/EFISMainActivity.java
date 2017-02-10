@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.location.GpsStatus.Listener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
@@ -85,9 +84,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
-	float SlipOffset = 0;
-	float GmeterOffset = 0;
-	float loadfactorCal = 0;
+	// --Commented out by Inspection (2017-02-10 15:02):float SlipOffset = 0;
+	// --Commented out by Inspection (2017-02-10 15:02):float GmeterOffset = 0;
+	// --Commented out by Inspection (2017-02-10 15:02):float loadfactorCal = 0;
 	int calibrationCount = 0;
 
 	// Location abstracts
@@ -546,7 +545,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // If the database changed it needs to be re-loaded.
         s = SP.getString("regionDatabase", "zar.aus");
-        if (mGpx.region != s) mGpx.loadDatabase(s);
+        if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);
 
 
         // First go at the landscape / porait mode toggle
@@ -771,7 +770,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// It acts like a very simple flight simulator
 	//
 	static int counter;
-	DigitalFilter filterTestAlt = new DigitalFilter(128); //32
+	// --Commented out by Inspection (2017-02-10 15:03):DigitalFilter filterTestAlt = new DigitalFilter(128); //32
 	float _gps_lon = 116; //0;
 	float	_gps_lat = -32; //0;
 	float _gps_course = 0;
@@ -826,7 +825,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
 	//for landscape mode
-	private float azimuthValue;
+	// private float azimuthValue;
 	private float rollValue;
 	private float pitchValue;
 	private float gyro_rateOfTurn;
@@ -886,14 +885,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		hasGps = isGPSAvailable();
 
-		// debug
+		// for debug
 		if (false) {
 			hasGps = true; //debug
 			hasSpeed = true; //debug
 			gps_speed = 3;//60; //m/s debug
 			gps_rateOfClimb = 1.0f; //m/s debug
 		}
-		// debug
+		// end debug
 
 		//
 		//Demo mode handler
