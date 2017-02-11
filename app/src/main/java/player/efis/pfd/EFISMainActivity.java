@@ -992,7 +992,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setLatLon(gps_lat, gps_lon);
 		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
 
-        s = String.format("GPS: %d / %d", gps_infix, gps_insky);
+        s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
 
         //s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));

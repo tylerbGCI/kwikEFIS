@@ -17,7 +17,7 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="infoPage"
-            android:summary="Automatic details page"
+            android:summary="Ancillary details page"
             android:title="Details" />
         
         <CheckBoxPreference

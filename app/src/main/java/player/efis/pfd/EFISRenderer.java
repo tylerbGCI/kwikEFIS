@@ -131,10 +131,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private float DIInView;        	// The indicated units to display above the center line
 	private float DIValue;          // Altitude MSL
 	private float SlipValue;        // was int
-	private float BatteryPct;
-	private float GForceValue;
+	private float BatteryPct;       // Battery usage
+	private float GForceValue;      // G force
 	private float GSValue;
-	private float ROTValue;
+	private float ROTValue;         // Rate Of Turn
 	private float DITranslation;   	// Value amplified by 1/2 window pixels for use by glTranslate
 	// Geographic Coordinates
 	private float LatValue;  		// Latitude
@@ -348,6 +348,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             renderCompassRose(rmiMatrix);
 			renderBearing(rmiMatrix);
+            renderAutoWptDetails(mMVPMatrix);
 		}
 
 		if (displayFlightDirector || displayRMI)   
@@ -391,7 +392,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         renderTurnMarkers(mMVPMatrix);
 		renderSlipBall(mMVPMatrix);
-		renderBatteryPct(mMVPMatrix);
 		renderGForceValue(mMVPMatrix);
 
 		if (displayInfoPage) { 
@@ -402,7 +402,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			*/
 			//renderMSGValue(mMVPMatrix); // need to phase this out, causes problems with portrait/landscape
             renderAncillaryDetails(mMVPMatrix);
-            renderAutoWptDetails(mMVPMatrix);
+            renderBatteryPct(mMVPMatrix);
+            //renderAutoWptDetails(mMVPMatrix);
 		}
 
 		if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
@@ -2218,7 +2219,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	static final int MX_NR_APT = 10;
 	static int MX_RANGE = 20;   //nm
 	static int counter = 0;
-
+    static int nrAptsFound;
 	private void renderAPT(float[] matrix)
 	{
 		float z, pixPerDegree, x1, y1;
@@ -2233,9 +2234,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		double _d = 6080000; // 1,000 nm 
 		double relBrg = 0;    // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 		double _relBrg = 180; // Assume the worst
-		int nrAptsFound = 0;
 
-		Iterator <Apt> it = Gpx.aptList.iterator(); 
+        nrAptsFound = 0;
+		Iterator <Apt> it = Gpx.aptList.iterator();
 		while (it.hasNext()) {
 			Apt currApt;//  = it.next();
 			try {
@@ -2315,7 +2316,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
 		MX_RANGE = Math.min(MX_RANGE, 99);
 
-        setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); // // TODO: 2017-02-07 move to own handlers 
+        //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); // // TODO: 2017-02-07 move to own handlers
     }
 
 	void setLatLon(float lat, float lon)
@@ -2408,14 +2409,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 	String mAutoWpt = "YSEN";
-
     void setAutoWptValue(String wpt)
 	{
 		mAutoWpt = wpt;
 	}
 
 	float mAutoWptBrg;
-
 	void setAutoWptBrg(float brg)
 	{
 		mAutoWptBrg = brg;
@@ -2472,20 +2471,20 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
         glText.setScale(2.0f);
 
-        //s = String.format("TST %03.1f", mAutoWptDme);
-        //glText.draw(s, -0.97f * pixW2, (lineA-0.2f)*pixM2 - glText.getCharHeight()/2 );
-
-        //String.format("GPS: %d / %d", gps_infix, gps_insky);
         s = mGpsStatus; //String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
         glText.draw(s, -0.97f * pixW2, (lineA-0.3f)*pixM2 - glText.getCharHeight()/2 );
 
-        //private float LatValue;  		// Latitude
-        //private float LonValue;  		// Longitude
-
+        /*
         s = String.format("%c%03.2f %c%03.2f",  (LatValue < 0)?  'S':'N' , Math.abs(LatValue), (LonValue < 0)? 'W':'E' , Math.abs(LonValue));
         glText.draw(s, -0.97f * pixW2, (lineA-0.4f)*pixM2 - glText.getCharHeight()/2 );
+         */
+
+        s = String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound);
+        glText.draw(s, -0.97f * pixW2, (lineA-0.4f)*pixM2 - glText.getCharHeight()/2 );
+
         glText.end();
 
+        //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound));
     }
 
 
