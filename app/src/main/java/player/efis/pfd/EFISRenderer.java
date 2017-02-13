@@ -334,8 +334,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else {
 				//Portrait
 				xlx = -0.00f * pixW2;
-				xly = -0.45f * pixH2;
-				roseScale = 0.45f; //0.50f;
+				xly = -0.44f * pixH2;  //0.45f
+				roseScale = 0.52f; //0.45f; //0.50f;
 			}
 
 			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
@@ -2997,9 +2997,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
         mTriangle.SetVerts(
-                0.035f * pixM2, 15.0f * pixPerDegree, z,
-               -0.035f * pixM2, 15.0f * pixPerDegree, z,
-                0.0f, 14.0f * pixPerDegree, z);
+                0.035f * pixM2, 1.120f * roseRadius, z,
+               -0.035f * pixM2, 1.120f * roseRadius, z,
+                0.0f,    1.00f * roseRadius, z);
         mTriangle.draw(matrix);
 
 
