@@ -42,6 +42,7 @@ enum AircraftModel
 	RV7,
 	RV8,
 	// --Commented out by Inspection (2017-02-08 12:56):T18,
+    M20J,
 	W10
 }
 
@@ -89,6 +90,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private final float[] mRotationMatrix = new float[16];
 	private final float[] mFdRotationMatrix = new float[16];  // for Flight Director
 	private final float[] mRmiRotationMatrix = new float[16]; // for RMI / Compass Rose
+
+    private final float[] mPitchMatrix = new float[16];
+
 
 	private float mAngle; 
 
@@ -238,6 +242,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		float[] scratch1 = new float[16]; // moved to class scope
 		float[] scratch2 = new float[16]; // moved to class scope
+        float[] scratch3 = new float[16]; // moved to class scope
 		float[] altMatrix = new float[16]; // moved to class scope
 		float[] iasMatrix = new float[16]; // moved to class scope
 		float[] fdMatrix = new float[16];  // moved to class scope
@@ -266,6 +271,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		//??Matrix.multiplyMM(altMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0); ??
 
+        // HITS
+        //public static void setRotateM(float[] rm, int rmOffset, float a, float x, float y, float z) {
+        /*
+        Matrix.setRotateM(mPitchMatrix, 0, 5.5f, 0, 0, 1);
+        Matrix.multiplyMM(scratch3, 0, mMVPMatrix, 0, mPitchMatrix, 0);
+        Matrix.translateM(scratch3, 0, 0, -150.5f, 0);
+        renderHITS(scratch3);
+        Matrix.translateM(scratch3, 0, 0, +150.5f, 0);*/
+        //Matrix.translateM(mMVPMatrix, 0, 0, -250.5f, 0);
+        //Matrix.translateM(mMVPMatrix, 0, 0, +250.5f, 0);
+
+        /*
+        This technique could maybe be used
+        Matrix.setRotateM(mPitchMatrix, 0, 0.325f, 0, 1, 0);
+        Matrix.multiplyMM(scratch3, 0, scratch2, 0, mPitchMatrix, 0);  // todo rename to rlb
+        renderHITS(scratch3);
+        */
+
+
+
         // Pitch
         if (Layout == layout_t.LANDSCAPE) {
             // Slide pitch to current value
@@ -273,8 +298,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset;
-            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
+            float Adjust = pixH2 * portraitOffset; //portraitOffset set to 0.4
+            //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
+            Matrix.translateM(scratch1, 0, 0, Adjust, 0); // apply the pitch
         }
 
 		// Slide ALT to current value
@@ -289,8 +316,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         renderPitchMarkers(scratch1);
 
 		// FPV only means anything if we have speed and rate of climb, ie altitude
-		if (displayFPV) renderFPV(scratch1);  // must be on the same matrix as the Pitch
-		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch		
+		if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
+		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
+
+        renderHITS(scratch1);
 
 
         // Flight Director - FD
@@ -312,9 +341,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
 			renderFlightDirector(fdMatrix);
 			renderSelWptValue(mMVPMatrix);
+            renderSelWptDetails(mMVPMatrix);
 			renderSelAltValue(mMVPMatrix);
-		}
-		
+        }
+
+
 		// Remote Magnetic Inidicator - RMI
 		if (displayRMI) {
 			float xlx; // = -0.78f*pixW2;
@@ -351,8 +382,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderAutoWptDetails(mMVPMatrix);
 		}
 
-		if (displayFlightDirector || displayRMI)   
-		  renderSelWptValue(mMVPMatrix);
+		if (displayFlightDirector || displayRMI) {
+            renderSelWptValue(mMVPMatrix);
+            renderSelWptDetails(mMVPMatrix);
+        }
+
 
         if (Layout == layout_t.PORTRAIT) {
             // Slide pitch to current value adj for portrait
@@ -664,6 +698,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Vno = 161;  // Max structural cruise
 			Vne = 200;  // Never exceed         
 			break;
+
+        case M20J:
+            Vs0 = 53;   // Stall, flap extended
+            Vs1 = 53;   // Stall, flap retracted
+            Vx  = 66;   // Best angle climb
+            Vy  = 85;   // Best rate climb
+            Vfe = 115;  // Flaps extension
+            Va  = 120;  // Maneuvering
+            Vno = 152;  // Max structural cruise
+            Vne = 174;  // Never exceed
+            break;
+
 			
 		case PA28:
 			// Piper PA28 Archer II
@@ -1156,11 +1202,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		{
 			float[] squarePoly = {
 					-pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-					pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-					pixOverWidth, 0.0f + 0.0f/pixH2, z,
-					-pixOverWidth, 0.0f + 0.0f/pixH2, z
-					/*pixOverWidth, 0.0f + 1.0f/pixH2, z,
-					-pixOverWidth, 0.0f + 1.0f/pixH2, z*/
+					 pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth,  0.0f + 0.0f/pixH2, z,
+					-pixOverWidth,  0.0f + 0.0f/pixH2, z
 			};
 			mSquare.SetVerts(squarePoly);
 			mSquare.draw(matrix);
@@ -1173,9 +1217,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mSquare.SetWidth(1);
 		{
 			float[] squarePoly = {
-					-pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-					pixOverWidth,  -2.0f * pixPitchViewMultiplier, z,
-					pixOverWidth,  -1.0f * pixPitchViewMultiplier, z,
+				    -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+					 pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
 					-pixOverWidth, -1.0f * pixPitchViewMultiplier, z
 			};
 			mSquare.SetVerts(squarePoly);
@@ -2231,7 +2275,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// 0.16667 deg lat  = 10 nm
 		// 0.1 approx 5nm
 		double d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft 
-		double _d = 6080000; // 1,000 nm 
+		double _d = 6080000;  // 1,000 nm
 		double relBrg = 0;    // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 		double _relBrg = 180; // Assume the worst
 
@@ -2259,15 +2303,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else if ((nrAptsFound < MX_NR_APT) && (d < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
 			else continue;                                                              // we already have all the apts as we wish to display
 
-			relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;
+			relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 			if (relBrg >  180) relBrg = relBrg - 360;
 			if (relBrg < -180) relBrg = relBrg + 360;
 
 			x1 = (float) ( relBrg * pixPerDegree);
-			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) )  * pixPerDegree);
+			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) ) * pixPerDegree);    // we do not take apt elevation into account
 
 			mPolyLine.SetWidth(3); 
-			mPolyLine.SetColor(0.99f, 0.5f, 0.99f, 1); //purple'ish
+			mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
 			{
 				float[] vertPoly = {
 						x1 + 2.0f*radius, y1 + 0.0f*radius, z,
@@ -2287,14 +2331,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.drawCY(s, x1, y1 + glText.getCharHeight()/2 );
 			glText.end(); 
 
-			/*if (Math.abs(relBrg) < Math.abs(_relBrg)) {
-					// closest on the nose bearing
-					setWPTAutoValue(wptId); 
-					setDME((float) d/6080);  // 1nm = 6080ft
-					setRelBrg((float) relBrg);
-					_relBrg = relBrg;
-			}*/ 
-			
 			double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
 			while (absBrg < 0) absBrg += 360;
 			
@@ -2318,6 +2354,46 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); // // TODO: 2017-02-07 move to own handlers
     }
+
+    //-------------------------------------------------------------------------
+    // HITS
+    //
+    private void renderHITS(float[] matrix) {
+        float z, pixPerDegree, x1, y1;
+        float radius = 5;
+
+        pixPerDegree = pixM / pitchInView;
+        z = zfloat;
+
+        // Slide pitch to current value adj for portrait
+        float Adjust = pixH2 * portraitOffset;  // portraitOffset set to 0.4
+
+
+        mPolyLine.SetWidth(3);
+        mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
+        for (float i = 0; i > -6; i = i - 1f) {
+            z = i;
+            Adjust = -pixM2 * portraitOffset * i;
+            Adjust = 0;
+            {
+                float[] vertPoly = {
+                        -0.20f * pixM, Adjust - 0.10f * pixM, z,
+                         0.20f * pixM, Adjust - 0.10f * pixM, z,
+                         0.20f * pixM, Adjust + 0.10f * pixM, z,
+                        -0.20f * pixM, Adjust + 0.10f * pixM, z,
+                        -0.20f * pixM, Adjust - 0.10f * pixM, z
+                };
+                mPolyLine.VertexCount = 5;
+                mPolyLine.SetVerts(vertPoly);
+                mPolyLine.draw(matrix);
+            }
+        }
+
+
+
+    }
+
+
 
 	void setLatLon(float lat, float lon)
 	{
@@ -2598,7 +2674,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         setSelWptDme((float) dme);
 
         // Display the Name details and also BRG and DME
-        renderSelWptDetails(matrix);
+        //renderSelWptDetails(matrix);
 
 
 		// HWY
@@ -2821,7 +2897,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	float mAutoWptDme; 
-
 	void setAutoWptDme(float dme)
 	{
 		mAutoWptDme = dme;
@@ -2838,7 +2913,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String t = String.format("RLB  %03.0f", mAutoWptRlb);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
 		glText.setScale(2.0f); 							// 
-        //glText.draw(t, -0.97f*pixW2, 0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
         glText.draw(t, -0.97f*pixW2, -0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
 		glText.end();
 	}
