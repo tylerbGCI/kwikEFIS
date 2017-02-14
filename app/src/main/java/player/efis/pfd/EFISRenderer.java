@@ -37,12 +37,12 @@ enum AircraftModel
 	CRUZ,
 	J160,
 	LGEZ,
+    M20J,
 	PA28,
 	RV6,
 	RV7,
 	RV8,
 	// --Commented out by Inspection (2017-02-08 12:56):T18,
-    M20J,
 	W10
 }
 
@@ -91,7 +91,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private final float[] mFdRotationMatrix = new float[16];  // for Flight Director
 	private final float[] mRmiRotationMatrix = new float[16]; // for RMI / Compass Rose
 
-    private final float[] mPitchMatrix = new float[16];
 
 
 	private float mAngle; 
@@ -242,7 +241,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		float[] scratch1 = new float[16]; // moved to class scope
 		float[] scratch2 = new float[16]; // moved to class scope
-        float[] scratch3 = new float[16]; // moved to class scope
 		float[] altMatrix = new float[16]; // moved to class scope
 		float[] iasMatrix = new float[16]; // moved to class scope
 		float[] fdMatrix = new float[16];  // moved to class scope
@@ -298,10 +296,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset; //portraitOffset set to 0.4
-            //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
-            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
-            Matrix.translateM(scratch1, 0, 0, Adjust, 0); // apply the pitch
+            float Adjust = pixH2 * portraitOffset;
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
         }
 
 		// Slide ALT to current value
@@ -318,8 +314,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// FPV only means anything if we have speed and rate of climb, ie altitude
 		if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-
-        renderHITS(scratch1);
 
 
         // Flight Director - FD
@@ -343,9 +337,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			renderSelWptValue(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
 			renderSelAltValue(mMVPMatrix);
-        }
-
-
+		}
+		
 		// Remote Magnetic Inidicator - RMI
 		if (displayRMI) {
 			float xlx; // = -0.78f*pixW2;
@@ -2355,46 +2348,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); // // TODO: 2017-02-07 move to own handlers
     }
 
-    //-------------------------------------------------------------------------
-    // HITS
-    //
-    private void renderHITS(float[] matrix) {
-        float z, pixPerDegree, x1, y1;
-        float radius = 5;
-
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        // Slide pitch to current value adj for portrait
-        float Adjust = pixH2 * portraitOffset;  // portraitOffset set to 0.4
-
-
-        mPolyLine.SetWidth(3);
-        mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
-        for (float i = 0; i > -6; i = i - 1f) {
-            z = i;
-            Adjust = -pixM2 * portraitOffset * i;
-            Adjust = 0;
-            {
-                float[] vertPoly = {
-                        -0.20f * pixM, Adjust - 0.10f * pixM, z,
-                         0.20f * pixM, Adjust - 0.10f * pixM, z,
-                         0.20f * pixM, Adjust + 0.10f * pixM, z,
-                        -0.20f * pixM, Adjust + 0.10f * pixM, z,
-                        -0.20f * pixM, Adjust - 0.10f * pixM, z
-                };
-                mPolyLine.VertexCount = 5;
-                mPolyLine.SetVerts(vertPoly);
-                mPolyLine.draw(matrix);
-            }
-        }
-
-
-
-    }
-
-
-
 	void setLatLon(float lat, float lon)
 	{
 		LatValue = lat;
@@ -2674,7 +2627,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         setSelWptDme((float) dme);
 
         // Display the Name details and also BRG and DME
-        //renderSelWptDetails(matrix);
+        renderSelWptDetails(matrix);
 
 
 		// HWY
@@ -2897,6 +2850,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	float mAutoWptDme; 
+
 	void setAutoWptDme(float dme)
 	{
 		mAutoWptDme = dme;
@@ -2912,7 +2866,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		String t = String.format("RLB  %03.0f", mAutoWptRlb);
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(2.0f); 							// 
+		glText.setScale(2.0f); 							//
         glText.draw(t, -0.97f*pixW2, -0.7f*pixM2 - glText.getCharHeight()/2 );            // Draw  String
 		glText.end();
 	}
