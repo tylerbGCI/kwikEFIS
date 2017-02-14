@@ -32,10 +32,9 @@
         <item>CRUZ - Piper Cruiser</item>
         <item>J160 - Jabiru</item>
         <item>LGEZ - Rutan Long EZ</item>
+        <item>M20J - Mooney M20J</item>
         <item>PA28 - Piper Cherokee</item>
-        <item>RV6 - Vans RV-6</item>
-        <item>RV7 - Vans RV-7</item>
-        <item>RV8 - Vans RV-8</item>
+        <item>RV8 - Vans RV-6, 7, 8</item>
         <item>T18 - Thorp</item>
         <item>W10 - Wittman Tailwind</item>
     </string-array>
@@ -46,9 +45,8 @@
         <item>CRUZ</item>
         <item>J160</item>
         <item>LGEZ</item>
+        <item>M20J</item>
         <item>PA28</item>
-        <item>RV6</item>
-        <item>RV7</item>
         <item>RV8</item>
         <item>T18</item>
         <item>W10</item>

@@ -604,15 +604,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		}
 
 
-		// Generic - Ultralight
-		// Vs0 = 30;  // Stall, flap extended
-		// Vs1 = 40;  // Stall, flap retracted
-		// Vx  = 50;  // Best angle climb
-		// Vy  = 60;  // Best rate climb
-		// Vfe = 70;  // Flaps extension
-		// Va  = 80;  // Maneuvering
-		// Vno = 100; // Max structural cruise
-		// Vne = 120; // Never exceed
+		// Vs0  Stall, flap extended
+		// Vs1  Stall, flap retracted
+		// Vx   Best angle climb
+		// Vy   Best rate climb
+		// Vfe  Flaps extension
+		// Va   Maneuvering
+		// Vno  Max structural cruise
+		// Vne  Never exceed
 		//
 		// White Arc  Vs0 - Vfe
 		// Green Arc  Vs1 - Vno
@@ -628,7 +627,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			Vy  = 60;  // Best rate climb      
 			Vfe = 60;  // Flaps extension      
 			Va  = 80;  // Maneuvering          
-			Vno = 100; // Max structural cruise
+			Vno = 90;  // Max structural cruise
 			Vne = 120; // Never exceed         
 			break;
 
@@ -779,8 +778,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		String s = sDemoMsg; //"demo mode";
 		glText.begin( 1.0f, 0f, 0f, 1.0f, matrix ); // Red
-		glText.setScale(10.0f); 							//
-		//glText.drawCX(t, 0, - pixM2 / 2);
+		glText.setScale(9.0f);
         glText.drawCX(s, 0, 0);
 		glText.end();
 	}
@@ -1757,44 +1755,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			//
 			String t;
 
-			// Vx
-			iPix = (float) Vx * pixPerUnit;
-			mLine.SetColor(0, 0, 0, 1);  // black
-			mLine.SetVerts(outerTic, iPix, z,// - 0.1f,
-					midTic, iPix, z// - 0.1f
-					);
-			mLine.draw(matrix);
-			t = "Vx";
-			glText.begin( 0.0f, 0.6f, 0.0f, 1.0f, matrix ); // Green
-			glText.setScale(1.5f); 							// was 1.2
-			glText.drawC(t, midTic, iPix);            
-			glText.end();                                    
+            // Simplified V Speeds
 
-			// Vy
-			iPix = (float) Vy * pixPerUnit; 
-			mLine.SetColor(0, 0, 0, 1);  // black
-			mLine.SetVerts(outerTic, iPix, z,// - 0.1f,
-					midTic, iPix, z// - 0.1f
-					);
-			mLine.draw(matrix);
-			t = "Vy";
-			glText.begin( 0.0f, 0.6f, 0.0f, 1.0f, matrix ); // Green
-			glText.setScale(1.5f); 							// was 1.2
-			glText.drawC(t, midTic, iPix);            
-			glText.end();                                    
+            //glText.begin( 0.0f, 0.6f, 0.0f, 1.0f, matrix); // Green
+            //glText.begin( 0.9f, 0.9f, 0.0f, 1.0f, matrix); // yellow
+            //glText.begin( 0.0f, 0.9f, 0.9f, 1.0f, matrix); // cyan
+            glText.begin( 0.7f, 0.7f, 0.7f, 1.0f, matrix); // grey
+            glText.setScale(2.0f); 	// was 1.5
+            glText.draw(" Vx", innerTic, (float) Vx * pixPerUnit); // Vx
+            glText.draw(" Vy", innerTic, (float) Vy * pixPerUnit); // Vy
+            glText.draw(" Va", innerTic, (float) Va * pixPerUnit); // Va
+            glText.end();
 
-			// Va
-			iPix = (float) Va * pixPerUnit;
-			mLine.SetColor(0, 0, 0, 1);  // black
-			mLine.SetVerts(outerTic, iPix, z,// - 0.1f,
-					midTic, iPix, z// - 0.1f
-					);
-			mLine.draw(matrix);
-			t = "Va";
-			glText.begin( 0.0f, 0.6f, 0.0f, 1.0f, matrix ); // Green
-			glText.setScale(1.5f); 							// was 1.2
-			glText.drawC(t, midTic, iPix);            
-			glText.end();                                    
 
 			// Tape markings for V speeds
             // Re use midTic ... maybe not such a good idea ...
@@ -1851,8 +1823,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				mSquare.SetVerts(squarePoly);
 				mSquare.draw(matrix);
 
-                /*
-				float[] squarePoly2 = { 
+				float[] squarePoly2 = {
 						innerTic, (float) Vne * pixPerUnit, z, //-.2);
 						innerTic, (float) (IASMaxDisp + 10) * pixPerUnit, z, //-.2);
 						midTic, (float) (IASMaxDisp + 10) * pixPerUnit, z, //-.2);
@@ -1860,7 +1831,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				};
 				mSquare.SetVerts(squarePoly2);
 				mSquare.draw(matrix);
-				*/
 			}
 		}
 	}
