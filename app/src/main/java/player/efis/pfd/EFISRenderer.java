@@ -2217,7 +2217,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// 0.1 approx 5nm
 		double d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft 
 		double _d = 6080000;  // 1,000 nm
-		double relBrg = 0;    // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+		double aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 		double _relBrg = 180; // Assume the worst
 
         nrAptsFound = 0;
@@ -2244,11 +2244,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else if ((nrAptsFound < MX_NR_APT) && (d < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
 			else continue;                                                              // we already have all the apts as we wish to display
 
-			relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-			if (relBrg >  180) relBrg = relBrg - 360;
-			if (relBrg < -180) relBrg = relBrg + 360;
+			aptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+			if (aptRelBrg >  180) aptRelBrg = aptRelBrg - 360;
+			if (aptRelBrg < -180) aptRelBrg = aptRelBrg + 360;
 
-			x1 = (float) ( relBrg * pixPerDegree);
+			x1 = (float) ( aptRelBrg * pixPerDegree);
 			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) ) * pixPerDegree);    // we do not take apt elevation into account
 
 			mPolyLine.SetWidth(3); 
