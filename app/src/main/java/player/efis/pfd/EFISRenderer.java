@@ -59,20 +59,20 @@ enum AircraftModel
  */
 public class EFISRenderer implements GLSurfaceView.Renderer 
 {
-	//private final static AircraftModel mAcraftModel = AircraftModel.GENERIC; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.AZTEC; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.CRICRI; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.CRUZ; //done 
-	//private final static AircraftModel mAcraftModel = AircraftModel.J160; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.LGEZ; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.PA28; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.RV6; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.RV7; //done
-	//private final static AircraftModel mAcraftModel = AircraftModel.RV8; //done 
-	//private final static AircraftModel mAcraftModel = AircraftModel.T18; // removed
-	//private final static AircraftModel mAcraftModel = AircraftModel.W10; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.GENERIC; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.AZTEC; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.CRICRI; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.CRUZ; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.J160; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.LGEZ; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.PA28; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.RV6; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.RV7; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.RV8; //done
+	//private final static AircraftModel mAircraftModel = AircraftModel.T18; // removed
+	//private final static AircraftModel mAircraftModel = AircraftModel.W10; //done
 
-	private static AircraftModel mAcraftModel = AircraftModel.RV8;  
+	private static AircraftModel mAircraftModel = AircraftModel.RV8;
 	
 	
 	private static final String TAG = "EFISRenderer"; //"MyGLRenderer";
@@ -90,8 +90,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private final float[] mRotationMatrix = new float[16];
 	private final float[] mFdRotationMatrix = new float[16];  // for Flight Director
 	private final float[] mRmiRotationMatrix = new float[16]; // for RMI / Compass Rose
-
-
 
 	private float mAngle; 
 
@@ -269,26 +267,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		//??Matrix.multiplyMM(altMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0); ??
 
-        // HITS
-        //public static void setRotateM(float[] rm, int rmOffset, float a, float x, float y, float z) {
-        /*
-        Matrix.setRotateM(mPitchMatrix, 0, 5.5f, 0, 0, 1);
-        Matrix.multiplyMM(scratch3, 0, mMVPMatrix, 0, mPitchMatrix, 0);
-        Matrix.translateM(scratch3, 0, 0, -150.5f, 0);
-        renderHITS(scratch3);
-        Matrix.translateM(scratch3, 0, 0, +150.5f, 0);*/
-        //Matrix.translateM(mMVPMatrix, 0, 0, -250.5f, 0);
-        //Matrix.translateM(mMVPMatrix, 0, 0, +250.5f, 0);
-
-        /*
-        This technique could maybe be used
-        Matrix.setRotateM(mPitchMatrix, 0, 0.325f, 0, 1, 0);
-        Matrix.multiplyMM(scratch3, 0, scratch2, 0, mPitchMatrix, 0);  // todo rename to rlb
-        renderHITS(scratch3);
-        */
-
-
-
         // Pitch
         if (Layout == layout_t.LANDSCAPE) {
             // Slide pitch to current value
@@ -347,10 +325,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			// Add switch for orientation
 			if (Layout == layout_t.LANDSCAPE) {
 				// Landscape
-				//xlx = -0.73f * pixW2; // bottom left
-				//xly = -0.40f * pixH2; // bottom left
-                //xlx = 0.75f * pixW2; // top right
-                //xly = 0.55f * pixH2; // top right
                 xlx = -0.74f * pixW2; // top left -0.75
                 xly =  0.50f * pixH2; // top left  0.55
 				roseScale = 0.44f;
@@ -562,13 +536,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	 */
 	public static void checkGlError(String glOperation) 
 	{
-		///*  bugbug
+		/*  bugbug
 		int error;
 		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
 			Log.e(TAG, glOperation + ": glError " + error);
 			throw new RuntimeException(glOperation + ": glError " + error);
 		}
-		//*/
+		*/
+        int error;
+        if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            Log.e(TAG, glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
 	}
 
 	/**
@@ -596,11 +575,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	public void setAircraftData(String model)
 	{
 		try {
-			mAcraftModel = AircraftModel.valueOf(model);
+			mAircraftModel = AircraftModel.valueOf(model);
 		}
 		//catch (IllegalArgumentException e) {
 		catch (Exception e) {
-			mAcraftModel = AircraftModel.RV8;
+			mAircraftModel = AircraftModel.RV8;
 		}
 
 
@@ -617,7 +596,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// Green Arc  Vs1 - Vno
 		// Yellow Arc Vno - Vne
 		
-		switch (mAcraftModel) {
+		switch (mAircraftModel) {
 		// V Speeds for various aircraft models
 		case GENERIC: 
 			// Ultralight
@@ -853,12 +832,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//pixPerDegree = pixM2 / pitchInView;
         pixPerDegree = pixM2 / PPD_DIV;
 
-		// The lubber line - W style
         // We might make this configurable in future
         // for now force it to false
 		if (false) {
+            // The lubber line - W style
 			mPolyLine.SetColor(1, 1, 0, 1);
-			mPolyLine.SetWidth(6); 
+			mPolyLine.SetWidth(6);
 
 			float[] vertPoly = {
 					// in counterclockwise order:
@@ -870,7 +849,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 					4.0f * pixPerDegree,  0.0f, z,
 					6.0f * pixPerDegree,  0.0f, z
 			};
-			mPolyLine.VertexCount = 7;  	
+			mPolyLine.VertexCount = 7;
 			mPolyLine.SetVerts(vertPoly);
 			mPolyLine.draw(mMVPMatrix);
 		}
@@ -1556,7 +1535,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//
 	void renderVSIMarkers(float[] matrix)
 	{
-		int i, j;
+		int i;
 		float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
 
 		pixPerUnit =  1.0f* pixM2 / VSIInView ;
@@ -1753,7 +1732,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //
 			// Special Vspeed markers
 			//
-			String t;
 
             // Simplified V Speeds
 
@@ -2962,10 +2940,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderFixedCompassMarkers(float[] matrix)
     {
         float tapeShade = 0.6f;
-        int i, j;
+        int i;
         //float innerTic, outerTic, iPix;
         float z, sinI, cosI;
-        String t;
         float roseRadius = roseScale * pixM2;
 
         z = zfloat;
