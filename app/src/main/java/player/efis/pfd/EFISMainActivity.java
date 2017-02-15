@@ -786,7 +786,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		hasSpeed = true;
 		hasGps = true;
 
- 		final float setSpeed = 65; // m/s
+ 		final float setSpeed = 565; // m/s
+
 		if (Math.abs(pitchValue) > 10) {
 			_gps_speed -= 0.01f * pitchValue;
 			if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
@@ -809,6 +810,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			while (_gps_course < 0) _gps_course += (2*Math.PI);
 		}
 		gps_course = _gps_course;
+
+        // todo: Hardcoded for debugging
+        gps_course = 198 * (float) Math.PI / 180;
+        // todo: Hardcoded for debugging
+
+
 
 		time.setToNow();
 		sim_ms = time.toMillis(true);

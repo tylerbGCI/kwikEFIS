@@ -316,7 +316,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
 
-        renderHITS(scratch1);
+
 
 
         // Flight Director - FD
@@ -399,6 +399,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderALTMarkers(altMatrix);
                 renderASIMarkers(iasMatrix);
             }
+
+            //renderHITS(scratch3);
+            renderHITS(mMVPMatrix);
 
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
             renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
@@ -2338,30 +2341,43 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // it may no be best to use opgenGL, but rather do it manually
         //
 
+        float dmeNm =  mSelWptDme / 6080;
+        float fracDme = dmeNm - (int) dmeNm;
+
         mPolyLine.SetWidth(3);
         mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
-        for (float i = 0; i > -6; i = i - 1f) {
-            z = i;
+        //for (float i = -1.0f; i <= 0; i = i + 0.1f) {
+        for (float i = -1.0f; i <= 0; i = i + 0.1f) {
+            z = i - fracDme / 5;
             //Adjust = -pixM2 * portraitOffset * i * 0.5f;
-            Adjust = -pixM2 * i * 0.25f;
-            //Adjust = 0;
+            //Adjust = -pixM2 * i * 0.25f;
+            //mSelWptDme
+            Adjust = 0;
             {
                 float[] vertPoly = {
-                        -0.20f * pixM, Adjust - 0.10f * pixM, z,
-                         0.20f * pixM, Adjust - 0.10f * pixM, z,
-                         0.20f * pixM, Adjust + 0.10f * pixM, z,
-                        -0.20f * pixM, Adjust + 0.10f * pixM, z,
-                        -0.20f * pixM, Adjust - 0.10f * pixM, z
+                        -0.80f * pixM * i / 1, Adjust - 0.40f * pixM * i / 1, z,
+                         0.80f * pixM * i / 1, Adjust - 0.40f * pixM * i / 1, z,
+                         0.80f * pixM * i / 1, Adjust + 0.40f * pixM * i / 1, z,
+                        -0.80f * pixM * i / 1, Adjust + 0.40f * pixM * i / 1, z,
+                        -0.80f * pixM * i / 1, Adjust - 0.40f * pixM * i / 1, z
+                };
+                mPolyLine.VertexCount = 5;
+                mPolyLine.SetVerts(vertPoly);
+                mPolyLine.draw(matrix);
+            }
+            if (i == 0) {
+                float[] vertPoly = {
+                        -0.20f * pixM, Adjust - 0.10f, z,
+                         0.20f * pixM, Adjust - 0.10f, z,
+                         0.20f * pixM, Adjust + 0.10f, z,
+                        -0.20f * pixM, Adjust + 0.10f, z,
+                        -0.20f * pixM, Adjust - 0.10f, z
                 };
                 mPolyLine.VertexCount = 5;
                 mPolyLine.SetVerts(vertPoly);
                 mPolyLine.draw(matrix);
             }
         }
-
-
-
-
     }
 
 
