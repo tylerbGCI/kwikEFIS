@@ -144,8 +144,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private float fpvX; 			// Flight Path Vector X
 	private float fpvY; 			// Flight Path Vector Y
 	//Flight Director
-	float FDTranslation;// = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
-	float FDRotation;// = 20;  // command 20 deg roll
+	float FDTranslation;            // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
+	float FDRotation;               // = 20;  // command 20 deg roll
 	boolean displayInfoPage;
 	boolean displayFlightDirector;
 	//RMI
@@ -163,8 +163,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private boolean ServiceableAlt;	    // Flag to indicate Altimeter failure
 	private boolean ServiceableAsi;   	// Flag to indicate Airspeed failure
 	private boolean ServiceableDi;      // Flag to indicate DI failure
-	private boolean Calibrating;
-	private String  CalibratingMsg;
+	private boolean Calibrating;        // no longer used
+	private String  CalibratingMsg;     // no longer used
 
 	// kepress location
 	private float mX, mY;
@@ -336,7 +336,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				roseScale = 0.52f; //0.45f; //0.50f;
 			}
 
-			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0); 
+			Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
 			// Create a rotation for the RMI
 			Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
 			Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
@@ -395,7 +395,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		renderSlipBall(mMVPMatrix);
 		renderGForceValue(mMVPMatrix);
 
-		if (displayInfoPage) { 
+		if (displayInfoPage) {
 			/*renderAutoWptValue(mMVPMatrix);
 			renderAutoWptDme(mMVPMatrix);		
 			//renderAutoWptRlb(mMVPMatrix);
@@ -2217,7 +2217,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// 0.1 approx 5nm
 		double d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft 
 		double _d = 6080000;  // 1,000 nm
-		double relBrg = 0;    // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+		double aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 		double _relBrg = 180; // Assume the worst
 
         nrAptsFound = 0;
@@ -2244,11 +2244,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else if ((nrAptsFound < MX_NR_APT) && (d < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
 			else continue;                                                              // we already have all the apts as we wish to display
 
-			relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-			if (relBrg >  180) relBrg = relBrg - 360;
-			if (relBrg < -180) relBrg = relBrg + 360;
+			aptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+			if (aptRelBrg >  180) aptRelBrg = aptRelBrg - 360;
+			if (aptRelBrg < -180) aptRelBrg = aptRelBrg + 360;
 
-			x1 = (float) ( relBrg * pixPerDegree);
+			x1 = (float) ( aptRelBrg * pixPerDegree);
 			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) ) * pixPerDegree);    // we do not take apt elevation into account
 
 			mPolyLine.SetWidth(3); 
