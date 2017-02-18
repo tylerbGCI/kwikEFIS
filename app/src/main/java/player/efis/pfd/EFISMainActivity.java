@@ -264,12 +264,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     	layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
     	getWindow().setAttributes(layout);
 
-		// Restore preferences
+		// Restore persistent preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
     	mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
     	mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
     	mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     	mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
+        mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
+        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "000");
+
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
@@ -291,25 +294,30 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
 	@Override
-  protected void onStop(){
-     super.onStop();
+  protected void onStop()
+  {
+        super.onStop();
 
-    // We need an Editor object to make preference changes.
-    // All objects are from android.context.Context
-    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-    SharedPreferences.Editor editor = settings.edit();
-    editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
-    editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
-    editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
-    editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        // Save persistent preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
+        editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
+        editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
+        editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
+        editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
+        editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
 
-    // need to add the aircraft --- todo
-    //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-    // editor.putString("RegionDatabase", mGpx.region);  // happens automatically ?
 
-    // Commit the edits
-    editor.commit();
-  }
+        // need to add the aircraft --- todo
+        //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
+        // editor.putString("RegionDatabase", mGpx.region);  // happens automatically ?
+
+        // Commit the edits
+        editor.commit();
+    }
 
 
 
@@ -787,6 +795,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		hasGps = true;
 
  		final float setSpeed = 65; // m/s
+
 		if (Math.abs(pitchValue) > 10) {
 			_gps_speed -= 0.01f * pitchValue;
 			if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
