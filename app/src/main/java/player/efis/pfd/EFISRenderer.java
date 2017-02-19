@@ -2346,6 +2346,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //double deltaLat = mWptSelLat - LatValue;
         //double deltaLon = mWptSelLon - LonValue;
 
+        final double altMult = 10;
+
         double deltaLat = mWptSelLat - LatValue;
         double deltaLon = mWptSelLon - LonValue;
 
@@ -2357,7 +2359,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
 
         x1 = (float) (wptRelBrg * pixPerDegree);
-        y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * 100);    // 100 fo FL
+        y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // 100 fo FL
 
         mPolyLine.SetWidth(3);
         mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
@@ -2379,15 +2381,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         double i = 0; //0.01; // in nm 0.01 degree (or nm approx)
 
         //double d = Double.MAX_VALUE;
-        for ( i = 0; i < 5; i++) {
-
-            double hitLat = mWptSelLat + i/60.080 * Math.sin(Math.toRadians(wptRelBrg));
-            double hitLon = mWptSelLon + i/60.080 * Math.cos(Math.toRadians(wptRelBrg));
+        for ( i = 0; i < 10; i++) {
+            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(wptRelBrg));
+            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(wptRelBrg));
 
             deltaLat = hitLat - LatValue;
             deltaLon = hitLon - LonValue;
 
-            radius *= 1.14148;
+            radius *= 1.1;
             //radius = 5;
 
             //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
@@ -2400,7 +2401,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float skew = (float) Math.cos(Math.toRadians(wptRelBrg));  // this may be guilding the lily
 
             x1 = (float) (wptRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * 10);    // we do not take apt elevation into account
+            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // we do not take apt elevation into account
 
             mPolyLine.SetWidth(3);
             mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
