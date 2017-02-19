@@ -2361,6 +2361,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         x1 = (float) (wptRelBrg * pixPerDegree);
         y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // 100 fo FL
 
+        /* the i = 0 should be close enough
         mPolyLine.SetWidth(3);
         mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
         {
@@ -2375,6 +2376,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.SetVerts(vertPoly);  //crash here
             mPolyLine.draw(matrix);
         }
+        */
 
 
         // the gates to the drop point
@@ -2382,8 +2384,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         //double d = Double.MAX_VALUE;
         for ( i = 0; i < 10; i++) {
-            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(wptRelBrg));
-            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(wptRelBrg));
+            //double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(wptRelBrg));
+            //double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(wptRelBrg));
+            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(mSelWptRlb));
+            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(mSelWptRlb));
 
             deltaLat = hitLat - LatValue;
             deltaLon = hitLon - LonValue;
@@ -2527,20 +2531,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mAutoWptBrg = brg;
 	}
 	
-	private float mSelWptBrg;
-    private float SelLatValue;  		// Latitude
-    private float SelLonValue;  		// Longitude
+	private float mSelWptBrg;           // Selected waypoint Bearing
+    private float mSelWptRlb;           // Selected waypoint Relative bearing
+    private float SelLatValue;  		// Selected waypoint Latitude
+    private float SelLonValue;  		// Selected waypoint Longitude
+    private float mSelWptDme;           // Selected waypoint Dme distance (nm)
+
 	void setSelWptBrg(float brg)
 	{
 		mSelWptBrg = brg;
 	}
 
-    float mSelWptDme;
     void setSelWptDme(float dme)
     {
         mSelWptDme = dme;
     }
 
+    void setSelWptRelBrg(float rlb)
+    {
+        mSelWptRlb = rlb;
+    }
 
     //
     // Display all the relevant auto wpt information with
@@ -2675,25 +2685,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		if (relBrg >  180) relBrg = relBrg - 360;
 		if (relBrg < -180) relBrg = relBrg + 360;
 
-		if (relBrg >  30) relBrg = 30;
-		if (relBrg < -30) relBrg = -30;
 
 		// Calculate how many degrees of pitch to command
 		final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
 		float deltaAlt = mAltSelValue - MSLValue;
 		//float commandPitch =  (IASValue) / 5 * (deltaAlt / 1000);
 		float commandPitch;		
-		if (deltaAlt > 0) 
-			commandPitch =  (IASValue - Vy) / 5 * (deltaAlt / 1000);
-		else
-			commandPitch =  (IASValue) / 5 * (deltaAlt / 1000);
+		if (deltaAlt > 0) commandPitch =  (IASValue - Vy) / 5 * (deltaAlt / 1000);
+		else              commandPitch =  (IASValue) / 5 * (deltaAlt / 1000);
 
 		if (commandPitch >  MAX_COMMAND) commandPitch =  MAX_COMMAND;
 		if (commandPitch < -MAX_COMMAND) commandPitch = -MAX_COMMAND;
 		//if (IASValue < Vs0) commandPitch = -MAX_COMMAND;  
 
 		// update the flight director data
-		setFlightDirector(displayFlightDirector, commandPitch, (float) relBrg);
+        double commandRoll = relBrg;
+        if (commandRoll >  30) commandRoll = 30;   //
+        if (commandRoll < -30) commandRoll = -30;  //
+		setFlightDirector(displayFlightDirector, commandPitch, (float) commandRoll);
 
         // BRG
         double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
@@ -2705,6 +2714,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // handle "navigation"?
         setSelWptBrg((float) absBrg);
         setSelWptDme((float) dme);
+        setSelWptRelBrg((float) relBrg);
 
         // Display the Name details and also BRG and DME
         renderSelWptDetails(matrix);
@@ -2926,8 +2936,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				}
                 //calculate the HITS points here since we have everything we need here
                 //hitsArray
-                SelLatValue = LatValue;  		// Latitude
-                SelLonValue = LonValue;  		// Longitude
+                //SelLatValue = LatValue;  		// Latitude
+                //SelLonValue = LonValue;  		// Longitude
 			}
 		}
 	}
