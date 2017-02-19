@@ -214,8 +214,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//displayMirror  = false;
 		displayFPV = true;
 
-        SelLatValue = LatValue;  		// pin Latitude
-        SelLonValue = LonValue;  		// pin Longitude
+        SelLatValue = -31.940300f;  // pin Latitude
+        SelLonValue = 115.967000f;  // pin Longitude
 
 
 	}
@@ -2334,7 +2334,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // HITS
     //
-    private void renderHITS(float[] matrix) {
+    private void renderHITS(float[] matrix)
+    {
         float z, pixPerDegree, x1, y1;
         float radius = 5;
 
@@ -2345,8 +2346,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //double deltaLat = mWptSelLat - LatValue;
         //double deltaLon = mWptSelLon - LonValue;
 
-        double deltaLat = mWptSelLat - SelLatValue;
-        double deltaLon = mWptSelLon - SelLonValue;
+        double deltaLat = mWptSelLat - LatValue;
+        double deltaLon = mWptSelLon - LonValue;
 
         //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
         double d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
@@ -2356,7 +2357,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
 
         x1 = (float) (wptRelBrg * pixPerDegree);
-        y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * 10);    // we do not take apt elevation into account
+        y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * 100);    // 100 fo FL
 
         mPolyLine.SetWidth(3);
         mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
@@ -2378,23 +2379,25 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         double i = 0; //0.01; // in nm 0.01 degree (or nm approx)
 
         //double d = Double.MAX_VALUE;
-        for ( i = 0; i < 15; i++) {
+        for ( i = 0; i < 5; i++) {
 
-            double hitLat = mWptSelLat + i/6.080 * Math.sin(Math.toRadians(wptRelBrg+180));
-            double hitLon = mWptSelLon + i/6.080 * Math.cos(Math.toRadians(wptRelBrg+180));
+            double hitLat = mWptSelLat + i/60.080 * Math.sin(Math.toRadians(wptRelBrg));
+            double hitLon = mWptSelLon + i/60.080 * Math.cos(Math.toRadians(wptRelBrg));
 
-            deltaLat = hitLat - SelLatValue;
-            deltaLon = hitLon - SelLonValue;
+            deltaLat = hitLat - LatValue;
+            deltaLon = hitLon - LonValue;
 
-            //radius *= 1.14148;
-            radius = 5;
+            radius *= 1.14148;
+            //radius = 5;
 
             //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
             d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
 
-            //wptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-            //if (wptRelBrg > 180) wptRelBrg = wptRelBrg - 360;
-            //if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
+            wptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+            if (wptRelBrg > 180) wptRelBrg = wptRelBrg - 360;
+            if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
+
+            float skew = (float) Math.cos(Math.toRadians(wptRelBrg));  // this may be guilding the lily
 
             x1 = (float) (wptRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * 10);    // we do not take apt elevation into account
@@ -2403,11 +2406,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
             {
                 float[] vertPoly = {
-                        x1 - 3.0f * radius, y1 - 2.0f * radius, z,
-                        x1 + 3.0f * radius, y1 - 2.0f * radius, z,
-                        x1 + 3.0f * radius, y1 + 2.0f * radius, z,
-                        x1 - 3.0f * radius, y1 + 2.0f * radius, z,
-                        x1 - 3.0f * radius, y1 - 2.0f * radius, z
+                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z,
+                        x1 + 3.0f * radius * skew, y1 - 2.0f * radius, z,
+                        x1 + 3.0f * radius * skew, y1 + 2.0f * radius, z,
+                        x1 - 3.0f * radius * skew, y1 + 2.0f * radius, z,
+                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z
                 };
                 mPolyLine.VertexCount = 5;
                 mPolyLine.SetVerts(vertPoly);  //crash here
