@@ -2354,11 +2354,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
         double d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
 
-        double wptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        if (wptRelBrg > 180) wptRelBrg = wptRelBrg - 360;
-        if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
+        double hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        if (hitRelBrg > 180) hitRelBrg = hitRelBrg - 360;
+        if (hitRelBrg < -180) hitRelBrg = hitRelBrg + 360;
 
-        x1 = (float) (wptRelBrg * pixPerDegree);
+        x1 = (float) (hitRelBrg * pixPerDegree);
         y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // 100 fo FL
 
         /* the i = 0 should be close enough
@@ -2398,17 +2398,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
             d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
 
-            wptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-            if (wptRelBrg > 180) wptRelBrg = wptRelBrg - 360;
-            if (wptRelBrg < -180) wptRelBrg = wptRelBrg + 360;
+            hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+            if (hitRelBrg > 180) hitRelBrg = hitRelBrg - 360;
+            if (hitRelBrg < -180) hitRelBrg = hitRelBrg + 360;
 
-            float skew = (float) Math.cos(Math.toRadians(wptRelBrg));  // this may be guilding the lily
+            float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // this may be guilding the lily
 
-            x1 = (float) (wptRelBrg * pixPerDegree);
+            x1 = (float) (hitRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // we do not take apt elevation into account
 
             mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
+            mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
             {
                 float[] vertPoly = {
                         x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z,

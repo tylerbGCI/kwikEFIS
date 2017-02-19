@@ -818,10 +818,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		gps_course = _gps_course;
 
+
         // todo: Hardcoded for debugging
         //gps_course = 198 * (float) Math.PI / 180;
         //gps_course = 205 * (float) Math.PI / 180;
         gps_course = 192 * (float) Math.PI / 180;
+        gps_altitude = 1000; //meter
+        gps_speed = 300;  // m/s
+        rollValue = 0;
+        pitchValue = 2;
         // todo: Hardcoded for debugging
 
 
