@@ -2353,15 +2353,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         double d;         // = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
         double hitRelBrg; // = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 
-        double obs = 220; //198;
+        double obs = 198; //252; //220; //198;
 
         // the gates to the drop point
         float i = 0; //0.01; // in nm 0.01 degree (or nm approx)
 
         //double d = Double.MAX_VALUE;
         for ( i = 0; i < 10; i++) {
-            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
-            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
+            double hitLat = mWptSelLat + i/60 * Math.cos(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
+            double hitLon = mWptSelLon + i/60 * Math.sin(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
             deltaLat = hitLat - LatValue;
             deltaLon = hitLon - LonValue;
 
@@ -2376,7 +2376,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // this may be guilding the lily
 
             x1 = (float) (hitRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // we do not take apt elevation into account
+            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);
 
             mPolyLine.SetWidth(3);
             //mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
