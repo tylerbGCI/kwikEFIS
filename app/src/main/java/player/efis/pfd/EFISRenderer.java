@@ -2380,7 +2380,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             mPolyLine.SetWidth(3);
             //mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
-            mPolyLine.SetColor(0.0f, 0.6f, 0.6f, 1); // darker cyan
+            mPolyLine.SetColor(0.0f, 0.6f, 0.6f, 1);   // darker cyan
             //glText.begin( 0.0f, 0.9f, 0.9f, 1.0f, matrix); // cyan
 
             {
