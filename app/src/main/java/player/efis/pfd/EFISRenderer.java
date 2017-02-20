@@ -214,8 +214,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//displayMirror  = false;
 		displayFPV = true;
 
-        SelLatValue = -31.940300f;  // pin Latitude
-        SelLonValue = 115.967000f;  // pin Longitude
+        hitsOriginLatValue = -31.940300f;  // pin Latitude
+        hitsOriginLonValue = 115.967000f;  // pin Longitude
 
 
 	}
@@ -2337,7 +2337,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderHITS(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;
-        float radius = 5;
+        float radius = pixM2 / 2; //5;
 
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
@@ -2348,68 +2348,49 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         final double altMult = 10;
 
-        double deltaLat = mWptSelLat - LatValue;
-        double deltaLon = mWptSelLon - LonValue;
+        double deltaLat;  // = mWptSelLat - LatValue;
+        double deltaLon;  // = mWptSelLon - LonValue;
+        double d;         // = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
+        double hitRelBrg; // = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 
-        //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
-        double d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
-
-        double hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        if (hitRelBrg > 180) hitRelBrg = hitRelBrg - 360;
-        if (hitRelBrg < -180) hitRelBrg = hitRelBrg + 360;
-
-        x1 = (float) (hitRelBrg * pixPerDegree);
-        y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // 100 fo FL
-
-        /* the i = 0 should be close enough
-        mPolyLine.SetWidth(3);
-        mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
-        {
-            float[] vertPoly = {
-                    x1 - 3.0f * radius, y1 - 2.0f * radius, z,
-                    x1 + 3.0f * radius, y1 - 2.0f * radius, z,
-                    x1 + 3.0f * radius, y1 + 2.0f * radius, z,
-                    x1 - 3.0f * radius, y1 + 2.0f * radius, z,
-                    x1 - 3.0f * radius, y1 - 2.0f * radius, z
-            };
-            mPolyLine.VertexCount = 5;
-            mPolyLine.SetVerts(vertPoly);  //crash here
-            mPolyLine.draw(matrix);
-        }
-        */
-
+        double obs = 220; //198;
 
         // the gates to the drop point
-        double i = 0; //0.01; // in nm 0.01 degree (or nm approx)
+        float i = 0; //0.01; // in nm 0.01 degree (or nm approx)
 
         //double d = Double.MAX_VALUE;
         for ( i = 0; i < 10; i++) {
-            //double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(wptRelBrg));
-            //double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(wptRelBrg));
-            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(mSelWptRlb));
-            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(mSelWptRlb));
-
+            double hitLat = mWptSelLat + i/60 * Math.sin(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
+            double hitLon = mWptSelLon + i/60 * Math.cos(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
             deltaLat = hitLat - LatValue;
             deltaLon = hitLon - LonValue;
 
-            radius *= 1.1;
-            //radius = 5;
-
-            //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
             d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
-
             hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
             if (hitRelBrg > 180) hitRelBrg = hitRelBrg - 360;
             if (hitRelBrg < -180) hitRelBrg = hitRelBrg + 360;
 
+            //radius *= 1.1;
+            //radius = pixM2 / 20;
+            radius = (float) ( (pixM2 / d * 608.0) * (pixM2 / d * 608.0) );//*(pixM2 / d * 6080));   //mSelWptDme
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // this may be guilding the lily
 
             x1 = (float) (hitRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, d)) * pixPerDegree * altMult);    // we do not take apt elevation into account
 
             mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
+            //mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
+            mPolyLine.SetColor(0.0f, 0.6f, 0.6f, 1); // darker cyan
+            //glText.begin( 0.0f, 0.9f, 0.9f, 1.0f, matrix); // cyan
+
             {
+                /*float[] vertPoly = {
+                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z,
+                        x1 + 3.0f * radius * skew, y1 - 2.0f * radius, z,
+                        x1 + 3.0f * radius * skew, y1 + 2.0f * radius, z,
+                        x1 - 3.0f * radius * skew, y1 + 2.0f * radius, z,
+                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z
+                };*/
                 float[] vertPoly = {
                         x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z,
                         x1 + 3.0f * radius * skew, y1 - 2.0f * radius, z,
@@ -2418,7 +2399,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                         x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z
                 };
                 mPolyLine.VertexCount = 5;
-                mPolyLine.SetVerts(vertPoly);  //crash here
+                mPolyLine.SetVerts(vertPoly);
                 mPolyLine.draw(matrix);
             }
         }
@@ -2533,8 +2514,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	
 	private float mSelWptBrg;           // Selected waypoint Bearing
     private float mSelWptRlb;           // Selected waypoint Relative bearing
-    private float SelLatValue;  		// Selected waypoint Latitude
-    private float SelLonValue;  		// Selected waypoint Longitude
+    private float hitsOriginLatValue;  	// Selected waypoint Latitude
+    private float hitsOriginLonValue;  	// Selected waypoint Longitude
     private float mSelWptDme;           // Selected waypoint Dme distance (nm)
 
 	void setSelWptBrg(float brg)
@@ -2934,10 +2915,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 						mWptSelLon = 0;
 					}
 				}
-                //calculate the HITS points here since we have everything we need here
-                //hitsArray
-                //SelLatValue = LatValue;  		// Latitude
-                //SelLonValue = LonValue;  		// Longitude
+                //Set the HITS origin points here since we have everything we need here
+                hitsOriginLatValue = LatValue;  		// Latitude
+                hitsOriginLonValue = LonValue;  		// Longitude
+                // todo calculate a auto generated OBS here as well
 			}
 		}
 	}
