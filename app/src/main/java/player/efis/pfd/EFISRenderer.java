@@ -151,6 +151,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//RMI
 	boolean displayRMI;  // debug
 	float RMIRotation;
+    // HITS
+    boolean displayHITS;
 	//3D map display
 	boolean displayAirport;
 	private boolean displayTerrain;
@@ -319,8 +321,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// FPV only means anything if we have speed and rate of climb, ie altitude
 		if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
 		if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        renderHITS(scratch1); // will not keep in the viewport
-
+        if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
 
         // Flight Director - FD
@@ -3100,32 +3101,34 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	void setPrefs(prefs_t pref, boolean value)
-	{
-		switch (pref) {
-		case TERRAIN:
-			displayTerrain = value;
-			break;
-		case TAPE:
-			displayTape = value;
-			break;
-		case MIRROR:
-			displayMirror = value;
-			break;
-		case INFO_PAGE:
-			displayInfoPage = value;
-			break;
-		case FLIGHT_DIRECTOR:
-			displayFlightDirector = value;
-			break;
-		case REMOTE_INDICATOR:
-			displayRMI = value;
-			break;
-		case AIRPORT:
-			displayAirport = value;
-			break;
-
-		}
-	}
+    {
+        switch (pref) {
+            case TERRAIN:
+                displayTerrain = value;
+                break;
+            case TAPE:
+                displayTape = value;
+                break;
+            case MIRROR:
+                displayMirror = value;
+                break;
+            case INFO_PAGE:
+                displayInfoPage = value;
+                break;
+            case FLIGHT_DIRECTOR:
+                displayFlightDirector = value;
+                break;
+            case REMOTE_INDICATOR:
+                displayRMI = value;
+                break;
+            case HITS:
+                displayHITS = value;
+                break;
+            case AIRPORT:
+                displayAirport = value;
+                break;
+        }
+    }
 
 	
 	//-----------------------------------------------------------------------------

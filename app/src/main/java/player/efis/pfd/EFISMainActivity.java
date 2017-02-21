@@ -530,6 +530,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.INFO_PAGE, SP.getBoolean("infoPage", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, SP.getBoolean("displayRmi", false));
+        mGLView.setPrefs(prefs_t.HITS, SP.getBoolean("displayHITS", false));
+
 
         bLockedMode = SP.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(SP.getString("sensorBias", "0.15f"));

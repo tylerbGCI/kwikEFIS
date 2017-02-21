@@ -20,11 +20,7 @@
             android:summary="Ancillary details page"
             android:title="Details" />
         
-        <CheckBoxPreference
-            android:defaultValue="false"  
-            android:key="displayMirror"
-            android:summary="Mirror image for HUD usage" 
-            android:title="Mirror HUD" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="NAVIGATION" > 
@@ -33,13 +29,17 @@
             android:key="displayFlightDirector"
             android:summary="Engage Flight Director"
             android:title="Flight Director" />
-        
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayRmi"
             android:summary="Engage Compass and Bearing Indicator"
             android:title="Compass Rose" />
-        
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="displayHITS"
+            android:summary="Enable HITS display"
+            android:title="Highway In The Sky" />
+
         </PreferenceCategory>
         
     <!--     <PreferenceCategory  android:title="SYSTEM" >     -->
