@@ -272,6 +272,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     	mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "000");
+        mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
@@ -294,7 +295,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 	@Override
   protected void onStop()
-  {
+    {
         super.onStop();
 
         // We need an Editor object to make preference changes.
@@ -308,7 +309,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
         editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
         editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
-
+        editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
 
         // need to add the aircraft --- todo
         //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
@@ -818,19 +819,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		gps_course = _gps_course;
 
-
-        // todo: Hardcoded for debugging
-        //gps_course = 198 * (float) Math.PI / 180;
-        //gps_course = 205 * (float) Math.PI / 180;
-        gps_course = 198 * (float) Math.PI / 180;  //192
-        gps_altitude = 1000; //meter
-        gps_speed = 300;  // m/s
-        rollValue = 0;
-        pitchValue = 2;
-        // todo: Hardcoded for debugging
-
-
-
 		time.setToNow();
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
@@ -842,6 +830,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
 			if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
 		}
+
+        // todo: Hardcoded for debugging
+        /*
+        //gps_course = 198 * (float) Math.PI / 180;
+        //gps_course = 205 * (float) Math.PI / 180;
+        gps_course = 195 * (float) Math.PI / 180;  //192
+        gps_altitude = 1000; //meter
+        gps_speed = 300;  // m/s
+        rollValue = 0;
+        pitchValue = 2;
+        */
+        // todo: Hardcoded for debugging
 	}
 
 

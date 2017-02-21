@@ -214,8 +214,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//displayMirror  = false;
 		displayFPV = true;
 
-        hitsOriginLatValue = -31.940300f;  // pin Latitude
-        hitsOriginLonValue = 115.967000f;  // pin Longitude
+        //hitsOriginLatValue = -31.940300f;  // pin Latitude
+        //hitsOriginLonValue = 115.967000f;  // pin Longitude
 
 
 	}
@@ -2236,7 +2236,51 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		fpvY = y;
 	}
 
-	static final int MX_NR_APT = 10;
+
+    //-------------------------------------------------------------------------
+    // Calculate the DME distance in nm
+    //
+    double calcDme(float lat1, float lon1, float lat2, float lon2)
+    {
+        double deltaLat = lat2 - lat1;
+        double deltaLon = lon2 - lon1;
+
+        //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
+        double d =  60 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // in nm, 1 deg of lat
+        return d;
+
+    }
+
+    //-------------------------------------------------------------------------
+    // Calculate the Relative Bearing in degrees
+    //
+    double calcRelBrg(float lat1, float lon1, float lat2, float lon2)
+    {
+        double deltaLat = lat2 - lat1;
+        double deltaLon = lon2 - lon1;
+
+        double relBrg =  (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        if (relBrg > 180) relBrg = relBrg - 360;
+        if (relBrg < -180) relBrg = relBrg + 360;
+        return relBrg;
+    }
+
+
+    //-------------------------------------------------------------------------
+    // Calculate the Absolute Bearing in degrees
+    //
+    double calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
+    {
+        double deltaLat = lat2 - lat1;
+        double deltaLon = lon2 - lon1;
+
+        double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
+        while (absBrg < 0) absBrg += 360;
+        return absBrg;
+    }
+
+
+    static final int MX_NR_APT = 10;
 	static int MX_RANGE = 20;   //nm
 	static int counter = 0;
     static int nrAptsFound;
@@ -2269,19 +2313,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 			String wptId = currApt.name;
 
+            /* bb2
 			double deltaLat = currApt.lat - LatValue;
 			double deltaLon = currApt.lon - LonValue;
 			//d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
 			d =  364800 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
+			*/
+            d = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
+
 
 			// Apply selection criteria
 			if (d < 5*6080) nrAptsFound++;                                              // always show apts closer then 5nm
 			else if ((nrAptsFound < MX_NR_APT) && (d < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
 			else continue;                                                              // we already have all the apts as we wish to display
 
+            /* bb2
 			aptRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 			if (aptRelBrg >  180) aptRelBrg = aptRelBrg - 360;
 			if (aptRelBrg < -180) aptRelBrg = aptRelBrg + 360;
+            */
+            aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
 			x1 = (float) ( aptRelBrg * pixPerDegree);
 			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) ) * pixPerDegree);    // we do not take apt elevation into account
@@ -2307,8 +2358,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.drawCY(s, x1, y1 + glText.getCharHeight()/2 );
 			glText.end();
 
+            /* bb2
 			double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
 			while (absBrg < 0) absBrg += 360;
+			*/
+            double absBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
 			if (Math.abs(d) < Math.abs(_d)) {
 				// closest apt (dme)
@@ -2330,6 +2384,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound)); // // TODO: 2017-02-07 move to own handlers
     }
+
+
 
     //-------------------------------------------------------------------------
     // HITS
@@ -2353,26 +2409,38 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         double d;         // = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
         double hitRelBrg; // = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 
-        double obs = 198; //252; //220; //198;
+        double obs = 205; //252; //220; //198;
+        obs = mObsValue;
 
         // the gates to the drop point
         float i = 0; //0.01; // in nm 0.01 degree (or nm approx)
 
         //double d = Double.MAX_VALUE;
-        for ( i = 0; i < 10; i++) {
-            double hitLat = mWptSelLat + i/60 * Math.cos(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
-            double hitLon = mWptSelLon + i/60 * Math.sin(Math.toRadians(obs-180/*mSelWptRlb*/));  // this is not right, it must be the OBS setting
+        //for (i = 0; i < 10; i++) {
+        for (i = 0; i < mSelWptDme; i++) {
+            //if (i < mSelWptDme - 6) continue;
+
+            float hitLat = mWptSelLat + i/60 * (float)Math.cos(Math.toRadians(obs-180));  // this is not right, it must be the OBS setting
+            float hitLon = mWptSelLon + i/60 * (float)Math.sin(Math.toRadians(obs-180));  // this is not right, it must be the OBS setting
             deltaLat = hitLat - LatValue;
             deltaLon = hitLon - LonValue;
 
+            /* bb2
             d = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
-            hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+            */
+            d = 6080 * calcDme(LatValue, LonValue, hitLat, hitLon);
+
+            /* bb2
+            hitRelBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the hitpoint
             if (hitRelBrg > 180) hitRelBrg = hitRelBrg - 360;
             if (hitRelBrg < -180) hitRelBrg = hitRelBrg + 360;
+            */
+            hitRelBrg = calcRelBrg(LatValue, LonValue, hitLat, hitLon);  // the relative bearing to the hitpoint
 
             //radius *= 1.1;
             //radius = pixM2 / 20;
-            radius = (float) ( (pixM2 / d * 608.0) * (pixM2 / d * 608.0) );//*(pixM2 / d * 6080));   //mSelWptDme
+            //radius = (float) ( (pixM2 / d * 608.0) * (pixM2 / d * 608.0) );//*(pixM2 / d * 6080));   //mSelWptDme
+            radius = (float) ( (pixM2 / d * 608.0) );//*(pixM2 / d * 6080));   //mSelWptDme
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // this may be guilding the lily
 
             x1 = (float) (hitRelBrg * pixPerDegree);
@@ -2514,8 +2582,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	
 	private float mSelWptBrg;           // Selected waypoint Bearing
     private float mSelWptRlb;           // Selected waypoint Relative bearing
-    private float hitsOriginLatValue;  	// Selected waypoint Latitude
-    private float hitsOriginLonValue;  	// Selected waypoint Longitude
+    //private float hitsOriginLatValue;  	// Selected waypoint Latitude
+    //private float hitsOriginLonValue;  	// Selected waypoint Longitude
     private float mSelWptDme;           // Selected waypoint Dme distance (nm)
 
 	void setSelWptBrg(float brg)
@@ -2623,6 +2691,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float selWptDec;      // = 0.90f * pixH2;
     float selWptInc;      // = 0.74f * pixH2;
 
+    float mObsValue;
+
 
 	private void renderSelWptValue(float[] matrix)
 	{
@@ -2694,7 +2764,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Perhaps introduce a new function to explicitly
         // handle "navigation"?
         setSelWptBrg((float) absBrg);
-        setSelWptDme((float) dme);
+        setSelWptDme((float) dme / 6080);
         setSelWptRelBrg((float) relBrg);
 
         // Display the Name details and also BRG and DME
@@ -2729,7 +2799,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.end();
 
         // DME
-        String t = String.format("DME %03.1f", mSelWptDme / 6080);
+        //String t = String.format("DME %03.1f", mSelWptDme / 6080);
+        String t = String.format("DME %03.1f", mSelWptDme);  // in nm
         glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
         glText.setScale(2.5f); 							//
         //glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixH2 - glText.getCharHeight()/2 );
@@ -2916,9 +2987,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 					}
 				}
                 //Set the HITS origin points here since we have everything we need here
-                hitsOriginLatValue = LatValue;  		// Latitude
-                hitsOriginLonValue = LonValue;  		// Longitude
+                //hitsOriginLatValue = LatValue;  		// Latitude
+                //hitsOriginLonValue = LonValue;  		// Longitude
                 // todo calculate a auto generated OBS here as well
+                mObsValue = (float) calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
 			}
 		}
 	}
