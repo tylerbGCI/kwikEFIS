@@ -75,7 +75,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private static AircraftModel mAircraftModel = AircraftModel.RV8;
 
 
-	private static final String TAG = "EFISRenderer"; //"MyGLRenderer";
+	private static final String TAG = "EFISRenderer";
 
 	private Triangle mTriangle;
 	private Square   mSquare;
@@ -315,7 +315,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		zfloat = 0;
 
-        if (displayTerrain == true) renderTerrain(scratch1);
+        if (displayTerrain) renderTerrain(scratch1);
         renderPitchMarkers(scratch1);
 
 		// FPV only means anything if we have speed and rate of climb, ie altitude
@@ -400,7 +400,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             else
                 GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
 
-            if (displayTape == true) {
+            if (displayTape) {
                 renderALTMarkers(altMatrix);
                 renderASIMarkers(iasMatrix);
             }
@@ -2241,13 +2241,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the DME distance in nm
     //
-    double calcDme(float lat1, float lon1, float lat2, float lon2)
+    float  calcDme(float lat1, float lon1, float lat2, float lon2)
     {
-        double deltaLat = lat2 - lat1;
-        double deltaLon = lon2 - lon1;
+         float deltaLat = lat2 - lat1;
+         float deltaLon = lon2 - lon1;
 
         //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
-        double d =  60 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // in nm, 1 deg of lat
+         float d =  (float) (60 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat));  // in nm, 1 deg of lat
         return d;
 
     }
@@ -2255,12 +2255,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the Relative Bearing in degrees
     //
-    double calcRelBrg(float lat1, float lon1, float lat2, float lon2)
+    float  calcRelBrg(float lat1, float lon1, float lat2, float lon2)
     {
-        double deltaLat = lat2 - lat1;
-        double deltaLon = lon2 - lon1;
+         float deltaLat = lat2 - lat1;
+         float deltaLon = lon2 - lon1;
 
-        double relBrg =  (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+         float relBrg =  (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
         if (relBrg > 180) relBrg = relBrg - 360;
         if (relBrg < -180) relBrg = relBrg + 360;
         return relBrg;
@@ -2270,12 +2270,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the Absolute Bearing in degrees
     //
-    double calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
+    float  calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
     {
-        double deltaLat = lat2 - lat1;
-        double deltaLon = lon2 - lon1;
+         float deltaLat = lat2 - lat1;
+         float deltaLon = lon2 - lon1;
 
-        double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
+         float  absBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
         while (absBrg < 0) absBrg += 360;
         return absBrg;
     }
@@ -2295,10 +2295,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// 0.16667 deg lat  = 10 nm
 		// 0.1 approx 5nm
-		double d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-		double _d = 6080000;  // 1,000 nm
-		double aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-		double _relBrg = 180; // Assume the worst
+		float  d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        float  _d = 6080000;  // 1,000 nm
+        float  aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float  _relBrg = 180; // Assume the worst
 
         nrAptsFound = 0;
 		Iterator <Apt> it = Gpx.aptList.iterator();
@@ -2823,7 +2823,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float selAltDec; // = -0.74f * pixH2;
 	private void renderSelAltValue(float[] matrix)
 	{
-		float z, pixPerDegree, x1, y1;
+		float z; //, pixPerDegree, x1, y1;
 		//pixPerDegree = pixM2 / pitchInView;
 		//pixPerDegree = pixM2 / PPD_DIV;
 		z = zfloat;
