@@ -783,7 +783,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// --Commented out by Inspection (2017-02-10 15:03):DigitalFilter filterTestAlt = new DigitalFilter(128); //32
 	float _gps_lon = 116; //0;
 	float	_gps_lat = -32; //0;
-	float _gps_course = 0;
+	float _gps_course = 0;  //in radians
 	float _gps_altitude = 1000;
 	float _gps_speed = 0;
 	long _sim_ms = 0, sim_ms;
