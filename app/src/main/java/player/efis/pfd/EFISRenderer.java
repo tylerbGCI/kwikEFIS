@@ -1297,7 +1297,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	 */
 	public void setPitch( float degrees )
 	{
-		pitch = (float) -degrees;
+		pitch = -degrees;
 		pitchTranslation = pitch / pitchInView * pixH;
 	}
 
@@ -1306,7 +1306,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	 */
 	void setRoll( float degrees )
 	{
-		roll = (float) degrees;
+		roll = degrees;
 		rollRotation = roll;
 	}
 
@@ -1357,7 +1357,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			mSquare.draw(matrix);
 		}
 
-		int MSLValue =  (int) (Math.round((float) this.MSLValue / 10) * 10);  // round to 10
+		int MSLValue = Math.round((float) this.MSLValue / 10) * 10;  // round to 10
 		// draw the tape text in mixed sizes
 		// to clearly show the thousands
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
@@ -2104,7 +2104,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		z = zfloat;
 
 		//int rd = (int) 5 * Math.round(2 * DIValue / 10); // round to nearest 5
-		int rd = (int) Math.round(DIValue); // round to nearest integer
+		int rd = Math.round(DIValue); // round to nearest integer
 
 		String t = Integer.toString(rd);
 		glText.begin( 1, 1, 1, 1, matrix ); 			// white
@@ -2909,18 +2909,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		
 		// Determine if we are counting up or down? 
 		// wpt character
-        //selWptDec
+        // selWptDec
         if      (Math.abs(mY - selWptDec / pixH2) < 0.10) inc = -1;
         else if (Math.abs(mY - selWptInc / pixH2) < 0.10) inc = +1;
-		//if      (Math.abs(mY - 0.9) < 0.15) inc = -1;
-		//else if (Math.abs(mY - 0.6) < 0.15) inc = +1;
 
 		// Determine if we are counting up or down?
 		// altitude number
         else if (Math.abs(mY - selAltDec / pixH2) < 0.10) ina = -1;
         else if (Math.abs(mY - selAltInc / pixH2) < 0.10) ina = +1;
-		//else if (Math.abs(mY + 0.6) < 0.15) ina = -1;
-		//else if (Math.abs(mY + 0.9) < 0.15) ina = +1;
 
 		// Determine which digit is changing
 		for (int i = 0; i < 4; i++) {
@@ -2987,24 +2983,27 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 						mWptSelLon = 0;
 					}
 				}
-                //Set the HITS origin points here since we have everything we need here
-                //hitsOriginLatValue = LatValue;  		// Latitude
-                //hitsOriginLonValue = LonValue;  		// Longitude
-                // todo calculate a auto generated OBS here as well
+                // The selected waypoint has changed
+                // Update the OBS as well
                 mObsValue = (float) calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
 			}
 		}
 	}
 
 
+    //-------------------------------------------------------------------------
+    //
+    // Auto Waypoint handlers
+    //
+    //-------------------------------------------------------------------------
     float mAutoWptDme;
+    float mAutoWptRlb;
 
-	void setAutoWptDme(float dme)
+    void setAutoWptDme(float dme)
 	{
 		mAutoWptDme = dme;
 	}
 
-	float mAutoWptRlb; 
 	private void renderAutoWptRlb(float[] matrix)
 	{
 		float z, pixPerUnit;
@@ -3023,10 +3022,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	{
 		mAutoWptRlb = rlb;
 	}
-
-
-
-
 
 
 	static String mMsg[] = new String[20]; //10
@@ -3056,48 +3051,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		mMsg[line] = s;
 	}
 
-
-	/*	
- 	String mMsg1; 
-	void renderMSG1Value(float[] matrix)
-	{
-		float z, pixPerUnit;
-
-		pixPerUnit = pixH2/DIInView;
-		z = zfloat;
-
-		String t = mMsg1;
-		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.6f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
-	}
-
-	void setMSG1(String s)
-	{
-		mMsg1 = s;
-	}
-
-	String mMsg2; 
-	void renderMSG2Value(float[] matrix)
-	{
-		float z, pixPerUnit;
-
-		pixPerUnit = pixH2/DIInView;
-		z = zfloat;
-
-		String t = mMsg2;
-		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-		glText.setScale(2.0f); 							// 
-		glText.draw(t, -0.97f*pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();                                    
-	}
-
-	void setMSG2(String s)
-	{
-		mMsg2 = s;
-	}
-	 */
 
 
 	void setPrefs(prefs_t pref, boolean value)
@@ -3136,7 +3089,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//  Remote Indicator
 	//
 	//-----------------------------------------------------------------------------
-	// todo - render fixed RMI markers
+
 	float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
 
     private void renderFixedCompassMarkers(float[] matrix)
@@ -3421,22 +3374,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 
-/*
-//-------------------------------------------------
-// todo move to individual and populate
-t = (QString( "%1" ).sprintf("WPT: %s", "YABA")); // todo ... demo
-QGLWidget::renderText (-0.97*pixW2, 0.90*pixH2, z+.1, t, font, 2000 ) ;
-
-t = (QString( "%1" ).sprintf("BRG: %03d", 123)); // todo ... demo
-QGLWidget::renderText (-0.97*pixW2, 0.80*pixH2, z+.1, t, font, 2000 ) ;
-
-
-t = (QString( "%1" ).sprintf("GS: %03.1f", GSValue )); // todo ... demo
-QGLWidget::renderText (-0.97*pixW2, 0.60*pixH2, z+.1, t, font, 2000 ) ;
-*/
-
 
 /*
+
+Some leftover code fragments from the original c code.
+This may still be uselful one day
+
 void GLPFD::renderDIMarkers()
 {
 	GLint i, j;
