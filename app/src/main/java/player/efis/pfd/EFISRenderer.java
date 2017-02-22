@@ -2295,8 +2295,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 		// 0.16667 deg lat  = 10 nm
 		// 0.1 approx 5nm
-		float  d = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float  _d = 6080000;  // 1,000 nm
+		float  dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        float  _dme = 6080000;  // 1,000 nm
         float  aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float  _relBrg = 180; // Assume the worst
 
@@ -2320,12 +2320,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			//d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
 			d =  364800 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
 			*/
-            d = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
+            dme = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
 
 
 			// Apply selection criteria
-			if (d < 5*6080) nrAptsFound++;                                              // always show apts closer then 5nm
-			else if ((nrAptsFound < MX_NR_APT) && (d < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
+			if (dme < 5*6080) nrAptsFound++;                                              // always show apts closer then 5nm
+			else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
 			else continue;                                                              // we already have all the apts as we wish to display
 
             /* bb2
@@ -2336,7 +2336,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
 			x1 = (float) ( aptRelBrg * pixPerDegree);
-			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) ) * pixPerDegree);    // we do not take apt elevation into account
+			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme) ) * pixPerDegree);    // we do not take apt elevation into account
 
 			mPolyLine.SetWidth(3);
 			mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
@@ -2363,14 +2363,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
 			while (absBrg < 0) absBrg += 360;
 			*/
-            double absBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+            float absBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
-			if (Math.abs(d) < Math.abs(_d)) {
+			if (Math.abs(dme) < Math.abs(_dme)) {
 				// closest apt (dme)
 				setAutoWptValue(wptId);
-				setAutoWptDme((float) d/6080);  // 1nm = 6080ft
+				setAutoWptDme((float) dme/6080);  // 1nm = 6080ft
 				setAutoWptBrg((float) absBrg);
-				_d = d;
+				_dme = dme;
 			}
 		}
 
@@ -2403,14 +2403,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //double deltaLat = mWptSelLat - LatValue;
         //double deltaLon = mWptSelLon - LonValue;
 
-        final double altMult = 10;
+        final float altMult = 10;
 
-        double deltaLat;  // = mWptSelLat - LatValue;
-        double deltaLon;  // = mWptSelLon - LonValue;
-        double d;         // = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
-        double hitRelBrg; // = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        float deltaLat;  // = mWptSelLat - LatValue;
+        float deltaLon;  // = mWptSelLon - LonValue;
+        float d;         // = 364800 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,800
+        float hitRelBrg; // = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 
-        double obs = 205; //252; //220; //198;
+        float obs = 205; //252; //220; //198;
         obs = mObsValue;
 
         // the gates to the drop point
@@ -2727,16 +2727,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 glText.end();
 			} 
 		}
-		
-		// Calculate the relative bearing to the selected wpt
-		double deltaLat = mWptSelLat - LatValue;
-		double deltaLon = mWptSelLon - LonValue;
-		//double d =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // in ft  very slow see comment elsewhere
-		double dme =  364800 * Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  //faster version see comment in renderApt
-		double relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;
-		if (relBrg >  180) relBrg = relBrg - 360;
-		if (relBrg < -180) relBrg = relBrg + 360;
 
+		// Calculate the relative bearing to the selected wpt
+        float dme = 6080 * calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in ft
+        float relBrg = calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
 
 		// Calculate how many degrees of pitch to command
 		final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
@@ -2751,14 +2745,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//if (IASValue < Vs0) commandPitch = -MAX_COMMAND;  
 
 		// update the flight director data
-        double commandRoll = relBrg;
+        float commandRoll = relBrg;
         if (commandRoll >  30) commandRoll = 30;   //
         if (commandRoll < -30) commandRoll = -30;  //
 		setFlightDirector(displayFlightDirector, commandPitch, (float) commandRoll);
 
         // BRG
-        double absBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
-        while (absBrg < 0) absBrg += 360;
+        float absBrg = calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
 
         // Setting data in this renderer does not make
         // much logical sense. This could be re-factored
@@ -2770,19 +2763,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // Display the Name details and also BRG and DME
         renderSelWptDetails(matrix);
-
-
-		// HWY
-		/*
-			x1 = (float) ( relBrg * pixPerDegree);
-			y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, d) )  * pixPerDegree);
-
-			mLine.SetWidth(15f);
-			mLine.SetColor(0.1f, 0.1f, 0.1f, 0);  // black
-			mLine.SetVerts(0,  -0.8f * pixH2, z,
-					           x1,  y1, z);
-			mLine.draw(mMVPMatrix);
-		 */
 	}
 
     private void renderSelWptDetails(float[] matrix)
