@@ -73,8 +73,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAircraftModel = AircraftModel.W10; //done
 
 	private static AircraftModel mAircraftModel = AircraftModel.RV8;
-
-
 	private static final String TAG = "EFISRenderer";
 
 	private Triangle mTriangle;
@@ -101,7 +99,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private  int pixM2;              // The smallest dimension of pixH2 or pixM2
     private  float zfloat;           // A Z to use for layering of ortho projected markings*/
 
-	//b2
 	// Artificial Horizon
 	private float pitchInView;      // The degrees pitch to display above and below the lubber line
 	private float pitch, roll;      // Pitch and roll in degrees
@@ -109,25 +106,31 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private float rollRotation;     // Roll converted for glRotate
 	// Airspeed Indicator
 	private float IASInView;     	// The indicated units to display above the center line
+
 	//private int   IASValue;         // Indicated Airspeed
 	private float IASValue;         // Indicated Airspeed
 	private float IASTranslation;	// Value amplified by 1/2 window pixels for use by glTranslate
+
 	// The following should be read from a calibration file by an init routine
 	private int Vs0, Vs1, Vfe, Vno;	// Basic Vspeeds
 	private int Vne, Va, Vy, Vx;    // More Vspeeds
 	private int IASMaxDisp;         // The highest speed to show on tape
+
 	// Altimeter
 	private float MSLInView;        // The indicated units to display above the center line
 	private int MSLValue;           // Altitude MSL
 	private float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 	private float baroPressure;     // Barometric pressure in in-Hg
+
 	// The following should be read from a calibration file by an init routine
 	private int MSLMinDisp;         // The lowest altitude to show on tape
 	private int MSLMaxDisp;         // The highest altitude to show on tape
+
 	// VSI
 	private float VSIInView;        // Vertical speed to display above the centerline
 	private int   VSIValue;         // Vertical speed in feet/minute
 	private float VSINeedleAngle;   // The angle to set the VSI needle
+
 	//DI
 	private float DIInView;        	// The indicated units to display above the center line
 	private float DIValue;          // Altitude MSL
@@ -137,22 +140,25 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private float GSValue;
 	private float ROTValue;         // Rate Of Turn
 	private float DITranslation;   	// Value amplified by 1/2 window pixels for use by glTranslate
+
 	// Geographic Coordinates
 	private float LatValue;  		// Latitude
 	private float LonValue;  		// Longitude
+
 	//FPV - Flight Path Vector
 	private float fpvX; 			// Flight Path Vector X
 	private float fpvY; 			// Flight Path Vector Y
+
 	//Flight Director
 	float FDTranslation;            // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
 	float FDRotation;               // = 20;  // command 20 deg roll
-	boolean displayInfoPage;
-	boolean displayFlightDirector;
-	//RMI
-	boolean displayRMI;  // debug
-	float RMIRotation;
-    // HITS
-    boolean displayHITS;
+
+    // Onscreen elements
+	boolean displayInfoPage;        // Display The Ancillary Information
+	boolean displayFlightDirector;  // Display Flight Director
+	boolean displayRMI;             // Display RMI
+    boolean displayHITS;            // Display the Highway In The Sky
+
 	//3D map display
 	boolean displayAirport;
 	private boolean displayTerrain;
@@ -168,17 +174,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	private boolean Calibrating;        // no longer used
 	private String  CalibratingMsg;     // no longer used
 
-	// kepress location
-	private float mX, mY;
+	private float mX, mY;               // keypress location
 
-    // the magic number for portrait offset
-    float portraitOffset = 0.40f; // 40f / 100f  aka 40%
+    private final float portraitOffset = 0.40f;       // the magic number for portrait offset
 
 	//Demo Modes
 	private boolean bDemoMode;
 	private String sDemoMsg;
-
-	//b2 end
 
 	private GLText glText;                             // A GLText Instance
 	private Context context;                           // Context (from Activity)
@@ -188,7 +190,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		PORTRAIT,
 		LANDSCAPE
 	}
-	//layout_t Layout = layout_t.PORTRAIT;
 	layout_t Layout = layout_t.LANDSCAPE;
 
 	public EFISRenderer(Context context)
@@ -205,9 +206,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		MSLValue = 0; 		// The default to show if no MSL calls come in
 		VSIValue = 0; 		// The default vertical speed
 
-		IASMaxDisp = 200; // 400;
+		IASMaxDisp = 200;
 		MSLMinDisp = -1000;
-		MSLMaxDisp =  20000;
+		MSLMaxDisp = 20000;
 
 		VSIInView = 2000;
 
@@ -2535,7 +2536,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	String mWptSelComment = "Serpentine";
 	float mWptSelLat = -32.395000f;
 	float mWptSelLon = 115.871000f;
-	String mAltSelName = "00000";
+	String mAltSelName = "000";
 	float mAltSelValue = 0;
 	float leftC = 0.6f;   // Selected Wpt
     float lineC;          // Selected Wpt - Set in onSurfaceChanged
