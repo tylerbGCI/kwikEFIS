@@ -16,7 +16,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.pfd"
     android:versionCode="2"
-    android:versionName="2.01.1" >
+    android:versionName="2.01.2" >
 
     <!-- We need to target 10 for the menu button -->
     <uses-sdk

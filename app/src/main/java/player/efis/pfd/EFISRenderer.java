@@ -463,15 +463,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (Layout == layout_t.LANDSCAPE) {
             // Landscape
             lineC =  0.50f;
-            lineB =  0.00f;
+            lineAutoWptDetails =  0.00f;
+            lineAncillaryDetails = -0.30f;
 
             // Top
             selWptDec =  0.90f * pixH2;
             selWptInc =  0.74f * pixH2;
-
-            // Bottom
-            //selWptDec =  -0.00f * pixH2;
-            //selWptInc =  -0.16f * pixH2;
 
             selAltDec = -0.74f * pixH2;
             selAltInc = -0.90f * pixH2;
@@ -479,7 +476,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         else {
             // Portrait
             lineC = -0.90f;
-            lineB = -0.90f;
+            lineAutoWptDetails =   -0.60f;
+            lineAncillaryDetails = -0.90f;
 
             selWptDec = -0.30f * pixH2;
             selWptInc = -0.41f * pixH2;
@@ -2393,7 +2391,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		//glText.draw(t, -0.97f*pixW2, 0.2f*pixH2 - glText.getCharHeight()/2 );
         //glText.draw(t, -0.70f*pixW2, -0.9f*pixH2 - glText.getCharHeight()/2 );  // next to the G meter
         //glText.draw(s, -0.97f*pixW2, 0.2f*pixH2 - glText.getCharHeight()/2 );
-        glText.draw(s, -0.97f * pixW2, (lineA-0.2f)*pixM2 - glText.getCharHeight()/2 ); // as part of the ancillaray group
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails-0.2f)*pixM2 - glText.getCharHeight()/2 ); // as part of the ancillaray group
 		glText.end();
 	}
 
@@ -2458,7 +2456,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Display all the relevant auto wpt information with
     // A combo function to replace the individual ones
     //
-    float lineB;  // Auto Wpt - Set in onSurfaceChanged
+    float lineAutoWptDetails;  // Auto Wpt - Set in onSurfaceChanged
     private void renderAutoWptDetails(float[] matrix)
     {
         //float z, pixPerUnit;
@@ -2470,13 +2468,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.setScale(2.0f);
 
         s = String.format("%s", mAutoWpt);
-        glText.draw(s, -0.97f * pixW2, (lineB-0.0f)*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(s, -0.97f * pixW2, (lineAutoWptDetails -0.0f)*pixM2 - glText.getCharHeight()/2 );
 
         s = String.format("BRG  %03.0f", mAutoWptBrg);
-        glText.draw(s, -0.97f * pixW2, (lineB-0.1f)*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(s, -0.97f * pixW2, (lineAutoWptDetails -0.1f)*pixM2 - glText.getCharHeight()/2 );
 
         s = String.format("DME %03.1f", mAutoWptDme);
-        glText.draw(s, -0.97f * pixW2, (lineB-0.2f)*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(s, -0.97f * pixW2, (lineAutoWptDetails -0.2f)*pixM2 - glText.getCharHeight()/2 );
         glText.end();
     }
 
@@ -2484,7 +2482,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Display all the relevant ancillary device information with
     // A combo function to replace the individual ones
     //
-    float lineA = -0.30f;  // Ancillary
+    float lineAncillaryDetails;  // Ancillary Details - Set in onSurfaceChanged
     private void renderAncillaryDetails(float[] matrix)
     {
         String s;
@@ -2493,7 +2491,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.setScale(2.0f);
 
         s = mGpsStatus; //String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
-        glText.draw(s, -0.97f * pixW2, (lineA-0.3f)*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails-0.3f)*pixM2 - glText.getCharHeight()/2 );
 
         /*
         s = String.format("%c%03.2f %c%03.2f",  (LatValue < 0)?  'S':'N' , Math.abs(LatValue), (LonValue < 0)? 'W':'E' , Math.abs(LonValue));
@@ -2501,7 +2499,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
          */
 
         s = String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound);
-        glText.draw(s, -0.97f * pixW2, (lineA-0.4f)*pixM2 - glText.getCharHeight()/2 );
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails-0.4f)*pixM2 - glText.getCharHeight()/2 );
 
         glText.end();
 
