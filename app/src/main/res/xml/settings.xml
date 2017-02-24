@@ -25,7 +25,7 @@
 
     <PreferenceCategory android:title="NAVIGATION" > 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="displayFlightDirector"
             android:summary="Engage Flight Director"
             android:title="Flight Director" />
@@ -35,7 +35,7 @@
             android:summary="Engage Compass and Bearing Indicator"
             android:title="Compass Rose" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="displayHITS"
             android:summary="Enable HITS display"
             android:title="Highway In The Sky" />

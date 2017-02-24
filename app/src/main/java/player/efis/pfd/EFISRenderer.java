@@ -487,16 +487,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             selAltInc = -0.91f * pixH2;
         }
 
-
 		// Set the window size specific scales, positions and sizes (nothing dynamic yet...)
-		pitchInView = 25.0f;  //12.5f;//25.0f;	// degrees to display from horizon to top of viewport
-		IASInView   = 40.0f;  //25.0f;    // IAS units to display from center to top of viewport
-		MSLInView   = 300.0f; //250.0f;	  // IAS units to display from center to top of viewport
+		pitchInView = 25.0f;      // degrees to display from horizon to top of viewport
+		IASInView   = 40.0f;      // IAS units to display from center to top of viewport
+		MSLInView   = 300.0f; 	  // IAS units to display from center to top of viewport
 
         // this projection matrix is applied to  object coordinates in the onDrawFrame() method
         float ratio = (float) width / height;
 		//Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest
-		//Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 2.99f, 7f); //hack for Samsung G2
         Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 2.99f, 75f); //hack for Samsung G2
 
 		// Create the GLText
@@ -587,8 +585,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	//-------------------------------------------------------------------------
-  // Define the various built-in arcraft definitions
-  //
+    // Define the various built-in arcraft definitions
+    //
 	public void setAircraftData(String model)
 	{
 		try {
@@ -2536,7 +2534,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	String mWptSelComment = "Serpentine";
 	float mWptSelLat = -32.395000f;
 	float mWptSelLon = 115.871000f;
-	String mAltSelName = "000";
+	String mAltSelName = "00000";
 	float mAltSelValue = 0;
 	float leftC = 0.6f;   // Selected Wpt
     float lineC;          // Selected Wpt - Set in onSurfaceChanged
@@ -3087,7 +3085,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				);
 		mLine.draw(matrix);
 		
-		// prallel
+		// parallel
 		float parr = 0.40f;
 		
         float __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg + 12);
@@ -3107,7 +3105,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 				);
 		mLine.draw(matrix);
 
-		// prallel
+		// parallel
          __sinI = parr*UTrig.isin(90-(int)mAutoWptBrg - 12);
          __cosI = parr*UTrig.icos(90-(int)mAutoWptBrg - 12);
 		mLine.SetVerts(
