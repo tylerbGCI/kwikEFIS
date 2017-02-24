@@ -8526,13 +8526,6 @@
 		<cmt>Amburla, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
-	<wpt lat="-35.997800" lon="148.796000">
-		<ele>1019.8608</ele>
-		<magvar>347.5</magvar>
-		<name>YADI</name>
-		<cmt>Adaminaby, AU</cmt>
-		<type>AIRPORT</type>
-	</wpt>
 	<wpt lat="-21.258300" lon="147.000000">
 		<magvar>351.9</magvar>
 		<name>YADM</name>
@@ -12091,7 +12084,7 @@
 		<ele>1694.9928</ele>
 		<magvar>21.1</magvar>
 		<name>FABM</name>
-		<cmt>Bethlehem,BETHLEHEM, ZA</cmt>
+		<cmt>Bethlehem, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-28.368400" lon="32.248100">
@@ -12245,7 +12238,7 @@
 		<ele>1623.06</ele>
 		<magvar>17.9</magvar>
 		<name>FAGC</name>
-		<cmt>Grand Central,GRAND CENTRAL, ZA</cmt>
+		<cmt>Grand Central, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.242500" lon="28.151200">
@@ -12364,14 +12357,14 @@
 		<ele>82.296</ele>
 		<magvar>20.4</magvar>
 		<name>FAKZ</name>
-		<cmt>Kleinsee,KLEINSEE, ZA</cmt>
+		<cmt>Kleinsee, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-25.938500" lon="27.926100">
 		<ele>1376.7816</ele>
 		<magvar>17.8</magvar>
 		<name>FALA</name>
-		<cmt>Lanseria,LANSERIA, ZA</cmt>
+		<cmt>Lanseria, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-28.360100" lon="23.439100">
@@ -12406,14 +12399,14 @@
 		<ele>32.9184</ele>
 		<magvar>23.6</magvar>
 		<name>FALW</name>
-		<cmt>Langebaanweg,LANGEBAANWEG, ZA</cmt>
+		<cmt>Langebaanweg, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-28.581700" lon="29.749700">
 		<ele>1081.4304</ele>
 		<magvar>22.1</magvar>
 		<name>FALY</name>
-		<cmt>Ladysmith,LADYSMITH, ZA</cmt>
+		<cmt>Ladysmith, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-25.684800" lon="29.440200">
@@ -12434,7 +12427,7 @@
 		<ele>150.876</ele>
 		<magvar>25.5</magvar>
 		<name>FAMG</name>
-		<cmt>Margate,MARGATE, ZA</cmt>
+		<cmt>Margate, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-29.181100" lon="27.453600">
@@ -12469,7 +12462,7 @@
 		<ele>312.1152</ele>
 		<magvar>18.3</magvar>
 		<name>FAMN</name>
-		<cmt>Riverside,MALELANE, ZA</cmt>
+		<cmt>Riverside, MALELANE, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-24.750200" lon="31.475700">
@@ -12497,7 +12490,7 @@
 		<ele>1241.7552</ele>
 		<magvar>21.1</magvar>
 		<name>FANC</name>
-		<cmt>Newcastle,NEWCASTLE, ZA</cmt>
+		<cmt>Newcastle, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-24.686100" lon="28.434900">
@@ -12511,14 +12504,14 @@
 		<ele>15.8496</ele>
 		<magvar>25.5</magvar>
 		<name>FAOB</name>
-		<cmt>Overberg,OVERBERG, ZA</cmt>
+		<cmt>Overberg, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-33.607000" lon="22.189000">
 		<ele>324.0024</ele>
 		<magvar>25.4</magvar>
 		<name>FAOH</name>
-		<cmt>Oudtshoorn,OUDTSHOORN, ZA</cmt>
+		<cmt>Oudtshoorn, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-33.984900" lon="25.617300">
@@ -12532,7 +12525,7 @@
 		<ele>141.732</ele>
 		<magvar>26.3</magvar>
 		<name>FAPG</name>
-		<cmt>Plettenberg Bay,PLETTENBERG BAY, ZA</cmt>
+		<cmt>Plettenberg Bay, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-23.937200" lon="31.155400">
@@ -12560,21 +12553,21 @@
 		<ele>738.5304</ele>
 		<magvar>23.9</magvar>
 		<name>FAPM</name>
-		<cmt>Pietermaritzburg,PIETERMARITZBURG, ZA</cmt>
+		<cmt>Pietermaritzburg, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-25.333800" lon="27.173400">
 		<ele>1039.9776</ele>
 		<magvar>16.7</magvar>
 		<name>FAPN</name>
-		<cmt>Pilanesberg International,PILANESBERG, ZA</cmt>
+		<cmt>Pilanesberg International, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-23.845300" lon="29.458600">
 		<ele>1242.3648</ele>
 		<magvar>15.3</magvar>
 		<name>FAPP</name>
-		<cmt>Polokwane International,POLOKWANE, ZA</cmt>
+		<cmt>Polokwane International, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.671000" lon="27.081900">
@@ -12602,7 +12595,7 @@
 		<ele>33.2232</ele>
 		<magvar>23.3</magvar>
 		<name>FARB</name>
-		<cmt>Richards Bay,RICHARDS BAY, ZA</cmt>
+		<cmt>Richards Bay, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-25.644300" lon="27.271100">
@@ -12630,7 +12623,7 @@
 		<ele>1600.2</ele>
 		<magvar>19.0</magvar>
 		<name>FASC</name>
-		<cmt>Secunda,SECUNDA, ZA</cmt>
+		<cmt>Secunda, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-32.964100" lon="17.969300">
@@ -12658,7 +12651,7 @@
 		<ele>1172.8704</ele>
 		<magvar>18.8</magvar>
 		<name>FASS</name>
-		<cmt>Sishen,SISHEN, ZA</cmt>
+		<cmt>Sishen, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-34.048200" lon="20.474600">
@@ -12672,7 +12665,7 @@
 		<ele>310.896</ele>
 		<magvar>17.6</magvar>
 		<name>FASZ</name>
-		<cmt>Skukuza,SKUKUZA, ZA</cmt>
+		<cmt>Skukuza, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-28.260000" lon="22.993200">
@@ -12693,7 +12686,7 @@
 		<ele>1619.4024</ele>
 		<magvar>19.4</magvar>
 		<name>FATT</name>
-		<cmt>Tutuka Power Station,TUTUKA POWER STATION, ZA</cmt>
+		<cmt>Tutuka Power Station, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-23.824400" lon="30.329300">
@@ -12756,7 +12749,7 @@
 		<ele>1477.0608</ele>
 		<magvar>18.7</magvar>
 		<name>FAVV</name>
-		<cmt>Vereeniging,VEREENIGING, ZA</cmt>
+		<cmt>Vereeniging, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-31.399400" lon="23.156400">
@@ -12770,7 +12763,7 @@
 		<ele>1248.156</ele>
 		<magvar>17.5</magvar>
 		<name>FAWB</name>
-		<cmt>Wonderboom,PRETORIA, ZA</cmt>
+		<cmt>Wonderboom, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-29.325000" lon="30.149200">
@@ -12784,7 +12777,7 @@
 		<ele>1547.7744</ele>
 		<magvar>18.0</magvar>
 		<name>FAWI</name>
-		<cmt>Witbank,WITBANK, ZA</cmt>
+		<cmt>Witbank, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-25.830000" lon="28.222500">
@@ -12959,7 +12952,7 @@
 		<ele>16.764</ele>
 		<magvar>4.1</magvar>
 		<name>FCPP</name>
-		<cmt>Pointe Noire,POINTE NOIRE,CF</cmt>
+		<cmt>Pointe Noire, CF</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.529000" lon="31.307500">
@@ -13321,42 +13314,42 @@
 		<ele>891.54</ele>
 		<magvar>12.6</magvar>
 		<name>FBSP</name>
-		<cmt>Selebi Phikwe,SELEBI-PHIKWE,BC</cmt>
+		<cmt>Selebi Phikwe, BC</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-22.448100" lon="29.337700">
 		<ele>711.0984</ele>
 		<magvar>13.5</magvar>
 		<name>FAVM</name>
-		<cmt>Venetia,VENETIA, ZA</cmt>
+		<cmt>Venetia, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-21.159600" lon="27.474500">
 		<ele>1000.6584</ele>
 		<magvar>11.5</magvar>
 		<name>FBFT</name>
-		<cmt>Francistown,FRANCISTOWN,BC</cmt>
+		<cmt>Francistown, BC</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.832900" lon="25.162400">
 		<ele>1002.4872</ele>
 		<magvar>7.8</magvar>
 		<name>FBKE</name>
-		<cmt>Kasane,KASANE,BC</cmt>
+		<cmt>Kasane, BC</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-19.972600" lon="23.431100">
 		<ele>942.7464</ele>
 		<magvar>9.9</magvar>
 		<name>FBMN</name>
-		<cmt>Maun,MAUN,BC</cmt>
+		<cmt>Maun, BC</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-21.266700" lon="25.316700">
 		<ele>944.88</ele>
 		<magvar>11.3</magvar>
 		<name>FBOR</name>
-		<cmt>Orapa,ORAPA,BC</cmt>
+		<cmt>Orapa, BC</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-20.553400" lon="26.115800">
@@ -13370,7 +13363,7 @@
 		<ele>1006.4496</ele>
 		<magvar>7.8</magvar>
 		<name>FLLI</name>
-		<cmt>Livingstone,LIVINGSTONE,ZA</cmt>
+		<cmt>Livingstone, ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-19.151300" lon="33.429000">
@@ -13405,7 +13398,7 @@
 		<ele>1063.752</ele>
 		<magvar>8.1</magvar>
 		<name>FVFA</name>
-		<cmt>Victoria Falls International,VICTORIA FALLS,ZI</cmt>
+		<cmt>Victoria Falls International, ZI</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.931800" lon="31.092800">
@@ -13433,7 +13426,7 @@
 		<ele>1095.756</ele>
 		<magvar>10.9</magvar>
 		<name>FVMV</name>
-		<cmt>Masvingo International,MASVINGO,ZI</cmt>
+		<cmt>Masvingo International,ZI</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-16.984800" lon="32.672700">
@@ -13475,7 +13468,7 @@
 		<ele>1387.1448</ele>
 		<magvar>3.6</magvar>
 		<name>FLSW</name>
-		<cmt>Solwesi,SOLWEZI,ZA</cmt>
+		<cmt>Solwesi,ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-13.558300" lon="32.587200">
@@ -13496,7 +13489,7 @@
 		<ele>1151.8392</ele>
 		<magvar>5.8</magvar>
 		<name>FLLS</name>
-		<cmt>Lusaka International,LUSAKA,ZA</cmt>
+		<cmt>Lusaka International,ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-13.258900" lon="31.936600">
@@ -13510,14 +13503,14 @@
 		<ele>1063.1424</ele>
 		<magvar>5.9</magvar>
 		<name>FLMG</name>
-		<cmt>Mongu,MONGU,ZA</cmt>
+		<cmt>Mongu,ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-12.998100" lon="28.664900">
 		<ele>1270.1016</ele>
 		<magvar>4.1</magvar>
 		<name>FLND</name>
-		<cmt>Ndola,NDOLA,ZA</cmt>
+		<cmt>Ndola,ZA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-12.900500" lon="28.149900">
@@ -13552,7 +13545,7 @@
 		<ele>519.9888</ele>
 		<magvar>6.9</magvar>
 		<name>FVKB</name>
-		<cmt>Kariba International,KARIBA,ZI</cmt>
+		<cmt>Kariba International,ZI</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-16.769200" lon="31.559800">
@@ -13587,21 +13580,21 @@
 		<ele>10.0584</ele>
 		<magvar>11.8</magvar>
 		<name>FQBR</name>
-		<cmt>Beira,BEIRA,MZ</cmt>
+		<cmt>Beira,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.855500" lon="36.869100">
 		<ele>10.9728</ele>
 		<magvar>10.2</magvar>
 		<name>FQQL</name>
-		<cmt>Quelimane,QUELIMANE,MZ</cmt>
+		<cmt>Quelimane,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-22.018400" lon="35.313300">
 		<ele>14.0208</ele>
 		<magvar>14.8</magvar>
 		<name>FQVL</name>
-		<cmt>Vilankulo,VILANKULO,MZ</cmt>
+		<cmt>Vilankulo,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-14.815000" lon="36.530000">
@@ -13622,7 +13615,7 @@
 		<ele>1373.124</ele>
 		<magvar>5.3</magvar>
 		<name>FQLC</name>
-		<cmt>Lichinga,LICHINGA,MZ</cmt>
+		<cmt>Lichinga,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-15.033100" lon="40.671700">
@@ -13650,14 +13643,14 @@
 		<ele>440.1312</ele>
 		<magvar>8.1</magvar>
 		<name>FQNP</name>
-		<cmt>Nampula,NAMPULA,MZ</cmt>
+		<cmt>Nampula,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-12.986800" lon="40.522500">
 		<ele>100.8888</ele>
 		<magvar>6.6</magvar>
 		<name>FQPB</name>
-		<cmt>Pemba,PEMBA,MZ</cmt>
+		<cmt>Pemba,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-14.704600" lon="34.352400">
@@ -13685,7 +13678,7 @@
 		<ele>14.0208</ele>
 		<magvar>7.1</magvar>
 		<name>FMCI</name>
-		<cmt>Mohéli Bandar Es Eslam,MOHELI,CN</cmt>
+		<cmt>Moheli Bandar Es Eslam,CN</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-11.710800" lon="43.243900">
@@ -13727,7 +13720,7 @@
 		<ele>1079.9064</ele>
 		<magvar>8.6</magvar>
 		<name>FVWN</name>
-		<cmt>Hwange National Park,HWANGE,ZI</cmt>
+		<cmt>Hwange National Park,ZI</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.917000" lon="25.817000">
@@ -13853,7 +13846,7 @@
 		<ele>1068.6288</ele>
 		<magvar>17.2</magvar>
 		<name>FYKT</name>
-		<cmt>Keetmanshoop,KEETMANSHOOP,WA</cmt>
+		<cmt>Keetmanshoop,WA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.687400" lon="15.242900">
@@ -13920,7 +13913,7 @@
 		<ele>91.1352</ele>
 		<magvar>14.2</magvar>
 		<name>FYWB</name>
-		<cmt>Walvis Bay,WALVIS BAY,WA</cmt>
+		<cmt>Walvis Bay,WA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-22.612200" lon="17.080400">
@@ -13983,7 +13976,7 @@
 		<ele>356.0064</ele>
 		<magvar>0.5</magvar>
 		<name>FZGN</name>
-		<cmt>Boende,BOENDE,CG</cmt>
+		<cmt>Boende,CG</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-0.683000" lon="22.333000">
@@ -15109,7 +15102,7 @@
 		<ele>7.0104</ele>
 		<magvar>340.5</magvar>
 		<name>NZAA</name>
-		<cmt>Auckland International,AUCKLAND,NZ</cmt>
+		<cmt>Auckland International,NZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-37.029700" lon="174.973000">
@@ -15118,15 +15111,12 @@
 		<name>NZAR</name>
 		<cmt>Ardmore,NZ</cmt>
 		<type>AIRPORT</type>
-					
-
-
 	</wpt>
 	<wpt lat="-37.866700" lon="175.332000">
 		<ele>52.4256</ele>
 		<magvar>339.9</magvar>
 		<name>NZHN</name>
-		<cmt>Hamilton,HAMILTON,NZ</cmt>
+		<cmt>Hamilton,NZ</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -15273,7 +15263,7 @@
 		<ele>6.096</ele>
 		<magvar>339.7</magvar>
 		<name>NZWK</name>
-		<cmt>Whakatane,WHAKATANE,NZ</cmt>
+		<cmt>Whakatane,NZ</cmt>
 		<type>AIRPORT</type>
 					
 
@@ -15282,7 +15272,7 @@
 		<ele>12.4968</ele>
 		<magvar>337.8</magvar>
 		<name>NZWN</name>
-		<cmt>Wellington International,WELLINGTON,NZ</cmt>
+		<cmt>Wellington International,NZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-39.006900" lon="177.407000">
@@ -15297,7 +15287,7 @@
 		<ele>30.48</ele>
 		<magvar>340.6</magvar>
 		<name>NZWP</name>
-		<cmt>RNZAF Base Auckland-Whenuapai,AUCKLAND,NZ</cmt>
+		<cmt>RNZAF Base Auckland-Whenuapai,NZ</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -15314,9 +15304,8 @@
 		<ele>3.9624</ele>
 		<magvar>338.0</magvar>
 		<name>NZWS</name>
-		<cmt>Westport,WESTPORT,NZ</cmt>
+		<cmt>Westport,NZ</cmt>
 		<type>AIRPORT</type>
-					
 	</wpt>
 	<wpt lat="-39.962200" lon="175.025000">
 		<ele>8.2296</ele>
@@ -15324,11 +15313,6 @@
 		<name>NZWU</name>
 		<cmt>Wanganui,NZ</cmt>
 		<type>AIRPORT</type>
-					
-
-
-
-
 	</wpt>
 	<wpt lat="-8.500000" lon="157.683000">
 		<magvar>351.7</magvar>
@@ -16069,7 +16053,7 @@
 		<ele>1083.8688</ele>
 		<magvar>348.4</magvar>
 		<name>YARM</name>
-		<cmt>Armidale,ARMIDALE, AU</cmt>
+		<cmt>Armidale, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16122,7 +16106,7 @@
 		<ele>9.4488</ele>
 		<magvar>354.4</magvar>
 		<name>YAUR</name>
-		<cmt>Aurukun,AURUKUN, AU</cmt>
+		<cmt>Aurukun, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16154,7 +16138,7 @@
 		<ele>495.6048</ele>
 		<magvar>355.6</magvar>
 		<name>YAYE</name>
-		<cmt>Ayers Rock Connellan,AYERS ROCK, AU</cmt>
+		<cmt>Ayers Rock Connellan, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16177,7 +16161,7 @@
 		<ele>19.2024</ele>
 		<magvar>348.9</magvar>
 		<name>YBAF</name>
-		<cmt>Brisbane Archerfield,BRISBANE, AU</cmt>
+		<cmt>Brisbane Archerfield, AU</cmt>
 		<type>AIRPORT</type>
 					
 
@@ -16267,7 +16251,7 @@
 		<ele>282.8544</ele>
 		<magvar>351.7</magvar>
 		<name>YBCK</name>
-		<cmt>Blackall,BLACKALL, AU</cmt>
+		<cmt>Blackall, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16275,14 +16259,14 @@
 		<ele>3.048</ele>
 		<magvar>352.9</magvar>
 		<name>YBCS</name>
-		<cmt>Cairns International,CAIRNS, AU</cmt>
+		<cmt>Cairns International, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-26.413300" lon="146.262000">
 		<ele>305.7144</ele>
 		<magvar>351.1</magvar>
 		<name>YBCV</name>
-		<cmt>Charleville,CHARLEVILLE, AU</cmt>
+		<cmt>Charleville, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16290,7 +16274,7 @@
 		<ele>214.884</ele>
 		<magvar>349.0</magvar>
 		<name>YBDG</name>
-		<cmt>Bendigo,BENDIGO, AU</cmt>
+		<cmt>Bendigo, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16304,7 +16288,7 @@
 		<ele>48.4632</ele>
 		<magvar>353.2</magvar>
 		<name>YBDV</name>
-		<cmt>Birdsville,BIRDSVILLE, AU</cmt>
+		<cmt>Birdsville, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16415,7 +16399,7 @@
 		<ele>91.44</ele>
 		<magvar>353.4</magvar>
 		<name>YBIE</name>
-		<cmt>Bedourie,BEDOURIE, AU</cmt>
+		<cmt>Bedourie, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16471,17 +16455,13 @@
 		<name>YBKT</name>
 		<cmt>Burketown,BURKETOWN, AU</cmt>
 		<type>AIRPORT</type>
-					
 	</wpt>
 	<wpt lat="-36.551900" lon="146.007000">
 		<ele>173.4312</ele>
 		<magvar>348.4</magvar>
 		<name>YBLA</name>
-		<cmt>Benalla,BENALLA, AU</cmt>
+		<cmt>Benalla, AU</cmt>
 		<type>AIRPORT</type>
-					
-
-
 	</wpt>
 	<wpt lat="-30.535000" lon="139.337000">
 		<ele>43.8912</ele>
@@ -16591,7 +16571,7 @@
 		<ele>50.292</ele>
 		<magvar>347.3</magvar>
 		<name>YBNS</name>
-		<cmt>Bairnsdale,BAIRNSDALE, AU</cmt>
+		<cmt>Bairnsdale, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16692,7 +16672,7 @@
 		<ele>10.3632</ele>
 		<magvar>350.6</magvar>
 		<name>YBRK</name>
-		<cmt>Rockhampton,ROCKHAMPTON, AU</cmt>
+		<cmt>Rockhampton, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16700,7 +16680,7 @@
 		<ele>16.764</ele>
 		<magvar>355.2</magvar>
 		<name>YBRL</name>
-		<cmt>Borroloola,BORROLOOLA, AU</cmt>
+		<cmt>Borroloola, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16735,7 +16715,7 @@
 		<ele>126.1872</ele>
 		<magvar>350.0</magvar>
 		<name>YBRW</name>
-		<cmt>Brewarrina,BREWARRINA, AU</cmt>
+		<cmt>Brewarrina, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -16793,7 +16773,7 @@
 		<ele>200.2536</ele>
 		<magvar>351.0</magvar>
 		<name>YBTR</name>
-		<cmt>Blackwater,BLACKWATER, AU</cmt>
+		<cmt>Blackwater, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -18727,7 +18707,7 @@
 		<ele>123.1392</ele>
 		<magvar>353.3</magvar>
 		<name>YJLC</name>
-		<cmt>Julia Creek,JULIA CREEK, AU</cmt>
+		<cmt>Julia Creek, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -19030,7 +19010,7 @@
 		<ele>454.7616</ele>
 		<magvar>349.5</magvar>
 		<name>YKRY</name>
-		<cmt>Kingaroy,KINGAROY, AU</cmt>
+		<cmt>Kingaroy, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20707,7 +20687,7 @@
 		<ele>3.6576</ele>
 		<magvar>347.7</magvar>
 		<name>YPMQ</name>
-		<cmt>Port Macquarie,PORT MACQUARIE, AU</cmt>
+		<cmt>Port Macquarie, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20734,7 +20714,7 @@
 		<ele>80.772</ele>
 		<magvar>349.9</magvar>
 		<name>YPOD</name>
-		<cmt>Portland,PORTLAND, AU</cmt>
+		<cmt>Portland, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20755,7 +20735,7 @@
 		<ele>17.3736</ele>
 		<magvar>351.9</magvar>
 		<name>YPPF</name>
-		<cmt>Adelaide Parafield,ADELAIDE, AU</cmt>
+		<cmt>Adelaide Parafield, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20763,7 +20743,7 @@
 		<ele>20.4216</ele>
 		<magvar>1.5</magvar>
 		<name>YPPH</name>
-		<cmt>Perth International,PERTH, AU</cmt>
+		<cmt>Perth International, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-34.750000" lon="137.933000">
@@ -20788,7 +20768,7 @@
 		<ele>167.0304</ele>
 		<magvar>353.2</magvar>
 		<name>YPWR</name>
-		<cmt>Woomera,WOOMERA, AU</cmt>
+		<cmt>Woomera, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20796,7 +20776,7 @@
 		<ele>279.1968</ele>
 		<magvar>359.7</magvar>
 		<name>YPXM</name>
-		<cmt>Christmas Island,CHRISTMAS I,KT</cmt>
+		<cmt>Christmas Island, KT</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20828,7 +20808,7 @@
 		<ele>321.2592</ele>
 		<magvar>348.4</magvar>
 		<name>YQDI</name>
-		<cmt>Quirindi,QUIRINDI, AU</cmt>
+		<cmt>Quirindi, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20836,7 +20816,7 @@
 		<ele>199.644</ele>
 		<magvar>351.6</magvar>
 		<name>YQLP</name>
-		<cmt>Quilpie,QUILPIE, AU</cmt>
+		<cmt>Quilpie, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20906,7 +20886,7 @@
 		<ele>35.052</ele>
 		<magvar>351.2</magvar>
 		<name>YREN</name>
-		<cmt>Renmark,RENMARK, AU</cmt>
+		<cmt>Renmark, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20945,7 +20925,7 @@
 		<ele>206.0448</ele>
 		<magvar>353.0</magvar>
 		<name>YRMD</name>
-		<cmt>Richmond,RICHMOND, AU</cmt>
+		<cmt>Richmond, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -20973,7 +20953,7 @@
 		<ele>314.5536</ele>
 		<magvar>350.3</magvar>
 		<name>YROM</name>
-		<cmt>Roma,ROMA, AU</cmt>
+		<cmt>Roma, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21071,7 +21051,7 @@
 		<ele>8.8392</ele>
 		<magvar>347.5</magvar>
 		<name>YSBK</name>
-		<cmt>Sydney Bankstown,SYDNEY, AU</cmt>
+		<cmt>Sydney Bankstown, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21079,7 +21059,7 @@
 		<ele>574.8528</ele>
 		<magvar>347.6</magvar>
 		<name>YSCB</name>
-		<cmt>Canberra International,CANBERRA, AU</cmt>
+		<cmt>Canberra International, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21111,7 +21091,7 @@
 		<ele>107.8992</ele>
 		<magvar>359.8</magvar>
 		<name>YSCR</name>
-		<cmt>Southern Cross,SOUTHERN CROSS, AU</cmt>
+		<cmt>Southern Cross, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-12.750000" lon="142.367000">
@@ -21206,7 +21186,7 @@
 		<ele>113.9952</ele>
 		<magvar>348.7</magvar>
 		<name>YSHT</name>
-		<cmt>Shepparton,SHEPPARTON, AU</cmt>
+		<cmt>Shepparton, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-33.995000" lon="150.952000">
@@ -21227,7 +21207,7 @@
 		<ele>9.4488</ele>
 		<magvar>347.3</magvar>
 		<name>YSMI</name>
-		<cmt>Smithton,SMITHTON, AU</cmt>
+		<cmt>Smithton, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21241,7 +21221,7 @@
 		<ele>113.0808</ele>
 		<magvar>345.1</magvar>
 		<name>YSNF</name>
-		<cmt>Norfolk Island International,NORFOLK I,NF</cmt>
+		<cmt>Norfolk Island International, NF</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21255,7 +21235,7 @@
 		<ele>121.92</ele>
 		<magvar>347.2</magvar>
 		<name>YSNW</name>
-		<cmt>Nowra,NOWRA, AU</cmt>
+		<cmt>Nowra, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21263,7 +21243,7 @@
 		<ele>895.5024</ele>
 		<magvar>348.9</magvar>
 		<name>YSPE</name>
-		<cmt>Stanthorpe,STANTHORPE, AU</cmt>
+		<cmt>Stanthorpe, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21302,7 +21282,7 @@
 		<ele>20.4216</ele>
 		<magvar>347.6</magvar>
 		<name>YSRI</name>
-		<cmt>Richmond,RICHMOND, AU</cmt>
+		<cmt>Richmond, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -21310,7 +21290,7 @@
 		<ele>6.096</ele>
 		<magvar>346.6</magvar>
 		<name>YSRN</name>
-		<cmt>Strahan,STRAHAN, AU</cmt>
+		<cmt>Strahan, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-27.150000" lon="149.083000">
@@ -21323,7 +21303,7 @@
 		<ele>6.4008</ele>
 		<magvar>347.4</magvar>
 		<name>YSSY</name>
-		<cmt>Sydney Kingsford Smith International,SYDNEY, AU</cmt>
+		<cmt>Sydney Kingsford Smith International, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-36.636700" lon="143.186000">
@@ -21344,7 +21324,7 @@
 		<ele>14.6304</ele>
 		<magvar>345.5</magvar>
 		<name>YSTH</name>
-		<cmt>St Helens,ST HELENS, AU</cmt>
+		<cmt>St Helens, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-24.358300" lon="143.300000">
@@ -22805,7 +22785,7 @@
 		<ele>133.8072</ele>
 		<magvar>356.5</magvar>
 		<name>YBGO</name>
-		<cmt>Balgo Hill,BALGO HILL, AU</cmt>
+		<cmt>Balgo Hill, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.607000" lon="131.549000">
@@ -23911,14 +23891,14 @@
 		<ele>7.0104</ele>
 		<magvar>8.0</magvar>
 		<name>FMCZ</name>
-		<cmt>Dzaoudzi Pamandzi International,DZAOUDZI,MF</cmt>
+		<cmt>Dzaoudzi Pamandzi International,MF</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-12.349400" lon="49.291700">
 		<ele>113.9952</ele>
 		<magvar>8.8</magvar>
 		<name>FMNA</name>
-		<cmt>Arrachart,ANTSIRANANA,MA</cmt>
+		<cmt>Arrachart,MA</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-14.651700" lon="49.620600">
@@ -24883,7 +24863,7 @@
 		<ele>1.524</ele>
 		<magvar>352.3</magvar>
 		<name>AGGE</name>
-		<cmt>Ballalae,BALLALAE,BP</cmt>
+		<cmt>Ballalae, BP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-8.097780" lon="156.864000">
@@ -24918,7 +24898,7 @@
 		<ele>44.5008</ele>
 		<magvar>353.7</magvar>
 		<name>AYPY</name>
-		<cmt>Port Moresby Jacksons International,PORT MORESBY,PP
+		<cmt>Port Moresby Jacksons International, PP
 		</cmt>
 		<type>AIRPORT</type>
 	</wpt>
@@ -24974,7 +24954,7 @@
 		<ele>3.048</ele>
 		<magvar>351.8</magvar>
 		<name>AGGM</name>
-		<cmt>Munda,MUNDA,BP</cmt>
+		<cmt>Munda,BP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-5.330560" lon="151.008000">
@@ -25016,7 +24996,7 @@
 		<ele>3.3528</ele>
 		<magvar>352.7</magvar>
 		<name>AYBK</name>
-		<cmt>Buka,BUKA,PP</cmt>
+		<cmt>Buka, PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-5.462170" lon="150.405000">
@@ -25030,14 +25010,14 @@
 		<ele>2.1336</ele>
 		<magvar>353.9</magvar>
 		<name>AYKV</name>
-		<cmt>Kavieng,KAVIENG,PP</cmt>
+		<cmt>Kavieng, PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-2.061890" lon="147.424000">
 		<ele>3.6576</ele>
 		<magvar>354.7</magvar>
 		<name>AYMO</name>
-		<cmt>Momote,MOMOTE,PP</cmt>
+		<cmt>Momote, PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-4.340460" lon="152.380000">
@@ -25051,7 +25031,7 @@
 		<ele>50.9016</ele>
 		<magvar>353.5</magvar>
 		<name>AYKY</name>
-		<cmt>Londolovit,LIHIR, PAPA NEW GUINEA,PP</cmt>
+		<cmt>Londolovit,LIHIR, PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-37.733300" lon="144.422000">
@@ -25065,7 +25045,7 @@
 		<ele>4.2672</ele>
 		<magvar>7.2</magvar>
 		<name>FJDG</name>
-		<cmt>DIEGO GARCIA NSF,CAMP JUSTICE,IO</cmt>
+		<cmt>Diego Garcia NSF, IO</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 </gpx>
