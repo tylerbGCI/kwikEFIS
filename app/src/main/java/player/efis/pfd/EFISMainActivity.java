@@ -214,8 +214,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-
-
         // Create a GLSurfaceView instance and set it
 		// as the ContentView for this Activity
 		mGLView = new EFISSurfaceView(this);
@@ -271,11 +269,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     	mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
     	mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
-        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "000");
+        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
+        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
 	    String region = settings.getString("RegionDatabase", "zar.aus");
 
