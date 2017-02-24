@@ -732,6 +732,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Utility function to
 	// Perform a simple calibration
 	//
+    /*
 	float pitchOffset = 0;
 	//float _RollOffset = Float.MAX_VALUE;
 	float _PitchOffset = Float.MAX_VALUE;
@@ -772,6 +773,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			return true; //false;
 		}
 	}
+	*/
 
 
 	//-------------------------------------------------------------------------

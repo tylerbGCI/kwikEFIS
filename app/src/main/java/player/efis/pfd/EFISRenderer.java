@@ -91,7 +91,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 	private float mAngle; 
 
-	//b2 start
 	// OpenGL
 	private  int pixW, pixH;         // Width & Height of window in pixels
 	private  int pixW2, pixH2;       // Half Width & Height of window in pixels
@@ -272,10 +271,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset; //portraitOffset set to 0.4
-            //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
-            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
-            Matrix.translateM(scratch1, 0, 0, Adjust, 0); // apply the offset
+            float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
         }
 
 		// Slide ALT to current value
@@ -401,15 +398,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		renderGForceValue(mMVPMatrix);
 
 		if (displayInfoPage) {
-			/*renderAutoWptValue(mMVPMatrix);
-			renderAutoWptDme(mMVPMatrix);		
-			//renderAutoWptRlb(mMVPMatrix);
-			renderAutoWptBrg(mMVPMatrix);
-			*/
-			//renderMSGValue(mMVPMatrix); // need to phase this out, causes problems with portrait/landscape
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
-            //renderAutoWptDetails(mMVPMatrix);
 		}
 
 		if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
@@ -2488,8 +2478,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails-0.4f)*pixM2 - glText.getCharHeight()/2 );
 
         glText.end();
-
-        //setMSG(8, String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound));
     }
 
 
@@ -2499,23 +2487,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mGpsStatus = gpsstatus;
     }
 
-
-	/*
-	String mWptSelName = "YAAA";
-	String mWptSelComment = "   ";
-	float mWptSelLat = 0;
-	float mWptSelLon = 0;
-	*/
-	
-	/*
-	<wpt lat="-32.395000" lon="115.871000">
-		<ele>2.7432</ele>
-		<magvar>1.8</magvar>
-		<name>YSEN</name>
-		<cmt>Serpentine,AS</cmt>
-		<type>AIRPORT</type>
-	</wpt>
-	*/
 
 	String mWptSelName = "YSEN";
 	String mWptSelComment = "Serpentine";
@@ -2571,8 +2542,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		// Calculate how many degrees of pitch to command
 		final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
 		float deltaAlt = mAltSelValue - MSLValue;
-		//float commandPitch =  (IASValue) / 5 * (deltaAlt / 1000);
-		float commandPitch;		
+		float commandPitch;
 		if (deltaAlt > 0) commandPitch =  (IASValue - Vy) / 5 * (deltaAlt / 1000);
 		else              commandPitch =  (IASValue) / 5 * (deltaAlt / 1000);
 
@@ -2600,24 +2570,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderSelWptDetails(float[] matrix)
     {
-        //float lineC =  0.35f;  // landscape
-        //float lineC =  -0.50f;  // Also OK for Landscape
-        //float lineC =  selWptInc / pixM2 - 0.35f;  //
 
         glText.begin( 1.0f, 1f, 1.0f, 1.0f, matrix ); //
         glText.setScale(2.1f);
         String s = mWptSelComment;
-        //glText.draw(s, leftC * pixW2, 0.5f*pixH2 - glText.getCharHeight()/2 );
-        //glText.draw(s, leftC * pixW2, (lineC+0.15f)*pixM2 - glText.getCharHeight()/2 );
         glText.draw(s, leftC * pixW2, (lineC+0.0f)*pixM2 - glText.getCharHeight()/2 );
         glText.end();
 
         // DME
-        //String t = String.format("DME %03.1f", mSelWptDme / 6080);
         String t = String.format("DME %03.1f", mSelWptDme);  // in nm
-        glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
-        glText.setScale(2.5f); 							//
-        //glText.draw(t, leftC*pixW2, (lineC-0.05f)*pixH2 - glText.getCharHeight()/2 );
+        glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix );      // white
+        glText.setScale(2.5f);
         glText.draw(t, leftC*pixW2, (lineC-0.2f)*pixM2 - glText.getCharHeight()/2 );
         glText.end();
 
@@ -2625,7 +2588,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         t = String.format("BRG  %03.0f", mSelWptBrg);
         glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix ); // white
         glText.setScale(2.5f); 							//
-        //glText.draw(t, leftC*pixW2, (lineC+0.05f)*pixH2 - glText.getCharHeight()/2 );
         glText.draw(t, leftC*pixW2, (lineC-0.1f)*pixM2 - glText.getCharHeight()/2 );
         glText.end();
     }
@@ -2636,9 +2598,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float selAltDec; // = -0.74f * pixH2;
 	private void renderSelAltValue(float[] matrix)
 	{
-		float z; //, pixPerDegree, x1, y1;
-		//pixPerDegree = pixM2 / pitchInView;
-		//pixPerDegree = pixM2 / PPD_DIV;
+		float z;
 		z = zfloat;
 
 		// Draw the selecting triangle spinner buttons
@@ -2668,15 +2628,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			} 
 		}
 
-		/*
-		// We will only go to 10 ft. Hardcode the last digit to '0'   
-		float xPos = (leftC + 3.8f/10f);
-		glText.begin( 1.0f, 0.8f, 1.0f, 1.0f, matrix ); //
-		glText.setScale(3f);
-		String s = "0";
-		glText.drawCX(s, xPos * pixW2, -0.83f*pixH2 - glText.getCharHeight()/2 );            
-		glText.end();
-		 */
 		float xPos = (leftC + 2.6f/10f);
 		glText.begin( 1.0f, 0.8f, 1.0f, 1.0f, matrix ); //
 		glText.setScale(2.2f);
@@ -2816,34 +2767,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	void setAutoWptRelBrg(float rlb)
 	{
 		mAutoWptRlb = rlb;
-	}
-
-
-	static String mMsg[] = new String[20]; //10
-	static float lineNr;
-	void renderMSGValue(float[] matrix)
-	{
-		float z, pixPerUnit;
-
-		pixPerUnit = pixH2/DIInView;
-		z = zfloat;
-
-		//for (int i = 0; i  < mMsg.length;  i++) {
-        for (int i = 0; i  < mMsg.length;  i++) {
-            String t = mMsg[i];
-			if (t != null) {
-				glText.begin( 1.0f, 1.0f, 1.0f, 1.0f, matrix );
-				glText.setScale(2.0f); 							 
-				glText.draw(t, -0.97f*pixW2, (float) (i-10) / 10f * pixM2 - glText.getCharHeight()/2 );
-				glText.end();                                  
-			}
-		}
-	}
-
-	void setMSG(int line, String s)
-	{
-		lineNr = line;
-		mMsg[line] = s;
 	}
 
 

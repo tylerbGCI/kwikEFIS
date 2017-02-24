@@ -178,28 +178,6 @@ public class EFISSurfaceView extends GLSurfaceView
 		//requestRender();
 	}
 
-	// Message
-	void setMSG(int line, String s)
-	{
-		mRenderer.setMSG(line, s);
-		requestRender();
-	}
-
-
-
-	/*
-	void setMSG1(String s)
-	{
-    	mRenderer.setMSG1(s);
-    	requestRender();
-	}
-
-	void setMSG2(String s)
-	{
-    	mRenderer.setMSG2(s);
-    	requestRender();
-	}
-	 */
 
 	public void setTurn(float rot)
 	{
