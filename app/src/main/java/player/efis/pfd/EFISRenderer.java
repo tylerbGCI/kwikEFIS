@@ -211,16 +211,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		MSLMaxDisp = 20000;
 
 		VSIInView = 2000;
-
-		//displayTerrain = true;
-		//displayTape    = true;
-		//displayMirror  = false;
 		displayFPV = true;
-
-        //hitsOriginLatValue = -31.940300f;  // pin Latitude
-        //hitsOriginLonValue = 115.967000f;  // pin Longitude
-
-
 	}
 
 	@Override
@@ -388,10 +379,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderASIMarkers(iasMatrix);
             }
 
-            // renderHITS(scratch1); // will heep in the viewport
 
-
-            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
+            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
             renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
             renderFixedASIMarkers(mMVPMatrix); // this could be empty argument
             renderVSIMarkers(mMVPMatrix);
@@ -2432,8 +2421,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	
 	private float mSelWptBrg;           // Selected waypoint Bearing
     private float mSelWptRlb;           // Selected waypoint Relative bearing
-    //private float hitsOriginLatValue;  	// Selected waypoint Latitude
-    //private float hitsOriginLonValue;  	// Selected waypoint Longitude
     private float mSelWptDme;           // Selected waypoint Dme distance (nm)
 
 	void setSelWptBrg(float brg)
@@ -2697,24 +2684,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 		String s = "F L";
 		glText.draw(s, xPos * pixW2, -0.83f*pixH2 - glText.getCharHeight()/2 );            
 		glText.end();
-
-
-		// maybe draw some HITS boxes?
-		/*
-			// Calculate the relative bearing to the selected wpt
-			double deltaLat = mWptSelLat - LatValue;
-			double deltaLon = mWptSelLon - LonValue;
-			double d =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // in ft 
-			double relBrg = (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;
-			if (relBrg >  180) relBrg = relBrg - 360;
-			if (relBrg < -180) relBrg = relBrg + 360;
-
-			if (relBrg >  30) relBrg = 30;
-			if (relBrg < -30) relBrg = -30;
-
-			// update the flight director data
-			setFlightDirector(true, 2f, (float) relBrg);
-		 */
 	}
 
 
