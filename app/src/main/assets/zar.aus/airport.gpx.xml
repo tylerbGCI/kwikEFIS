@@ -24320,7 +24320,7 @@
 		<ele>4.572</ele>
 		<magvar>354.7</magvar>
 		<name>YSII</name>
-		<cmt>Saibai Island,SAIBAI ISLAND, AU</cmt>
+		<cmt>Saibai Island, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-10.208300" lon="142.825000">
@@ -24334,7 +24334,7 @@
 		<ele>3.048</ele>
 		<magvar>354.5</magvar>
 		<name>YYKI</name>
-		<cmt>Yorke Island,YORKE ISLAND, AU</cmt>
+		<cmt>Yorke Island, AU</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-7.963610" lon="145.771000">
@@ -24453,7 +24453,7 @@
 		<ele>13.1064</ele>
 		<magvar>354.6</magvar>
 		<name>YHID</name>
-		<cmt>Horn Island,HORN ISLAND, AU</cmt>
+		<cmt>Horn Island, AU</cmt>
 		<type>AIRPORT</type>
 					
 	</wpt>
@@ -24636,21 +24636,21 @@
 		<ele>6.096</ele>
 		<magvar>354.6</magvar>
 		<name>AYMD</name>
-		<cmt>Madang,MADANG,PP</cmt>
+		<cmt>Madang,PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-5.278610" lon="141.226000">
 		<ele>478.536</ele>
 		<magvar>355.6</magvar>
 		<name>AYTB</name>
-		<cmt>Tabubil,TABUBIL,PP</cmt>
+		<cmt>Tabubil,PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-2.697170" lon="141.302000">
 		<ele>3.048</ele>
 		<magvar>355.9</magvar>
 		<name>AYVN</name>
-		<cmt>Vanimo,VANIMO,PP</cmt>
+		<cmt>Vanimo,PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-3.583830" lon="143.669000">
@@ -24898,8 +24898,7 @@
 		<ele>44.5008</ele>
 		<magvar>353.7</magvar>
 		<name>AYPY</name>
-		<cmt>Port Moresby Jacksons International, PP
-		</cmt>
+		<cmt>Port Moresby Jacksons International, PP</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-6.271110" lon="150.331000">
