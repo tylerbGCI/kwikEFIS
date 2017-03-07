@@ -31,6 +31,7 @@
     </PreferenceCategory>
         
 
+    <!--
     <PreferenceCategory android:title="MODE" >
         <PreferenceScreen
             android:key="modeSelection"
@@ -59,8 +60,38 @@
                 android:title="Locked" />
         </PreferenceScreen>
     </PreferenceCategory>
+    -->
 
     <PreferenceCategory android:title="SYSTEM" >
+        <PreferenceScreen
+            android:key="modeSelection"
+            android:title="Panorama / Mirror / Demo / Locked"
+            android:summary="Mode Selection"
+            android:persistent="false">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="landscapeMode"
+                android:summary="Select Panorama view"
+                android:title="Panorama" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="displayMirror"
+                android:summary="Mirror image for HUD usage"
+                android:title="Mirror HUD" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="demoMode"
+                android:summary="Simulate GPS movement for demonstration"
+                android:title="Demo" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="lockedMode"
+                android:summary="Lock the exit on back button"
+                android:title="Locked" />
+        </PreferenceScreen>
+
+
 
         <ListPreference
             android:defaultValue="0.75f"
@@ -70,13 +101,12 @@
             android:summary="Select the bank sensor/GPS bias"
             android:title="Bank Sensor" />
 
-        <ListPreference
-            android:defaultValue="0.0.0"
+        <PreferenceScreen
+            android:defaultValue="0.0"
             android:key="version"
-            android:entries="@array/version_names"
-            android:entryValues="@array/version_values"
-            android:summary="0.0.0"
+            android:summary="0.0"
             android:title="kwikEFIS version" />
+
     </PreferenceCategory>
 </PreferenceScreen>
 
