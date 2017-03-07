@@ -22,55 +22,51 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 import android.view.View;
 import android.widget.ListView;
 
-public class EFISPrefManage extends PreferenceActivity 
+public class EFISPrefManage extends PreferenceActivity
 {
 
-	@SuppressWarnings("deprecation")
-	@Override 
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.manage); 
-		updateSummary();
-	}
-	
-    
-	@SuppressWarnings("deprecation")
-	private void updateSummary()
-	{
-    ListPreference lp;
-    lp = (ListPreference) findPreference("AircraftModel");
-	  lp.setSummary(lp.getEntry());
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.manage);
+        updateSummary();
+    }
 
-	  lp = (ListPreference) findPreference("regionDatabase");
-	  lp.setSummary(lp.getEntry());
-		
-	  lp = (ListPreference) findPreference("sensorBias"); 
-	  lp.setSummary(lp.getEntry()); 
-	  
 
-		// Get the version number of the app
-		PackageInfo pInfo = null;
-		try {
-			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-		}
-		catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		String version = pInfo.versionName; 
-		
-	  lp = (ListPreference) findPreference("version"); 
-	  lp.setSummary(version); 
-	  
-    CharSequence[] entries = { version };
-    CharSequence[] entryValues = {"1"};
-    lp.setEntries(entries);
-    lp.setDefaultValue("1");
-    lp.setEntryValues(entryValues);
-	}
+    @SuppressWarnings("deprecation")
+    private void updateSummary()
+    {
+        ListPreference lp;
+        lp = (ListPreference) findPreference("AircraftModel");
+        lp.setSummary(lp.getEntry());
+
+        lp = (ListPreference) findPreference("regionDatabase");
+        lp.setSummary(lp.getEntry());
+
+        lp = (ListPreference) findPreference("sensorBias");
+        lp.setSummary(lp.getEntry());
+
+
+        // Get the version number of the app
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = pInfo.versionName;
+
+
+        PreferenceScreen ps;
+        ps = (PreferenceScreen) findPreference("version");
+        ps.setSummary(version);
+    }
 }
 
 

@@ -53,6 +53,7 @@
     </string-array>
 
 
+<!--
     <string-array name="screen_mode_names">
         <item>Locked</item>
         <item>Landscape</item>
@@ -68,9 +69,9 @@
     </string-array>
     <string-array name="version_values">
     </string-array>
-    
-    
-    
+-->
+
+
     <!--
 <string-array name="ac_list_values">
     <item>0</item>
