@@ -42,7 +42,6 @@ enum AircraftModel
 	RV6,
 	RV7,
 	RV8,
-	// --Commented out by Inspection (2017-02-08 12:56):T18,
 	W10
 }
 
@@ -69,7 +68,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	//private final static AircraftModel mAircraftModel = AircraftModel.RV6; //done
 	//private final static AircraftModel mAircraftModel = AircraftModel.RV7; //done
 	//private final static AircraftModel mAircraftModel = AircraftModel.RV8; //done
-	//private final static AircraftModel mAircraftModel = AircraftModel.T18; // removed
 	//private final static AircraftModel mAircraftModel = AircraftModel.W10; //done
 
 	private static AircraftModel mAircraftModel = AircraftModel.RV8;
