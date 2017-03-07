@@ -2234,7 +2234,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glText.drawCY(s, x1, y1 + glText.getCharHeight()/2 );
 			glText.end();
 
-            float absBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+            float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
 			if (Math.abs(dme) < Math.abs(_dme)) {
 				// closest apt (dme)
