@@ -727,55 +727,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		else return false;
 	}
 
-
-	//-------------------------------------------------------------------------
-	// Utility function to
-	// Perform a simple calibration
-	//
-    /*
-	float pitchOffset = 0;
-	//float _RollOffset = Float.MAX_VALUE;
-	float _PitchOffset = Float.MAX_VALUE;
-	long _cal_ms, cal_ms;
-	boolean CalibratePitch()
-	{
-		if (calibrationCount < CAL_MAX) {
-			// wait 2 seconds between calibrations
-			time.setToNow();
-			cal_ms = time.toMillis(true);
-		  if ((double) cal_ms - (double) _cal_ms < 2000) {
-		  	return false;   // 2 seconds have not elapsed yet
-		  }
-		  _cal_ms = cal_ms;
-
-			pitchOffset = sensorComplementaryFilter.getPitchAcc();
-
-			// the the pitch is sensible, ie <  45 degrees
-			if (Math.abs(pitchOffset) < 45) {
-				mGLView.setCalibratingMsg(true, String.format("CALIBRATE %d", CAL_MAX-calibrationCount));
-				calibrationCount++;
-			}
-			else  {
-				mGLView.setCalibratingMsg(true, "CHECK MOUNT ANGLE");
-				calibrationCount = 0;
-			}
-
-			_PitchOffset = pitchOffset;
-			return false;
-		}
-		else if (calibrationCount == CAL_MAX) {
-			calibrationCount++;
-			mGLView.setMSG(0, null);
-			mGLView.setCalibratingMsg(false, "DONE");
-			return false; //true;
-		}
-		else {
-			return true; //false;
-		}
-	}
-	*/
-
-
 	//-------------------------------------------------------------------------
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a very simple flight simulator
@@ -866,8 +817,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
 
-		//CalibratePitch();
-
 		//
 		// Read the Sensors
 		//
@@ -900,10 +849,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
 
-
-		// Apply the pitch mounting offset
-		// pitchValue += pitchOffset;
-
 		//
 		// Check if we have a valid GPS
 		//
@@ -911,9 +856,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// for debug
 		if (false) {
-			hasGps = true; //debug
-			hasSpeed = true; //debug
-			gps_speed = 3;//60; //m/s debug
+			hasGps = true;          //debug
+			hasSpeed = true;        //debug
+			gps_speed = 3;//60;     //m/s debug
 			gps_rateOfClimb = 1.0f; //m/s debug
 		}
 		// end debug
@@ -965,8 +910,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			}
 			else {
 				// No GPS no speed ... no idea what the AH is :-(
-				fpvX = 0;//180;
-				fpvY = 0;//180;
+				fpvX = 0;
+				fpvY = 0;
 
 				// The dreaded red crosses are required
 				mGLView.setDisplayAirport(false);
@@ -982,17 +927,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			}
 		}
 
-
 		//
 		// Read and Set the user preferences
 		//
 		setUserPrefs();
 
-
 		// Apply a little filtering to the pitch and bank
 		pitchValue = filterPitch.runningAverage(pitchValue);
 		rollValue = filterRoll.runningAverage(compassRose180(rollValue));
-
 
 		//
 		// Get the battery percentage
@@ -1019,14 +961,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
 
-        //s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
-        //mGLView.setMSG(5, s);
-
-        // used for debugging
+        //---------------------------------------------------------------------
+        // Was used for debugging
+        // s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
+        // mGLView.setMSG(5, s);
         // s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000);
         // mGLView.setMSG(3, s);
-        //s = String.format("BIAS: %d", (int) (sensorBias*100));
-        //mGLView.setMSG(1, s);
+        // s = String.format("BIAS: %d", (int) (sensorBias*100));
+        // mGLView.setMSG(1, s);
 
 	}
 }
@@ -1037,4 +979,4 @@ new AlertDialog.Builder(this)
                     .setMessage("Hello boys!!!")
                     .setPositiveButton("OK", null)
                     .show();
- */
+*/
