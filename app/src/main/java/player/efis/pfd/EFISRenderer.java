@@ -737,12 +737,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 	}
 
 
-	// calibrating flag
+	/* // calibrating flag
 	void setCalibrate(boolean cal, String msg)
 	{
 		Calibrating = cal;
 		CalibratingMsg = msg;
 	}
+	*/
 
 
 	private void renderDemoMode(float[] matrix)
