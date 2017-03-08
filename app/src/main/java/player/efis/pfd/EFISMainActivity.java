@@ -700,6 +700,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return rateOfTurn;
 	}
 
+
 	//-------------------------------------------------------------------------
 	// Utility function to calculate the remaining
 	// battery in percentage.
@@ -715,6 +716,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return batteryPct;
 	}
 
+
 	//-------------------------------------------------------------------------
 	// Utility function to Check GPS status
 	//
@@ -726,6 +728,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		if (gps_infix > 3) return true;
 		else return false;
 	}
+
 
 	//-------------------------------------------------------------------------
 	// Utility function to do a simple simulation for demo mode
@@ -946,12 +949,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		String s; // general purpose string
 
-		mGLView.setPitch(pitchValue);                           // in degrees
-		mGLView.setRoll(rollValue);                             // in degrees
-		mGLView.setBatteryPct(batteryPct);                      // in percentage
-		mGLView.setGForce(loadfactor);                          // in gunits
+		mGLView.setPitch(pitchValue);                             // in degrees
+		mGLView.setRoll(rollValue);                               // in degrees
+		mGLView.setBatteryPct(batteryPct);                        // in percentage
+		mGLView.setGForce(loadfactor);                            // in gunits
 		mGLView.setSlip(SLIP_SENS * slipValue);
-		mGLView.setHeading((float) Math.toDegrees(gps_course)); // in degrees
+		mGLView.setHeading((float) Math.toDegrees(gps_course));   // in degrees
 		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
 		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
 		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
