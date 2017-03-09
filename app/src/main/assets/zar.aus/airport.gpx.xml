@@ -13196,21 +13196,21 @@
 		<ele>24.9936</ele>
 		<magvar>3.3</magvar>
 		<name>FOGR</name>
-		<cmt>Lambarene,LAMBARENE,GB</cmt>
+		<cmt>Lambarene,GB</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-1.533000" lon="13.267000">
 		<ele>572.1096</ele>
 		<magvar>2.7</magvar>
 		<name>FOOD</name>
-		<cmt>Moanda,MOANDA,GB</cmt>
+		<cmt>Moanda,GB</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-0.711739" lon="8.754380">
 		<ele>3.9624</ele>
 		<magvar>3.7</magvar>
 		<name>FOOG</name>
-		<cmt>Port Gentil,PORT GENTIL,GB</cmt>
+		<cmt>Port Gentil,GB</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-1.574730" lon="9.262690">
@@ -13238,7 +13238,7 @@
 		<ele>9.144</ele>
 		<magvar>17.5</magvar>
 		<name>FQIN</name>
-		<cmt>Inhambane,INHAMBANE,MZ</cmt>
+		<cmt>Inhambane,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-2.533000" lon="9.767000">
@@ -13259,7 +13259,7 @@
 		<ele>44.196</ele>
 		<magvar>19.4</magvar>
 		<name>FQMA</name>
-		<cmt>Maputo,MAPUTO,MZ</cmt>
+		<cmt>Maputo,MZ</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-3.417000" lon="10.650000">
@@ -13405,7 +13405,7 @@
 		<ele>1489.5576</ele>
 		<magvar>8.6</magvar>
 		<name>FVHA</name>
-		<cmt>Harare International,HARARE,ZI</cmt>
+		<cmt>Harare International,ZI</cmt>
 		<type>AIRPORT</type>
 	</wpt>
 	<wpt lat="-17.431900" lon="32.184500">
