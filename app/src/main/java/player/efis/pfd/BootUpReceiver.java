@@ -21,6 +21,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+//-----------------------------------------------------------------------------
+// This is the mechanism to austo start the kwik EFIS application when the
+// device boots up.
+
+
 public class BootUpReceiver extends BroadcastReceiver
 {
 
@@ -32,3 +37,32 @@ public class BootUpReceiver extends BroadcastReceiver
             context.startActivity(i);  
     }
 }
+
+/*
+This section must be added to he AndroidManifest file
+
+////////////// AUTOSTART CODE
+<receiver android:enabled="true" android:name=".BootUpReceiver"
+        android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+
+        <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+</receiver>
+[..]
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+[..]
+
+public class BootUpReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+                Intent i = new Intent(context, MyActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+        }
+
+}
+////////////// AUTOSTART CODE
+*/
