@@ -267,7 +267,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (Layout == layout_t.LANDSCAPE) {
             // Slide pitch to current value
             Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
-        } else {
+        }
+        else {
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
@@ -298,7 +299,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             if (Layout == layout_t.LANDSCAPE) {
                 // Slide FD to current value
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
-            } else {
+            }
+            else {
                 //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
                 // Slide pitch to current value adj for portrait
                 float Adjust = pixH2 * portraitOffset;
@@ -322,7 +324,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = -0.74f * pixW2; // top left -0.75
                 xly = 0.50f * pixH2; // top left  0.55
                 roseScale = 0.44f;
-            } else {
+			}
+			else {
                 //Portrait
                 xlx = -0.00f * pixW2;
                 xly = -0.44f * pixH2;  //0.45f
@@ -448,7 +451,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             selAltDec = -0.74f * pixH2;
             selAltInc = -0.90f * pixH2;
-        } else {
+        }
+        else {
             // Portrait
             lineC = -0.90f;
             lineAutoWptDetails = -0.60f;
@@ -839,7 +843,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.VertexCount = 7;
             mPolyLine.SetVerts(vertPoly);
             mPolyLine.draw(mMVPMatrix);
-        } else {
+		}
+		else {
             // The lubber line - Flight Director style
             // side lines
             int B2 = 3;
@@ -996,7 +1001,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //pixPerDegree = pixM / pitchInView;
         if (Layout == layout_t.LANDSCAPE) {
             pixPerDegree = pixM / pitchInView; //pixH
-        } else {
+        }
+        else {
             pixPerDegree = pixM / pitchInView * 100 / 60;
         }
 
@@ -1303,10 +1309,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
         if (MSLValue > 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
-        if (MSLValue < 10000)
-            margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
-        else
-            margin = 1.1f * glText.getCharWidthMax();                    // we have to deal with the margin ourselves
+		if (MSLValue < 10000) margin = 0.6f*glText.getCharWidthMax(); // because of the differing sizes
+		else margin = 1.1f*glText.getCharWidthMax();                 	// we have to deal with the margin ourselves
 
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) MSLValue % 1000);
@@ -1383,10 +1387,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //glText.setScale(4.0f, 2.5f);
             if (i >= 1000) glText.draw(t, outerTic, iPix - glText.getCharHeight() / 2);
 
-            if (i < 10000)
-                margin = 0.6f * glText.getCharWidthMax();  // because of the differing sizes
-            else
-                margin = 1.1f * glText.getCharWidthMax();            // we have to deal with the margin ourselves
+            if (i < 10000) margin = 0.6f*glText.getCharWidthMax();  // because of the differing sizes
+			else margin = 1.1f*glText.getCharWidthMax();            // we have to deal with the margin ourselves
 
             // draw the hundreds digits smaller
             t = String.format("%03.0f", (float) i % 1000);
@@ -2195,12 +2197,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             dme = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
 
             // Apply selection criteria
-            if (dme < 5 * 6080)
-                nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE * 6080))
-                nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
-            else
-                continue;                                                                // we already have all the apts as we wish to display
+			if (dme < 5*6080) nrAptsFound++;                                              // always show apts closer then 5nm
+			else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE*6080))  nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
+			else continue;                                                                // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
@@ -2657,11 +2656,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         for (int i = 0; i < 4; i++) {
             if (Math.abs(mX - (leftC + 0.0f)) < 0.05) {         //0.6
                 pos = 0;
-            } else if (Math.abs(mX - (leftC + 0.1f)) < 0.05) {  //0.7
+			} 
+			else if (Math.abs(mX - (leftC + 0.1f)) < 0.05) {  //0.7
                 pos = 1;
-            } else if (Math.abs(mX - (leftC + 0.2f)) < 0.05) {  //0.8
+			}
+			else if (Math.abs(mX - (leftC + 0.2f)) < 0.05) {  //0.8
                 pos = 2;
-            } else if (Math.abs(mX - (leftC + 0.3f)) < 0.05) {  //0.9
+			}
+			else if (Math.abs(mX - (leftC + 0.3f)) < 0.05) {  //0.9
                 pos = 3;
             }
         }
