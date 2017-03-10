@@ -780,7 +780,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // fwd triangles
         mTriangle.SetWidth(1);
-        mTriangle.SetColor(1f, 0.5f, 1f, 1);  //purple'ish
+        mTriangle.SetColor(1f, 0.5f, 1f, 1);  //purple
         mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                 10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z);
@@ -2431,7 +2431,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderAutoWptDetails(float[] matrix)
     {
         String s;
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        //glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        //glText.begin(1.0f, 0.5f, 1.0f, 1.0f, matrix); // purple
+        glText.begin(1.0f, 1.0f, 0.0f, 1, matrix); // light yellow
+
         glText.setScale(2.0f);
 
         s = String.format("%s", mAutoWpt);
@@ -2561,8 +2564,28 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderSelWptDetails(float[] matrix)
     {
+        String s;
 
-        glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //
+        //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
+        glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
+            // Name
+            glText.setScale(2.1f);
+            s = mWptSelComment;
+            glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
+
+            // DME
+            s = String.format("DME %03.1f", mSelWptDme);  // in nm
+            glText.setScale(2.5f);
+            glText.draw(s, leftC * pixW2, (lineC - 0.2f) * pixM2 - glText.getCharHeight() / 2);
+
+            // BRG
+            s = String.format("BRG  %03.0f", mSelWptBrg);
+            glText.setScale(2.5f);                            //
+            glText.draw(s, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
+        glText.end();
+
+        /*
+        glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
         glText.setScale(2.1f);
         String s = mWptSelComment;
         glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
@@ -2581,6 +2604,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.setScale(2.5f);                            //
         glText.draw(t, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
         glText.end();
+        */
     }
 
 
@@ -2958,7 +2982,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Bearing to Automatic Waypoint
         //
         mLine.SetWidth(5); //3);
-        mLine.SetColor(0.7f, 0.7f, 0.0f, 1);  // yellow
+        mLine.SetColor(0.9f, 0.9f, 0.0f, 1);  // needle yellow
 
         sinI = 0.9f * UTrig.isin(90 - (int) mAutoWptBrg);
         cosI = 0.9f * UTrig.icos(90 - (int) mAutoWptBrg);
