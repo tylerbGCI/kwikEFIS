@@ -1,6 +1,6 @@
 Changelog
 =========
-2.4 (2014-nn-nn)
+2.4 (Work in Progress/Under Test)
 ------------------
 * Waypoint database cycle 2017-03 (usa.can)
 * Change bank/skid correction filter constant to 32 (from 4)
