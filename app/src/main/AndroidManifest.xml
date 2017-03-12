@@ -12,11 +12,21 @@
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.-->
+    limitations under the License.
+-->
+<!--
+ Versioning scheme
+   android:versionCode is incremented on every new viable build
+   android:versionName="a.b"
+      where:
+        a - is a major update. Typically incorporating a new feature or significant change
+        b - is a minor update. Typically incorporating a bugfix or a data update
+ -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.pfd"
-    android:versionCode="6"
-    android:versionName="2.3" >
+    android:versionCode="7"
+    android:versionName="2.4" >
 
     <!-- We need to target 10 for the menu button -->
     <uses-sdk
