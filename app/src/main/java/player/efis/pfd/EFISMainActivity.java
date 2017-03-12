@@ -239,7 +239,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
 		// testing for lightweight -- may or may not use
-		    sensorComplementaryFilter = new SensorComplementaryFilter();
+		sensorComplementaryFilter = new SensorComplementaryFilter();
 
 		// Location
 		// Get the location manager

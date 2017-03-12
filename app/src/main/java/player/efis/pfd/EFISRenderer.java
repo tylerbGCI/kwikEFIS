@@ -2275,11 +2275,23 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             dme = 6080 * calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = calcRelBrg(LatValue, LonValue, hitLat, hitLon);  // the relative bearing to the hitpoint
-            radius = (float) ((pixM2 / dme * 608.0));
+            radius = (608.0f * pixM2) / dme;
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = (float) (hitRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
+
+            // De-clutter the gates
+            //
+            //if ((Math.abs(x1) < 50) && (Math.abs(y1) < 50)) {
+            //    if (i < mSelWptDme - 6) continue;  // only show 6 gates
+            //}
+            // This appears to be a better compromise.
+            // Limit the gates to 6 only when close to the altitude
+            if ((Math.abs(y1) < 5)) {
+                if (i < mSelWptDme - 6) continue;  // only show 6 gates
+            }
+
 
             mPolyLine.SetWidth(3);
             //mPolyLine.SetColor(0.8f, 0.4f, 0.8f, 1); // darker purple'ish
