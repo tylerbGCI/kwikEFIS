@@ -43,7 +43,7 @@ public class DigitalFilter
 
 	public float lowPass(float a) 
 	{
-			return runningAverage(a);
+	    return runningAverage(a);
 	}	
 	
 	// High Pass filter	
