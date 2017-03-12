@@ -15,6 +15,9 @@
 # files for the dex VM
 *.dex
 
+# AWK data cleanup scripts
+/clean
+
 # Java class files
 *.class
 
