@@ -1,5 +1,11 @@
 Changelog
 =========
+2.4 (2014-nn-nn)
+------------------
+* Waypoint database cycle 2017-03 (usa.can)
+* Change bank/skid correction filter constant to 32 (from 4)
+* Add automatic de-clutter to HITS
+
 2.3 (2014-11-05)
 ------------------
 * Adopt different versioning scheme
@@ -10,7 +16,7 @@ Changelog
 * Waypoint database cycle 2017-03 (zar.aus)
 * First Release version on F-Droid
 
-Prior history
+Prior History
 ------------------
 * First Release version on F-Droid
 * Fix the selected altitude bug introduced by HITS
@@ -26,7 +32,3 @@ Prior history
 * Set GPS to maximum/realtime perfromance. 
 * Change pitch to 25 degrees in view. Change wording for sensor bias choices.
 * Introduce calibration routine. Change pitch filter to 32.
-
-
-
-
