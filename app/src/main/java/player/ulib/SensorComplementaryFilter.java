@@ -120,29 +120,29 @@ public class SensorComplementaryFilter
 	//
 	// Calculate augmented bank angle given rate of turn and velocity
 	//
-	DigitalFilter filterRollAcc = new DigitalFilter(4); //16//64
-	
-	public float calculateBankAngle(float rot, float speed)
-	{ 
-		float bank = 0;
-		
-		if (speed > 2.0) {  
-			// Bank angle using the speed
-			// For a coordinated turn:
-			//   tan (b) = w * v / g 
-			float roll_centripetal = (float) (Math.atan2(rot*speed, SensorManager.GRAVITY_EARTH)* 180 / Math.PI);
+	DigitalFilter filterRollAcc = new DigitalFilter(32); //4
 
-			bank = roll_centripetal;  // no corrections
+    public float calculateBankAngle(float rot, float speed)
+    {
+        float bank = 0;
 
-			// Apply in a correction for any slip / skid
-			float roll_accel = filterRollAcc.runningAverage(this.getRollAcc());
-		  bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
-		}
-		return bank;
-	} 
-	
-	 
-	class calculateFilterTask extends TimerTask
+        if (speed > 2.0) {
+            // Bank angle using the speed
+            // For a coordinated turn:
+            //   tan (b) = w * v / g
+            float roll_centripetal = (float) (Math.atan2(rot * speed, SensorManager.GRAVITY_EARTH) * 180 / Math.PI);
+
+            bank = roll_centripetal;  // no corrections
+
+            // Apply in a correction for any slip / skid
+            float roll_accel = filterRollAcc.runningAverage(this.getRollAcc());
+            bank = (roll_centripetal - roll_accel);  // correct slip with acceleration sensor value
+        }
+        return bank;
+    }
+
+
+    class calculateFilterTask extends TimerTask
 	{
 		public void run()
 		{
