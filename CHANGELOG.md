@@ -1,12 +1,12 @@
 Changelog
 =========
-2.4 (Work in Progress/Under Test)
+2.4 (2014-03-13)
 ------------------
 * Waypoint database cycle 2017-03 (usa.can)
 * Change bank/skid correction filter constant to 32 (from 4)
 * Add automatic de-clutter to HITS
 
-2.3 (2014-11-05)
+2.3 (2014-03-05)
 ------------------
 * Adopt different versioning scheme
 * Rolled up bugfix release 
