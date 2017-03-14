@@ -557,8 +557,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);
 
 
-        // First go at the landscape / porait mode toggle
-        // move elsewhere - // TODO: 2017-02-03
+        // landscape / porait mode toggle
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
         //if (bLandscapeMode != SP.getBoolean("landscapeMode", false)) {
         {
@@ -735,7 +734,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// It acts like a very simple flight simulator
 	//
 	static int counter;
-	// --Commented out by Inspection (2017-02-10 15:03):DigitalFilter filterTestAlt = new DigitalFilter(128); //32
 	float _gps_lon = 116; //0;
 	float	_gps_lat = -32; //0;
 	float _gps_course = 0;  //in radians
@@ -895,7 +893,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				// Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
 				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
-				pitchValue = (float) (Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+                pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
+                //pitchValue = (float) (Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
+
 
 				// the Flight Path Vector (FPV)
 				deltaA = compassRose180(gps_course - orientationAzimuth);

@@ -69,21 +69,20 @@ public class SensorComplementaryFilter
 	{
 		return pitch;
 	}
-	
-	public float getPitchRate() 
-	{
-		switch (orientation) {
-		case HORIZONTAL_LANDSCAPE:  
-			return (gyrData[1] * 180f / M_PI) * dt;  // Angle around the Y-axis 
 
-		case VERTICAL_LANDSCAPE: 
-			return (gyrData[1] * 180f / M_PI) * dt; // Angle around the X-axis
-			
-		default:
-			return 0;
-			
-		}
-	}
+    public float getPitchRate()
+    {
+        switch (orientation) {
+            case HORIZONTAL_LANDSCAPE:
+                return (gyrData[1] * 180f / M_PI) * dt;  // Angle around the Y-axis
+
+            case VERTICAL_LANDSCAPE:
+                return (gyrData[1] * 180f / M_PI) * dt; // Angle around the X-axis
+
+            default:
+                return 0;
+        }
+    }
 
 	
 	public float getRoll()
@@ -105,8 +104,7 @@ public class SensorComplementaryFilter
 	{
 		return loadfactor;
 	}
-	
-	
+
 	public void primePitch()
 	{
 		pitch = pitchAcc;
@@ -122,6 +120,10 @@ public class SensorComplementaryFilter
 	//
 	DigitalFilter filterRollAcc = new DigitalFilter(32); //4
 
+    //
+    // Utility for calculation of bank based on rate of turn and speed.
+    // Correction for slip is made using the accelerometer data
+    //
     public float calculateBankAngle(float rot, float speed)
     {
         float bank = 0;
@@ -141,7 +143,20 @@ public class SensorComplementaryFilter
         return bank;
     }
 
+    //
+    // Utility for calculation of pitch based on rate of climb and speed.
+    //
+    public float calculatePitchAngle(float roc, float speed)
+    {
+        float pitch = 0;
+        pitch = (float) (Math.atan2(roc, speed) * 180.0f / Math.PI);
 
+        return pitch;
+    }
+
+
+    // Free running task implementing  the actual
+    // complimentary filter
     class calculateFilterTask extends TimerTask
 	{
 		public void run()
@@ -206,5 +221,4 @@ public class SensorComplementaryFilter
 			}
 		}
 	}
-
 }
