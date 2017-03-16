@@ -1,12 +1,16 @@
 Changelog
 =========
-2.4 (2014-03-13)
+2.4 (2014-03-nn)
 ------------------
 * Waypoint database cycle 2017-03 (usa.can)
 * Change bank/skid correction filter constant to 32 (from 4)
 * Add automatic de-clutter to HITS
 
-2.3 (2014-03-05)
+2.3 (2014-03-15)
+------------------
+* Add REFLOG.md 
+
+2.3 (2014-03-10)
 ------------------
 * Adopt different versioning scheme
 * Rolled up bugfix release 
@@ -18,7 +22,6 @@ Changelog
 
 Prior History
 ------------------
-* First Release version on F-Droid
 * Fix the selected altitude bug introduced by HITS
 * Highway In The Sky (HITS) impelementation
 * Add M20J. Cosmetic changes
