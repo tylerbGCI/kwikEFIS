@@ -1,6 +1,9 @@
 # kwikEFIS
 Kwik Electronic Flight Information System for Android.
 
+<a href="https://f-droid.org/repository/browse/?fdid=player.efis.pfd" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
+
 The author wishes to acknowledge the following people:
 
 Tom Dollmeyer  	(http://avionics.sourceforge.net/)
