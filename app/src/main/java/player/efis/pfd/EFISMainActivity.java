@@ -110,6 +110,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float sensorBias;
 
 	private Gpx mGpx;  // wpt database
+    private Dem mDem;  // dem database
 
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
@@ -284,6 +285,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
+
+        mDem = new Dem(this);
+        mDem.loadDEM(region);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
