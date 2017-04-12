@@ -127,10 +127,24 @@ public class UTrig {
 		0.98163f,0.98481f,0.98769f,0.99027f,0.99255f,0.99452f,
 		0.99619f,0.99756f,0.99863f,0.99939f,0.99985f};
 	
-	public UTrig() {
+	public UTrig()
+    {
 		
 	}
 
+    //-------------------------------------------------------------------------
+    // Fast arctan approximate
+    //
+    static final double M_PI_4 = 0.785398164;
+    public static double fastArcTan(double x)
+    {
+        return M_PI_4*x - x*(Math.abs(x) - 1)*(0.2447 + 0.0663*Math.abs(x));
+    }
+
+
+    //-------------------------------------------------------------------------
+    // sin value
+    // phi is integer degrees
 	public static float isin(int phi)
 	{
 	  while (phi < 0) phi = phi + 360;
@@ -138,13 +152,14 @@ public class UTrig {
 	  return (float) isinTbl[phi];
 	}
 
+    //-------------------------------------------------------------------------
+    // cos value
+    // phi is integer degrees
 	public static float icos(int phi)
 	{
 	  while (phi < 0) phi = phi + 360;
 	  while (phi > 359) phi = phi - 360;
 	  return (float) icosTbl[phi];
 	}
-	
-	
-	
+
 }
