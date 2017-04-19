@@ -1,7 +1,25 @@
 package player.ulib;
 
 public class UTrig {
-	
+
+    //
+    // Useful constants.
+    //
+    static final double M_E		    =2.7182818284590452354;
+    static final double M_LOG2E		=1.4426950408889634074;
+    static final double M_LOG10E	=0.43429448190325182765;
+    static final double M_LN2		=0.69314718055994530942;  // Natural log of 2
+    static final double M_LN10		=2.30258509299404568402;
+    static final double M_PI		=3.14159265358979323846;
+    static final double M_PI_2		=1.57079632679489661923;
+    static final double M_PI_4		=0.78539816339744830962;
+    static final double M_1_PI		=0.31830988618379067154;
+    static final double M_2_PI		=0.63661977236758134308;
+    static final double M_2_SQRTPI	=1.12837916709551257390;
+    static final double M_SQRT2		=1.41421356237309504880;
+    static final double M_SQRT1_2	=0.70710678118654752440;
+
+
 	 private static final double[] isinTbl = { 		0.00000f,
 		0.01745f,0.03490f,0.05234f,0.06976f,0.08716f,0.10453f,
 		0.12187f,0.13917f,0.15643f,0.17365f,0.19081f,0.20791f,
@@ -127,10 +145,23 @@ public class UTrig {
 		0.98163f,0.98481f,0.98769f,0.99027f,0.99255f,0.99452f,
 		0.99619f,0.99756f,0.99863f,0.99939f,0.99985f};
 	
-	public UTrig() {
+	public UTrig()
+    {
 		
 	}
 
+    //-------------------------------------------------------------------------
+    // Fast arctan approximate
+    //
+    public static double fastArcTan(double x)
+    {
+        return M_PI_4*x - x*(Math.abs(x) - 1)*(0.2447 + 0.0663*Math.abs(x));
+    }
+
+
+    //-------------------------------------------------------------------------
+    // sin value
+    // phi is integer degrees
 	public static float isin(int phi)
 	{
 	  while (phi < 0) phi = phi + 360;
@@ -138,13 +169,14 @@ public class UTrig {
 	  return (float) isinTbl[phi];
 	}
 
+    //-------------------------------------------------------------------------
+    // cos value
+    // phi is integer degrees
 	public static float icos(int phi)
 	{
 	  while (phi < 0) phi = phi + 360;
 	  while (phi > 359) phi = phi - 360;
 	  return (float) icosTbl[phi];
 	}
-	
-	
-	
+
 }
