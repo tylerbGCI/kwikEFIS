@@ -5,19 +5,20 @@ public class UTrig {
     //
     // Useful constants.
     //
-    static final double M_E		    =2.7182818284590452354;
-    static final double M_LOG2E		=1.4426950408889634074;
-    static final double M_LOG10E	=0.43429448190325182765;
-    static final double M_LN2		=0.69314718055994530942;  // Natural log of 2
-    static final double M_LN10		=2.30258509299404568402;
-    static final double M_PI		=3.14159265358979323846;
-    static final double M_PI_2		=1.57079632679489661923;
-    static final double M_PI_4		=0.78539816339744830962;
-    static final double M_1_PI		=0.31830988618379067154;
-    static final double M_2_PI		=0.63661977236758134308;
-    static final double M_2_SQRTPI	=1.12837916709551257390;
-    static final double M_SQRT2		=1.41421356237309504880;
-    static final double M_SQRT1_2	=0.70710678118654752440;
+    public static final double M_E		    = 2.7182818284590452354;
+    public static final double M_LOG2E		= 1.4426950408889634074;
+    public static final double M_LOG10E	    = 0.43429448190325182765;
+    public static final double M_LN2		= 0.69314718055994530942;  // Natural log of 2
+    public static final double M_LN10		= 2.30258509299404568402;  // Natural log of 10
+    public static final double M_PI		    = 3.14159265358979323846;  // pi
+    public static final double M_2PI	    = 6.28318530717958647693;  // 2*pi
+    public static final double M_PI_2		= 1.57079632679489661923;  // pi/2
+    public static final double M_PI_4		= 0.78539816339744830962;  // pi/4
+    public static final double M_1_PI		= 0.31830988618379067154;  // 1/pi
+    public static final double M_2_PI		= 0.63661977236758134308;  // 2/pi
+    public static final double M_2_SQRTPI	= 1.12837916709551257390;
+    public static final double M_SQRT2		= 1.41421356237309504880;
+    public static final double M_SQRT1_2	= 0.70710678118654752440;
 
 
 	 private static final double[] isinTbl = { 		0.00000f,
@@ -153,9 +154,15 @@ public class UTrig {
     //-------------------------------------------------------------------------
     // Fast arctan approximate
     //
-    public static double fastArcTan(double x)
+    public static double fastArcTan(double a)
     {
-        return M_PI_4*x - x*(Math.abs(x) - 1)*(0.2447 + 0.0663*Math.abs(x));
+        return M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
+    }
+
+    public static double fastArcTan2(double dx, double dy)
+    {
+        double a = dx / dy;
+        return M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
     }
 
 

@@ -20,6 +20,7 @@ package player.efis.pfd;
 
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
+import player.ulib.UTrig;
 import player.ulib.orientation_t;
 import android.app.Activity;
 import android.content.Context;
@@ -51,6 +52,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+
+import java.util.Random;
 
 
 public class EFISMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
@@ -110,6 +113,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float sensorBias;
 
 	private Gpx mGpx;  // wpt database
+    private Dem mDem;  // dem database
 
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
@@ -284,6 +288,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
+
+        mDem = new Dem(this);
+        mDem.loadDEM(region);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -678,7 +685,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float deltaCrs = course - _course;
 
  		// Handle the case around 0
-		if (Math.abs(deltaCrs) > Math.PI/4) {
+		if (Math.abs(deltaCrs) > UTrig.M_PI_4) { // Math.PI/4) {
 			_course = course;   // save the previous course
 			return _rateOfTurn; // result would be rubbish, just return the previous rot
 		}
@@ -740,8 +747,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	float _gps_altitude = 1000;
 	float _gps_speed = 0;
 	long _sim_ms = 0, sim_ms;
+    Random rand = new Random();
 
-	private void Simulate()
+    private void Simulate()
 	{
 		pitchValue = -sensorComplementaryFilter.getPitch();
 		rollValue = -sensorComplementaryFilter.getRoll();
@@ -769,8 +777,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		if (gps_speed != 0) {
 			_gps_course += (rollValue * gps_speed / 1e6f );
-			while (_gps_course > (2*Math.PI)) _gps_course %= (2*Math.PI) ;
-			while (_gps_course < 0) _gps_course += (2*Math.PI);
+			//while (_gps_course > (2*Math.PI)) _gps_course %= (2*Math.PI);
+			//while (_gps_course < 0) _gps_course += (2*Math.PI);
+            while (_gps_course > (UTrig.M_2PI)) _gps_course %= (UTrig.M_2PI);
+            while (_gps_course < 0) _gps_course += (UTrig.M_2PI);
 		}
 		gps_course = _gps_course;
 
@@ -787,15 +797,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
         // todo: Hardcoded for debugging
-        /*
-        //gps_course = 198 * (float) Math.PI / 180;
-        //gps_course = 205 * (float) Math.PI / 180;
-        gps_course = 195 * (float) Math.PI / 180;  //192
+        ///*
+        gps_course = _gps_course = (float) Math.toRadians(148);
+        gps_speed = _gps_speed = 600;  // m/s
         gps_altitude = 1000; //meter
-        gps_speed = 300;  // m/s
         rollValue = 0;
-        pitchValue = 2;
-        */
+        pitchValue = 0;
+        // */
+
         // todo: Hardcoded for debugging
 	}
 
@@ -899,8 +908,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 				// the Flight Path Vector (FPV)
 				deltaA = compassRose180(gps_course - orientationAzimuth);
-				fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose
-				fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / Math.PI);    // simple RA of the two velocities
+				//fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose
+				//fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / Math.PI);    // simple RA of the two velocities
+                fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
+                fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
 
 				// Pitch and birdie
 				mGLView.setDisplayAirport(true);

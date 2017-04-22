@@ -25,6 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -104,9 +105,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Airspeed Indicator
     private float IASInView;        // The indicated units to display above the center line
 
-    //private int   IASValue;         // Indicated Airspeed
+    //private int   IASValue;       // Indicated Airspeed
     private float IASValue;         // Indicated Airspeed
-    private float IASTranslation;    // Value amplified by 1/2 window pixels for use by glTranslate
+    private float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
     private int Vs0, Vs1, Vfe, Vno;    // Basic Vspeeds
@@ -125,7 +126,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // VSI
     private float VSIInView;        // Vertical speed to display above the centerline
-    private int VSIValue;         // Vertical speed in feet/minute
+    private int VSIValue;           // Vertical speed in feet/minute
     private float VSINeedleAngle;   // The angle to set the VSI needle
 
     //DI
@@ -283,6 +284,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         if (displayTerrain) renderTerrain(scratch1);
+
+        renderDem(scratch1);
+        //renderDemBuffer(mMVPMatrix);  /// dddddddd
+
+
+
         renderPitchMarkers(scratch1);
 
         // FPV only means anything if we have speed and rate of climb, ie altitude
@@ -1138,7 +1145,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-    private void renderTerrain(float[] matrix)
+    private void _renderTerrain(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 
@@ -1155,14 +1162,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         z = zfloat;
 
         // Earth
-        // Level to -90 pitch
+        // -90 to Level  pitch
         mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
                     -pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 0.0f + 0.0f / pixH2, z,
+                    pixOverWidth,  -1.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  0.0f + 0.0f / pixH2, z,
                     -pixOverWidth, 0.0f + 0.0f / pixH2, z
             };
             mSquare.SetVerts(squarePoly);
@@ -1177,8 +1184,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         {
             float[] squarePoly = {
                     -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -1.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, -1.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -1204,8 +1211,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         {
             float[] squarePoly = {
                     -pixOverWidth, 0.0f + 1.0f / pixH2, z,
-                    pixOverWidth, 0.0f + 1.0f / pixH2, z,
-                    pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  0.0f + 1.0f / pixH2, z,
+                    pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 1.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -1219,8 +1226,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         {
             float[] squarePoly = {
                     -pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  1.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -1239,6 +1246,54 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			glVertex3f( -pixOverWidth,  -2.0 * pixPitchViewMultiplier, z);
 			glEnd();
 		 */
+    }
+
+    private void renderTerrain(float[] matrix)
+    {
+        float pixPitchViewMultiplier, pixOverWidth, z;
+
+		/*!
+			The ModelView has units of +/- 1 about the center.  In order to keep the gyro edges outside of the edges of
+			the ViewPort, it is drawn wide to deal with affect of the aspect ratio scaling and the corners during roll
+
+			The pitch range in degrees to be viewed must fit the ModelView units of 1. To accommodate this, the gyro must
+			be ovesized, hence the multiplier 90/ pitchInView.
+		 */
+
+        pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
+        pixOverWidth = pixW2 * 1.80f; //1.42f;
+        z = zfloat;
+
+        // Earth
+        // Level to -180 pitch
+        mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth, 0.0f + 0.0f / pixH2, z,
+                    -pixOverWidth, 0.0f + 0.0f / pixH2, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+        // Sky
+        // Level to 180 pitch
+        mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, 0.0f + 1.0f / pixH2, z,
+                    pixOverWidth, 0.0f + 1.0f / pixH2, z,
+                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
     }
 
 
@@ -2178,8 +2233,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
         float dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float _dme = 6080000;  // 1,000 nm
-        float aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float _dme = 6080000;  // 1,000 nm in ft
+        float aptRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
@@ -2202,7 +2257,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else continue;                                                                // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-
             x1 = (float) (aptRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme)) * pixPerDegree);    // we do not take apt elevation into account
 
@@ -2247,6 +2301,259 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
         MX_RANGE = Math.min(MX_RANGE, 99);
     }
+
+
+
+
+
+    private void renderDemTerrain(float[] matrix)
+    {
+        float pixPitchViewMultiplier, pixOverWidth, z;
+
+		/*!
+			The ModelView has units of +/- 1 about the center.  In order to keep the gyro edges outside of the edges of
+			the ViewPort, it is drawn wide to deal with affect of the aspect ratio scaling and the corners during roll
+
+			The pitch range in degrees to be viewed must fit the ModelView units of 1. To accommodate this, the gyro must
+			be ovesized, hence the multiplier 90/ pitchInView.
+		 */
+
+        pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
+        pixOverWidth = pixW2 * 1.80f; //1.42f;
+        z = zfloat;
+
+
+        // Earth
+        // -180  to -90 pitch
+        mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -2.0f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -0.5f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, -0.5f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+
+        // Sky
+        // -90 to 180 pitch
+        mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -0.5f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -0.5f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+    }
+
+
+
+    float red = 0;
+    float blue = 0;
+    float green = 0;//(float) c / r;
+
+    short test_c = 0;
+
+    private void getColor0(short c)
+    {
+        float r = 600;   //600;
+        float r2 = r*2;
+
+        red = 0.0f;
+        blue = 0.0f;
+        green = (float) c / r;
+        if (green > 1) {
+            green = 1;
+            red = (float) (c - r) / r;
+            if (red > 1) {
+                red = 1;
+                blue = (float) (c - r2) / r;
+                if (blue > 1) {
+                    blue = 1;
+                }
+            }
+        }
+    }
+
+    private void getColor(short c)
+    {
+        float r = 600;   //600;
+        float r2 = r*2;
+
+        red = 0.0f;
+        blue = 0.0f;
+        green = (float) c / r;
+        if (green > 1) {
+            green = 1;
+            red = (float) (c - r) / r;
+            if (red > 1) {
+                red = 1;
+                blue = (float) (c - r2) / r;
+                if (blue > 1) {
+                    blue = 1;
+                }
+            }
+        }
+    }
+
+
+    //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+
+    private void getHSVColor(short c)
+    {
+        float hsv[] = {0,0,0};
+        //int colorBase = android.graphics.Color.rgb(0x00, 0x7f, 0x00); //brown 64, 50, 25
+        int colorBase = android.graphics.Color.rgb(0, 64, 0);
+
+        android.graphics.Color.colorToHSV(colorBase, hsv);
+        //hsv[0] = hsv[0];  // hue 0..360
+        //hsv[1] = hsv[1];  // sat 0..1
+        //hsv[2] = hsv[2];  // val 0..1
+        hsv[0] = c/2;
+
+        int color = android.graphics.Color.HSVToColor(hsv);
+        red   = (float) android.graphics.Color.red(color) / 255;
+        green = (float) android.graphics.Color.green(color) / 255;
+        blue  = (float) android.graphics.Color.blue(color) / 255;
+    }
+
+    public void renderDem(float[] matrix)
+    {
+        float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
+        float radius = 5;
+        int x = 0;
+        int y = 0;
+        float lat, lon;
+
+        renderDemTerrain(matrix);
+
+        pixPerDegree = pixM / pitchInView;
+        z = zfloat;
+
+        float dme;     //in nm
+        float dme_ft = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        float dme_1000_ft = 6080000;  // 1,000 nm
+        int demRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+
+        int maxx = Dem.BUFX;
+        int maxy = Dem.BUFY;
+
+
+        lat = LatValue + 0.05f;  // wip
+
+        //MX_RANGE  //20 nm
+        float deminc = 0.001f; //1f/60f/2f;
+        float DemElev;
+
+        float perspective = 1f;
+        float pm = 0;//0.02f;
+
+        float horizon = (float) Math.sqrt(MSLValue);
+
+        for (dme = 0; dme < 30; dme += 0.5) { //30
+            for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
+                dme_ft = dme * 6080;
+                //float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+
+                lat = LatValue + dme/60*UTrig.icos((int)DIValue + demRelBrg);
+                lon = LonValue + dme/60*UTrig.isin((int)DIValue + demRelBrg);
+                DemElev = 3.28084f * Dem.getElev(lat, lon);
+                x1 = (float) (demRelBrg * pixPerDegree);// * perspective;  // use perspective
+                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + dme/60*UTrig.icos((int)DIValue + demRelBrg+1);
+                lon = LonValue + dme/60*UTrig.isin((int)DIValue + demRelBrg+1);
+                DemElev = 3.28084f * Dem.getElev(lat, lon);
+                x2 = (float) ((demRelBrg+1) * pixPerDegree);// * perspective;  // use perspective
+                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                dme_ft = (dme+1) * 6080;
+                lat = LatValue + (dme+1)/60*UTrig.icos((int)DIValue + demRelBrg+1);
+                lon = LonValue + (dme+1)/60*UTrig.isin((int)DIValue + demRelBrg+1);
+                DemElev = 3.28084f * Dem.getElev(lat, lon);
+                x3 = (float) ((demRelBrg+1) * pixPerDegree);// * (perspective - pm);  // use perspective
+                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + (dme+1)/60*UTrig.icos((int)DIValue + demRelBrg);
+                lon = LonValue + (dme+1)/60*UTrig.isin((int)DIValue + demRelBrg);
+                DemElev = 3.28084f * Dem.getElev(lat, lon);
+                x4 = (float) ((demRelBrg) * pixPerDegree);// * (perspective - pm);  // use perspective
+                y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                short colorInt = Dem.getElev(lat, lon);
+                getColor(colorInt);
+                //getHSVColor(colorInt);
+
+                mPolygon.SetWidth(1);
+                mPolygon.SetColor(red, green, blue, 1);  // rgb
+
+                /*
+                mPolyLine.SetWidth(1);
+                mPolyLine.SetColor(red*1.5f, green*1.5f, blue*1.5f, 1);  // rgb
+                // */
+
+                {
+                    float[] vertPoly = {
+                            x1, y1, z,
+                            x2, y2, z,
+                            x3, y3, z,
+                            x4, y4, z,
+                            x1, y1, z
+                    };
+                    mPolygon.VertexCount = 5;
+                    mPolygon.SetVerts(vertPoly);
+                    mPolygon.draw(matrix);
+
+                    /*
+                    mPolyLine.VertexCount = 5;
+                    mPolyLine.SetVerts(vertPoly);
+                    mPolyLine.draw(matrix);
+                    // */
+                }
+            }
+            perspective -= pm;
+        }
+    }
+
+
+
+    // This is only good for debugging
+    // It is very slow
+    public void renderDemBuffer(float[] matrix)
+    {
+        float z = zfloat;
+        int x = 0;
+        int y = 0;
+
+        int maxx = Dem.BUFX;
+        int maxy = Dem.BUFY;
+
+        for (y = 0; y < maxy /*BUFY*/; y++) {
+            for (x = 0; x < maxx /*BUFX*/; x++) {
+                getColor(Dem.buff[x][y]);
+                mLine.SetColor(red, green, blue, 1);  // rgb
+
+                mLine.SetWidth(1);
+                mLine.SetVerts(
+                        x-pixW2, -y+pixH2/10, z,
+                        x-pixW2+1, -y+pixH2/10, z
+                );
+                mLine.draw(matrix); // debug
+            }
+        }
+    }
+
+
 
 
     //-------------------------------------------------------------------------
