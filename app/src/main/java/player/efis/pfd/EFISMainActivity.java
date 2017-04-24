@@ -20,6 +20,7 @@ package player.efis.pfd;
 
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
+import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.orientation_t;
 import android.app.Activity;
@@ -290,7 +291,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx.loadDatabase(region);
 
         mDem = new Dem(this);
-        mDem.loadDEM(region);
+        mDem.setDEMRegionFileName(-25f, 120f);  // todo: remove hardcoding
+        mDem.setTile(-32f, 116f);  // todo: remove hardcoding
+        mDem.loadDemBuffer(region);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -651,8 +654,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//-------------------------------------------------------------------------
 	// Utility function to calculate rate of climb
 	// Rate of climb in m/s
-	private static  Time  time = new Time(); 	// Time class
-	private static  long   time_a, _time_a;
+	private static Time  time = new Time(); 	// Time class
+	private static long   time_a, _time_a;
 	private static float _altitude;   	// previous altitude
 	private float calculateRateOfClimb(float altitude)
 	{
@@ -676,8 +679,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Utility function to calculate rate of turn
 	// Rate of turn in rad/s
 	private static float _course;   	// previous course
-	private static  long   time_c, _time_c;
-	private static  float   _rateOfTurn;
+	private static long  time_c, _time_c;
+	private static float _rateOfTurn;
 	private float calculateRateOfTurn(float course)
 	{
 		float rateOfTurn = 0;
@@ -742,7 +745,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//
 	static int counter;
 	float _gps_lon = 116; //0;
-	float	_gps_lat = -32; //0;
+	float _gps_lat = -32; //0;
 	float _gps_course = 0;  //in radians
 	float _gps_altitude = 1000;
 	float _gps_speed = 0;
@@ -787,6 +790,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		time.setToNow();
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
+        //deltaT = 0.0000124f; // todo: debugging super fast - Ludicrous Speed
+        deltaT = 0.00000124f; // todo: debugging fast fly - Warp Speed
 		_sim_ms = sim_ms;
 		if ((deltaT > 0) && (deltaT < 0.0000125)) {
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
@@ -798,11 +803,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // todo: Hardcoded for debugging
         ///*
-        gps_course = _gps_course = (float) Math.toRadians(148);
-        gps_speed = _gps_speed = 600;  // m/s
-        gps_altitude = 1000; //meter
-        rollValue = 0;
-        pitchValue = 0;
+        Random rnd = new Random();
+
+        //gps_course = _gps_course = (float) Math.toRadians(90);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(148);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(25);// + (float) rnd.nextGaussian() / 200;
+        gps_speed = _gps_speed = 160;  // m/s
+        //gps_altitude = 600; //meter
+        rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         // */
 
         // todo: Hardcoded for debugging
@@ -954,6 +963,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Get the battery percentage
 		//
 		float batteryPct = getRemainingBattery();
+
+        mGLView.setPrefs(prefs_t.DEM, false);
+        float dem_dme = UNavigation.calcDme(mDem.lat0, mDem.lon0, gps_lat, gps_lon);
+        if (dem_dme + 30 > mDem.BUFX / 4) {
+            Toast.makeText(this, "Terrain loading", Toast.LENGTH_SHORT).show();
+            mDem.setDEMRegionFileName(gps_lat, gps_lon); //-32f, 116f);  //
+            mDem.setTile(gps_lat, gps_lon); //-32f, 116f);  //
+            mDem.loadDemBuffer("zar.aus");
+        }
+
 
 		//
 		// Pass the values to mGLView for updating
