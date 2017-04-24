@@ -6,7 +6,7 @@ public class UNavigation {
     //-------------------------------------------------------------------------
     // Calculate the DME distance in nm
     //
-    float calcDme(float lat1, float lon1, float lat2, float lon2)
+    public static float calcDme(float lat1, float lon1, float lat2, float lon2)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -20,7 +20,7 @@ public class UNavigation {
     //-------------------------------------------------------------------------
     // Calculate the Relative Bearing in degrees
     //
-    float calcRelBrg(float lat1, float lon1, float lat2, float lon2, float hdg)
+    public static float calcRelBrg(float lat1, float lon1, float lat2, float lon2, float hdg)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -35,7 +35,7 @@ public class UNavigation {
     //-------------------------------------------------------------------------
     // Calculate the Absolute Bearing in degrees
     //
-    float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
+    public static float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -49,7 +49,7 @@ public class UNavigation {
     // Calculate the Distance to the Horizon in m
     // h in meters
     //
-    float calcHorizonMetric(float h)  // in m
+    public static float calcHorizonMetric(float h)  // in m
     {
         return (float) (3570 * Math.sqrt(h)); // in m
     }
@@ -59,7 +59,7 @@ public class UNavigation {
     // Calculate the Distance to the Horizon in nm
     // h in ft
     //
-    float calcHorizonNautical(float h) // in ft
+    public static float calcHorizonNautical(float h) // in ft
     {
         return (float) Math.sqrt(h); // in nm
     }
