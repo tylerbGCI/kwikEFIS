@@ -19,6 +19,7 @@ package player.efis.pfd;
 
 public enum prefs_t
 {
+    DEM,
 	TERRAIN,
 	TAPE,
 	MIRROR,
