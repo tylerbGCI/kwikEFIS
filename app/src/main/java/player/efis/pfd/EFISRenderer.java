@@ -155,10 +155,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     boolean displayFlightDirector;  // Display Flight Director
     boolean displayRMI;             // Display RMI
     boolean displayHITS;            // Display the Highway In The Sky
+    private boolean displayDEM;     // todo debugging used for the BIV
 
     //3D map display
     boolean displayAirport;
-    private boolean displayDem;     // todo debugging used for the BIV
     private boolean displayTerrain;
     private boolean displayTape;
     private boolean displayMirror;
@@ -284,10 +284,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayTerrain) renderTerrain(scratch1);
+        if (displayDEM) renderDem(scratch1);
+        else if (displayTerrain) renderTerrain(scratch1);
 
-        renderDem(scratch1);
-        if (displayDem) renderDemBuffer(mMVPMatrix);  /// dddddddd
+        //if (displayDEM) renderDemBuffer(mMVPMatrix);  /// dddddddd
 
 
 
@@ -2434,7 +2434,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float hsv[] = {0, 0, 0};
             int r = 600;   //600;
             int v = c * gain / r;
-            if (v > gain) v = gain;
+            //if (v > gain) v = gain;
 
             // todo: debugging
             // v = c * 225 / (int) r;//200;
@@ -2443,21 +2443,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
             int colorBase = android.graphics.Color.rgb(0, v, 0);
+
             if (c > r) {
                 //colorBase = android.graphics.Color.rgb(v, v, 0);
                 //hsv[2] = (float) (c % r) / r;  // sat 0..1
-                colorBase = android.graphics.Color.rgb(v, gain, 0);
-                hsv[1] = (float) (c % r) / (float) r;  // sat 0..1
+                colorBase = android.graphics.Color.rgb(v/2, v/2, 0);
+                //hsv[1] = (float) (c % r) / (float) r;  // sat 0..1
             }
             if (c > 2*r) {
                 //colorBase = android.graphics.Color.rgb(v, v, v);
                 //hsv[2] = (float) (c % (2*r)) / (2*r);  // sat 0..1
-                colorBase = android.graphics.Color.rgb(v, v, gain);
-                hsv[1] = (float) (c % (2*r)) / (float) (2*r);  // sat 0..1
+                colorBase = android.graphics.Color.rgb(v/3, v/3, v/3);
+                //hsv[1] = (float) (c % (2*r)) / (float) (2*r);  // sat 0..1
+            }
+            if (c > 3*r) {
+                colorBase = android.graphics.Color.rgb(gain, gain, gain);
+                //hsv[1] = (float) (c % (3*r)) / (float) (3*r);  // sat 0..1
             }
 
-
             android.graphics.Color.colorToHSV(colorBase, hsv);
+
             //hsv[0] = hsv[0] + c/10;  // hue 0..360
             //hsv[0] = (c) % 360;  // hue 0..360
             //hsv[1] = (float) (c % r) / r;  // sat 0..1
@@ -2466,7 +2471,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //hsv[0] = hsv[0];  // hue 0..360
             //hsv[1] = hsv[1];  // sat 0..1
             //hsv[2] = hsv[2];  // val 0..1
-
             int color = android.graphics.Color.HSVToColor(hsv);
             red = (float) android.graphics.Color.red(color) / 255;
             green = (float) android.graphics.Color.green(color) / 255;
@@ -2510,7 +2514,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float DemElev; // in ft
 
         float perspective = 1f;
-        float pm = 0.02f;
+        float pm = 0;//0.01f;
         float horizon = (float) Math.sqrt(MSLValue);
 
         for (dme = 0; dme < 30; dme += 0.5) { //30
@@ -2557,10 +2561,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                             x1+gutter, y1+gutter, z
                     };
                     mPolygon.SetWidth(1);
-                    float agl = MSLValue - DemElev;  // in ft
-                    if (agl < 100) mPolygon.SetColor(0.8f, 0, 0, 1);  // light red
-                    else if (agl < 1000) mPolygon.SetColor(0.4f, 0, 0, 1);  // dark red
-                    else mPolygon.SetColor(red, green, blue, 1);  // rgb
+
+                    if (IASValue < Vs0) {
+                        // we must be on the ground, ignore the terrain
+                        mPolygon.SetColor(red, green, blue, 1);  // rgb
+                    }
+                    else {
+                        // we are in the air check  the terrain
+                        float agl = MSLValue - DemElev;  // in ft
+                        if (agl < 100) mPolygon.SetColor(0.8f, 0, 0, 1);  // light red
+                        else if (agl < 1000) mPolygon.SetColor(0.8f, 0.8f, 0, 1);  // light yellow
+                        else mPolygon.SetColor(red, green, blue, 1);  // rgb
+                    }
+
                     mPolygon.VertexCount = 5;
                     mPolygon.SetVerts(vertPoly);
                     mPolygon.draw(matrix);
@@ -3158,7 +3171,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         switch (pref) {
             case DEM:
-                displayDem = value;
+                displayDEM = value;
                 break;
             case TERRAIN:
                 displayTerrain = value;
