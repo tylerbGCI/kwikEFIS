@@ -25,7 +25,6 @@ import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -159,10 +158,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     //3D map display
     boolean displayAirport;
+    private boolean displayDem;     // todo debugging used for the BIV
     private boolean displayTerrain;
     private boolean displayTape;
     private boolean displayMirror;
     private boolean displayFPV;
+
 
     private boolean ServiceableDevice;    // Flag to indicate no faults
     private boolean ServiceableAh;        // Flag to indicate AH failure
@@ -286,7 +287,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (displayTerrain) renderTerrain(scratch1);
 
         renderDem(scratch1);
-        //renderDemBuffer(mMVPMatrix);  /// dddddddd
+        if (displayDem) renderDemBuffer(mMVPMatrix);  /// dddddddd
 
 
 
@@ -1264,6 +1265,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         pixOverWidth = pixW2 * 1.80f; //1.42f;
         z = zfloat;
 
+
+        //todo: make consistent with renderDemTerrain
         // Earth
         // Level to -180 pitch
         mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
@@ -2219,7 +2222,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     static final int MX_NR_APT = 10;
     static int MX_RANGE = 20;   //nm
-    static int counter = 0;
+    static int Aptscounter = 0;
     static int nrAptsFound;
 
     private void renderAPT(float[] matrix)
@@ -2297,42 +2300,48 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // If do we have a full compliment start reducing the range
         // This also has the "useful" side effect of "flashing" new additions for a few cycles
         //
-        if ((nrAptsFound < MX_NR_APT - 2) && (counter++ % 10 == 0)) MX_RANGE += 1;
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
         else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
         MX_RANGE = Math.min(MX_RANGE, 99);
     }
 
 
 
-
-
+    //-------------------------------------------------------------------------
+    // Default Dem terrain.
+    // Typcally the color used at 30nm  is used
+    //
     private void renderDemTerrain(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
-
-		/*!
-			The ModelView has units of +/- 1 about the center.  In order to keep the gyro edges outside of the edges of
-			the ViewPort, it is drawn wide to deal with affect of the aspect ratio scaling and the corners during roll
-
-			The pitch range in degrees to be viewed must fit the ModelView units of 1. To accommodate this, the gyro must
-			be ovesized, hence the multiplier 90/ pitchInView.
-		 */
 
         pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
         pixOverWidth = pixW2 * 1.80f; //1.42f;
         z = zfloat;
 
+        // Take a guess at a color
+        // use the color  dead ahead at 50nm
+        short colorInt = 0;
+        float lat = LatValue + 50 /60*UTrig.icos((int)DIValue + 0);
+        float lon = LonValue + 50 /60*UTrig.isin((int)DIValue + 0);
+        //float lat = LatValue;// + 30 /60*UTrig.icos((int)DIValue + 0);
+        //float lon = LonValue;// + 30 /60*UTrig.isin((int)DIValue + 0);
+        colorInt = Dem.getElev(lat, lon);
+        getHSVColor(colorInt);
+
+
 
         // Earth
         // -180  to -90 pitch
-        mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+        //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+        mSquare.SetColor(red, green, blue, 1); // as set by the Dem
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
                     -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
                     pixOverWidth,  -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth,  -0.5f * pixPitchViewMultiplier, z,
-                    -pixOverWidth, -0.5f * pixPitchViewMultiplier, z
+                    pixOverWidth,  -0.00000003f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, -0.00000003f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -2345,10 +2354,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
-                    -pixOverWidth, -0.5f * pixPitchViewMultiplier, z,
-                    pixOverWidth,  -0.5f * pixPitchViewMultiplier, z,
-                    pixOverWidth,  2.0f * pixPitchViewMultiplier, z,
-                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+                    -pixOverWidth, -0.00000003f * pixPitchViewMultiplier, z,
+                    pixOverWidth,  -0.00000003f * pixPitchViewMultiplier, z,
+                    pixOverWidth,   2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth,  2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -2385,6 +2394,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
+    float maxGreen=0;
+
     private void getColor(short c)
     {
         float r = 600;   //600;
@@ -2393,6 +2404,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         red = 0.0f;
         blue = 0.0f;
         green = (float) c / r;
+
+        if (green > maxGreen)
+            maxGreen = green;
         if (green > 1) {
             green = 1;
             red = (float) (c - r) / r;
@@ -2411,20 +2425,57 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void getHSVColor(short c)
     {
-        float hsv[] = {0,0,0};
-        //int colorBase = android.graphics.Color.rgb(0x00, 0x7f, 0x00); //brown 64, 50, 25
-        int colorBase = android.graphics.Color.rgb(0, 64, 0);
+        //getColor(c);
+        //if (true) return;
 
-        android.graphics.Color.colorToHSV(colorBase, hsv);
-        //hsv[0] = hsv[0];  // hue 0..360
-        //hsv[1] = hsv[1];  // sat 0..1
-        //hsv[2] = hsv[2];  // val 0..1
-        hsv[0] = c/2;
+        if (c > 0) {
+            int gain = 128;
 
-        int color = android.graphics.Color.HSVToColor(hsv);
-        red   = (float) android.graphics.Color.red(color) / 255;
-        green = (float) android.graphics.Color.green(color) / 255;
-        blue  = (float) android.graphics.Color.blue(color) / 255;
+            float hsv[] = {0, 0, 0};
+            int r = 600;   //600;
+            int v = c * gain / r;
+            if (v > gain) v = gain;
+
+            // todo: debugging
+            // v = c * 225 / (int) r;//200;
+            // if (v > 225) v = 225;
+            // todo: debugging
+
+
+            int colorBase = android.graphics.Color.rgb(0, v, 0);
+            if (c > r) {
+                //colorBase = android.graphics.Color.rgb(v, v, 0);
+                //hsv[2] = (float) (c % r) / r;  // sat 0..1
+                colorBase = android.graphics.Color.rgb(v, gain, 0);
+                hsv[1] = (float) (c % r) / (float) r;  // sat 0..1
+            }
+            if (c > 2*r) {
+                //colorBase = android.graphics.Color.rgb(v, v, v);
+                //hsv[2] = (float) (c % (2*r)) / (2*r);  // sat 0..1
+                colorBase = android.graphics.Color.rgb(v, v, gain);
+                hsv[1] = (float) (c % (2*r)) / (float) (2*r);  // sat 0..1
+            }
+
+
+            android.graphics.Color.colorToHSV(colorBase, hsv);
+            //hsv[0] = hsv[0] + c/10;  // hue 0..360
+            //hsv[0] = (c) % 360;  // hue 0..360
+            //hsv[1] = (float) (c % r) / r;  // sat 0..1
+            //hsv[2] = (float) (c % r) / r;  // val 0..1
+
+            //hsv[0] = hsv[0];  // hue 0..360
+            //hsv[1] = hsv[1];  // sat 0..1
+            //hsv[2] = hsv[2];  // val 0..1
+
+            int color = android.graphics.Color.HSVToColor(hsv);
+            red = (float) android.graphics.Color.red(color) / 255;
+            green = (float) android.graphics.Color.green(color) / 255;
+            blue = (float) android.graphics.Color.blue(color) / 255;
+        }
+        else {
+            red = 0; green = 0; blue = 0;
+        }
+
     }
 
     public void renderDem(float[] matrix)
@@ -2435,7 +2486,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         int y = 0;
         float lat, lon;
 
+
+        // take a guess at the color for the default terrain
+        // Ie further out then 30nm
         renderDemTerrain(matrix);
+
 
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
@@ -2448,19 +2503,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         int maxx = Dem.BUFX;
         int maxy = Dem.BUFY;
 
-
         lat = LatValue + 0.05f;  // wip
 
         //MX_RANGE  //20 nm
         float deminc = 0.001f; //1f/60f/2f;
-        float DemElev;
+        float DemElev; // in ft
 
         float perspective = 1f;
-        float pm = 0;//0.02f;
-
+        float pm = 0.02f;
         float horizon = (float) Math.sqrt(MSLValue);
 
         for (dme = 0; dme < 30; dme += 0.5) { //30
+            perspective -= pm;
             for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
                 dme_ft = dme * 6080;
                 //float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
@@ -2468,60 +2522,58 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 lat = LatValue + dme/60*UTrig.icos((int)DIValue + demRelBrg);
                 lon = LonValue + dme/60*UTrig.isin((int)DIValue + demRelBrg);
                 DemElev = 3.28084f * Dem.getElev(lat, lon);
-                x1 = (float) (demRelBrg * pixPerDegree);// * perspective;  // use perspective
+                x1 = (float) (demRelBrg * pixPerDegree) * perspective;  // use perspective
                 y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + dme/60*UTrig.icos((int)DIValue + demRelBrg+1);
                 lon = LonValue + dme/60*UTrig.isin((int)DIValue + demRelBrg+1);
                 DemElev = 3.28084f * Dem.getElev(lat, lon);
-                x2 = (float) ((demRelBrg+1) * pixPerDegree);// * perspective;  // use perspective
+                x2 = (float) ((demRelBrg+1) * pixPerDegree) * perspective;  // use perspective
                 y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 dme_ft = (dme+1) * 6080;
                 lat = LatValue + (dme+1)/60*UTrig.icos((int)DIValue + demRelBrg+1);
                 lon = LonValue + (dme+1)/60*UTrig.isin((int)DIValue + demRelBrg+1);
                 DemElev = 3.28084f * Dem.getElev(lat, lon);
-                x3 = (float) ((demRelBrg+1) * pixPerDegree);// * (perspective - pm);  // use perspective
+                x3 = (float) ((demRelBrg+1) * pixPerDegree) * (perspective - pm);  // use perspective
                 y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + (dme+1)/60*UTrig.icos((int)DIValue + demRelBrg);
                 lon = LonValue + (dme+1)/60*UTrig.isin((int)DIValue + demRelBrg);
                 DemElev = 3.28084f * Dem.getElev(lat, lon);
-                x4 = (float) ((demRelBrg) * pixPerDegree);// * (perspective - pm);  // use perspective
+                x4 = (float) ((demRelBrg) * pixPerDegree) * (perspective - pm);  // use perspective
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
+
                 short colorInt = Dem.getElev(lat, lon);
-                getColor(colorInt);
-                //getHSVColor(colorInt);
-
-                mPolygon.SetWidth(1);
-                mPolygon.SetColor(red, green, blue, 1);  // rgb
-
-                /*
-                mPolyLine.SetWidth(1);
-                mPolyLine.SetColor(red*1.5f, green*1.5f, blue*1.5f, 1);  // rgb
-                // */
-
+                getHSVColor(colorInt);
                 {
+                    float gutter = 0;
                     float[] vertPoly = {
-                            x1, y1, z,
-                            x2, y2, z,
-                            x3, y3, z,
-                            x4, y4, z,
-                            x1, y1, z
+                            x1+gutter, y1+gutter, z,
+                            x2-gutter, y2+gutter, z,
+                            x3-gutter, y3-gutter, z,
+                            x4+gutter, y4-gutter, z,
+                            x1+gutter, y1+gutter, z
                     };
+                    mPolygon.SetWidth(1);
+                    float agl = MSLValue - DemElev;  // in ft
+                    if (agl < 100) mPolygon.SetColor(0.8f, 0, 0, 1);  // light red
+                    else if (agl < 1000) mPolygon.SetColor(0.4f, 0, 0, 1);  // dark red
+                    else mPolygon.SetColor(red, green, blue, 1);  // rgb
                     mPolygon.VertexCount = 5;
                     mPolygon.SetVerts(vertPoly);
                     mPolygon.draw(matrix);
 
                     /*
+                    mPolyLine.SetWidth(1);
+                    mPolyLine.SetColor(red*1.2f, green*1.2f, blue*1.2f, 1);  // rgb
                     mPolyLine.VertexCount = 5;
                     mPolyLine.SetVerts(vertPoly);
                     mPolyLine.draw(matrix);
                     // */
                 }
             }
-            perspective -= pm;
         }
     }
 
@@ -2540,7 +2592,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         for (y = 0; y < maxy /*BUFY*/; y++) {
             for (x = 0; x < maxx /*BUFX*/; x++) {
-                getColor(Dem.buff[x][y]);
+                //getColor(Dem.buff[x][y]);
+                getHSVColor(Dem.buff[x][y]);
                 mLine.SetColor(red, green, blue, 1);  // rgb
 
                 mLine.SetWidth(1);
@@ -3104,6 +3157,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setPrefs(prefs_t pref, boolean value)
     {
         switch (pref) {
+            case DEM:
+                displayDem = value;
+                break;
             case TERRAIN:
                 displayTerrain = value;
                 break;
