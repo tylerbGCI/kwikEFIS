@@ -5,8 +5,6 @@ package player.efis.pfd;
 import android.content.Context;
 import java.io.*;
 
-import player.ulib.UNavigation;
-
 
 
 /*
@@ -20,8 +18,12 @@ a
  |             |         |            |
  |             +---------+            |
  |                                    |
+ |             |< BUFX  >|            |
  |                                    |
  +------------------------------------+
+
+ Note: BUFX must fit completely in the DEm tile
+       Consider this when choosing size
 */
 
 
@@ -30,7 +32,7 @@ public class Dem
     final int maxcol = 4800;
     final int maxrow = 6000;
 
-    static final int BUFX = 600;  //800 = 400nm square ie at least  200nm in each direction
+    static final int BUFX = 400;//600;  //800 = 400nm square ie at least  200nm in each direction
     static final int BUFY = BUFX; // 400;
     static short buff[][] = new short[BUFX][BUFY];
 
@@ -57,7 +59,7 @@ public class Dem
     final int height = BUFY;
 
     Context context;
-    public String region = "zar.aus";
+    //public String region = "zar.aus";
 
     public static boolean demDataValid = false;
 
@@ -79,8 +81,8 @@ public class Dem
     {
         // Do we return bad data and let the program continue
         // or do we wait for valid data ?
-        while (!demDataValid)
-          ; // do nothing and wait for valid data
+        //while (!demDataValid)
+        //  ; // do nothing and wait for valid data
 
         // check if buff is valid -- todo
         // do the test here ... if not in buff ... do a reload centered here.
@@ -97,7 +99,7 @@ public class Dem
         //return buff[x][y];
     }
 
-    public void setTile(float lat, float lon)
+    public void setBufferCenter(float lat, float lon)
     {
         lat0 = lat;
         lon0 = lon;
@@ -112,7 +114,7 @@ public class Dem
     String DemFilename;
     public void setDEMRegionFileName(float lat, float lon)
     {
-        setTile(lat, lon);  // set the buffer tile as well
+        setBufferCenter(lat, lon);  // set the buffer tile as well
 
         demTopLeftLat =  (int) (lat+10) / 50 * 50 - 10; //-10;
         demTopLeftLon =  (int) (lon-20) / 40 * 40 + 20; //+100;
@@ -124,38 +126,28 @@ public class Dem
     }
 
 
-    // assume a setTile was done...
-    public void loadDemBuffer(String database)
+    // assume a setBufferCenter was done...
+    // assume a setDEMRegionFileName was done...
+    public void loadDemBuffer(/*String database*/)
     {
         demDataValid = false;
-        region = database;
 
         try {
 
-            InputStream inp  = context.getAssets().open(region + "/" + DemFilename + ".DEM"); //SA-E
+            InputStream inp  = context.getAssets().open("terrain/" + DemFilename + ".DEM"); //SA-E
             DataInputStream demFile = new DataInputStream(inp);
 
+            final int NUM_BYTES_IN_SHORT = 2;
             short c;
 
-            int x = 0;
-            int y = 0;
-
-            int x1; //= 1800;
-            int y1; //= 0;
-            int x2; //= 3000;  //1000;
-            int y2; //= 5600;   //2000;
+            int x, y;
+            int x1, y1, x2, y2;
 
             x1 = x0;
             x2 = x1 + width;
             y1 = y0;
             y2 = y1 + height;
 
-            int _x = 0;
-            int _y = 0;
-            int _c = 0;
-            final int NUM_BYTES_IN_SHORT = 2;
-
-            //demFile.seek(0);
             demFile.skipBytes(NUM_BYTES_IN_SHORT  * (maxcol * y1));
             demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
             for (y = y1; y < y2; y++) {
@@ -170,7 +162,6 @@ public class Dem
                 demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
             }
             demFile.close();
-            //inp.close();
             demDataValid = true;
         }
         catch (Exception e) {
