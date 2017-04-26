@@ -110,7 +110,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float sensorBias;
 
 	private Gpx mGpx;  // wpt database
-    private Dem mDem;  // dem database
+    //private Dem mDem;  // dem database
 
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
@@ -286,8 +286,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
 
-        mDem = new Dem(this);
-        mDem.loadDEM(region);
+        //mDem = new Dem(this);
+        //mDem.loadDEM(region);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -781,6 +781,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		time.setToNow();
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
+
+        //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
+        //deltaT = 0.00000124f; // todo: debugging - Warp Speed
+        //deltaT = 0.000000124f; // todo: debugging - Super Speed
 		_sim_ms = sim_ms;
 		if ((deltaT > 0) && (deltaT < 0.0000125)) {
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
@@ -792,14 +796,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // todo: Hardcoded for debugging
         /*
-        //gps_course = 198 * (float) Math.PI / 180;
-        //gps_course = 205 * (float) Math.PI / 180;
-        gps_course = 195 * (float) Math.PI / 180;  //192
-        gps_altitude = 1000; //meter
-        gps_speed = 300;  // m/s
-        rollValue = 0;
-        pitchValue = 2;
-        */
+        Random rnd = new Random();
+        //gps_course = _gps_course = (float) Math.toRadians(050);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(25);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(2);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(136);// + (float) rnd.nextGaussian() / 200;
+
+        gps_speed = _gps_speed = 100;  // m/s
+        gps_altitude = 3000; //meter
+        rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        pitchValue = 0;//(float) rnd.nextGaussian() / 20;
+        // */
+
         // todo: Hardcoded for debugging
 	}
 
@@ -910,7 +918,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setDisplayAirport(true);
 				mGLView.setFPV(fpvX, fpvY); // need to clean this up
 			}
-			else if (hasGps && gps_speed < 9) {
+			else if (hasGps && gps_speed < 9) {  // m/s
 				// taxi mode
 				rollValue = 0;
 				pitchValue = 0;

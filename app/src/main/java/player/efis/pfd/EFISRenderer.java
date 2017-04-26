@@ -2164,7 +2164,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     static final int MX_NR_APT = 10;
     static int MX_RANGE = 20;   //nm
-    static int counter = 0;
+    static int Aptscounter = 0;
     static int nrAptsFound;
 
     private void renderAPT(float[] matrix)
@@ -2178,7 +2178,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
         float dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float _dme = 6080000;  // 1,000 nm
+        float _dme = 6080000;  // 1,000 nm in ft
         float aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
@@ -2243,7 +2243,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // If do we have a full compliment start reducing the range
         // This also has the "useful" side effect of "flashing" new additions for a few cycles
         //
-        if ((nrAptsFound < MX_NR_APT - 2) && (counter++ % 10 == 0)) MX_RANGE += 1;
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
         else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
         MX_RANGE = Math.min(MX_RANGE, 99);
     }
