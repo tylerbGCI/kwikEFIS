@@ -1,4 +1,4 @@
-/*
+/*/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -291,9 +291,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx.loadDatabase(region);
 
         mDem = new Dem(this);
-        mDem.setDEMRegionFileName(-25f, 120f);  // todo: remove hardcoding
-        mDem.setTile(-32f, 116f);  // todo: remove hardcoding
-        mDem.loadDemBuffer(region);
+        mDem.setDEMRegionFileName(gps_lat, gps_lon);  // todo: remove hardcoding
+        mDem.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
+        mDem.loadDemBuffer();
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -540,6 +540,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, SP.getBoolean("displayRmi", false));
         mGLView.setPrefs(prefs_t.HITS, SP.getBoolean("displayHITS", false));
+        mGLView.setPrefs(prefs_t.DEM, SP.getBoolean("displayDEM", false));
 
 
         bLockedMode = SP.getBoolean("lockedMode", false);
@@ -744,8 +745,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// It acts like a very simple flight simulator
 	//
 	static int counter;
-	float _gps_lon = 116; //0;
-	float _gps_lat = -32; //0;
+	//float _gps_lon = 116;  float _gps_lat = -32;  // Australia
+    float _gps_lon = 115.6f;  float _gps_lat = -32;  // Australia
+    //float _gps_lon = 116;  float _gps_lat = -24;  // Australia
+    //float _gps_lon = 28; float _gps_lat = -33.53f;//-28;// = -33; // South Africa - East London
+    //float _gps_lon = 20.404783f; float _gps_lat = -34.9f;// Stilbaai South Africa = 21.447835° -34.379099°
+    //float _gps_lon = 22.404783f; float _gps_lat = -34.9f;// South Africa
+
 	float _gps_course = 0;  //in radians
 	float _gps_altitude = 1000;
 	float _gps_speed = 0;
@@ -790,8 +796,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		time.setToNow();
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
-        //deltaT = 0.0000124f; // todo: debugging super fast - Ludicrous Speed
-        deltaT = 0.00000124f; // todo: debugging fast fly - Warp Speed
+
+        //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
+        //deltaT = 0.00000124f; // todo: debugging - Warp Speed
+        //deltaT = 0.000000124f; // todo: debugging - Super Speed
 		_sim_ms = sim_ms;
 		if ((deltaT > 0) && (deltaT < 0.0000125)) {
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
@@ -804,12 +812,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // todo: Hardcoded for debugging
         ///*
         Random rnd = new Random();
+        //gps_course = _gps_course = (float) Math.toRadians(050);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(25);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(2);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(136);// + (float) rnd.nextGaussian() / 200;
 
-        //gps_course = _gps_course = (float) Math.toRadians(90);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(148);// + (float) rnd.nextGaussian() / 200;
-        gps_course = _gps_course = (float) Math.toRadians(25);// + (float) rnd.nextGaussian() / 200;
-        gps_speed = _gps_speed = 160;  // m/s
-        //gps_altitude = 600; //meter
+        gps_speed = _gps_speed = 100;  // m/s
+        gps_altitude = 3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         // */
@@ -926,7 +935,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				mGLView.setDisplayAirport(true);
 				mGLView.setFPV(fpvX, fpvY); // need to clean this up
 			}
-			else if (hasGps && gps_speed < 9) {
+			else if (hasGps && gps_speed < 9) {  // m/s
 				// taxi mode
 				rollValue = 0;
 				pitchValue = 0;
@@ -964,13 +973,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		float batteryPct = getRemainingBattery();
 
-        mGLView.setPrefs(prefs_t.DEM, false);
         float dem_dme = UNavigation.calcDme(mDem.lat0, mDem.lon0, gps_lat, gps_lon);
         if (dem_dme + 30 > mDem.BUFX / 4) {
-            Toast.makeText(this, "Terrain loading", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "DEM terrain loading", Toast.LENGTH_SHORT).show();
             mDem.setDEMRegionFileName(gps_lat, gps_lon); //-32f, 116f);  //
-            mDem.setTile(gps_lat, gps_lon); //-32f, 116f);  //
-            mDem.loadDemBuffer("zar.aus");
+            mDem.setBufferCenter(gps_lat, gps_lon); //-32f, 116f);  //
+            mDem.loadDemBuffer();
         }
 
 

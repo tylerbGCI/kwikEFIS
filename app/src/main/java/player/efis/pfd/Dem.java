@@ -11,10 +11,10 @@ import java.io.*;
 
 a
  +------------------------------------+
- |                                    |     a = demTopLeftLat /  demTopLeftLon
- |             +---------+            |     b = lat0 / lon0 and x0 / y 0
- |             |         |            |
- |             |  b +    |            |
+ |            b                       |     a = demTopLeftLat,  demTopLeftLon
+ |             +---------+            |     b = x0, y0
+ |             |         |            |     c = lat0, lon0
+ |             |  c +    |            |
  |             |         |            |
  |             +---------+            |
  |                                    |
@@ -22,50 +22,37 @@ a
  |                                    |
  +------------------------------------+
 
- Note: BUFX must fit completely in the DEm tile
+ Note: BUFX should fit completely in the DEM tile
        Consider this when choosing size
 */
 
 
 public class Dem
 {
-    final int maxcol = 4800;
-    final int maxrow = 6000;
+    Context context;
 
-    static final int BUFX = 400;//600;  //800 = 400nm square ie at least  200nm in each direction
+    final static float DEM_HORIZON = 30; // nm
+
+    final  int maxcol = 4800;
+    final  int maxrow = 6000;
+
+    static final int BUFX = 400;  //600;  //800 = 400nm square ie at least  200nm in each direction
     static final int BUFY = BUFX; // 400;
     static short buff[][] = new short[BUFX][BUFY];
 
     static float demTopLeftLat =  -10;
     static float demTopLeftLon = +100;
 
-    /*
-    static public float lat0 = -32.0f;
-    static public float lon0 = 116.0f;
-    static private int x0 = (int) (Math.abs(lon0 - demTopLeftLon) * 60 *2) - BUFX/2;  //0;
-    static private int y0 = (int) (Math.abs(lat0 - demTopLeftLat) * 60 *2) - BUFY/2;  //2750;
-    */
-
     static public float lat0;
     static public float lon0;
     static private int x0;   // center of the BUFX tile ??
     static private int y0;   // center of the BUFX tile
 
-
-    //static private int x0 = (int) ((116.0 - 100) * 60 *2) - BUFX/2;  //0;
-    //static private int y0 = (int) ((32.0 - 10) * 60 *2) - BUFY/2;  //2750;
-
-    final int width = BUFX;
-    final int height = BUFY;
-
-    Context context;
-    //public String region = "zar.aus";
-
     public static boolean demDataValid = false;
 
-    /**
-     * Construct a new default loader with no flags set
-     */
+    //-------------------------------------------------------------------------
+    // Construct a new default loader with no flags set
+    //
     public Dem()
     {
     }
@@ -73,7 +60,6 @@ public class Dem
     public Dem(Context context)
     {
         this.context = context;
-        //aptList = new ArrayList();
     }
 
 
@@ -88,23 +74,23 @@ public class Dem
         // do the test here ... if not in buff ... do a reload centered here.
         //float center_dme = UNavigation.calcDme(lat, lon, lat0, lon0);
 
-        int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0;  // *60 > min * 2 > 30 arcsec = 1/2 a min
-        int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
+        // *60 > min * 2 > 30 arcsec = 1/2 a min
+        int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0; //+ BUFX/2;
+        int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0; // + BUFY/2;
         //int x = 0;
 
         if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
             return -8888;
         else return buff[x][y];
 
-        //return buff[x][y];
     }
 
     public void setBufferCenter(float lat, float lon)
     {
         lat0 = lat;
         lon0 = lon;
-        x0 = (int) (Math.abs(lon0 - demTopLeftLon) * 60 *2) - BUFX/2;
-        y0 = (int) (Math.abs(lat0 - demTopLeftLat) * 60 *2) - BUFY/2;
+        x0 = (int) (Math.abs(lon0 - demTopLeftLon) * 60 *2) -  BUFX/2;
+        y0 = (int) (Math.abs(lat0 - demTopLeftLat) * 60 *2) -  BUFY/2;
     }
 
 
@@ -144,16 +130,22 @@ public class Dem
             int x1, y1, x2, y2;
 
             x1 = x0;
-            x2 = x1 + width;
+            x2 = x0 + BUFX;
             y1 = y0;
-            y2 = y1 + height;
+            y2 = y0 + BUFY;
 
             demFile.skipBytes(NUM_BYTES_IN_SHORT  * (maxcol * y1));
             demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
             for (y = y1; y < y2; y++) {
                 for (x = x1; x < x2; x++) {
+
+                    /*if ((x-x1 > 0)
+                       && (y-y1 > 0)
+                       && (x-x1 < maxcol)
+                       && (y-y1 < maxrow)
+                       ) {*/
+
                     c = demFile.readShort();
-                    //System.out.println(c);
                     if (c > 0) {
                         buff[x-x1][y-y1] = c;  // fill in the buffer
                     }
@@ -168,10 +160,5 @@ public class Dem
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 }
