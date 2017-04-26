@@ -43,10 +43,12 @@ public class Dem
     static float demTopLeftLat =  -10;
     static float demTopLeftLon = +100;
 
-    static public float lat0;
-    static public float lon0;
     static private int x0;   // center of the BUFX tile ??
     static private int y0;   // center of the BUFX tile
+
+    public float lat0;
+    public float lon0;
+
 
     public static boolean demDataValid = false;
 
@@ -75,8 +77,8 @@ public class Dem
         //float center_dme = UNavigation.calcDme(lat, lon, lat0, lon0);
 
         // *60 > min * 2 > 30 arcsec = 1/2 a min
-        int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0; //+ BUFX/2;
-        int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0; // + BUFY/2;
+        int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0;
+        int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
         //int x = 0;
 
         if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
