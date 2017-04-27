@@ -114,7 +114,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float sensorBias;
 
 	private Gpx mGpx;  // wpt database
-    private Dem mDem;  // dem database
+    private DemGTOPO30 mDemGTOPO30;  // dem database
 
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
@@ -290,10 +290,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
 
-        mDem = new Dem(this);
-        mDem.setDEMRegionFileName(gps_lat, gps_lon);  // todo: remove hardcoding
-        mDem.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
-        mDem.loadDemBuffer();
+        mDemGTOPO30 = new DemGTOPO30(this);
+        //mDemGTOPO30.setDEMRegionFileName(gps_lat, gps_lon);  // todo: remove hardcoding
+        //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
+        mDemGTOPO30.loadDemBuffer(_gps_lat, _gps_lon);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -746,15 +746,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//
 	static int counter;
 	//float _gps_lon = 116;  float _gps_lat = -32;  // Australia
-    float _gps_lon = 115.6f;  float _gps_lat = -32;  // Australia
+    //float _gps_lon = 115.6f;  float _gps_lat = -32;  // Australia
     //float _gps_lon = 116;  float _gps_lat = -24;  // Australia
-    //float _gps_lon = 28; float _gps_lat = -33.53f;//-28;// = -33; // South Africa - East London
-    //float _gps_lon = 20.404783f; float _gps_lat = -34.9f;// Stilbaai South Africa = 21.447835° -34.379099°
-    //float _gps_lon = 22.404783f; float _gps_lat = -34.9f;// South Africa
+    //float _gps_lon = 28; float _gps_lat = -33.3f;//-28;// = -33; // South Africa - East London
+    //float _gps_lon = 20.4f; float _gps_lat = -34.4f;// Stilbaai South Africa = 21.447835° -34.379099°
+    //float _gps_lon = 21.404783f; float _gps_lat = -34.9f;// east of Stilbaai South Africa = 21.447835° -34.379099°
+    //float _gps_lon =   18.655624f;  float _gps_lat = -34.459918f;// South of valsbaai
+    float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
 
-	float _gps_course = 0;  //in radians
-	float _gps_altitude = 1000;
-	float _gps_speed = 0;
+
+	float _gps_course = 0;      //in radians
+	float _gps_altitude = 2000; // meters
+	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
 
@@ -800,6 +803,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
         //deltaT = 0.00000124f; // todo: debugging - Warp Speed
         //deltaT = 0.000000124f; // todo: debugging - Super Speed
+
 		_sim_ms = sim_ms;
 		if ((deltaT > 0) && (deltaT < 0.0000125)) {
 			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
@@ -810,16 +814,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
         // todo: Hardcoded for debugging
-        ///*
+        /*
         Random rnd = new Random();
-        //gps_course = _gps_course = (float) Math.toRadians(050);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(25);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(85);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(35);// + (float) rnd.nextGaussian() / 200;
         //gps_course = _gps_course = (float) Math.toRadians(2);// + (float) rnd.nextGaussian() / 200;
-        gps_course = _gps_course = (float) Math.toRadians(136);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(136);// + (float) rnd.nextGaussian() / 200;
+        //gps_course = _gps_course = (float) Math.toRadians(143);// + (float) rnd.nextGaussian() / 200;
 
         gps_speed = _gps_speed = 100;  // m/s
         gps_altitude = 3000; //meter
-        rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         // */
 
@@ -973,14 +978,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		float batteryPct = getRemainingBattery();
 
-        float dem_dme = UNavigation.calcDme(mDem.lat0, mDem.lon0, gps_lat, gps_lon);
-        if (dem_dme + 30 > mDem.BUFX / 4) {
-            Toast.makeText(this, "DEM terrain loading", Toast.LENGTH_SHORT).show();
-            mDem.setDEMRegionFileName(gps_lat, gps_lon); //-32f, 116f);  //
-            mDem.setBufferCenter(gps_lat, gps_lon); //-32f, 116f);  //
-            mDem.loadDemBuffer();
+        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
+        if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
+            //mDemGTOPO30.setDEMRegionFileName(gps_lat, gps_lon); //-32f, 116f);  //
+            //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon); //-32f, 116f);  //
+            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
-
 
 		//
 		// Pass the values to mGLView for updating
