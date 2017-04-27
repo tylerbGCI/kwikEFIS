@@ -1,4 +1,4 @@
-/*/*
+/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 package player.efis.pfd; 
 
@@ -88,9 +87,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
-	// --Commented out by Inspection (2017-02-10 15:02):float SlipOffset = 0;
-	// --Commented out by Inspection (2017-02-10 15:02):float GmeterOffset = 0;
-	// --Commented out by Inspection (2017-02-10 15:02):float loadfactorCal = 0;
 	int calibrationCount = 0;
 
 	// Location abstracts
@@ -567,19 +563,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         s = SP.getString("regionDatabase", "zar.aus");
         if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);
 
-
         // landscape / porait mode toggle
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
-        //if (bLandscapeMode != SP.getBoolean("landscapeMode", false)) {
-        {
-            if (bLandscapeMode) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                mGLView.mRenderer.Layout = EFISRenderer.layout_t.LANDSCAPE;
-            }
-            else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
-            }
+        if (bLandscapeMode) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            mGLView.mRenderer.Layout = EFISRenderer.layout_t.LANDSCAPE;
+        }
+        else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
     }
@@ -980,8 +972,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
-            //mDemGTOPO30.setDEMRegionFileName(gps_lat, gps_lon); //-32f, 116f);  //
-            //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon); //-32f, 116f);  //
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
 
