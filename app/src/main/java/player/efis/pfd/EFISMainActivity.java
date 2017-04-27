@@ -80,7 +80,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private boolean bHudMode = false;
     private boolean bLandscapeMode = false;
 
-	private static final int CAL_MAX = 6;//500;//350;
 	private static final int SLIP_SENS = 25; //50;	// Arbitrary choice
 	private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
 
@@ -576,16 +575,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
     }
 
-
-	private void intro()
-	{
-		mGLView.setGS((float) calibrationCount);
-		mGLView.setRoll(calibrationCount*360/CAL_MAX);
-		mGLView.setPitch(-90 + calibrationCount*90/CAL_MAX);
-		mGLView.setASI((int) (calibrationCount*200/CAL_MAX));
-		mGLView.setALT((int) (calibrationCount*20000/CAL_MAX));
-		mGLView.setHeading((int) (calibrationCount*360/CAL_MAX));
-	}
 
 
 	//-------------------------------------------------------------------------
