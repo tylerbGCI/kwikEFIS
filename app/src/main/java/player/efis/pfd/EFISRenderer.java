@@ -461,7 +461,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Portrait
             lineC = -0.90f;
             lineAutoWptDetails = -0.60f;
-            lineAncillaryDetails = -0.90f;
+            lineAncillaryDetails = -0.85f;
 
             selWptDec = -0.30f * pixH2;
             selWptInc = -0.41f * pixH2;
@@ -2674,7 +2674,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // A combo function to replace the individual ones
     //
     float lineAncillaryDetails;  // Ancillary Details - Set in onSurfaceChanged
-
     private void renderAncillaryDetails(float[] matrix)
     {
         String s;
