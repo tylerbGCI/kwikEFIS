@@ -1,5 +1,11 @@
 Changelog
 =========
+2.5 (2014-05-01)
+------------------
+* Waypoint database cycle 2017-05 (zar.aus)
+* Synthetic vision (DEM) impelementation
+* Add digital elevation model (DEM) data packs
+
 2.4 (2014-03-17)
 ------------------
 * Waypoint database cycle 2017-03 (usa.can)
