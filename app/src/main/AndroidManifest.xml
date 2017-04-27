@@ -25,8 +25,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.pfd"
-    android:versionCode="8"
-    android:versionName="2.4" >
+    android:versionCode="9"
+    android:versionName="2.5" >
 
     <!-- We need to target 10 for the menu button -->
     <uses-sdk
@@ -88,9 +88,11 @@
 
         <!-- Auto start code start -->
         <!-- to ENABLE set, android:enabled="true" -->
+        <!-- to DISABLE set, android:enabled="false" -->
+        <!--
         <receiver
             android:name=".BootUpReceiver"
-            android:enabled="false"
+            android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -98,6 +100,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        -->
         <!-- Auto start code end -->
 
     </application>
