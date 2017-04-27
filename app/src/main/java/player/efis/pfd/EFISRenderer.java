@@ -1,6 +1,4 @@
 /*
-/*
-/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package player.efis.pfd;
 
 import java.util.Iterator;
-
 import player.ulib.*;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import player.gles20.GLText;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.opengl.GLES20;
@@ -2326,8 +2321,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
-                    -pixOverWidth, -0.02f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -0.02f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
+                    pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
                     pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
@@ -2357,58 +2352,44 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
-        float dme;     //in nm
-        float dme_ft = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float dme_1000_ft = 6080000;  // 1,000 nm
+        float dme;           //in nm
+        float dme_ft = 0;    // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
         int demRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float DemElev;       // in ft
 
-        int maxx = DemGTOPO30.BUFX;
-        int maxy = DemGTOPO30.BUFY;
-        lat = LatValue + 0.05f;  // wip
-
-        //MX_RANGE  //20 nm
-        float deminc = 0.001f; //1f/60f/2f;
-        float DemElev; // in ft
-
-        float perspective = 1f;
-        float pm = 0;//0.01f;
+        //float perspective = 1f;
+        //float pm = 0.01f;
         float horizon = (float) Math.sqrt(MSLValue);
 
         for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += 0.5) { //30
             //perspective -= pm;
             for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
                 dme_ft = dme * 6080;
-                //float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
                 lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
                 DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x1 = (float) (demRelBrg * pixPerDegree) * perspective;  // use perspective
+                x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
                 y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
                 lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
                 DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x2 = (float) ((demRelBrg + 1) * pixPerDegree) * perspective;  // use perspective
+                x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
                 y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 dme_ft = (dme + 1) * 6080;
                 lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
                 lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
                 DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x3 = (float) ((demRelBrg + 1) * pixPerDegree) * (perspective - pm);  // use perspective
+                x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
                 y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg);
                 lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg);
                 DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x4 = (float) ((demRelBrg) * pixPerDegree) * (perspective - pm);  // use perspective
+                x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
-
-                //if (dme == DEM_HORIZON) {
-                //    y3 = y4 = 0; // take the last line all the way to the horizon
-                //}
-
 
                 short colorInt = DemGTOPO30.getElev(lat, lon);
                 getHSVColor(colorInt);
@@ -2421,17 +2402,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     };
                     mSquare.SetWidth(1);
 
-                    if (IASValue < 1.5*Vs0) {
-                        // we must be on final approach or on the ground, ignore the terrain
+
+                    float agl = MSLValue - DemElev;  // in ft
+                    if ((IASValue < 1.5*Vs0) || (agl > 1000))  {
+                        // we are above 1000 ft, on final approach or on the ground, ignore the terrain
                         mSquare.SetColor(red, green, blue, 1);  // rgb
                     }
                     else {
                         // we are in the air check  the terrain
-                        float agl = MSLValue - DemElev;  // in ft
-                        if (agl < 100) mSquare.SetColor(0.9f, 0, 0, 1);  // light red
-                        else if (agl < 1000) mSquare.SetColor(0.9f, 0.9f, 0, 1);  // light yellow
-                        else mSquare.SetColor(red, green, blue, 1);  // rgb ... note: alpha = 0.5
+                        if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
+                        else if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
                     }
+
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
 
