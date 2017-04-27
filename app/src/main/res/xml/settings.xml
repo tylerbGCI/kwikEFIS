@@ -5,8 +5,14 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayTerrain"
-            android:summary="This option if selected will display color."
-            android:title="Color earth and sky" />
+            android:summary="Display the color AH horizon."
+            android:title="Color attitude indicator" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="displayDEM"
+            android:summary="Enable synthetic vision DEM terrain"
+            android:title="Synthetic vision" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -39,6 +45,9 @@
             android:key="displayHITS"
             android:summary="Enable HITS display"
             android:title="Highway In The Sky" />
+
+
+
 
         </PreferenceCategory>
         

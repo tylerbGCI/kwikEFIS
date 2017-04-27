@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 20
     buildToolsVersion "25.0.0"
@@ -17,3 +16,7 @@ android {
         }
     }
 }
+
+//dependencies {
+//    compile files('libs/vecmath.jar')
+//}

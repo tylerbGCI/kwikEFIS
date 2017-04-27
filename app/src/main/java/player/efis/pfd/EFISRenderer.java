@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package player.efis.pfd;
 
 import java.util.Iterator;
-
 import player.ulib.*;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import player.gles20.GLText;
-
 import android.content.Context;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -104,9 +102,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Airspeed Indicator
     private float IASInView;        // The indicated units to display above the center line
 
-    //private int   IASValue;         // Indicated Airspeed
+    //private int   IASValue;       // Indicated Airspeed
     private float IASValue;         // Indicated Airspeed
-    private float IASTranslation;    // Value amplified by 1/2 window pixels for use by glTranslate
+    private float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
     private int Vs0, Vs1, Vfe, Vno;    // Basic Vspeeds
@@ -125,7 +123,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // VSI
     private float VSIInView;        // Vertical speed to display above the centerline
-    private int VSIValue;         // Vertical speed in feet/minute
+    private int VSIValue;           // Vertical speed in feet/minute
     private float VSINeedleAngle;   // The angle to set the VSI needle
 
     //DI
@@ -155,6 +153,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     boolean displayFlightDirector;  // Display Flight Director
     boolean displayRMI;             // Display RMI
     boolean displayHITS;            // Display the Highway In The Sky
+    private boolean displayDEM;     // todo debugging used for the BIV
 
     //3D map display
     boolean displayAirport;
@@ -162,6 +161,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean displayTape;
     private boolean displayMirror;
     private boolean displayFPV;
+
 
     private boolean ServiceableDevice;    // Flag to indicate no faults
     private boolean ServiceableAh;        // Flag to indicate AH failure
@@ -282,7 +282,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayTerrain) renderTerrain(scratch1);
+        if (displayDEM) renderDem(scratch1);
+        else if (displayTerrain) renderTerrain(scratch1);
+
+        //if (displayDEM) renderDemBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
+
+
         renderPitchMarkers(scratch1);
 
         // FPV only means anything if we have speed and rate of climb, ie altitude
@@ -324,8 +329,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = -0.74f * pixW2; // top left -0.75
                 xly = 0.50f * pixH2; // top left  0.55
                 roseScale = 0.44f;
-			}
-			else {
+            }
+            else {
                 //Portrait
                 xlx = -0.00f * pixW2;
                 xly = -0.44f * pixH2;  //0.45f
@@ -456,7 +461,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Portrait
             lineC = -0.90f;
             lineAutoWptDetails = -0.60f;
-            lineAncillaryDetails = -0.90f;
+            lineAncillaryDetails = -0.85f;
 
             selWptDec = -0.30f * pixH2;
             selWptInc = -0.41f * pixH2;
@@ -528,7 +533,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     public static void checkGlError(String glOperation)
     {
         /*  bugbug
-		int error;
+        int error;
 		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
 			Log.e(TAG, glOperation + ": glError " + error);
 			throw new RuntimeException(glOperation + ": glError " + error);
@@ -738,7 +743,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 	/* // calibrating flag
-	void setCalibrate(boolean cal, String msg)
+    void setCalibrate(boolean cal, String msg)
 	{
 		Calibrating = cal;
 		CalibratingMsg = msg;
@@ -843,8 +848,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.VertexCount = 7;
             mPolyLine.SetVerts(vertPoly);
             mPolyLine.draw(mMVPMatrix);
-		}
-		else {
+        }
+        else {
             // The lubber line - Flight Director style
             // side lines
             int B2 = 3;
@@ -1154,91 +1159,38 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         pixOverWidth = pixW2 * 1.80f; //1.42f;
         z = zfloat;
 
+
+        //todo: make consistent with renderDemSky
         // Earth
-        // Level to -90 pitch
-        mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
-        mSquare.SetWidth(1);
-        {
-            float[] squarePoly = {
-                    -pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 0.0f + 0.0f / pixH2, z,
-                    -pixOverWidth, 0.0f + 0.0f / pixH2, z
-            };
-            mSquare.SetVerts(squarePoly);
-            mSquare.draw(matrix);
-        }
-
-
-        //  -90 pitch to -180 pitch
-        //mSquare.SetColor(194f/255f, 150f/255f, 75f/255f, 0); //brown
+        // Level to -180 pitch
         mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
                     -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -1.0f * pixPitchViewMultiplier, z,
-                    -pixOverWidth, -1.0f * pixPitchViewMultiplier, z
+                     pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                     pixOverWidth, 0.0f, z,
+                    -pixOverWidth, 0.0f, z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
         }
-
-		/* 
-   		b2 due to flip no longer needed
-		glBegin(GL_POLYGON);
-		qglColor( QColor( 194, 150, 75 ) );
-		glVertex3f( -pixOverWidth, -2.0 * pixPitchViewMultiplier, z);
-		glVertex3f( pixOverWidth, -2.0 * pixPitchViewMultiplier, z);
-		qglColor( QColor( 64, 50, 25 ) );
-		glVertex3f( pixOverWidth, -1.0 * pixPitchViewMultiplier, z);
-		glVertex3f( -pixOverWidth, -1.0 * pixPitchViewMultiplier, z);
-		glEnd();
-		 */
 
         // Sky
-        // Level to 90 pitch
+        // Level to 180 pitch
         mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
-                    -pixOverWidth, 0.0f + 1.0f / pixH2, z,
-                    pixOverWidth, 0.0f + 1.0f / pixH2, z,
-                    pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
-                    -pixOverWidth, 1.0f * pixPitchViewMultiplier, z
-            };
-            mSquare.SetVerts(squarePoly);
-            mSquare.draw(matrix);
-        }
-
-
-        // 90 pitch to 180 pitch
-        mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
-        mSquare.SetWidth(1);
-        {
-            float[] squarePoly = {
-                    -pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 1.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 0.0f, z,
+                     pixOverWidth, 0.0f, z,
+                     pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
         }
 
-		/*
-		   b2 due to flip no longer needed
-		  //Once more to fill the ViewPort when pitch approaches -180
-			glBegin(GL_POLYGON);
-			qglColor( QColor( 0, 0, 0 ) );
-			glVertex3f( -pixOverWidth, -3.0 * pixPitchViewMultiplier, z);
-			glVertex3f( pixOverWidth, -3.0 * pixPitchViewMultiplier, z);
-			qglColor( QColor( 0, 0, 255 ) );
-			glVertex3f( pixOverWidth, -2.0 * pixPitchViewMultiplier, z);
-			glVertex3f( -pixOverWidth,  -2.0 * pixPitchViewMultiplier, z);
-			glEnd();
-		 */
     }
 
 
@@ -2179,7 +2131,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // 0.1 approx 5nm
         float dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
         float _dme = 6080000;  // 1,000 nm in ft
-        float aptRelBrg = 0; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float aptRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
@@ -2202,7 +2154,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 			else continue;                                                                // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-
             x1 = (float) (aptRelBrg * pixPerDegree);
             y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme)) * pixPerDegree);    // we do not take apt elevation into account
 
@@ -2246,6 +2197,257 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
         else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
         MX_RANGE = Math.min(MX_RANGE, 99);
+    }
+
+    //-------------------------------------------------------------------------
+    // Synthetic Vision
+    //
+    float red = 0;
+    float blue = 0;
+    float green = 0;
+
+    private void getColor(short c)
+    {
+        float r = 600;   //600;
+        float r2 = r * 2;
+
+        red = 0.0f;
+        blue = 0.0f;
+        green = (float) c / r;
+        if (green > 1) {
+            green = 1;
+            red = (float) (c - r) / r;
+            if (red > 1) {
+                red = 1;
+                blue = (float) (c - r2) / r;
+                if (blue > 1) {
+                    blue = 1;
+                }
+            }
+        }
+    }
+
+    //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+
+    private void getHSVColor(short c)
+    {
+        //getColor(c);
+        //if (true) return;
+
+        int r = 600;//1000;   //600;  //600m=2000ft
+        int MaxColor = 128;
+        float hsv[] = {0, 0, 0};
+        int colorBase;
+
+        int v = MaxColor*c/r;
+
+        if (v > 3*MaxColor) {
+            // mountain
+            v %= MaxColor;
+            colorBase = Color.rgb(MaxColor-v, MaxColor, MaxColor);
+        }
+        else if (v > 2*MaxColor) {
+            // highveld
+            v %= MaxColor;
+            colorBase = Color.rgb(MaxColor, MaxColor, v); // keep building to white
+        }
+        else if (v > MaxColor) {
+            // inland
+            v %= MaxColor;
+            colorBase = Color.rgb(v, MaxColor, 0);
+        }
+        else if (v > 1) {
+            // coastal plain
+            colorBase = Color.rgb(0, v, 0);
+        }
+        else if (v > 0) {
+            // the beach
+            //v = MaxColor/3;
+            //colorBase = Color.rgb(v, v, v);
+            colorBase = Color.DKGRAY;
+        }
+        else {
+            colorBase = Color.rgb(0, 0, MaxColor/3); //blue ocean = 0xFF00002A
+            //colorBase = Color.RED; //red ocean, for debugging
+        }
+
+        // this allows us to adjust hue, sat and val
+        Color.colorToHSV(colorBase, hsv);
+        hsv[0] = hsv[0];  // hue 0..360
+        hsv[1] = hsv[1];  // sat 0..1
+        hsv[2] = hsv[2];  // val 0..1
+
+        if (hsv[2] > 0.25) {
+            //hsv[0] = hsv[0] - (hsv[2]*120);  // adjust the hue max 30%,  hue 0..360
+            hsv[0] = hsv[0] - ((hsv[2]-0.25f)*60);  // adjust the hue max 15%,  hue 0..360
+            hsv[2] = 0.25f; // clamp the value, val 0..1
+        }
+
+        /*if (hsv[2] < 0.1) {
+            hsv[2] = 0.1f; // clamp the value, val 0..1
+        }*/
+
+        int color = Color.HSVToColor(hsv);
+        // or just use as is
+        //int color = colorBase;
+
+        red = (float) Color.red(color) / 255;
+        green = (float) Color.green(color) / 255;
+        blue = (float) Color.blue(color) / 255;
+
+    }
+
+    //-------------------------------------------------------------------------
+    // DemGTOPO30 Sky.
+    //
+    private void renderDemSky(float[] matrix)
+    {
+        float pixPitchViewMultiplier, pixOverWidth, z;
+
+        pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
+        pixOverWidth = pixW2 * 1.80f; //1.42f;
+        z = zfloat;
+
+        // Sky
+        // -90 to 180 pitch
+        mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
+                    pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
+                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+    }
+
+
+    //-------------------------------------------------------------------------
+    // Render the DEM.
+    //
+    // This is the meat and potatoes of the synthetic vision implementation
+    public void renderDem(float[] matrix)
+    {
+        float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
+        float radius = 5;
+        int x = 0;
+        int y = 0;
+        float lat, lon;
+
+        // take a guess at the color for the default terrain
+        // Ie further out then 30nm
+        renderDemSky(matrix);
+
+        pixPerDegree = pixM / pitchInView;
+        z = zfloat;
+
+        float dme;           //in nm
+        float dme_ft = 0;    // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        int demRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float DemElev;       // in ft
+
+        //float perspective = 1f;
+        //float pm = 0.01f;
+        float horizon = (float) Math.sqrt(MSLValue);
+
+        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += 0.5) { //30
+            //perspective -= pm;
+            for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
+                dme_ft = dme * 6080;
+
+                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
+                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
+                x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
+                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
+                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
+                x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
+                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                dme_ft = (dme + 1) * 6080;
+                lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
+                lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
+                x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
+                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg);
+                lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
+                x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
+                y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
+
+                short colorInt = DemGTOPO30.getElev(lat, lon);
+                getHSVColor(colorInt);
+                {
+                    float[] squarePoly = {
+                            x1, y1, z,
+                            x2, y2, z,
+                            x3, y3, z,
+                            x4, y4, z
+                    };
+                    mSquare.SetWidth(1);
+
+
+                    float agl = MSLValue - DemElev;  // in ft
+                    if ((IASValue < 1.5*Vs0) || (agl > 1000))  {
+                        // we are above 1000 ft, on final approach or on the ground, ignore the terrain
+                        mSquare.SetColor(red, green, blue, 1);  // rgb
+                    }
+                    else {
+                        // we are in the air check  the terrain
+                        if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
+                        else if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
+                    }
+
+                    mSquare.SetVerts(squarePoly);
+                    mSquare.draw(matrix);
+
+                    /*
+                    mPolyLine.SetWidth(1);
+                    mPolyLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // rgb
+                    mPolyLine.VertexCount = 4;
+                    mPolyLine.SetVerts(squarePoly);
+                    mPolyLine.draw(matrix);
+                    // */
+                }
+            }
+        }
+    }
+
+
+    // This is only good for debugging
+    // It is very slow
+    public void renderDemBuffer(float[] matrix)
+    {
+        float z = zfloat;
+        int x = 0;
+        int y = 0;
+
+        int maxx = DemGTOPO30.BUFX;
+        int maxy = DemGTOPO30.BUFY;
+
+        for (y = 0; y < maxy /*BUFY*/; y++) {
+            for (x = 0; x < maxx /*BUFX*/; x++) {
+                //getColor(DemGTOPO30.buff[x][y]);
+                getHSVColor(DemGTOPO30.buff[x][y]);
+                mLine.SetColor(red, green, blue, 1);  // rgb
+
+                mLine.SetWidth(1);
+                mLine.SetVerts(
+                        x - pixW2, -y + pixH2 / 10, z,
+                        x - pixW2 + 1, -y + pixH2 / 10, z
+                );
+                mLine.draw(matrix); // debug
+            }
+        }
     }
 
 
@@ -2465,7 +2667,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // A combo function to replace the individual ones
     //
     float lineAncillaryDetails;  // Ancillary Details - Set in onSurfaceChanged
-
     private void renderAncillaryDetails(float[] matrix)
     {
         String s;
@@ -2476,13 +2677,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         s = mGpsStatus; //String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.3f) * pixM2 - glText.getCharHeight() / 2);
 
-        /*
-        s = String.format("%c%03.2f %c%03.2f",  (LatValue < 0)?  'S':'N' , Math.abs(LatValue), (LonValue < 0)? 'W':'E' , Math.abs(LonValue));
-        glText.draw(s, -0.97f * pixW2, (lineA-0.4f)*pixM2 - glText.getCharHeight()/2 );
-         */
-
         s = String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound);
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.4f) * pixM2 - glText.getCharHeight() / 2);
+
+        ///*
+        s = String.format("%c%03.2f %c%03.2f",  (LatValue < 0)?  'S':'N' , Math.abs(LatValue), (LonValue < 0)? 'W':'E' , Math.abs(LonValue));
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails-0.5f)*pixM2 - glText.getCharHeight()/2 );
+        //*/
 
         glText.end();
     }
@@ -2580,20 +2781,20 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
         glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
-            // Name
-            glText.setScale(2.1f);
-            s = mWptSelComment;
-            glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
+        // Name
+        glText.setScale(2.1f);
+        s = mWptSelComment;
+        glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
 
-            // DME
-            s = String.format("DME %03.1f", mSelWptDme);  // in nm
-            glText.setScale(2.5f);
-            glText.draw(s, leftC * pixW2, (lineC - 0.2f) * pixM2 - glText.getCharHeight() / 2);
+        // DME
+        s = String.format("DME %03.1f", mSelWptDme);  // in nm
+        glText.setScale(2.5f);
+        glText.draw(s, leftC * pixW2, (lineC - 0.2f) * pixM2 - glText.getCharHeight() / 2);
 
-            // BRG
-            s = String.format("BRG  %03.0f", mSelWptBrg);
-            glText.setScale(2.5f);                            //
-            glText.draw(s, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
+        // BRG
+        s = String.format("BRG  %03.0f", mSelWptBrg);
+        glText.setScale(2.5f);                            //
+        glText.draw(s, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
         glText.end();
 
         /*
@@ -2692,14 +2893,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         for (int i = 0; i < 4; i++) {
             if (Math.abs(mX - (leftC + 0.0f)) < 0.05) {         //0.6
                 pos = 0;
-			} 
-			else if (Math.abs(mX - (leftC + 0.1f)) < 0.05) {  //0.7
+            }
+            else if (Math.abs(mX - (leftC + 0.1f)) < 0.05) {  //0.7
                 pos = 1;
-			}
-			else if (Math.abs(mX - (leftC + 0.2f)) < 0.05) {  //0.8
+            }
+            else if (Math.abs(mX - (leftC + 0.2f)) < 0.05) {  //0.8
                 pos = 2;
-			}
-			else if (Math.abs(mX - (leftC + 0.3f)) < 0.05) {  //0.9
+            }
+            else if (Math.abs(mX - (leftC + 0.3f)) < 0.05) {  //0.9
                 pos = 3;
             }
         }
@@ -2797,6 +2998,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setPrefs(prefs_t pref, boolean value)
     {
         switch (pref) {
+            case DEM:
+                displayDEM = value;
+                break;
             case TERRAIN:
                 displayTerrain = value;
                 break;
