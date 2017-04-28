@@ -282,10 +282,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayDEM) renderDem(scratch1);
+        if (displayDEM) renderDEM(scratch1);
         else if (displayTerrain) renderTerrain(scratch1);
 
-        //if (displayDEM) renderDemBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
+        //if (displayDEM) renderDEMBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
 
 
         renderPitchMarkers(scratch1);
@@ -1160,7 +1160,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         z = zfloat;
 
 
-        //todo: make consistent with renderDemSky
+        //todo: make consistent with renderDEMSky
         // Earth
         // Level to -180 pitch
         mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
@@ -2300,7 +2300,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // DemGTOPO30 Sky.
     //
-    private void renderDemSky(float[] matrix)
+    private void renderDEMSky(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 
@@ -2308,8 +2308,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         pixOverWidth = pixW2 * 1.80f; //1.42f;
         z = zfloat;
 
-        // Sky
-        // -90 to 180 pitch
+        // Sky - simple
+        // -0.05 to 180 pitch
         mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
         mSquare.SetWidth(1);
         {
@@ -2322,15 +2322,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
         }
-
     }
 
 
     //-------------------------------------------------------------------------
-    // Render the DEM.
+    // Render the Digital Elevation Model (DEM).
     //
     // This is the meat and potatoes of the synthetic vision implementation
-    public void renderDem(float[] matrix)
+    public void renderDEM(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
         float radius = 5;
@@ -2340,7 +2339,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // take a guess at the color for the default terrain
         // Ie further out then 30nm
-        renderDemSky(matrix);
+        renderDEMSky(matrix);
 
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
@@ -2395,16 +2394,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     };
                     mSquare.SetWidth(1);
 
-
                     float agl = MSLValue - DemElev;  // in ft
                     if ((IASValue < 1.5*Vs0) || (agl > 1000))  {
-                        // we are above 1000 ft, on final approach or on the ground, ignore the terrain
+                        // we are above 1000 ft, on final approach or on the ground,
+                        // ignore the terrain warnings
                         mSquare.SetColor(red, green, blue, 1);  // rgb
                     }
                     else {
                         // we are in the air check  the terrain
-                        if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
-                        else if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
+                        if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
+                        else if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
                     }
 
                     mSquare.SetVerts(squarePoly);
@@ -2425,7 +2424,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // This is only good for debugging
     // It is very slow
-    public void renderDemBuffer(float[] matrix)
+    public void renderDEMBuffer(float[] matrix)
     {
         float z = zfloat;
         int x = 0;
