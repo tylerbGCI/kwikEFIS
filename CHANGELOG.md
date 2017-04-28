@@ -1,6 +1,6 @@
 Changelog
 =========
-2.5 (2014-05-01)
+2.5 (Under Test)
 ------------------
 * Waypoint database cycle 2017-05 (zar.aus)
 * Synthetic vision (DEM) impelementation
