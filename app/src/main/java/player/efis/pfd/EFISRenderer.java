@@ -2311,6 +2311,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Sky - simple
         // -0.05 to 180 pitch
         mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
+
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
@@ -2337,8 +2338,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         int y = 0;
         float lat, lon;
 
-        // take a guess at the color for the default terrain
-        // Ie further out then 30nm
+        // Make the Blue sky.
+        // Note it extends a little below the horizon
         renderDEMSky(matrix);
 
         pixPerDegree = pixM / pitchInView;
@@ -2392,16 +2393,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                             x3, y3, z,
                             x4, y4, z
                     };
-                    mSquare.SetWidth(1);
 
                     float agl = MSLValue - DemElev;  // in ft
+                    mSquare.SetWidth(1);
                     if ((IASValue < 1.5*Vs0) || (agl > 1000))  {
                         // we are above 1000 ft, on final approach or on the ground,
                         // ignore the terrain warnings
                         mSquare.SetColor(red, green, blue, 1);  // rgb
                     }
                     else {
-                        // we are in the air check  the terrain
+                        // we are in the air check the terrain for proximity
                         if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
                         else if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
                     }
@@ -2410,6 +2411,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     mSquare.draw(matrix);
 
                     /*
+                    // outline the DEM blocks - useful for debugging
                     mPolyLine.SetWidth(1);
                     mPolyLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // rgb
                     mPolyLine.VertexCount = 4;
