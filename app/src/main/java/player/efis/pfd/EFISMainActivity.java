@@ -286,7 +286,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx.loadDatabase(region);
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.setDEMRegionFileName(gps_lat, gps_lon);  // todo: remove hardcoding
+        //mDemGTOPO30.setDEMRegion(gps_lat, gps_lon);  // todo: remove hardcoding
         //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
         mDemGTOPO30.loadDemBuffer(_gps_lat, _gps_lon);
 
@@ -670,7 +670,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float deltaCrs = course - _course;
 
  		// Handle the case around 0
-		if (Math.abs(deltaCrs) > UTrig.M_PI_4) { // Math.PI/4) {
+		if (Math.abs(deltaCrs) > UTrig.M_PI_4) {
 			_course = course;   // save the previous course
 			return _rateOfTurn; // result would be rubbish, just return the previous rot
 		}
@@ -732,12 +732,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lon = 28; float _gps_lat = -33.3f;//-28;// = -33; // South Africa - East London
     //float _gps_lon = 20.4f; float _gps_lat = -34.4f;// Stilbaai South Africa = 21.447835° -34.379099°
     //float _gps_lon = 21.404783f; float _gps_lat = -34.9f;// east of Stilbaai South Africa = 21.447835° -34.379099°
-    //float _gps_lon =   18.655624f;  float _gps_lat = -34.459918f;// South of valsbaai
-    float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
-
+    //float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
+    float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of valsbaai -34.359918f
 
 	float _gps_course = 0;      //in radians
-	float _gps_altitude = 2000; // meters
+	float _gps_altitude = 200; // meters
 	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
@@ -770,8 +769,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		if (gps_speed != 0) {
 			_gps_course += (rollValue * gps_speed / 1e6f );
-			//while (_gps_course > (2*Math.PI)) _gps_course %= (2*Math.PI);
-			//while (_gps_course < 0) _gps_course += (2*Math.PI);
             while (_gps_course > (UTrig.M_2PI)) _gps_course %= (UTrig.M_2PI);
             while (_gps_course < 0) _gps_course += (UTrig.M_2PI);
 		}
@@ -783,7 +780,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
         //deltaT = 0.00000124f; // todo: debugging - Warp Speed
-        //deltaT = 0.000000124f; // todo: debugging - Super Speed
+        //deltaT = 0.000000224f; // todo: debugging - Super Speed2
 
 		_sim_ms = sim_ms;
 		if ((deltaT > 0) && (deltaT < 0.0000125)) {
@@ -797,15 +794,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // todo: Hardcoded for debugging
         /*
         Random rnd = new Random();
-        //gps_course = _gps_course = (float) Math.toRadians(85);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(35);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(2);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(136);// + (float) rnd.nextGaussian() / 200;
-        //gps_course = _gps_course = (float) Math.toRadians(143);// + (float) rnd.nextGaussian() / 200;
-
-        gps_speed = _gps_speed = 100;  // m/s
-        gps_altitude = 3000; //meter
-        //rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        gps_course = _gps_course = (float) Math.toRadians(40);// + (float) rnd.nextGaussian() / 200;
+        gps_speed = _gps_speed = 225;//100;  // m/s
+        gps_altitude = 2000; //3000; //meter
+        rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         // */
 
@@ -907,13 +899,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
 				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
                 pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
-                //pitchValue = (float) (Math.atan2(gps_rateOfClimb, gps_speed) * 180.0f / Math.PI);
 
 
 				// the Flight Path Vector (FPV)
 				deltaA = compassRose180(gps_course - orientationAzimuth);
-				//fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / Math.PI); // a point 100m ahead of nose
-				//fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / Math.PI);    // simple RA of the two velocities
                 fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
                 fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
 
@@ -959,10 +948,23 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		float batteryPct = getRemainingBattery();
 
+        //-----------------------------
+        // Handle the DEM buffer.
+        // Load new data to the buffer when the horizon gets close to the edge or
+        // if we have gone off the current tile.
+        //
+        if (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false) {
+            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        }
+
+        //
+        // Load new data into the buffer when the horizon gets close to the edge
+        //
         float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
+
 
 		//
 		// Pass the values to mGLView for updating
