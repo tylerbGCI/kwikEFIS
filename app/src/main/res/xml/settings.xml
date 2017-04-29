@@ -5,8 +5,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayTerrain"
-            android:summary="Display the color AH horizon."
-            android:title="Color attitude indicator" />
+            android:summary="Display full color artificial horizon"
+            android:title="Artificial horizon" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -17,7 +17,7 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayTape"
-            android:summary="Airspeed and Alimeter tapes"
+            android:summary="Airspeed and Altimeter tapes"
             android:title="Tapes" />
 
         <CheckBoxPreference
