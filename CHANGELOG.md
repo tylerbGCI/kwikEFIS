@@ -3,8 +3,8 @@ Changelog
 2.5 (Under Test)
 ------------------
 * Waypoint database cycle 2017-05 (zar.aus)
-* Synthetic vision (DEM) impelementation
-* Add digital elevation model (DEM) data packs
+* Synthetic vision (DEM) implementation
+* Add digital elevation model (DEM) data packs (zar.aus)
 
 2.4 (2014-03-17)
 ------------------
@@ -29,15 +29,15 @@ Changelog
 Prior History
 ------------------
 * Fix the selected altitude bug introduced by HITS
-* Highway In The Sky (HITS) impelementation
+* Highway In The Sky (HITS) implementation
 * Add M20J. Cosmetic changes
 * Production release 2
 * Add vertical view and rework panorama
 * Increase maximum taxi speed
 * Production release 1
-* Minor bufix in demo mode simulator
+* Minor bugfix in demo mode simulator
 * Add taxi mode. Bufix version display
 * Tweak filter constants. Remove autocalibration
-* Set GPS to maximum/realtime perfromance
+* Set GPS to maximum/realtime performance
 * Change pitch to 25 degrees in view. Change wording for sensor bias choices
 * Introduce calibration routine. Change pitch filter to 32
