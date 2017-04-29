@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,9 +114,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // Altimeter
     private float MSLInView;        // The indicated units to display above the center line
-    private int MSLValue;           // Altitude MSL
+    private int MSLValue;           // Altitude above mean sea level, MSL
     private float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
     private float baroPressure;     // Barometric pressure in in-Hg
+    private float AGLValue;         // Altitude above ground, AGL
 
     // The following should be read from a calibration file by an init routine
     private int MSLMinDisp;         // The lowest altitude to show on tape
@@ -198,9 +200,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Initialisation of variables
         pitchTranslation = rollRotation = 0; // default object translation and rotation
 
-        IASTranslation = 0; // default IAS tape translation
+        IASTranslation = 0;  // default IAS tape translation
         IASValue = 0;        // The default to show if no IAS calls come in
-        MSLTranslation = 0; // default MSL tape translation
+        MSLTranslation = 0;  // default MSL tape translation
         MSLValue = 0;        // The default to show if no MSL calls come in
         VSIValue = 0;        // The default vertical speed
 
@@ -282,7 +284,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayDEM) renderDEM(scratch1);
+        if (displayDEM) {
+            // Make the Blue sky.
+            // Note: it extends a little below the horizon
+            if (AGLValue > 0) renderDEMSky(scratch1); // sky only visible when aboveground :-)
+            renderDEM(scratch1);
+        }
         else if (displayTerrain) renderTerrain(scratch1);
 
         //if (displayDEM) renderDEMBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
@@ -383,6 +390,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
             renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
+            renderFixedRADALTMarkers(mMVPMatrix); // AGL
             renderFixedASIMarkers(mMVPMatrix); // this could be empty argument
             renderVSIMarkers(mMVPMatrix);
 
@@ -1214,6 +1222,96 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
     //-------------------------------------------------------------------------
+    // RadAlt Indicator (AGL)
+    //
+    void renderFixedRADALTMarkers(float[] matrix)
+    {
+        float z = zfloat;
+        String t;
+
+        float top = -0.8f * pixH2;  //-0.5f
+
+        float left = 0.80f * pixM2;
+        float right = 1.14f * pixM2;
+        float apex = 0.75f * pixM2;
+
+        // The tapes are positioned left & right of the roll circle, occupying the space based
+        // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
+        // square, leaving extra space outside the edges for terrain which can be clipped if required.
+
+        // Altimeter Display
+
+        // Do a dummy glText so that the Heights are correct for the masking box
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        glText.setScale(2.5f);  //was 1.5
+        glText.end();
+
+        // Mask over the moving tape for the value display box
+        mSquare.SetColor(0.0f, 0.0f, 0.0f, 1); //black
+        mSquare.SetWidth(2);
+        {
+            float[] squarePoly = {
+                    right, top - glText.getCharHeight(), z,
+                    right, top + glText.getCharHeight(), z,
+                    left, top + glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z,
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+        int aglAlt = Math.round((float) this.AGLValue / 10) * 10;  // round to 10
+        // draw the tape text in mixed sizes
+        // to clearly show the thousands
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        t = Integer.toString(aglAlt / 1000);
+        float margin;
+        float colom = 0.83f;
+
+        // draw the thousands digits larger
+        glText.setScale(3.5f);  //3  2.5
+        if (aglAlt > 1000) glText.draw(t, colom * pixM2, top - glText.getCharHeight() / 2);
+        if (aglAlt < 10000) margin = 0.6f*glText.getCharWidthMax(); // because of the differing sizes
+        else margin = 1.1f*glText.getCharWidthMax();                 	// we have to deal with the margin ourselves
+
+        // draw the hundreds digits smaller
+        t = String.format("%03.0f", (float) aglAlt % 1000);
+        glText.setScale(2.5f); // was 2.5
+        glText.draw(t, colom * pixM2 + margin, top - glText.getCharHeight() / 2);
+        glText.end();
+
+        /*mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
+        mTriangle.SetVerts(
+                left, glText.getCharHeight() / 2, z,
+                apex, 0.0f, z,
+                left, -glText.getCharHeight() / 2, z
+        );
+        mTriangle.draw(mMVPMatrix);*/
+
+        {
+            mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
+            mPolyLine.SetWidth(2);
+            float[] vertPoly = {
+                    right, top - glText.getCharHeight(), z,
+                    right, top + glText.getCharHeight(), z,
+                    left, top + glText.getCharHeight(), z,
+                    //left, top + glText.getCharHeight() / 2, z,
+                    //apex, 0.0f, z,
+                    //left, top - glText.getCharHeight() / 2, z,
+                    left, top - glText.getCharHeight(), z,
+                    right, top - glText.getCharHeight(), z
+            };
+
+            mPolyLine.VertexCount = 5;
+            mPolyLine.SetVerts(vertPoly);
+            mPolyLine.draw(matrix);
+        }
+
+    }
+
+
+
+    //-------------------------------------------------------------------------
     // Altimeter Indicator
     //
     void renderFixedALTMarkers(float[] matrix)
@@ -1250,22 +1348,22 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.draw(matrix);
         }
 
-        int MSLValue = Math.round((float) this.MSLValue / 10) * 10;  // round to 10
+        int mslAlt = Math.round((float) this.MSLValue / 10) * 10;  // round to 10
         // draw the tape text in mixed sizes
         // to clearly show the thousands
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
-        t = Integer.toString(MSLValue / 1000);
+        t = Integer.toString(mslAlt / 1000);
         float margin;
         float colom = 0.83f;
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (MSLValue > 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
-		if (MSLValue < 10000) margin = 0.6f*glText.getCharWidthMax(); // because of the differing sizes
+        if (mslAlt > 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
+		if (mslAlt < 10000) margin = 0.6f*glText.getCharWidthMax(); // because of the differing sizes
 		else margin = 1.1f*glText.getCharWidthMax();                 	// we have to deal with the margin ourselves
 
         // draw the hundreds digits smaller
-        t = String.format("%03.0f", (float) MSLValue % 1000);
+        t = String.format("%03.0f", (float) mslAlt % 1000);
         glText.setScale(2.5f); // was 2.5
         glText.draw(t, colom * pixM2 + margin, -glText.getCharHeight() / 2);
         glText.end();
@@ -1717,6 +1815,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         //String t;
 
+        float top = 0.9f * pixH2;
+
         float left = -0.15f * pixM2;
         float right = 0.15f * pixM2;
         //float apex =   0.00f * pixM2;
@@ -1735,10 +1835,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mSquare.SetWidth(2);
         {
             float[] squarePoly = {
-                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
-                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-                    left, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-                    left, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
+                    right, top - glText.getCharHeight(), z,
+                    right, top + glText.getCharHeight(), z,
+                    left, top + glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z,
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -1748,17 +1848,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
             mPolyLine.SetWidth(2);
             float[] vertPoly = {
-                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-                    left, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-                    left, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
-                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
-                    right, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
+                    right, top + glText.getCharHeight(), z,
+                    left, top + glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z,
+                    right, top - glText.getCharHeight(), z,
+                    right, top + glText.getCharHeight(), z,
 
                     // for some reason this causes a crash on restart if there are not 8 vertexes
                     // most probably a a bug in PolyLine
-                    left, 0.9f * pixH2 + glText.getCharHeight(), z,//+0.1f,
-                    left, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f
-                    right, 0.9f * pixH2 - glText.getCharHeight(), z,//+0.1f,
+                    left, top + glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z,
+                    right, top - glText.getCharHeight(), z,
 
             };
             mPolyLine.VertexCount = 8;
@@ -2074,7 +2174,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the DME distance in nm
     //
-    float calcDme(float lat1, float lon1, float lat2, float lon2)
+    private float calcDme(float lat1, float lon1, float lat2, float lon2)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -2088,7 +2188,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the Relative Bearing in degrees
     //
-    float calcRelBrg(float lat1, float lon1, float lat2, float lon2)
+    private float calcRelBrg(float lat1, float lon1, float lat2, float lon2)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -2103,7 +2203,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Calculate the Absolute Bearing in degrees
     //
-    float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
+    private float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
     {
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
@@ -2310,13 +2410,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // Sky - simple
         // -0.05 to 180 pitch
-        mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
+        float overlap;  //= 0.05f;  // 0 - 0.05
+        if (AGLValue > 0) overlap = 0.05f;
+        else overlap = 0.0f;
 
+        mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
-                    -pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -0.05f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    pixOverWidth, -overlap * pixPitchViewMultiplier, z,
                     pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
@@ -2333,30 +2436,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     public void renderDEM(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
-        float radius = 5;
-        int x = 0;
-        int y = 0;
         float lat, lon;
-
-        // Make the Blue sky.
-        // Note it extends a little below the horizon
-        renderDEMSky(matrix);
 
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         float dme;           //in nm
-        float dme_ft = 0;    // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        int demRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float dme_ft;        // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        int demRelBrg;       // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float DemElev;       // in ft
+        float caution = 0.6f;
 
         //float perspective = 1f;
         //float pm = 0.01f;
-        float horizon = (float) Math.sqrt(MSLValue);
+        //float horizon_dme = (float) Math.sqrt(MSLValue); // close approximation
+        mSquare.SetWidth(1);
 
         for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += 0.5) { //30
             //perspective -= pm;
             for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
+
                 dme_ft = dme * 6080;
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
@@ -2386,6 +2485,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
                 short colorInt = DemGTOPO30.getElev(lat, lon);
                 getHSVColor(colorInt);
+
                 {
                     float[] squarePoly = {
                             x1, y1, z,
@@ -2394,19 +2494,28 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                             x4, y4, z
                     };
 
-                    float agl = MSLValue - DemElev;  // in ft
-                    mSquare.SetWidth(1);
-                    if ((IASValue < 1.5*Vs0) || (agl > 1000))  {
-                        // we are above 1000 ft, on final approach or on the ground,
+                    float agl_ft = MSLValue - DemElev;  // in ft
+                    if (IASValue < 1.5*Vs0)  {
+                        // we on final approach or taxying on the ground,
                         // ignore the terrain warnings
                         mSquare.SetColor(red, green, blue, 1);  // rgb
                     }
                     else {
-                        // we are in the air check the terrain for proximity
-                        if (agl < 1000) mSquare.SetColor(0.8f, 0.8f, 0, 1f);  // light yellow
-                        else if (agl < 100) mSquare.SetColor(0.8f, 0, 0, 1f);  // light red
-                    }
+                        // we are in the air, enroute
+                        // check the terrain for proximity
 
+                        /* Sadly the DEM granularity is not sufficient for CAUTION and WARNING
+                           I leave the code in for maybe later use.
+
+                        // The logic is upside down for best performance. The most likely choice is first
+                        if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
+                        else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
+                        else mSquare.SetColor(caution, 0, 0, 1);    // light red
+                        */
+                        // Just show WARNING
+                        if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);  // rgb
+                        else mSquare.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                    }
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
 
@@ -2519,6 +2628,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         LatValue = lat;
         LonValue = lon;
+
+        if (DemGTOPO30.demDataValid) AGLValue = MSLValue - 3.28084f*DemGTOPO30.getElev(lat, lon);
     }
 
     //-------------------------------------------------------------------------
