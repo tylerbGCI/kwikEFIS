@@ -1,5 +1,6 @@
 /*
 /*
+/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -284,11 +285,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
+        //if (displayTerrain) renderTerrain(scratch1);
+
         if (displayDEM) {
-            // Make the Blue sky.
-            // Note: it extends a little below the horizon
-            if (AGLValue > 0) renderDEMSky(scratch1); // sky only visible when aboveground :-)
-            renderDEM(scratch1);
+            // Make the blue sky for the DEM.
+            // Note: it extends a little below the horizon when AGL is positive
+            renderDEMSky(scratch1);
+            if (AGLValue > 0) renderDEM(scratch1);  // underground is not valid
         }
         else if (displayTerrain) renderTerrain(scratch1);
 
@@ -2362,9 +2365,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else if (v > 0) {
             // the beach
-            //v = MaxColor/3;
-            //colorBase = Color.rgb(v, v, v);
-            colorBase = Color.DKGRAY;
+            v = MaxColor/4;
+            colorBase = Color.rgb(v, v, v);
         }
         else {
             colorBase = Color.rgb(0, 0, MaxColor/3); //blue ocean = 0xFF00002A
@@ -2409,7 +2411,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         z = zfloat;
 
         // Sky - simple
-        // -0.05 to 180 pitch
+        // max: -0.05 to 180 pitch
         float overlap;  //= 0.05f;  // 0 - 0.05
         if (AGLValue > 0) overlap = 0.05f;
         else overlap = 0.0f;
@@ -2447,9 +2449,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float DemElev;       // in ft
         float caution = 0.6f;
 
-        //float perspective = 1f;
-        //float pm = 0.01f;
-        //float horizon_dme = (float) Math.sqrt(MSLValue); // close approximation
         mSquare.SetWidth(1);
 
         for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += 0.5) { //30
@@ -2496,15 +2495,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
                     float agl_ft = MSLValue - DemElev;  // in ft
                     if (IASValue < 1.5*Vs0)  {
-                        // we on final approach or taxying on the ground,
+                        // we on final approach or taxiing on the ground,
                         // ignore the terrain warnings
                         mSquare.SetColor(red, green, blue, 1);  // rgb
                     }
                     else {
-                        // we are in the air, enroute
+                        // we are in the air, en-route
                         // check the terrain for proximity
 
-                        /* Sadly the DEM granularity is not sufficient for CAUTION and WARNING
+                        /* GTOPO30 granularity is not sufficient for CAUTION and WARNING
                            I leave the code in for maybe later use.
 
                         // The logic is upside down for best performance. The most likely choice is first
