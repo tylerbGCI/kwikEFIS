@@ -2380,7 +2380,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         hsv[2] = hsv[2];  // val 0..1
 
         if (hsv[2] > 0.25) {
-            //hsv[0] = hsv[0] - (hsv[2]*120);  // adjust the hue max 30%,  hue 0..360
             hsv[0] = hsv[0] - ((hsv[2]-0.25f)*60);  // adjust the hue max 15%,  hue 0..360
             hsv[2] = 0.25f; // clamp the value, val 0..1
         }
@@ -2554,7 +2553,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                         x - pixW2, -y + pixH2 / 10, z,
                         x - pixW2 + 1, -y + pixH2 / 10, z
                 );
-                mLine.draw(matrix); // debug
+                mLine.draw(matrix);
             }
         }
     }
@@ -2682,10 +2681,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         else glText.begin(0.0f, 1.0f, 1.0f, 1.0f, matrix); // red
         glText.setScale(2.0f);                            //
-        //glText.draw(t, -0.97f*pixW2, -0.8f*pixH2 - glText.getCharHeight()/2 );
-        //glText.draw(t, -0.97f*pixW2, 0.2f*pixH2 - glText.getCharHeight()/2 );
-        //glText.draw(t, -0.70f*pixW2, -0.9f*pixH2 - glText.getCharHeight()/2 );  // next to the G meter
-        //glText.draw(s, -0.97f*pixW2, 0.2f*pixH2 - glText.getCharHeight()/2 );
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.2f) * pixM2 - glText.getCharHeight() / 2); // as part of the ancillaray group
         glText.end();
     }
@@ -2756,8 +2751,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderAutoWptDetails(float[] matrix)
     {
         String s;
-        //glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
-        //glText.begin(1.0f, 0.5f, 1.0f, 1.0f, matrix); // purple
         glText.begin(1.0f, 1.0f, 0.0f, 1, matrix); // light yellow
 
         glText.setScale(2.0f);
@@ -2995,8 +2988,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (Math.abs(mY - selWptDec / pixH2) < 0.10) inc = -1;
         else if (Math.abs(mY - selWptInc / pixH2) < 0.10) inc = +1;
 
-            // Determine if we are counting up or down?
-            // altitude number
+        // Determine if we are counting up or down?
+        // altitude number
         else if (Math.abs(mY - selAltDec / pixH2) < 0.10) ina = -1;
         else if (Math.abs(mY - selAltInc / pixH2) < 0.10) ina = +1;
 
@@ -3158,8 +3151,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         z = zfloat;
 
         mLine.SetWidth(2);  //3
-        //mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
-        //mLine.SetColor(1, 1, 0, 1);  // light yellow
         mLine.SetColor(0.9f, 0.9f, 0.9f, 1); // white
         for (i = 0; i <= 315; i = i + 45) {
 
@@ -3176,9 +3167,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // Apex marker
-        float pixPerDegree;
-        //pixPerDegree = pixM2 / pitchInView;
-        pixPerDegree = pixM2 / PPD_DIV;
+        //float pixPerDegree;
+        //pixPerDegree = pixM2 / PPD_DIV;
 
         mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
         mTriangle.SetVerts(
@@ -3432,8 +3422,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 
+//-----------------------------------------------------------------------------
 /*
-
 Some leftover code fragments from the original c code.
 This may still be uselful one day
 
@@ -3449,7 +3439,7 @@ void GLPFD::renderDIMarkers()
   font = QFont("Fixed", 10, QFont::Normal);
 	QFontMetrics fm = fontMetrics();
 
-  innerTic = 0.80 * pixH2;												// inner & outer are relative to the vertical scale line
+  innerTic = 0.80 * pixH2;	// inner & outer are relative to the vertical scale line
   outerTic = 0.90 * pixH2;
   midTic = 0.87 * pixH2;
 
@@ -3464,7 +3454,7 @@ void GLPFD::renderDIMarkers()
       glVertex3f( iPix, innerTic, z);
       glVertex3f( iPix, outerTic, z);
     glEnd();
-    QGLWidget::renderText (iPix - fm.width(t)/2 , outerTic  + fm.ascent() / 2 , z, t, font, 2000 ) ;
+    QGLWidget::renderText (iPix - fm.width(t)/2 , outerTic  + fm.ascent() / 2 , z, t, font, 2000 );
 
     //for (j = i + 20; j < i+90; j=j+20) {
     for (j = i + 10; j < i+90; j=j+10) {
@@ -3482,7 +3472,7 @@ void GLPFD::renderDIMarkers()
       glVertex3f( -iPix, innerTic, z);
       glVertex3f( -iPix, outerTic, z);
     glEnd();
-    QGLWidget::renderText (-iPix - fm.width(t)/2 , outerTic  + fm.ascent() / 2 , z, t, font, 2000 ) ;
+    QGLWidget::renderText (-iPix - fm.width(t)/2 , outerTic  + fm.ascent() / 2 , z, t, font, 2000 );
 
     //for (j = i + 20; j < i+90; j=j+20) {
     for (j = i + 10; j < i+90; j=j+10) {
