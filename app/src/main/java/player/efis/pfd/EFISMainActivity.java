@@ -288,7 +288,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mDemGTOPO30 = new DemGTOPO30(this);
         //mDemGTOPO30.setDEMRegion(gps_lat, gps_lon);  // todo: remove hardcoding
         //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
-        mDemGTOPO30.loadDemBuffer(_gps_lat, _gps_lon);
+        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // pointless to load here, no gps yet
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -733,7 +733,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lon = 20.4f; float _gps_lat = -34.4f;// Stilbaai South Africa = 21.447835° -34.379099°
     //float _gps_lon = 21.404783f; float _gps_lat = -34.9f;// east of Stilbaai South Africa = 21.447835° -34.379099°
     //float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
-    float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of valsbaai -34.359918f
+    //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of valsbaai -34.359918f
+    float _gps_lon =   18.82f;  float _gps_lat = -33.98f;// Stellenbosh
 
 	float _gps_course = 0;      //in radians
 	float _gps_altitude = 200; // meters
