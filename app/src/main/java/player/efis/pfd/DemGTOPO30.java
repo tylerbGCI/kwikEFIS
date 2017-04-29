@@ -201,7 +201,6 @@ public class DemGTOPO30
                         c = demFile.readShort();
                         // deliberately avoid 0
                         if (c > 0) {
-                            //buff[x - x1][y - y1] = c;  // fill in the buffer
                             buff[x - x0][y - y0] = c;  // fill in the buffer
                         }
                     }
