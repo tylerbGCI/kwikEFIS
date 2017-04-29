@@ -49,8 +49,10 @@ public class DemGTOPO30
 
     final static float DEM_HORIZON = 30; // nm
 
-    final  int maxcol = 4800;
-    final  int maxrow = 6000;
+    final int maxcol = 4800;
+    final int maxrow = 6000;
+    final int TILE_WIDTH = 40;     // width in degrees, must be integer
+    final int TILE_HEIGHT = 50;    // height in degrees, must be integer
 
     static final int BUFX = 600;  //600;  //800 = 400nm square ie at least  200nm in each direction
     static final int BUFY = BUFX; // 400;
@@ -95,8 +97,7 @@ public class DemGTOPO30
         int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
 
         if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
-            //return 8888; //-8888;
-            return -9999; //-8888;
+            return -9999;
         else return buff[x][y];
 
     }
@@ -113,12 +114,12 @@ public class DemGTOPO30
     //-------------------------------------------------------------------------
     // use the lat lon to determine with region file is active
     //
-    public String setDEMRegionFileName(float lat, float lon)
+    public String setDEMRegion(float lat, float lon)
     {
         setBufferCenter(lat, lon);  // set the buffer tile as well
 
-        demTopLeftLat =   90  - (int) (90 - lat) / 50 * 50;
-        demTopLeftLon =  -180 + (int) (lon + 180) / 40 * 40;
+        demTopLeftLat =   90  - (int) (90 - lat) / TILE_HEIGHT * TILE_HEIGHT;
+        demTopLeftLon =  -180 + (int) (lon + 180) / TILE_WIDTH * TILE_WIDTH;
 
         String s = String.format("%c%03d%c%02d", demTopLeftLon<0?'W':'E', (int)Math.abs(demTopLeftLon),
                                                  demTopLeftLat<0?'S':'N', (int)Math.abs(demTopLeftLat));
@@ -146,15 +147,27 @@ public class DemGTOPO30
         return true;
     }
 
+    public boolean isOnTile(float lat, float lon)
+    {
+        if (       (lat < demTopLeftLat)
+                && (lat > demTopLeftLat - TILE_HEIGHT)
+                && (lon > demTopLeftLon)
+                && (lon < demTopLeftLon + TILE_WIDTH)
+                ) return true;
+        else return false;
+    }
+
 
     public void loadDemBuffer(float lat, float lon)
     {
+        demDataValid = false;
+
+        fillBuffer((short) 0);
+        String DemFilename = setDEMRegion(lat, lon);
+        setBufferCenter(lat, lon);
+
         if (isValidLocation(lat, lon)) {
             Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show();
-            demDataValid = false;
-            String DemFilename = setDEMRegionFileName(lat, lon);
-            setBufferCenter(lat, lon);
-            fillBuffer((short) 0);
 
             try {
                 InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
@@ -165,8 +178,7 @@ public class DemGTOPO30
                 int x, y;
                 int x1, y1, x2, y2;
 
-
-                // buffer wholly in tile
+                // buffer is wholly in tile
                 x1 = x0;
                 x2 = x0 + BUFX;
                 y1 = y0;
@@ -178,8 +190,8 @@ public class DemGTOPO30
                 if (y0 < 0) y1 = 0;
 
                 // Buffer east and south
-                if (x0 + BUFX > maxcol) x2 = maxcol;
-                if (y0 + BUFY > maxrow) y2 = maxrow;
+                if (x0 + BUFX > maxcol) {x1 = x0; x2 = maxcol;}
+                if (y0 + BUFY > maxrow) {y1 = y0; y2 = maxrow;}
 
 
                 demFile.skipBytes(NUM_BYTES_IN_SHORT * (maxcol * y1));
@@ -189,6 +201,7 @@ public class DemGTOPO30
                         c = demFile.readShort();
                         // deliberately avoid 0
                         if (c > 0) {
+                            //buff[x - x1][y - y1] = c;  // fill in the buffer
                             buff[x - x1][y - y1] = c;  // fill in the buffer
                         }
                     }
@@ -200,8 +213,20 @@ public class DemGTOPO30
             }
             catch (IOException e) {
                 Toast.makeText(context, "DEM file error: " + DemFilename, Toast.LENGTH_LONG).show();
+                demDataValid = false;
+                fillBuffer((short) 0);
                 e.printStackTrace();
             }
+        }
+        else {
+            // Not a valid requested location
+            // or Null Island
+            demTopLeftLat = -9999;
+            demTopLeftLon = -9999;
+            lat0 = -9999;
+            lon0 = -9999;
+            x0 = -9999;
+            y0 = -9999;
         }
     }
 
