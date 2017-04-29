@@ -1,0 +1,19 @@
+http://www.webgis.com/terr_world.html
+http://www.webgis.com/terr_world.html
+
+RGB weighted luminance
+R=0.299, G=0.587 and B=0.114
+
+left lon = 100
+right lon approx 140
+delta lon 40
+
+final int maxcol = 4800;
+final int maxrow = 6000;
+ 
+-32.0 116.0 home
+
+
+ 
+ 
+ 
