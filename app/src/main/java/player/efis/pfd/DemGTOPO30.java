@@ -149,9 +149,9 @@ public class DemGTOPO30
 
     public boolean isOnTile(float lat, float lon)
     {
-        if (       (lat < demTopLeftLat)
+        if (       (lat <= demTopLeftLat)
                 && (lat > demTopLeftLat - TILE_HEIGHT)
-                && (lon > demTopLeftLon)
+                && (lon >= demTopLeftLon)
                 && (lon < demTopLeftLon + TILE_WIDTH)
                 ) return true;
         else return false;
@@ -190,8 +190,8 @@ public class DemGTOPO30
                 if (y0 < 0) y1 = 0;
 
                 // Buffer east and south
-                if (x0 + BUFX > maxcol) {x1 = x0; x2 = maxcol;}
-                if (y0 + BUFY > maxrow) {y1 = y0; y2 = maxrow;}
+                if (x0 + BUFX > maxcol) x2 = maxcol;
+                if (y0 + BUFY > maxrow) y2 = maxrow;
 
 
                 demFile.skipBytes(NUM_BYTES_IN_SHORT * (maxcol * y1));
@@ -202,7 +202,7 @@ public class DemGTOPO30
                         // deliberately avoid 0
                         if (c > 0) {
                             //buff[x - x1][y - y1] = c;  // fill in the buffer
-                            buff[x - x1][y - y1] = c;  // fill in the buffer
+                            buff[x - x0][y - y0] = c;  // fill in the buffer
                         }
                     }
                     demFile.skipBytes(NUM_BYTES_IN_SHORT * (maxcol - x2));
@@ -220,7 +220,7 @@ public class DemGTOPO30
         }
         else {
             // Not a valid requested location
-            // or Null Island
+            // or trapped on Null Island
             demTopLeftLat = -9999;
             demTopLeftLon = -9999;
             lat0 = -9999;
