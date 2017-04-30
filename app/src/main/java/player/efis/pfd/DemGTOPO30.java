@@ -94,15 +94,14 @@ public class DemGTOPO30
         // check if buff is valid ?
 
         // *60 -> min * 2 -> 30 arcsec = 1/2 a min
-        int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0;
-        int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
+        //int y = (int) (Math.abs(demTopLeftLat - lat) * 60 * 2) - y0;
+        //int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
+        int y = (int) ((demTopLeftLat - lat) * 120) - y0;
+        int x = (int) ((lon - demTopLeftLon) * 120) - x0;
 
-        //if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
-        //    return -9999;
-        //else return buff[x][y];
-
-        return buff[x][y];
-
+        if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
+            return -9999;
+        else return buff[x][y];
     }
 
     public void setBufferCenter(float lat, float lon)
