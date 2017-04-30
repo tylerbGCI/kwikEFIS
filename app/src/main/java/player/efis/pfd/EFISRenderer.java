@@ -1232,11 +1232,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float top = -0.8f * pixH2;  //-0.5f
-
+        float top = -0.7f * pixH2;  //-0.5f
         float left = 0.80f * pixM2;
         float right = 1.14f * pixM2;
-        float apex = 0.75f * pixM2;
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
@@ -1282,14 +1280,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.setScale(2.5f); // was 2.5
         glText.draw(t, colom * pixM2 + margin, top - glText.getCharHeight() / 2);
         glText.end();
-
-        /*mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
-        mTriangle.SetVerts(
-                left, glText.getCharHeight() / 2, z,
-                apex, 0.0f, z,
-                left, -glText.getCharHeight() / 2, z
-        );
-        mTriangle.draw(mMVPMatrix);*/
 
         {
             mPolyLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
@@ -2309,7 +2299,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float blue = 0;
     float green = 0;
 
-    private void getColor(short c)
+    private void __getColor(short c)
     {
         float r = 600;   //600;
         float r2 = r * 2;
@@ -2330,13 +2320,34 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-    //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
+    private void getColor(short c)
+    {
+        float r = 600f;
+        float max = 0.5f;
+
+        red = 0.0f;
+        blue = 0.0f;
+        green = (float) c / r;
+        if (green > max) {
+            green = max;
+            red =  (c-r) / r;
+            if (red > max) {
+                red = max;
+                blue =  (c-r-r) / r;
+                if (blue > max) {
+                    blue = max;
+                    if (blue > max) {
+                        red = max - (c-r-r-r) / r;
+                    }
+                }
+            }
+        }
+        red *= 0.299f; green *= 0.587f; blue *= 0.114f; //RGB weighted luminance 0.299, 0.587, B=0.114
+    }
+
 
     private void getHSVColor(short c)
     {
-        //getColor(c);
-        //if (true) return;
-
         int r = 600;//1000;   //600;  //600m=2000ft
         int MaxColor = 128;
         float hsv[] = {0, 0, 0};
@@ -2370,7 +2381,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             colorBase = Color.rgb(0, 0, MaxColor/3); //blue ocean = 0xFF00002A
-            //colorBase = Color.RED; //red ocean, for debugging
         }
 
         // this allows us to adjust hue, sat and val
@@ -2383,11 +2393,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             hsv[0] = hsv[0] - ((hsv[2]-0.25f)*60);  // adjust the hue max 15%,  hue 0..360
             hsv[2] = 0.25f; // clamp the value, val 0..1
         }
-
-        /*if (hsv[2] < 0.1) {
-            hsv[2] = 0.1f; // clamp the value, val 0..1
-        }*/
-
         int color = Color.HSVToColor(hsv);
         // or just use as is
         //int color = colorBase;
@@ -2434,7 +2439,158 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Render the Digital Elevation Model (DEM).
     //
     // This is the meat and potatoes of the synthetic vision implementation
+
     public void renderDEM(float[] matrix)
+    {
+        float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
+        float lat, lon;
+        float a = Float.MAX_VALUE;
+        float b = Float.MAX_VALUE;
+
+        pixPerDegree = pixM / pitchInView;
+        z = zfloat;
+
+        float dme;             //in nm
+        float step = 0.5f;     //in nm
+        float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        //float DemElev;       // in ft
+        float caution = 0.6f;
+        float IASValueThreshold = 1.5f*Vs0;
+
+        mSquare.SetWidth(1);
+
+        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) { //30
+            //perspective -= pm;
+
+            for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
+
+                dme_ft = dme * 6080;
+                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
+                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                z1 = DemGTOPO30.getElev(lat, lon);
+                x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
+                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
+                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                z2 = DemGTOPO30.getElev(lat, lon);
+                x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
+                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
+
+                dme_ft = (dme + step) * 6080;
+                lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
+                lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                z3 = DemGTOPO30.getElev(lat, lon);
+                x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
+                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
+
+                lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg);
+                lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                z4 = DemGTOPO30.getElev(lat, lon);
+                x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
+                y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
+
+
+                if (a > x2-x1) {
+                    a = x2-x1;
+                }
+                if (b > y2-y1) {
+                    b = y2-y1;
+                }
+
+                //
+                //   Triangle #2   Triangle #1
+                //    +             +--+
+                //    |\             \ |
+                //    | \             \|
+                //    +--+             +
+                //
+                //if (false)
+                {
+                    zav = z1;
+                    //zav = (z1 + z2 + z3) / 3;
+                    getColor((short) zav);
+                    float agl_ft = MSLValue - zav;  // in ft
+
+                    if (IASValue < IASValueThreshold)  {
+                        // we on final approach or taxiing on the ground,
+                        // ignore the terrain warnings
+                        mTriangle.SetColor(red, green, blue, 1);
+                    }
+                    else {
+                        // we are in the air, en-route, check the terrain for proximity
+                        /* GTOPO30 granularity is not sufficient for CAUTION and WARNING
+                           I leave the code in for maybe later use.
+
+                        // The logic is upside down for best performance. The most likely choice is first
+                        if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
+                        else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
+                        else mSquare.SetColor(caution, 0, 0, 1);    // light red
+                        */
+                        // Just show WARNING
+                        if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1); // rgb
+                        else mTriangle.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                    }
+                    mTriangle.SetVerts(
+                            x1, y1, z,
+                            x2, y2, z,
+                            x4, y4, z);
+                    mTriangle.draw(matrix);
+                }
+                // Triangle #2
+                //if (false)
+                {
+                    zav = (z1 + z2) / 2; // take the simple average
+                    //zav = (z3 + z4 + z1) / 3;
+                    getColor((short) zav);
+                    float agl_ft = MSLValue - zav;  // in ft
+                    if (IASValue < IASValueThreshold)  {
+                        mTriangle.SetColor(red, green, blue, 1);
+                    }
+                    else {
+                        if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);
+                        else mTriangle.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                    }
+                    mTriangle.SetVerts(
+                            x2, y2, z,
+                            x3, y3, z,
+                            x4, y4, z);
+                    mTriangle.draw(matrix);
+                }
+
+                if (false)
+                {
+                    zav = z2;
+                    getColor((short) zav);
+                    float agl_ft = MSLValue - zav;  // in ft
+                    if (IASValue < IASValueThreshold)  {
+                        mSquare.SetColor(red, green, blue, 1);
+                    }
+                    else {
+                        if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);
+                        else mSquare.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                    }
+
+                    float[] squarePoly = {
+                            x1, y1, z,
+                            x2, y2, z,
+                            x3, y3, z,
+                            x4, y4, z
+                    };
+                    mSquare.SetVerts(squarePoly);
+                    mSquare.draw(matrix);
+                }
+
+
+            }
+        }
+    }
+
+
+
+
+    public void renderDEMQuad(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
         float lat, lon;
@@ -2455,7 +2611,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
 
                 dme_ft = dme * 6080;
-
                 lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
                 lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
                 DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
@@ -2482,7 +2637,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
 
                 short colorInt = DemGTOPO30.getElev(lat, lon);
-                getHSVColor(colorInt);
+                getColor(colorInt);
 
                 {
                     float[] squarePoly = {
@@ -2545,7 +2700,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         for (y = 0; y < maxy /*BUFY*/; y++) {
             for (x = 0; x < maxx /*BUFX*/; x++) {
                 //getColor(DemGTOPO30.buff[x][y]);
-                getHSVColor(DemGTOPO30.buff[x][y]);
+                getColor(DemGTOPO30.buff[x][y]);
                 mLine.SetColor(red, green, blue, 1);  // rgb
 
                 mLine.SetWidth(1);
