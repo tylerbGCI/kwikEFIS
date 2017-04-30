@@ -28,7 +28,9 @@ import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 enum AircraftModel
 {
@@ -2186,8 +2188,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
 
-        //float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        float relBrg = (float) (Math.toDegrees(UTrig.fastArcTan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        //todo: float relBrg = (float) (Math.toDegrees(UTrig.fastArcTan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
         if (relBrg > 180) relBrg = relBrg - 360;
         if (relBrg < -180) relBrg = relBrg + 360;
         return relBrg;
@@ -2326,8 +2328,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float r = 600f;
         float max = 0.5f;
 
-        red = 0.0f;
-        blue = 0.0f;
+        red = 0f;
+        blue = 0f;
         green = (float) c / r;
         if (green > max) {
             green = max;
@@ -2440,69 +2442,62 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Render the Digital Elevation Model (DEM).
     //
     // This is the meat and potatoes of the synthetic vision implementation
-
+    //
     public void renderDEM(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
-        float a = Float.MAX_VALUE;
-        float b = Float.MAX_VALUE;
+        float a = 0;//Float.MAX_VALUE;
+        //float b = Float.MAX_VALUE;
 
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         float dme;             //in nm
-        float step = 0.5f;     //in nm
+        float step = 0.50f;    //in nm
+
+        // oversize 20% a little to help with
+        // bleed through caused by itrig truncating
+        float gridy = 0.5f; //0.60f;   //in nm
+        float gridx = 1.0f;  //1.20f;   //in degree
+
         float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        //float DemElev;       // in ft
+        //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution = 0.6f;
         float IASValueThreshold = 1.5f*Vs0;
 
         mSquare.SetWidth(1);
 
-        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) { //30
-            //perspective -= pm;
-
-            for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
+        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) { //20 was 30
+            for (demRelBrg = -25; demRelBrg < 25; demRelBrg = demRelBrg + 1) {
 
                 dme_ft = dme * 6080;
-                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
-                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
+                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
-                x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
-                //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
-                y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
+                x1 = (float) (demRelBrg * pixPerDegree);
+                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
 
-                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
-                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
+                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z2 = DemGTOPO30.getElev(lat, lon);
-                x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
-                //y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
-                y2 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
+                x2 = (float) ((demRelBrg + gridx) * pixPerDegree);
+                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
 
-                dme_ft = (dme + step) * 6080;
-                lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
-                lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
+                dme_ft = (dme + gridy) * 6080;
+                lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
+                lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z3 = DemGTOPO30.getElev(lat, lon);
-                x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
-                //y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
-                y3 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
+                x3 = (float) ((demRelBrg + gridx) * pixPerDegree);
+                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
 
-                lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg);
-                lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg);
+                lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg));
+                lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z4 = DemGTOPO30.getElev(lat, lon);
-                x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
+                x4 = (float) ((demRelBrg) * pixPerDegree);
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
-                y4 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
 
-
-                if (a > x2-x1) {
-                    a = x2-x1;
-                }
-                if (b > y2-y1) {
-                    b = y2-y1;
-                }
 
                 //
                 //   Triangle #2   Triangle #1
@@ -2513,10 +2508,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 //
                 //if (false)
                 {
-                    zav = z1;
-                    //zav = (z1 + z2 + z3) / 3;
+                    zav = z1;  // in m asml
+
                     getColor((short) zav);
-                    float agl_ft = MSLValue - zav;  // in ft
+                    float agl_ft = MSLValue - zav*3.28084f;  // in ft
 
                     if (IASValue < IASValueThreshold)  {
                         // we on final approach or taxiing on the ground,
@@ -2525,17 +2520,20 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     }
                     else {
                         // we are in the air, en-route, check the terrain for proximity
-                        /* GTOPO30 granularity is not sufficient for CAUTION and WARNING
-                           I leave the code in for maybe later use.
 
-                        // The logic is upside down for best performance. The most likely choice is first
-                        if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
-                        else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
-                        else mSquare.SetColor(caution, 0, 0, 1);    // light red
+                        /*
+                             GTOPO30 granularity is not sufficient for CAUTION and WARNING
+                             I leave the code in for maybe later use.
+//
+                             // The logic is upside down for best performance. The most likely choice is first
+                             if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
+                             else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
+                             else mSquare.SetColor(caution, 0, 0, 1);    // light red
                         */
+
                         // Just show WARNING
                         if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1); // rgb
-                        else mTriangle.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                        else mTriangle.SetColor(caution, 0, 0, 1f);    // WARNING - light red
                     }
                     mTriangle.SetVerts(
                             x1, y1, z,
@@ -2547,15 +2545,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 //if (false)
                 {
                     zav = (z1 + z2) / 2; // take the simple average
-                    //zav = (z3 + z4 + z1) / 3;
+
                     getColor((short) zav);
-                    float agl_ft = MSLValue - zav;  // in ft
+                    float agl_ft = MSLValue - zav*3.28084f;  // in ft
                     if (IASValue < IASValueThreshold)  {
                         mTriangle.SetColor(red, green, blue, 1);
                     }
                     else {
                         if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);
-                        else mTriangle.SetColor(caution, 0, 0, 1);    // WARNING - light red
+                        else mTriangle.SetColor(caution, 0, 0, 1f);    // WARNING - light red
                     }
                     mTriangle.SetVerts(
                             x2, y2, z,
@@ -2564,9 +2562,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     mTriangle.draw(matrix);
                 }
 
-                if (false)
+                /*if (false)
                 {
-                    zav = z2;
+                    zav = z2;  // use the
                     getColor((short) zav);
                     float agl_ft = MSLValue - zav;  // in ft
                     if (IASValue < IASValueThreshold)  {
@@ -2585,110 +2583,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     };
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
-                }
-
+                } //*/
 
             }
         }
     }
 
-
-
-
-    public void renderDEMQuad(float[] matrix)
-    {
-        float z, pixPerDegree, x1, y1, x2, y2, x3, y3, x4, y4;
-        float lat, lon;
-
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        float dme;           //in nm
-        float dme_ft;        // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        int demRelBrg;       // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        float DemElev;       // in ft
-        float caution = 0.6f;
-
-        mSquare.SetWidth(1);
-
-        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += 0.5) { //30
-            //perspective -= pm;
-            for (demRelBrg = -25; demRelBrg < 25; demRelBrg++) {
-
-                dme_ft = dme * 6080;
-                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg);
-                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
-                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
-                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
-
-                lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
-                lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
-                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
-                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
-
-                dme_ft = (dme + 1) * 6080;
-                lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
-                lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
-                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
-                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
-
-                lat = LatValue + (dme + 1) / 60 * UTrig.icos((int) DIValue + demRelBrg);
-                lon = LonValue + (dme + 1) / 60 * UTrig.isin((int) DIValue + demRelBrg);
-                DemElev = 3.28084f * DemGTOPO30.getElev(lat, lon);
-                x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
-                y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - DemElev, dme_ft)) * pixPerDegree);
-
-                short colorInt = DemGTOPO30.getElev(lat, lon);
-                getColor(colorInt);
-
-                {
-                    float[] squarePoly = {
-                            x1, y1, z,
-                            x2, y2, z,
-                            x3, y3, z,
-                            x4, y4, z
-                    };
-
-                    float agl_ft = MSLValue - DemElev;  // in ft
-                    if (IASValue < 1.5*Vs0)  {
-                        // we on final approach or taxiing on the ground,
-                        // ignore the terrain warnings
-                        mSquare.SetColor(red, green, blue, 1);  // rgb
-                    }
-                    else {
-                        // we are in the air, en-route
-                        // check the terrain for proximity
-
-                        /* GTOPO30 granularity is not sufficient for CAUTION and WARNING
-                           I leave the code in for maybe later use.
-
-                        // The logic is upside down for best performance. The most likely choice is first
-                        if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
-                        else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
-                        else mSquare.SetColor(caution, 0, 0, 1);    // light red
-                        */
-                        // Just show WARNING
-                        if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);  // rgb
-                        else mSquare.SetColor(caution, 0, 0, 1);    // WARNING - light red
-                    }
-                    mSquare.SetVerts(squarePoly);
-                    mSquare.draw(matrix);
-
-                    /*
-                    // outline the DEM blocks - useful for debugging
-                    mPolyLine.SetWidth(1);
-                    mPolyLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // rgb
-                    mPolyLine.VertexCount = 4;
-                    mPolyLine.SetVerts(squarePoly);
-                    mPolyLine.draw(matrix);
-                    // */
-                }
-            }
-        }
-    }
 
 
     // This is only good for debugging
