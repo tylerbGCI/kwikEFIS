@@ -6,7 +6,7 @@
             android:defaultValue="true"
             android:key="displayTerrain"
             android:summary="Display full color artificial horizon"
-            android:title="Artificial horizon" />
+            android:title="Color Earth and Sky" />
 
         <CheckBoxPreference
             android:defaultValue="true"
