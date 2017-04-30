@@ -2186,7 +2186,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float deltaLat = lat2 - lat1;
         float deltaLon = lon2 - lon1;
 
-        float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        //float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
+        float relBrg = (float) (Math.toDegrees(UTrig.fastArcTan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
         if (relBrg > 180) relBrg = relBrg - 360;
         if (relBrg < -180) relBrg = relBrg + 360;
         return relBrg;
@@ -2470,26 +2471,30 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg);
                 z1 = DemGTOPO30.getElev(lat, lon);
                 x1 = (float) (demRelBrg * pixPerDegree); // * perspective;  // use perspective
-                y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
+                //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
+                y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1*3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
                 lon = LonValue + dme / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
                 z2 = DemGTOPO30.getElev(lat, lon);
                 x2 = (float) ((demRelBrg + 1) * pixPerDegree); // * perspective;  // use perspective
-                y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
+                //y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
+                y2 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z2*3.28084f, dme_ft)) * pixPerDegree);
 
                 dme_ft = (dme + step) * 6080;
                 lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg + 1);
                 lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg + 1);
                 z3 = DemGTOPO30.getElev(lat, lon);
                 x3 = (float) ((demRelBrg + 1) * pixPerDegree); // * (perspective - pm);  // use perspective
-                y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
+                //y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
+                y3 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z3*3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + (dme + step) / 60 * UTrig.icos((int) DIValue + demRelBrg);
                 lon = LonValue + (dme + step) / 60 * UTrig.isin((int) DIValue + demRelBrg);
                 z4 = DemGTOPO30.getElev(lat, lon);
                 x4 = (float) ((demRelBrg) * pixPerDegree); // * (perspective - pm);  // use perspective
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
+                y4 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
 
 
                 if (a > x2-x1) {
@@ -2744,7 +2749,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = (float) (hitRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
+            //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
+            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
 
             // De-clutter the gates
             //

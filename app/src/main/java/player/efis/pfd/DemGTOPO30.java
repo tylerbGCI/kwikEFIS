@@ -18,6 +18,7 @@ package player.efis.pfd;
 
 // Standard imports
 import android.content.Context;
+import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.*;
@@ -47,7 +48,7 @@ public class DemGTOPO30
 {
     Context context;
 
-    final static float DEM_HORIZON = 30; // nm
+    final static float DEM_HORIZON = 20; // nm
 
     final int maxcol = 4800;
     final int maxrow = 6000;
@@ -96,9 +97,11 @@ public class DemGTOPO30
         int y = (int) (Math.abs(lat - demTopLeftLat) * 60 * 2) - y0;
         int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
 
-        if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
-            return -9999;
-        else return buff[x][y];
+        //if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
+        //    return -9999;
+        //else return buff[x][y];
+
+        return buff[x][y];
 
     }
 
@@ -170,8 +173,16 @@ public class DemGTOPO30
             Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show();
 
             try {
-                InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
+                // read from "assets"
+                //InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
+                //DataInputStream demFile = new DataInputStream(inp);
+
+                // read from local directory "/data/ ...
+                File storage = Environment.getExternalStorageDirectory();
+                File file = new File(storage + "/data/player.efis.pfd/terrain/" + DemFilename + ".DEM");
+                FileInputStream inp = new  FileInputStream(file);
                 DataInputStream demFile = new DataInputStream(inp);
+
 
                 final int NUM_BYTES_IN_SHORT = 2;
                 short c;

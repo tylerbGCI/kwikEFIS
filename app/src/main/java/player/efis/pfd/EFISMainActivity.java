@@ -780,7 +780,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
         //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
-        //deltaT = 0.00000124f; // todo: debugging - Warp Speed
+        deltaT = 0.00000124f; // todo: debugging - Warp Speed
         //deltaT = 0.000000224f; // todo: debugging - Super Speed2
 
 		_sim_ms = sim_ms;
@@ -793,13 +793,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 
         // todo: Hardcoded for debugging
-        /*
+        ///*
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(40);// + (float) rnd.nextGaussian() / 200;
-        gps_speed = _gps_speed = 225;//100;  // m/s
+        gps_course = _gps_course = (float) Math.toRadians(50);// + (float) rnd.nextGaussian() / 200;
+        gps_speed = _gps_speed = 125;//100;  // m/s
         gps_altitude = 2000; //3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
+        gps_lon =   18.82f;  gps_lat = -33.98f;// Stellenbosh
         // */
 
         // todo: Hardcoded for debugging
