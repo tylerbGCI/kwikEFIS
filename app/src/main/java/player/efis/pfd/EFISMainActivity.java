@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.location.GpsStatus.Listener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
@@ -290,6 +291,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
         //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // pointless to load here, no gps yet
 
+
+
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
@@ -523,6 +526,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
 	}
 	// end location abs ------------------------
+
+
+
 
 
     private void setUserPrefs()
@@ -779,21 +785,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
-        //deltaT = 0.0000124f; // todo: debugging  - Ludicrous Speed
-        deltaT = 0.00000124f; // todo: debugging - Warp Speed
-        //deltaT = 0.000000224f; // todo: debugging - Super Speed2
-
-		_sim_ms = sim_ms;
-		if ((deltaT > 0) && (deltaT < 0.0000125)) {
-			gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
-			gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
-
-			if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
-			if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
-		}
-
         // todo: Hardcoded for debugging
-        /*
+        /*//------------------------------------------------------------------------------------------
+        //deltaT = 0.0000124f; //  Ludicrous Speed
+        //deltaT = 0.00000124f; //  Warp Speed
+        //deltaT = 0.000000224f; // Super Speed2
+
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(50);// + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
@@ -801,9 +798,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh N
-        // */
+        //
+        //------------------------------------------------------------------------------------------*/
 
         // todo: Hardcoded for debugging
+        _sim_ms = sim_ms;
+        if ((deltaT > 0) && (deltaT < 0.0000125)) {
+            gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
+            gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
+
+            if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
+            if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
+        }
 	}
 
 
@@ -955,14 +961,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // Load new data to the buffer when the horizon gets close to the edge or
         // if we have gone off the current tile.
         //
-        if (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false) {
+        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
+
+        if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
 
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
-        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }

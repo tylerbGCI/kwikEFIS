@@ -18,6 +18,7 @@ package player.efis.pfd;
 
 // Standard imports
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ public class DemGTOPO30
 
 
     public static boolean demDataValid = false;
+    public static boolean demNull = false;
 
     //-------------------------------------------------------------------------
     // Construct a new default loader with no flags set
@@ -133,11 +135,14 @@ public class DemGTOPO30
 
     private void fillBuffer(short c)
     {
-        for (int y = 0; y < BUFY; y++) {
-            for (int x = 0; x < BUFX; x++) {
-                buff[x][y] = c;  // fill in the buffer
+        if (!demNull) {
+            for (int y = 0; y < BUFY; y++) {
+                for (int x = 0; x < BUFX; x++) {
+                    buff[x][y] = c;  // fill in the buffer
+                }
             }
         }
+        if (c <= 0) demNull = true;
     }
 
     private boolean isValidLocation(float lat, float lon)
@@ -159,28 +164,61 @@ public class DemGTOPO30
         else return false;
     }
 
+    //-------------------------------------------------------------------------
+    // Check if specific application is installed of not
+    //
+    private boolean isAppInstalledOrNot(String uri)
+    {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+        }
+        return false;
+    }
+
+
 
     public void loadDemBuffer(float lat, float lon)
     {
         demDataValid = false;
-
         fillBuffer((short) 0);
         String DemFilename = setDEMRegion(lat, lon);
         setBufferCenter(lat, lon);
+
+        // Check to see if player.efis.data is installed
+        if (isAppInstalledOrNot("player.efis.data") == false) {
+            Toast.makeText(context, "DataPac not installed.\nSynthetic vision not available", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (isValidLocation(lat, lon)) {
             Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show();
 
             try {
-                // read from "assets"
-                //InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
-                //DataInputStream demFile = new DataInputStream(inp);
+                /*
+                // read from local "assets"
+                InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
+                DataInputStream demFile = new DataInputStream(inp);
+                //*/
 
+                ///*
+                // read from datapac "assets"
+                Context otherContext = context.createPackageContext("player.efis.data", 0);
+                //AssetManager am = otherContext.getAssets();
+                InputStream inp = otherContext.getAssets().open("terrain/" + DemFilename + ".DEM");
+                DataInputStream demFile = new DataInputStream(inp);
+                //*/
+
+                /*
                 // read from local directory "/data/ ...
                 File storage = Environment.getExternalStorageDirectory();
                 File file = new File(storage + "/data/player.efis.pfd/terrain/" + DemFilename + ".DEM");
                 FileInputStream inp = new  FileInputStream(file);
                 DataInputStream demFile = new DataInputStream(inp);
+                //*/
 
 
                 final int NUM_BYTES_IN_SHORT = 2;
@@ -219,11 +257,23 @@ public class DemGTOPO30
                 }
                 demFile.close();
                 demDataValid = true;
+                demNull = false;
             }
             catch (IOException e) {
-                Toast.makeText(context, "DEM file error: " + DemFilename, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Terrain file error: " + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
+                demNull = false;
                 fillBuffer((short) 0);
+
+                e.printStackTrace();
+            }
+            //catch (PackageManager.NameNotFoundException e) {
+            catch (Exception e) {
+                Toast.makeText(context, "Terrain datapac error: " + DemFilename, Toast.LENGTH_LONG).show();
+                demDataValid = false;
+                demNull = false;
+                fillBuffer((short) 0);
+
                 e.printStackTrace();
             }
         }
@@ -232,8 +282,6 @@ public class DemGTOPO30
             // or trapped on Null Island
             demTopLeftLat = -9999;
             demTopLeftLon = -9999;
-            lat0 = -9999;
-            lon0 = -9999;
             x0 = -9999;
             y0 = -9999;
         }

@@ -36,13 +36,10 @@
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="10" />
-
-
     <!--
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />    -->
-
 
     <!-- Tell the system this app requires OpenGL ES 2.0. -->
     <uses-feature
