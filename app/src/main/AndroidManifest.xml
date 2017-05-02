@@ -27,7 +27,7 @@
     android:installLocation="preferExternal"
     package="player.efis.pfd"
     android:versionCode="9"
-    android:versionName="2.5" >
+    android:versionName="3.0" >
 
 
 
