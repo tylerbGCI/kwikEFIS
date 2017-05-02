@@ -161,10 +161,10 @@ public class UTrig {
         return M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
     }
 
-    // todo: there is a problem with this
+    // todo: fix the the arctan issue ... is a problem with this
     public static double fastArcTan2(double dy, double dx)
     {
-        if (true) return Math.atan2(dy, dx); // for now just use Math
+        //if (true) return Math.atan2(dy, dx); // for now just use Math
 
         double a = dy / dx;
         return  M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
