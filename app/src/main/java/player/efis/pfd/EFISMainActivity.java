@@ -742,7 +742,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of Valsbaai -34.359918f
     float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
 
-	float _gps_course = 0;      //in radians
+	float _gps_course = 0.78f;  //in radians
 	float _gps_altitude = 1000; // meters
 	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
