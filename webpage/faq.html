@@ -1,62 +1,86 @@
 <html>
-<meta name="description" content="Kwik EFIS for Android devices"/>
-<meta name="keywords" content="android app, android, homebuilt aircraft, HUD, EFIS, glass cockpit"/>
+<meta name="description" content="Kwik EFIS for Android devices" />
+<meta name="keywords" content="android app, android, homebuilt aircraft, HUD, EFIS, glass cockpit" />
 <meta name="robots" content="index,follow">
 
-<script type="text/javascript" src="common.js"></script>
+<script type="text/javascript" src="common.js"> </script>  
 <!------------------------------------------------------------------------------------->
 
-<p align="center">
-    <b>Frequently Asked Questions</b></p>
-</td>
-</tr>
-<tr>
-    <td width="524">
-        <p>&nbsp
-        <p>
-        <p><b>When I first loaded it on my phone, I still had a couple of red X's on the display.
-            Finally figured out that if you're not moving, it thinks (knows?) something isn't
-            right? </b>
-        <p style="margin-left: 40px"><u>Red X's</u>
-            <br>The speed has to be non-zero (from memory I think the threshold is 1 m/s). There are
-            also
-            different behavior below and above the stall speed, which is why it is important to
-            choose a
-            suitable aircraft model in the "Manage" section. If yours is not there, let me know the
-            V speeds and I will add it.
+              <p align="center">
+                <b>Frequently Asked Questions</b></p>
+            </td>
+          </tr>
+          <tr>
+            <td width="524"> 
+              <p>&nbsp  
+							<!-- question --> 
+							<p><b>
+							When I first loaded it on my phone, I still had a couple of red X's on the display. 
+							Finally figured out that if you're not moving, it thinks (knows?) something isn't right?  </b>
+							<p style="margin-left: 40px"><u>Red X's</u>
+							<br>The speed has to be non-zero (from memory I think the threshold is 1 m/s). There are also 
+							different behavior below and above the stall speed, which is why it is important to choose a 
+							suitable aircraft model in the "Manage" section. If yours is not there, let me know the V speeds and I will add it.
+							<!-- answer -->
+							<p style="margin-left: 40px"><u>Demo Mode</u>
+							<br>In order to practice with the program, enable the "Demo Mode" and it will simulate movement 
+							allowing you to use it like a simple flight simulator. 
+							
+							<!-- question --> 
+							<p><hr><b>
+							I just installed the F-Droid app installer/repository, and found the kwik efis app. 
+							But both indicate they 'run at startup'. How do we set them up so they only load 
+							when we want to use them? Many android apps are battery hogs when running in the 
+							background, and I'd like to avoid that issue.
+							</b>
+							<!-- answer -->
+							<p style="margin-left: 40px">
+							<u>Run At Startup</u>
+							<br>The Kwik EFIS app will not run at startup. You need to start it like any other 
+							app and once you exit the app it is gone. No background processes at all.
 
-        <p style="margin-left: 40px"><u>Demo Mode</u>
-            <br>In order to practice with the program, enable the "Demo Mode" and it will simulate
-            movement
-            allowing you to use it like a simple flight simulator.
+							<p style="margin-left: 40px">To be as accurate as possible, the app does however use the maximum 
+							 performance from the GPS when it is running, there is no way around that.
 
-            <!--
-            <p><b>What would you consider to be a 'comfortable' level of processing power and gyro/accelerometer
-            quality for smooth, reliable operation? Component ID's are fine, but brand/model of phone or
-            tablet would be even better for the lazy (me) among us.</b>
-            <p style="margin-left: 40px"><u>Hardware/Devices</u>
-            Like the saying goes, your 'milage will vary'. I have only tested on devices I personally own.
-            -->
+							<p style="margin-left: 40px">The to 'run at startup' handler code exist in the program and is 
+							 therefore reported, but is not used and is disabled in the manifest. 
+							 The 'run at startup' handler is only used in a dedicated version of Kwik EFIS 
+							 when it is intended as the only app running on a permanently installed device. 
+							 Ie Kwik EFIS will start running when the device is powered on.							
+							
+							
+							<!--
+							<p><b>What would you consider to be a 'comfortable' level of processing power and gyro/accelerometer 
+							quality for smooth, reliable operation? Component ID's are fine, but brand/model of phone or 
+							tablet would be even better for the lazy (me) among us.</b>
+							<p style="margin-left: 40px"><u>Hardware/Devices</u>
+							Like the saying goes, your 'milage will vary'. I have only tested on devices I personally own.
+							-->
+							
+							
+							<!-- question --> 
+							<p><hr><b>
+							Would a 1st gen Nexus7 be adequate? 2013 version? 
+							What about some of the phones that are a few years old, like the Galaxy S4 or similar?	
+							</b>					
+							<!-- answer -->
+							<p style="margin-left: 40px"><u>Hardware/Devices</u>
+							<br>I have used the original Nexus7 (2012) for all the development and testing. 
+							It is adequate, but is the minimum I would use. 
+							<p style="margin-left: 40px">I tested with a Samsung S2 phone and that was close, 
+							but not quite good enough to be useful. I have been told that the later models of 
+							Samsung S 4/5 works well, but I have not had the opportunity to test for myself.						
 
 
-        <p><b>Would a 1st gen Nexus7 be adequate? 2013 version?
-            What about some of the phones that are a few years old, like the Galaxy S4 or
-            similar? </b>
-        <p style="margin-left: 40px"><u>Hardware/Devices</u>
-            <br>I have used the original Nexus7 (2012) for all the development and testing.
-            It is adequate, but is the minimum I would use.
-        <p style="margin-left: 40px">I tested with a Samsung S2 phone and that was close,
-            but not quite good enough to be useful. I have been told that the later models of
-            Samsung S 4/5 works well, but I have not had the opportunity to test for myself.
+
+						</td>
+						
+						
+      </td>
+    </tr>
+  </table>
 
 
-    </td>
-
-
-    </td>
-</tr>
-</table>
-
-
+  
 </body>
 </html>
