@@ -2455,6 +2455,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         float dme;             //in nm
         float step = 0.50f;    //in nm
+        float agl_ft;          //in feet
 
         // oversize 20% a little to help with
         // bleed through caused by itrig truncating
@@ -2498,7 +2499,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 x4 = (float) ((demRelBrg) * pixPerDegree);
                 y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4*3.28084f, dme_ft)) * pixPerDegree);
 
-
+                //
+                //  77%
                 //
                 //   Triangle #2   Triangle #1
                 //    +             +--+
@@ -2506,74 +2508,61 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 //    | \             \|
                 //    +--+             +
                 //
-                //if (false)
-                {
+
+                ///*
+                    // Triangle #1 --------------
                     zav = z1;  // in m asml
-
                     getColor((short) zav);
-                    float agl_ft = MSLValue - zav*3.28084f;  // in ft
+                    agl_ft = MSLValue - zav*3.28084f;  // in ft
 
-                    if (IASValue < IASValueThreshold)  {
-                        // we on final approach or taxiing on the ground,
-                        // ignore the terrain warnings
-                        mTriangle.SetColor(red, green, blue, 1);
-                    }
-                    else {
-                        // we are in the air, en-route, check the terrain for proximity
+                    if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
+                    else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  apporach
+                    else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
 
-                        /*
-                             GTOPO30 granularity is not sufficient for CAUTION and WARNING
-                             I leave the code in for maybe later use.
-//
-                             // The logic is upside down for best performance. The most likely choice is first
-                             if (agl_ft > 1000) mSquare.SetColor(red, green, blue, 1);  // rgb
-                             else if (agl_ft > 100) mSquare.SetColor(caution, caution, 0, 1);  // CAUTION - light yellow approx 0.6-0.8f
-                             else mSquare.SetColor(caution, 0, 0, 1);    // light red
-                        */
-
-                        // Just show WARNING
-                        if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1); // rgb
-                        else mTriangle.SetColor(caution, 0, 0, 1f);    // WARNING - light red
-                    }
                     mTriangle.SetVerts(
                             x1, y1, z,
                             x2, y2, z,
                             x4, y4, z);
                     mTriangle.draw(matrix);
-                }
-                // Triangle #2
-                //if (false)
-                {
+
+                    // Triangle #2 --------------
                     zav = (z1 + z2) / 2; // take the simple average
 
                     getColor((short) zav);
-                    float agl_ft = MSLValue - zav*3.28084f;  // in ft
-                    if (IASValue < IASValueThreshold)  {
-                        mTriangle.SetColor(red, green, blue, 1);
-                    }
-                    else {
-                        if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);
-                        else mTriangle.SetColor(caution, 0, 0, 1f);    // WARNING - light red
-                    }
+                    agl_ft = MSLValue - zav*3.28084f;  // in ft
+
+                    if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
+                    else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  apporach
+                    else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
+
                     mTriangle.SetVerts(
                             x2, y2, z,
                             x3, y3, z,
                             x4, y4, z);
                     mTriangle.draw(matrix);
-                }
 
-                /*if (false)
-                {
-                    zav = z2;  // use the
+                //*/
+
+                /*
+
+                //
+                //  69%
+                //
+                //   Square
+                //   4    3
+                //    +--+
+                //    |  |
+                //    |  |
+                //    +--+
+                //   1    2
+
+                    zav = z1;  // use the
                     getColor((short) zav);
-                    float agl_ft = MSLValue - zav;  // in ft
-                    if (IASValue < IASValueThreshold)  {
-                        mSquare.SetColor(red, green, blue, 1);
-                    }
-                    else {
-                        if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);
-                        else mSquare.SetColor(caution, 0, 0, 1);    // WARNING - light red
-                    }
+                    agl_ft = MSLValue - zav*3.28084f;  // in ft
+
+                    if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);                      // Enroute
+                    else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  apporach
+                    else mSquare.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
 
                     float[] squarePoly = {
                             x1, y1, z,
@@ -2583,7 +2572,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     };
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
-                } //*/
+                //*/
 
             }
         }
