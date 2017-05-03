@@ -13,3 +13,23 @@ allprojects {
         jcenter()
     }
 }
+
+
+task copyAppAPK(type: Copy) {
+    from 'app/build/outputs/apk'
+    into 'apk'
+    include '**/*.apk'
+}
+
+task copyDataAPK(type: Copy) {
+    from 'app/build/outputs/apk'
+    into 'apk'
+    include '**/*.apk'
+}
+
+/*
+doLast{
+    tasks.copyAppAPK.execute()
+    tasks.copyDataAPK.execute()
+}
+*/

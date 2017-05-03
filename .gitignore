@@ -17,7 +17,7 @@
 *.dex
 
 # AWK data cleanup scripts
-/clean
+/scripts/clean
 
 # Java class files
 *.class
