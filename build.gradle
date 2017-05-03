@@ -15,6 +15,7 @@ allprojects {
 }
 
 
+// todo: need to find out how to run these after a compile
 task copyAppAPK(type: Copy) {
     from 'app/build/outputs/apk'
     into 'apk'
