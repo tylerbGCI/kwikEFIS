@@ -2351,17 +2351,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
         }
 
-
         // This works OK
-        //- if (green > max) red *= 0.299f;
-        //- green *= 0.587f;
-        //- blue *= 0.114f; //RGB weighted luminance 0.299, 0.587, B=0.114
-
-        // Attempted improvement
         if (green > max) red *= 0.299f;
-        if (red > max) blue *= 0.114f;
         green *= 0.587f;
-
+        blue *= 0.114f; //RGB weighted luminance 0.299, 0.587, B=0.114
     }
 
 
