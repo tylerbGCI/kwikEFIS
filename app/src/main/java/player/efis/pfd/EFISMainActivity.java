@@ -789,7 +789,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
-        /*//------------------------------------------------------------------------------------------
+        /*
+        //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
@@ -802,11 +803,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_altitude = 3000; //900; //3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
-        //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh N
-        gps_lat = -33f; gps_lon = 28f;  // EL
+
+        //gps_lat = -33f; _gps_lon = 28f;  // EL
+        //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
+        //gps_lat = -33.4f; gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
+        gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
+        deltaT = 0; // freeze time, ie force stationary
         //
         // todo: Hardcoded for debugging
-        //------------------------------------------------------------------------------------------*/
+        //------------------------------------------------------------------------------------------
+        */
 
         _sim_ms = sim_ms;
         if ((deltaT > 0) && (deltaT < 0.0000125)) {
