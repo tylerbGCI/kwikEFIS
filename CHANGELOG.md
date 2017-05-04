@@ -1,10 +1,10 @@
 Changelog
 =========
-2.5 (Under Test)
+3.0 (Under Test)
 ------------------
-* Waypoint database cycle 2017-05 (zar.aus)
 * Synthetic vision (DEM) implementation
 * Add digital elevation model (DEM) data packs (zar.aus)
+* Waypoint database cycle 2017-05 (zar.aus)
 
 2.4 (2014-03-17)
 ------------------
