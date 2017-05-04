@@ -13,6 +13,7 @@ final int maxrow = 6000;
  
 -32.0 116.0 home
 
+git push --delete origin YOUR_TAG_NAME
 
  
  
