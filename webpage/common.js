@@ -26,7 +26,7 @@ document.write('              <a href="about.html">about</a><br>');
 document.write('              <br/>');
 document.write('              <!-- <a href="news.html">news</a><br> -->');
 document.write('              <a href="gallery.html">gallery</a><br>');
-document.write('              <a href="datapac.html">datapac</a><br>');
+document.write('              <a href="datapac.html">terrain</a><br>');
 document.write('              <br/>');
 document.write('              <a href="installation.html">instructions</a><br>');
 document.write('              <a href="faq.html">faq</a><br>');
