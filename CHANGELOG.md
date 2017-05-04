@@ -1,6 +1,6 @@
 Changelog
 =========
-3.0 (Under Test)
+3.0 (2017-05-05)
 ------------------
 * Synthetic vision (DEM) implementation
 * Add digital elevation model (DEM) data packs (zar.aus)
