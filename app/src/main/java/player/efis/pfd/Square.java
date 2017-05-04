@@ -142,11 +142,11 @@ public class Square {
 
 		// get handle to shape's transformation matrix
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-		EFISRenderer.checkGlError("glGetUniformLocation");
+		//EFISRenderer.checkGlError("glGetUniformLocation");
 
 		// Apply the projection and view transformation
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-		EFISRenderer.checkGlError("glUniformMatrix4fv");
+		//EFISRenderer.checkGlError("glUniformMatrix4fv");
 
 		// Draw the square
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);

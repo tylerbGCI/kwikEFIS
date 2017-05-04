@@ -83,28 +83,29 @@ public class PolyLine {
 
 		// prepare shaders and OpenGL program
 		int vertexShader = EFISRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-		EFISRenderer.checkGlError("loadShader"); //b2
+		//EFISRenderer.checkGlError("loadShader"); //b2
 		
 		int fragmentShader = EFISRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-		EFISRenderer.checkGlError("loadShader"); //b2
+		//EFISRenderer.checkGlError("loadShader"); //b2
 
 		mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
 		GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader  to program
-		EFISRenderer.checkGlError("glAttachShader"); //b2  
+		//EFISRenderer.checkGlError("glAttachShader"); //b2
 
 		GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment  shader to program
-		EFISRenderer.checkGlError("glAttachShader"); //b2  
+		//EFISRenderer.checkGlError("glAttachShader"); //b2
 		
 		GLES20.glLinkProgram(mProgram);                  // creates OpenGL ES program  executables
-		EFISRenderer.checkGlError("glLinkProgram"); //b2  
+		//EFISRenderer.checkGlError("glLinkProgram"); //b2
 	}
 	
 	public void SetVerts(float[] verts) 
 	{
-		for (int i = 0; i < VertexCount * COORDS_PER_VERTEX; i++) {
+		/*for (int i = 0; i < VertexCount * COORDS_PER_VERTEX; i++) {
 			LineCoords[i] = verts[i];
-		} 
-		
+		}*/
+		System.arraycopy(verts, 0, LineCoords, 0, VertexCount * COORDS_PER_VERTEX); // this is faster?
+
 		mVertexBuffer.put(LineCoords);
 		// set the buffer to read the first coordinate
 		mVertexBuffer.position(0);

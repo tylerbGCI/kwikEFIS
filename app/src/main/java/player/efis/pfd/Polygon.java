@@ -102,9 +102,10 @@ public class Polygon {
 
 	public void SetVerts(float[] verts) 
 	{
-		for (int i = 0; i < VertexCount * COORDS_PER_VERTEX; i++) {
+		/*for (int i = 0; i < VertexCount * COORDS_PER_VERTEX; i++) {
 			LineCoords[i] = verts[i];
-		} 
+		}*/
+        System.arraycopy(verts, 0, LineCoords, 0, VertexCount * COORDS_PER_VERTEX); // this is faster?
 
 		mVertexBuffer.put(LineCoords);
 		// set the buffer to read the first coordinate
@@ -154,11 +155,11 @@ public class Polygon {
 
 		// get handle to shape's transformation matrix
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-		EFISRenderer.checkGlError("glGetUniformLocation");
+		//EFISRenderer.checkGlError("glGetUniformLocation");
 
 		// Apply the projection and view transformation
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-		EFISRenderer.checkGlError("glUniformMatrix4fv");
+		//EFISRenderer.checkGlError("glUniformMatrix4fv");
 
 		// Draw the line
 		//GLES20.glDrawArrays(GLES20.GL_LINES, 0, VertexCount); 

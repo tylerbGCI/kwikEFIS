@@ -156,23 +156,36 @@ public class UTrig {
     //-------------------------------------------------------------------------
     // Fast arctan approximate
     //
-    public static double fastArcTan(double a)
+    /*  
+        http://nghiaho.com/?p=997
+        
+        Here is one algorithm I tried, which has a reported maximum error 
+        0.0015 radians (0.085944 degrees), lowest error in the paper.
+       
+        The valid range for x is between -1 and 1. 
+        
+        Comparing the above with the standard C atan 
+        function for 1,000,000 calls using GCC gives:	
+          FastArcTan = 17.315 ms
+          Standard C atan = 60.708 ms
+    */
+        public static double fastArcTan(double a)
     {
         return M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
     }
 
-    // todo: fix the the arctan issue ... is a problem with this
     public static double fastArcTan2(double dy, double dx)
     {
         //if (true) return Math.atan2(dy, dx); // for now just use Math
-
+        //return  M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
+        
         double a = dy / dx;
-        return  M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
-
-        //double v =  M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
-        //double m = Math.atan2(dy, dx);
-        //if (Math.abs(m - v) > 2) Log.w("UTrig.fastArcTan2", "large discrepancy v=" + v + " m=" + m + " x=" + dx + " y=" + dy + " a=" + a);
-        //return v;
+        double abs_a = Math.abs(a); 
+        
+        if (abs_a < 1)
+          return  M_PI_4*a - a*(abs_a - 1)*(0.2447 + 0.0663*abs_a); //http://nghiaho.com/?p=997
+        else 
+          return M_PI_2*Math.signum(a) - 1/a;  //https://math.stackexchange.com/questions/982838/asymptotic-approximation-of-the-arctangent
     }
 
 
