@@ -735,15 +735,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//float _gps_lon = 116;  float _gps_lat = -32;  // Australia
     //float _gps_lon = 115.6f;  float _gps_lat = -32;  // Australia over the ocean
     //float _gps_lon = 116;  float _gps_lat = -24;  // Australia
-    //float _gps_lon = 28; float _gps_lat = -33.3f;//-28;// = -33; // South Africa - East London
     //float _gps_lon = 20.4f; float _gps_lat = -34.4f;// Stilbaai South Africa = 21.447835° -34.379099°
     //float _gps_lon = 21.404783f; float _gps_lat = -34.9f;// east of Stilbaai South Africa = 21.447835° -34.379099°
     //float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
     //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of Valsbaai -34.359918f
-    float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
 
-	float _gps_course = 0.78f;  //in radians
-	float _gps_altitude = 1000; // meters
+    //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
+    //float _gps_course = 0.03f;  //in radians
+    //float _gps_altitude = 2000; // meters
+
+    float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
+	float _gps_course = 1.74f;  //in radians
+    float _gps_altitude = 1000; // meters
+
 	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
@@ -785,23 +789,25 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
-        // todo: Hardcoded for debugging
         /*//------------------------------------------------------------------------------------------
+        // todo: Hardcoded for debugging
+        //
         //deltaT = 0.0000124f; //  Ludicrous Speed
         //deltaT = 0.00000124f; //  Warp Speed
-        //deltaT = 0.000000224f; // Super Speed2
+        deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(50);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(100);// + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 4000; //900; //3000; //meter
+        gps_altitude = 3000; //900; //3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh N
+        gps_lat = -33f; gps_lon = 28f;  // EL
         //
+        // todo: Hardcoded for debugging
         //------------------------------------------------------------------------------------------*/
 
-        // todo: Hardcoded for debugging
         _sim_ms = sim_ms;
         if ((deltaT > 0) && (deltaT < 0.0000125)) {
             gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
