@@ -287,11 +287,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx.loadDatabase(region);
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.setDEMRegion(gps_lat, gps_lon);  // todo: remove hardcoding
-        //mDemGTOPO30.setBufferCenter(gps_lat, gps_lon);  // todo: remove hardcoding
-        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // pointless to load here, no gps yet
-
-
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -742,7 +737,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
     //float _gps_course = 0.03f;  //in radians
     //float _gps_altitude = 2000; // meters
-
     //float _gps_lon = 115.45f;  float _gps_lat = -31.9f;  // Australia north of Rottnest
     float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
 	float _gps_course = 1.74f;  //in radians
