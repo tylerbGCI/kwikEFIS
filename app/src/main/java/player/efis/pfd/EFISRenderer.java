@@ -2303,10 +2303,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Synthetic Vision
     //
-    float red = 0;
-    float blue = 0;
-    float green = 0;
-
     private void __getColor(short c)
     {
         float r = 600;   //600;
@@ -2328,33 +2324,52 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
+    float red = 0;
+    float blue = 0;
+    float green = 0;
+
+    // for performance, initialise outside function
+    static final float r = 600f;
+    static final float max = 0.5f;
+    static final float max_red = max;//*0.299f;
+    static final float max_green = max*0.587f;
+    static final float max_blue = max;//*0.114f;
+    static final float min_green = 0.2f;
     private void getColor(short c)
     {
-        float r = 600f;
-        float max = 0.5f;
+        if (c <= 0) {
+            // ocean
+            green = 0;
+            red = 0;
+            blue = 0.26f;
+            return;
+        }
 
+        // elevated terrain
         red = 0f;
         blue = 0f;
         green = (float) c / r;
-        if (green > max) {
-            green = max;
+        if (green > max_green) {
+            green = max_green;
             red = (c - r) / r;
-            if (red > max) {
-                red = max;
+            if (red > max_red) {
+                red = max_red;
                 blue = (c - r - r) / r;
-                if (blue > max) {
-                    blue = max;
-                    if (blue > max) {
-                        red = max - (c - r - r - r) / r;
-                    }
+                if (blue > max_blue) {
+                    blue = max_blue;
+                    //if (blue > max) {
+                    //    red = max - (c - r - r - r) / r;
+                    //}
                 }
             }
         }
+        else if (green < min_green ) {
+            // beach, special case
+            green = min_green + min_green - green;
+            red = min_green - green;
+            blue = min_green - green;
+        }
 
-        // This works OK
-        if (green > max) red *= 0.299f;
-        green *= 0.587f;
-        blue *= 0.114f; //RGB weighted luminance 0.299, 0.587, B=0.114
     }
 
 
