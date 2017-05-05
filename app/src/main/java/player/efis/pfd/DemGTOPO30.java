@@ -19,7 +19,6 @@ package player.efis.pfd;
 // Standard imports
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.*;
@@ -71,7 +70,7 @@ public class DemGTOPO30
 
 
     public static boolean demDataValid = false;
-    public static boolean demNull = false;
+    public static boolean buffEmpty = false;
 
     //-------------------------------------------------------------------------
     // Construct a new default loader with no flags set
@@ -135,14 +134,14 @@ public class DemGTOPO30
 
     private void fillBuffer(short c)
     {
-        if (!demNull) {
+        if (!buffEmpty) {
             for (int y = 0; y < BUFY; y++) {
                 for (int x = 0; x < BUFX; x++) {
                     buff[x][y] = c;  // fill in the buffer
                 }
             }
         }
-        if (c <= 0) demNull = true;
+        if (c <= 0) buffEmpty = true;
     }
 
     private boolean isValidLocation(float lat, float lon)
@@ -257,12 +256,12 @@ public class DemGTOPO30
                 }
                 demFile.close();
                 demDataValid = true;
-                demNull = false;
+                buffEmpty = false;
             }
             catch (IOException e) {
                 Toast.makeText(context, "Terrain file error: " + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
-                demNull = false;
+                buffEmpty = false;
                 fillBuffer((short) 0);
 
                 e.printStackTrace();
@@ -271,7 +270,7 @@ public class DemGTOPO30
             catch (Exception e) {
                 Toast.makeText(context, "Terrain datapac error: " + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
-                demNull = false;
+                buffEmpty = false;
                 fillBuffer((short) 0);
 
                 e.printStackTrace();
