@@ -732,7 +732,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// It acts like a very simple flight simulator
 	//
 	static int counter;
-	//float _gps_lon = 116;  float _gps_lat = -32;  // Australia
     //float _gps_lon = 115.6f;  float _gps_lat = -32;  // Australia over the ocean
     //float _gps_lon = 116;  float _gps_lat = -24;  // Australia
     //float _gps_lon = 20.4f; float _gps_lat = -34.4f;// Stilbaai South Africa = 21.447835° -34.379099°
@@ -744,6 +743,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_course = 0.03f;  //in radians
     //float _gps_altitude = 2000; // meters
 
+    //float _gps_lon = 115.45f;  float _gps_lat = -31.9f;  // Australia north of Rottnest
     float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
 	float _gps_course = 1.74f;  //in radians
     float _gps_altitude = 1000; // meters
@@ -795,24 +795,24 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
         //deltaT = 0.00000124f; //  Warp Speed
-        deltaT = 0.000000224f; // Super Speed2
+        //deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(100);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(50);// + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 3000; //900; //3000; //meter
+        gps_altitude = 2000; //900; //3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
 
         //gps_lat = -33f; _gps_lon = 28f;  // EL
         //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
         //gps_lat = -33.4f; gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
-        gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
-        deltaT = 0; // freeze time, ie force stationary
+        //gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
+        //deltaT = 0; // freeze time, ie force stationary
         //
         // todo: Hardcoded for debugging
         //------------------------------------------------------------------------------------------
-        */
+        // */
 
         _sim_ms = sim_ms;
         if ((deltaT > 0) && (deltaT < 0.0000125)) {
