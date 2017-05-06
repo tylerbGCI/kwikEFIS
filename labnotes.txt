@@ -13,6 +13,8 @@ final int maxrow = 6000;
  
 -32.0 116.0 home
 
+The mean height of land above sea level is 840 m.
+
 git tag --delete YOUR_TAG_NAME
 git push --delete origin YOUR_TAG_NAME
 
