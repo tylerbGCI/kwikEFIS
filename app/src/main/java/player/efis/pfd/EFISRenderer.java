@@ -32,9 +32,7 @@ import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 enum AircraftModel
 {
@@ -124,7 +122,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private int MSLValue;           // Altitude above mean sea level, MSL
     private float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
     private float baroPressure;     // Barometric pressure in in-Hg
-    private float AGLValue;         // Altitude above ground, AGL
+    private int AGLValue;         // Altitude above ground, AGL
 
     // The following should be read from a calibration file by an init routine
     private int MSLMinDisp;         // The lowest altitude to show on tape
@@ -297,7 +295,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
             if (AGLValue > 0) renderDEM(scratch1);  // underground is not valid
-        } else if (displayTerrain) renderTerrain(scratch1);
+        }
+        else if (displayTerrain) renderTerrain(scratch1);
 
         //if (displayDEM) renderDEMBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
 
@@ -609,14 +608,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // V Speeds for various aircraft models
             case GENERIC:
                 // Ultralight
-                Vs0 = 30;  // Stall, flap extended
-                Vs1 = 40;  // Stall, flap retracted
-                Vx = 50;  // Best angle climb
-                Vy = 60;  // Best rate climb
+                Vs0 = 20;  // Stall, flap extended
+                Vs1 = 30;  // Stall, flap retracted
+                Vx =  40;  // Best angle climb
+                Vy =  50;  // Best rate climb
                 Vfe = 60;  // Flaps extension
-                Va = 80;  // Maneuvering
-                Vno = 90;  // Max structural cruise
-                Vne = 120; // Never exceed
+                Va =  70;  // Maneuvering
+                Vno = 80;  // Max structural cruise
+                Vne = 90;  // Never exceed
                 break;
 
             case AZTEC:
@@ -1465,10 +1464,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     //Set the altimeter - ft
     //
+    int demTaxiMSLCorrection = 0;
     void setALT(int feet)
     {
-        MSLValue = feet;
+        MSLValue = feet + demTaxiMSLCorrection;
         MSLTranslation = MSLValue / MSLInView * pixH2;
+        setAGL();
     }
 
     //
@@ -2700,13 +2701,28 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
+    //void setAGL(float lat, float lon, int alt)
+    void setAGL()
+    {
+        //if (DemGTOPO30.demDataValid) AGLValue = alt - (int) (3.28084f * DemGTOPO30.getElev(lat, lon));
+        if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
+
+        if (AGLValue < 0) {
+            demTaxiMSLCorrection = 10 + Math.max(demTaxiMSLCorrection, -AGLValue);  // in ft
+            AGLValue = 0;
+        }
+
+        if ((AGLValue > 100) || (IASValue > 1.5f * Vs0))
+            demTaxiMSLCorrection = 0;
+}
 
     void setLatLon(float lat, float lon)
     {
         LatValue = lat;
         LonValue = lon;
 
-        if (DemGTOPO30.demDataValid) AGLValue = MSLValue - 3.28084f * DemGTOPO30.getElev(lat, lon);
+        //if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
+        setAGL();
     }
 
     //-------------------------------------------------------------------------
