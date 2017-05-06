@@ -1464,12 +1464,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     //Set the altimeter - ft
     //
-    int demTaxiMSLCorrection = 0;
     void setALT(int feet)
     {
-        MSLValue = feet + demTaxiMSLCorrection;
-        MSLTranslation = MSLValue / MSLInView * pixH2;
+        MSLValue = feet;
         setAGL();
+        MSLTranslation = MSLValue / MSLInView * pixH2;
     }
 
     //
@@ -2701,20 +2700,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
+
+
+    //-------------------------------------------------------------------------
+    // Radio Alitimeter (agl)
+    //
     //void setAGL(float lat, float lon, int alt)
     void setAGL()
     {
-        //if (DemGTOPO30.demDataValid) AGLValue = alt - (int) (3.28084f * DemGTOPO30.getElev(lat, lon));
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-
         if (AGLValue < 0) {
-            demTaxiMSLCorrection = 10 + Math.max(demTaxiMSLCorrection, -AGLValue);  // in ft
-            AGLValue = 0;
+            MSLValue = MSLValue + (-AGLValue*125/100);  //1.25
         }
-
-        if ((AGLValue > 100) || (IASValue > 1.5f * Vs0))
-            demTaxiMSLCorrection = 0;
-}
+    }
 
     void setLatLon(float lat, float lon)
     {
