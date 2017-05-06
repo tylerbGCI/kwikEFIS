@@ -144,15 +144,20 @@ public class DemGTOPO30
         if (c <= 0) buffEmpty = true;
     }
 
+    //-------------------------------------------------------------------------
+    // Check if a lat lon in valid
+    //
     private boolean isValidLocation(float lat, float lon)
     {
-        if (lat + lon == 0) return false;
         if (Math.abs(lat) > 90)  return false;
         if (Math.abs(lon) > 180)  return false;
 
         return true;
     }
 
+    //-------------------------------------------------------------------------
+    // Check if a lat lon in on the current tile
+    //
     public boolean isOnTile(float lat, float lon)
     {
         if (       (lat <= demTopLeftLat)
@@ -160,7 +165,8 @@ public class DemGTOPO30
                 && (lon >= demTopLeftLon)
                 && (lon < demTopLeftLon + TILE_WIDTH)
                 ) return true;
-        else return false;
+        else
+            return false;
     }
 
     //-------------------------------------------------------------------------
@@ -183,7 +189,7 @@ public class DemGTOPO30
     public void loadDemBuffer(float lat, float lon)
     {
         demDataValid = false;
-        fillBuffer((short) 0);
+        //b2 fillBuffer((short) 0);
         String DemFilename = setDEMRegion(lat, lon);
         setBufferCenter(lat, lon);
 
@@ -198,6 +204,14 @@ public class DemGTOPO30
 
             try {
                 /*
+                // read from local directory "/data/ ...
+                File storage = Environment.getExternalStorageDirectory();
+                File file = new File(storage + "/data/player.efis.pfd/terrain/" + DemFilename + ".DEM");
+                FileInputStream inp = new  FileInputStream(file);
+                DataInputStream demFile = new DataInputStream(inp);
+                //*/
+
+                /*
                 // read from local "assets"
                 InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
                 DataInputStream demFile = new DataInputStream(inp);
@@ -206,16 +220,7 @@ public class DemGTOPO30
                 ///*
                 // read from datapac "assets"
                 Context otherContext = context.createPackageContext("player.efis.data", 0);
-                //AssetManager am = otherContext.getAssets();
                 InputStream inp = otherContext.getAssets().open("terrain/" + DemFilename + ".DEM");
-                DataInputStream demFile = new DataInputStream(inp);
-                //*/
-
-                /*
-                // read from local directory "/data/ ...
-                File storage = Environment.getExternalStorageDirectory();
-                File file = new File(storage + "/data/player.efis.pfd/terrain/" + DemFilename + ".DEM");
-                FileInputStream inp = new  FileInputStream(file);
                 DataInputStream demFile = new DataInputStream(inp);
                 //*/
 
@@ -248,8 +253,9 @@ public class DemGTOPO30
                         c = demFile.readShort();
                         // deliberately avoid 0
                         if (c > 0) {
-                            buff[x - x0][y - y0] = c;  // fill in the buffer
+                            buff[x - x0][y - y0] = c;
                         }
+                        else buff[x - x0][y - y0] = 0;
                     }
                     demFile.skipBytes(NUM_BYTES_IN_SHORT * (maxcol - x2));
                     demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
@@ -278,7 +284,6 @@ public class DemGTOPO30
         }
         else {
             // Not a valid requested location
-            // or trapped on Null Island
             demTopLeftLat = -9999;
             demTopLeftLon = -9999;
             x0 = -9999;
