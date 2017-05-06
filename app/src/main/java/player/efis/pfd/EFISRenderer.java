@@ -2329,7 +2329,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float green = 0;
 
     // for performance, initialise outside function
-    static final float r = 600f;
+    static final float r = 600f; // Earth mean terrain elevation is 840m
     static final float max = 0.5f;
     static final float max_red = max;//*0.299f;
     static final float max_green = max*0.587f;
@@ -2337,18 +2337,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     static final float min_green = 0.2f;
     private void getColor(short c)
     {
-        if (c <= 0) {
+        /*if (c <= 0) {
             // ocean
             green = 0;
             red = 0;
             blue = 0.26f;
             return;
-        }
+        }*/
 
         // elevated terrain
         red = 0f;
         blue = 0f;
         green = (float) c / r;
+
         if (green > max_green) {
             green = max_green;
             red = (c - r) / r;
@@ -2357,11 +2358,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 blue = (c - r - r) / r;
                 if (blue > max_blue) {
                     blue = max_blue;
-                    //if (blue > max) {
-                    //    red = max - (c - r - r - r) / r;
-                    //}
                 }
             }
+        }
+        else if (green == 0) {
+            // assume ocean
+            green = 0;
+            red = 0;
+            blue = 0.26f;
         }
         else if (green < min_green ) {
             // beach, special case
@@ -2369,7 +2373,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             red = min_green - green;
             blue = min_green - green;
         }
-
     }
 
 
