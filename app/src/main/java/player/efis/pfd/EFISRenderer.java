@@ -2705,7 +2705,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Radio Alitimeter (agl)
     //
-    //void setAGL(float lat, float lon, int alt)
+    // There are two events that can change agl: setLatLon and seAlt
+    // This function is called directly by them.
+    //
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
