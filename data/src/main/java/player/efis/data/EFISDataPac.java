@@ -95,6 +95,7 @@ public class EFISDataPac extends Activity
         //*/
 
         // disable and hide the buttons
+        // -- we may use this again in future
         fab.setVisibility(View.GONE);
         gobutton.setVisibility(View.GONE);
 
