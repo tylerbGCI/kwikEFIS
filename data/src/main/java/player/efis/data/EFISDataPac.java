@@ -155,7 +155,6 @@ public class EFISDataPac extends Activity
             return false;
         }
 
-        //--------
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gtopo30_index);
         bitmap = bitmap.copy(android.graphics.Bitmap.Config.ARGB_8888, true);
         int twidth = bitmap.getWidth() / 9;
@@ -163,18 +162,14 @@ public class EFISDataPac extends Activity
 
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
-        //paint.setColor(Color.CYAN);
-        paint.setColor(Color.rgb(173, 214, 255));
+        paint.setColor(Color.rgb(173, 214, 255)); // cyanish
         paint.setAlpha(128);
-        //canvas.drawRect(10, 10, 200, 200, paint); // test
-        //--------
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
         ImageView imgView = new ImageView(this);
-        //imgView.setImageResource(R.drawable.gtopo30_index);
-        imgView.setImageBitmap(bitmap); // test
+        imgView.setImageBitmap(bitmap);
 
         TextView txtView = new TextView(this);
         String buff = "\nKwik EFIS Terrain data\n\n";
@@ -314,12 +309,9 @@ public class EFISDataPac extends Activity
         }
         buff += "\n";
         txtView.setText(buff);
-
         layout.addView(txtView);
         layout.addView(imgView);
-
         setContentView(layout);
-
         return true;
     }
 
