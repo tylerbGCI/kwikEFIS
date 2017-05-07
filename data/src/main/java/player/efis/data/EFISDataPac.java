@@ -18,6 +18,11 @@
 package player.efis.data;
 
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -95,10 +100,10 @@ public class EFISDataPac extends Activity
         //*/
 
         // disable and hide the buttons
+        // -- we may use this again in future
         fab.setVisibility(View.GONE);
         gobutton.setVisibility(View.GONE);
 
-        //listAssets();
         listAssetFiles("terrain");
     }
 
@@ -145,38 +150,27 @@ public class EFISDataPac extends Activity
         String [] list;
         try {
             list = getAssets().list(path);
-            /*if (list.length > 0) {
-                // This is a folder
-                for (String file : list) {
-                    if (!listAssetFiles(path + "/" + file))
-                        return false;
-                }
-            }
-            else {
-                // This is a file
-                // TODO: add file name to an array list
-            }*/
         }
         catch (IOException e) {
             return false;
         }
 
+        //--------
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gtopo30_index);
+        bitmap = bitmap.copy(android.graphics.Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.CYAN);
+        paint.setAlpha(128);
+        //canvas.drawRect(10, 10, 200, 200, paint); // test
+        //--------
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        /*
-        RelativeLayout.LayoutParams layoutParams =new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);*/
-
 
         ImageView imgView = new ImageView(this);
-        imgView.setImageResource(R.drawable.gtopo30_index);
-
-        //imgView.setGravity();
-        //this.setContentView(imgView);
-
+        //imgView.setImageResource(R.drawable.gtopo30_index); // test
+        imgView.setImageBitmap(bitmap);
 
         TextView txtView = new TextView(this);
         String buff = "\nKwik EFIS Terrain data\n\n";
@@ -194,41 +188,6 @@ public class EFISDataPac extends Activity
         return true;
     }
 
-
-    /*
-    private void CopyAssets() {
-        AssetManager assetManager = getAssets();
-        String[] files = null;
-        try {
-            files = assetManager.list("Files");
-        } catch (IOException e) {
-            Log.e("tag", e.getMessage());
-        }
-
-        for(String filename : files) {
-            System.out.println("File name => "+filename);
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                in = assetManager.open("Files/"+filename);
-
-                //out = new FileOutputStream(Environment.getExternalStorageDirectory().toString() +"/" + filename);
-                File storage = Environment.getExternalStorageDirectory();
-                File file = new File(storage + "/data/player.efis.pfd/terrain/" + filename);// + ".DEM");
-                out = new FileOutputStream(file);
-
-                copyFile(in, out);
-                in.close();
-                in = null;
-                out.flush();
-                out.close();
-                out = null;
-            } catch(Exception e) {
-                Log.e("tag", e.getMessage());
-            }
-        }
-    }
-    */
 
     private void copyFile(InputStream in, OutputStream out) throws IOException
     {
