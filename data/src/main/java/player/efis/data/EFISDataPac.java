@@ -158,9 +158,13 @@ public class EFISDataPac extends Activity
         //--------
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gtopo30_index);
         bitmap = bitmap.copy(android.graphics.Bitmap.Config.ARGB_8888, true);
+        int twidth = bitmap.getWidth() / 9;
+        int theight = bitmap.getHeight() / 3;
+
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
-        paint.setColor(Color.CYAN);
+        //paint.setColor(Color.CYAN);
+        paint.setColor(Color.rgb(173, 214, 255));
         paint.setAlpha(128);
         //canvas.drawRect(10, 10, 200, 200, paint); // test
         //--------
@@ -169,13 +173,144 @@ public class EFISDataPac extends Activity
         layout.setOrientation(LinearLayout.VERTICAL);
 
         ImageView imgView = new ImageView(this);
-        //imgView.setImageResource(R.drawable.gtopo30_index); // test
-        imgView.setImageBitmap(bitmap);
+        //imgView.setImageResource(R.drawable.gtopo30_index);
+        imgView.setImageBitmap(bitmap); // test
 
         TextView txtView = new TextView(this);
         String buff = "\nKwik EFIS Terrain data\n\n";
         for (int i = 0; i < list.length; i++) {
             buff += list[i] + "\t";
+
+            int x1=0, y1=0, x2, y2;
+            switch (list[i]) {
+                // top row
+                case "W180N90.DEM":
+                    x1 = twidth * 0;
+                    y1 = theight * 0;
+                    break;
+                case "W140N90.DEM":
+                    x1 = twidth * 1;
+                    y1 = theight * 0;
+                    break;
+                case "W100N90.DEM":
+                    x1 = twidth * 2;
+                    y1 = theight * 0;
+                    break;
+                case "W060N90.DEM":
+                    x1 = twidth * 3;
+                    y1 = theight * 0;
+                    break;
+                case "W020N90.DEM":
+                    x1 = twidth * 4;
+                    y1 = theight * 0;
+                    break;
+                case "E020N90.DEM":
+                    x1 = twidth * 5;
+                    y1 = theight * 0;
+                    break;
+                case "E020S90.DEM":
+                    x1 = twidth * 5;
+                    y1 = theight * 0;
+                    break;
+                case "E060S90.DEM":
+                    x1 = twidth * 6;
+                    y1 = theight * 0;
+                    break;
+                case "E100S90.DEM":
+                    x1 = twidth * 7;
+                    y1 = theight * 0;
+                    break;
+                case "E140S90.DEM":
+                    x1 = twidth * 8;
+                    y1 = theight * 0;
+                    break;
+
+                // middle row
+                case "W180N40.DEM":
+                    x1 = twidth * 0;
+                    y1 = theight * 1;
+                    break;
+                case "W140N40.DEM":
+                    x1 = twidth * 1;
+                    y1 = theight * 1;
+                    break;
+                case "W100N40.DEM":
+                    x1 = twidth * 2;
+                    y1 = theight * 1;
+                    break;
+                case "W060N40.DEM":
+                    x1 = twidth * 3;
+                    y1 = theight * 1;
+                    break;
+                case "W020N40.DEM":
+                    x1 = twidth * 4;
+                    y1 = theight * 1;
+                    break;
+                case "E020N40.DEM":
+                    x1 = twidth * 5;
+                    y1 = theight * 1;
+                    break;
+                case "E020S40.DEM":
+                    x1 = twidth * 5;
+                    y1 = theight * 1;
+                    break;
+                case "E060S40.DEM":
+                    x1 = twidth * 6;
+                    y1 = theight * 1;
+                    break;
+                case "E100S40.DEM":
+                    x1 = twidth * 7;
+                    y1 = theight * 1;
+                    break;
+                case "E140S40.DEM":
+                    x1 = twidth * 8;
+                    y1 = theight * 1;
+                    break;
+
+                // bottom row
+                case "W180N1.DEM":
+                    x1 = twidth * 0;
+                    y1 = theight * 2;
+                    break;
+                case "W140N10.DEM":
+                    x1 = twidth * 1;
+                    y1 = theight * 2;
+                    break;
+                case "W100N10.DEM":
+                    x1 = twidth * 2;
+                    y1 = theight * 2;
+                    break;
+                case "W060N10.DEM":
+                    x1 = twidth * 3;
+                    y1 = theight * 2;
+                    break;
+                case "W020S10.DEM":
+                    x1 = twidth * 4;
+                    y1 = theight * 2;
+                    break;
+                case "E020S10.DEM":
+                    x1 = twidth * 5;
+                    y1 = theight * 2;
+                    break;
+                case "E060S10.DEM":
+                    x1 = twidth * 6;
+                    y1 = theight * 2;
+                    break;
+                case "E100S10.DEM":
+                    x1 = twidth * 7;
+                    y1 = theight * 2;
+                    break;
+                case "E140S10.DEM":
+                    x1 = twidth * 8;
+                    y1 = theight * 2;
+                    break;
+                default:
+                    // invalid - pick coordinates off the bitmap
+                    x1 = twidth * 10;
+                    y1 = theight * 10;
+            }
+            canvas.drawRect(x1, y1, x1+twidth, y1+theight, paint); // test
+
         }
         buff += "\n";
         txtView.setText(buff);

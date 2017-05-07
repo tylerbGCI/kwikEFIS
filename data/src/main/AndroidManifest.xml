@@ -27,7 +27,7 @@
           package="player.efis.data"
           android:installLocation="preferExternal"
           android:versionCode="1"
-          android:versionName="1.0" >
+          android:versionName="1.1" >
 
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
