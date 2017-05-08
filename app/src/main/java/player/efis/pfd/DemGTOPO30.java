@@ -100,8 +100,8 @@ public class DemGTOPO30
     public DemGTOPO30(Context context)
     {
         this.context = context;
-        for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcHSVColor(i); //calcColor(i);
         //for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcColor(i);
+        for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcHSVColor(i); //optimal so far!
 
     }
 
