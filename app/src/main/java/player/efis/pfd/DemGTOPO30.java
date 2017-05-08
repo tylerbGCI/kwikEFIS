@@ -17,6 +17,7 @@
 package player.efis.pfd;
 
 // Standard imports
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -77,7 +78,7 @@ public class DemGTOPO30
     static short buff[][] = new short[BUFX][BUFY];
     static DemColor colorTbl[] = new DemColor[MAX_ELEV]; //7200 //600*3 = r*3
 
-    static float demTopLeftLat =  -10;
+    static float demTopLeftLat = -10;
     static float demTopLeftLon = +100;
 
     static private int x0;   // center of the BUFX tile ??
@@ -121,14 +122,11 @@ public class DemGTOPO30
         int y = (int) ((demTopLeftLat - lat) * 120) - y0;
         int x = (int) ((lon - demTopLeftLon) * 120) - x0;
 
-        if ((x < 0) || (y < 0) || (x >= BUFX) || ( y >= BUFY))
+        if ((x < 0) || (y < 0) || (x >= BUFX) || (y >= BUFY))
             return 0; //-9999;
         else return buff[x][y];
     }
 
-
-    //-----------------------------
-    //color stuff
 
     public static DemColor getColor(short c)
     {
@@ -138,8 +136,10 @@ public class DemGTOPO30
             return colorTbl[MAX_ELEV];
     }
 
+    //-----------------------------
+    //color stuff - moved from renderer and renamed
 
-    private  DemColor calcColor(short c)
+    private DemColor calcColor(short c)
     {
         float red = 0;
         float blue = 0;
@@ -148,7 +148,7 @@ public class DemGTOPO30
         final float r = 600; // Earth mean terrain elevation is 840m
         final float max = 0.5f;
         final float max_red = max;   //*0.299f;
-        final float max_green = max*0.587f;
+        final float max_green = max * 0.587f;
         final float max_blue = max;  //*0.114f;
         final float min_green = 0.2f;
 
@@ -158,10 +158,10 @@ public class DemGTOPO30
         green = (float) c / r;
         if (green > max) {
             green = max;
-            red = (c - 1*r) / r;
+            red = (c - 1 * r) / r;
             if (red > max) {
                 red = max;
-                blue = (c - 2*r) / r;
+                blue = (c - 2 * r) / r;
                 if (blue > max) {
                     blue = max;
                     //red = max - (c - 3*r) / r;
@@ -177,7 +177,7 @@ public class DemGTOPO30
             red = 0;
             blue = 0.26f;
         }
-        else if (green < min_green ) {
+        else if (green < min_green) {
             // beach, special case
             red = min_green - green;
             blue = min_green - green;
@@ -186,7 +186,7 @@ public class DemGTOPO30
 
         // HSV  allows adjustment hue, sat and val
         float hsv[] = {0, 0, 0};
-        int colorBase = Color.rgb((int)(red*255), (int)(green*255), (int)(blue*255));
+        int colorBase = Color.rgb((int) (red * 255), (int) (green * 255), (int) (blue * 255));
         Color.colorToHSV(colorBase, hsv);
         hsv[0] = hsv[0];  // hue 0..360
         hsv[1] = hsv[1];  // sat 0..1
@@ -219,40 +219,32 @@ public class DemGTOPO30
             // mountain
             v %= MaxColor;
             colorBase = Color.rgb(MaxColor - v, MaxColor, MaxColor);
-        } else if (v > 2 * MaxColor) {
+        }
+        else if (v > 2 * MaxColor) {
             // highveld
             v %= MaxColor;
             colorBase = Color.rgb(MaxColor, MaxColor, v); // keep building to white
-        } else if (v > MaxColor) {
+        }
+        else if (v > 1 * MaxColor) {
             // inland
             v %= MaxColor;
             colorBase = Color.rgb(v, MaxColor, 0);
-        } else if (v > 1) {
+        }
+        else if (v > 1) {
             // coastal plain
-            /*else if (green < min_green ) {
-                    // beach, special case
-                    red = min_green - green;
-                    blue = min_green - green;
-                    green = min_green + min_green - green;
-                }*/
             if (v > min_v)
                 colorBase = Color.rgb(0, v, 0);
             else {
                 // beach, a special case
-                /*
-                red = min_green - green;
-                blue = min_green - green;
-                green = min_green + min_green - green;
-                */
-                colorBase = Color.rgb(min_v - v, 2*min_v - v, min_v - v);
+                colorBase = Color.rgb(min_v - v, min_v + (min_v - v), min_v - v);
             }
-
-
-        } else if (v > 0) {
+        }
+        else if (v > 0) {
             // the beach
             v = MaxColor / 4;
             colorBase = Color.rgb(v, v, v);
-        } else {
+        }
+        else {
             colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
         }
 
@@ -275,14 +267,12 @@ public class DemGTOPO30
     //-----------------------------
 
 
-
-
     public void setBufferCenter(float lat, float lon)
     {
         lat0 = lat;
         lon0 = lon;
-        x0 = (int) (Math.abs(lon0 - demTopLeftLon) * 60 *2) -  BUFX/2;
-        y0 = (int) (Math.abs(lat0 - demTopLeftLat) * 60 *2) -  BUFY/2;
+        x0 = (int) (Math.abs(lon0 - demTopLeftLon) * 60 * 2) - BUFX / 2;
+        y0 = (int) (Math.abs(lat0 - demTopLeftLat) * 60 * 2) - BUFY / 2;
     }
 
 
@@ -293,11 +283,11 @@ public class DemGTOPO30
     {
         setBufferCenter(lat, lon);  // set the buffer tile as well
 
-        demTopLeftLat =   90  - (int) (90 - lat) / TILE_HEIGHT * TILE_HEIGHT;
-        demTopLeftLon =  -180 + (int) (lon + 180) / TILE_WIDTH * TILE_WIDTH;
+        demTopLeftLat = 90 - (int) (90 - lat) / TILE_HEIGHT * TILE_HEIGHT;
+        demTopLeftLon = -180 + (int) (lon + 180) / TILE_WIDTH * TILE_WIDTH;
 
-        String s = String.format("%c%03d%c%02d", demTopLeftLon<0?'W':'E', (int)Math.abs(demTopLeftLon),
-                                                 demTopLeftLat<0?'S':'N', (int)Math.abs(demTopLeftLat));
+        String s = String.format("%c%03d%c%02d", demTopLeftLon < 0 ? 'W' : 'E', (int) Math.abs(demTopLeftLon),
+                demTopLeftLat < 0 ? 'S' : 'N', (int) Math.abs(demTopLeftLat));
         //DemFilename = s;
         return s;
 
@@ -321,8 +311,8 @@ public class DemGTOPO30
     //
     private boolean isValidLocation(float lat, float lon)
     {
-        if (Math.abs(lat) > 90)  return false;
-        if (Math.abs(lon) > 180)  return false;
+        if (Math.abs(lat) > 90) return false;
+        if (Math.abs(lon) > 180) return false;
 
         return true;
     }
@@ -332,7 +322,7 @@ public class DemGTOPO30
     //
     public boolean isOnTile(float lat, float lon)
     {
-        if (       (lat <= demTopLeftLat)
+        if ((lat <= demTopLeftLat)
                 && (lat > demTopLeftLat - TILE_HEIGHT)
                 && (lon >= demTopLeftLon)
                 && (lon < demTopLeftLon + TILE_WIDTH)
@@ -355,7 +345,6 @@ public class DemGTOPO30
         }
         return false;
     }
-
 
 
     public void loadDemBuffer(float lat, float lon)

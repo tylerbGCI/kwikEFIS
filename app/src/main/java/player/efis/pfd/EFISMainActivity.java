@@ -730,9 +730,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of Valsbaai -34.359918f
     //float _gps_lon = 115.45f;  float _gps_lat = -31.9f;  // Australia north of Rottnest
     //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
-    float _gps_lon = 28; float _gps_lat = -33.2f;//-28;// = -33; // South Africa - South of East London
-    //float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
-	float _gps_course = 1.74f;  //in radians
+    //float _gps_lon = 28; float _gps_lat = -33.2f;//-28;// = -33; // South Africa - South of East London
+    float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
+	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 1000; // meters
 
 	float _gps_speed = 0;       // m/s
@@ -776,7 +776,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
-        ///*
+        /*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
@@ -785,7 +785,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(2);// + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(55);// 2 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
         gps_altitude = 3048; //900; //3000; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
