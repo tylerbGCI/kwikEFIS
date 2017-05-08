@@ -391,7 +391,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderASIMarkers(iasMatrix);
             }
 
-
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
             renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
@@ -517,7 +516,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
      */
     public static int loadShader(int type, String shaderCode)
     {
-
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
@@ -622,10 +620,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Colomban CriCri
                 Vs0 = 61;   // Stall, flap extended
                 Vs1 = 66;   // Stall, flap retracted
-                Vx = 93;   // Best angle climb
-                Vy = 102;  // Best rate climb
+                Vx = 93;    // Best angle climb
+                Vy = 102;   // Best rate climb
                 Vfe = 140;  // Flaps extension
-                Va = 129;  // Maneuvering
+                Va = 129;   // Maneuvering
                 Vno = 172;  // Max structural cruise
                 Vne = 216;  // Never exceed
                 break;
@@ -634,10 +632,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Colomban CriCri
                 Vs0 = 39;  // Stall, flap extended
                 Vs1 = 49;  // Stall, flap retracted
-                Vx = 56;  // Best angle climb
-                Vy = 68;  // Best rate climb
+                Vx = 56;   // Best angle climb
+                Vy = 68;   // Best rate climb
                 Vfe = 70;  // Flaps extension
-                Va = 85;  // Maneuvering
+                Va = 85;   // Maneuvering
                 Vno = 100; // Max structural cruise
                 Vne = 140; // Never exceed
                 break;
@@ -646,10 +644,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // PiperSport Cruzer
                 Vs0 = 32;  // Stall, flap extended
                 Vs1 = 39;  // Stall, flap retracted
-                Vx = 56;  // Best angle climb
-                Vy = 62;  // Best rate climb
+                Vx = 56;   // Best angle climb
+                Vy = 62;   // Best rate climb
                 Vfe = 75;  // Flaps extension
-                Va = 88;  // Maneuvering
+                Va = 88;   // Maneuvering
                 Vno = 108; // Max structural cruise
                 Vne = 138; // Never exceed
                 break;
@@ -658,10 +656,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Jabiru J160-C
                 Vs0 = 40;   // Stall, flap extended
                 Vs1 = 45;   // Stall, flap retracted
-                Vx = 65;   // Best angle climb
-                Vy = 68;   // Best rate climb
+                Vx = 65;    // Best angle climb
+                Vy = 68;    // Best rate climb
                 Vfe = 80;   // Flaps extension
-                Va = 90;   // Maneuvering
+                Va = 90;    // Maneuvering
                 Vno = 108;  // Max structural cruise
                 Vne = 140;  // Never exceed
                 break;
@@ -670,10 +668,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-8A
                 Vs0 = 56;   // Stall, flap extended
                 Vs1 = 56;   // Stall, flap retracted
-                Vx = 72;   // Best angle climb
-                Vy = 90;   // Best rate climb
+                Vx = 72;    // Best angle climb
+                Vy = 90;    // Best rate climb
                 Vfe = 85;   // Flaps extension
-                Va = 120;  // Maneuvering
+                Va = 120;   // Maneuvering
                 Vno = 161;  // Max structural cruise
                 Vne = 200;  // Never exceed
                 break;
@@ -681,10 +679,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             case M20J:
                 Vs0 = 53;   // Stall, flap extended
                 Vs1 = 53;   // Stall, flap retracted
-                Vx = 66;   // Best angle climb
-                Vy = 85;   // Best rate climb
+                Vx = 66;    // Best angle climb
+                Vy = 85;    // Best rate climb
                 Vfe = 115;  // Flaps extension
-                Va = 120;  // Maneuvering
+                Va = 120;   // Maneuvering
                 Vno = 152;  // Max structural cruise
                 Vne = 174;  // Never exceed
                 break;
@@ -694,10 +692,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Piper PA28 Archer II
                 Vs0 = 49;   // Stall, flap extended
                 Vs1 = 55;   // Stall, flap retracted
-                Vx = 64;   // Best angle climb
-                Vy = 76;   // Best rate climb
+                Vx = 64;    // Best angle climb
+                Vy = 76;    // Best rate climb
                 Vfe = 102;  // Flaps extension
-                Va = 89;   // Maneuvering
+                Va = 89;    // Maneuvering
                 Vno = 125;  // Max structural cruise
                 Vne = 154;  // Never exceed
                 break;
@@ -708,10 +706,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-6,7,8
                 Vs0 = 51;    // Stall, flap extended
                 Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;    // Best angle climb
-                Vy = 90;    // Best rate climb
+                Vx = 72;     // Best angle climb
+                Vy = 90;     // Best rate climb
                 Vfe = 85;    // Flaps extension
-                Va = 120;   // Maneuvering
+                Va = 120;    // Maneuvering
                 Vno = 165;   // Max structural cruise
                 Vne = 200;   // Never exceed
                 break;
@@ -720,10 +718,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Witttman Tailwind
                 Vs0 = 48;  // Stall, flap extended
                 Vs1 = 55;  // Stall, flap retracted
-                Vx = 90;  // Best angle climb - tbd
-                Vy = 104; // Best rate climb
+                Vx = 90;   // Best angle climb - tbd
+                Vy = 104;  // Best rate climb
                 Vfe = 91;  // Flaps extension
-                Va = 130; // Maneuvering
+                Va = 130;  // Maneuvering
                 Vno = 155; // Max structural cruise - tbd
                 Vne = 174; // Never exceed
                 break;
@@ -732,10 +730,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-8A
                 Vs0 = 51;    // Stall, flap extended
                 Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;    // Best angle climb
-                Vy = 90;    // Best rate climb
+                Vx = 72;     // Best angle climb
+                Vy = 90;     // Best rate climb
                 Vfe = 85;    // Flaps extension
-                Va = 120;   // Maneuvering
+                Va = 120;    // Maneuvering
                 Vno = 165;   // Max structural cruise
                 Vne = 200;   // Never exceed
                 break;
@@ -2303,8 +2301,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Synthetic Vision
     //
+
     private void __getColor(short c)
     {
+        float red = 0;
+        float blue = 0;
+        float green = 0;
+
         float r = 600;   //600;
         float r2 = r * 2;
 
@@ -2324,109 +2327,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-    float red = 0;
-    float blue = 0;
-    float green = 0;
 
-    // for performance, initialise outside function
-    static final float r = 600f; // Earth mean terrain elevation is 840m
-    static final float max = 0.5f;
-    static final float max_red = max;//*0.299f;
-    static final float max_green = max*0.587f;
-    static final float max_blue = max;//*0.114f;
-    static final float min_green = 0.2f;
-    private void getColor(short c)
-    {
-        /*if (c <= 0) {
-            // ocean
-            green = 0;
-            red = 0;
-            blue = 0.26f;
-            return;
-        }*/
-
-        // elevated terrain
-        red = 0f;
-        blue = 0f;
-        green = (float) c / r;
-
-        if (green > max_green) {
-            green = max_green;
-            red = (c - r) / r;
-            if (red > max_red) {
-                red = max_red;
-                blue = (c - r - r) / r;
-                if (blue > max_blue) {
-                    blue = max_blue;
-                }
-            }
-        }
-        else if (green == 0) {
-            // assume ocean
-            green = 0;
-            red = 0;
-            blue = 0.26f;
-        }
-        else if (green < min_green ) {
-            // beach, special case
-            green = min_green + min_green - green;
-            red = min_green - green;
-            blue = min_green - green;
-        }
-    }
-
-
-    private void getHSVColor(short c)
-    {
-        int r = 600;//1000;   //600;  //600m=2000ft
-        int MaxColor = 128;
-        float hsv[] = {0, 0, 0};
-        int colorBase;
-
-        int v = MaxColor * c / r;
-
-        if (v > 3 * MaxColor) {
-            // mountain
-            v %= MaxColor;
-            colorBase = Color.rgb(MaxColor - v, MaxColor, MaxColor);
-        } else if (v > 2 * MaxColor) {
-            // highveld
-            v %= MaxColor;
-            colorBase = Color.rgb(MaxColor, MaxColor, v); // keep building to white
-        } else if (v > MaxColor) {
-            // inland
-            v %= MaxColor;
-            colorBase = Color.rgb(v, MaxColor, 0);
-        } else if (v > 1) {
-            // coastal plain
-            colorBase = Color.rgb(0, v, 0);
-        } else if (v > 0) {
-            // the beach
-            v = MaxColor / 4;
-            colorBase = Color.rgb(v, v, v);
-        } else {
-            colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
-        }
-
-        // this allows us to adjust hue, sat and val
-        Color.colorToHSV(colorBase, hsv);
-        hsv[0] = hsv[0];  // hue 0..360
-        hsv[1] = hsv[1];  // sat 0..1
-        hsv[2] = hsv[2];  // val 0..1
-
-        if (hsv[2] > 0.25) {
-            hsv[0] = hsv[0] - ((hsv[2] - 0.25f) * 60);  // adjust the hue max 15%,  hue 0..360
-            hsv[2] = 0.25f; // clamp the value, val 0..1
-        }
-        int color = Color.HSVToColor(hsv);
-        // or just use as is
-        //int color = colorBase;
-
-        red = (float) Color.red(color) / 255;
-        green = (float) Color.green(color) / 255;
-        blue = (float) Color.blue(color) / 255;
-
-    }
 
     //-------------------------------------------------------------------------
     // DemGTOPO30 Sky.
@@ -2488,7 +2389,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution = 0.6f;
-        float IASValueThreshold = 1.5f * Vs0;
+        float IASValueThreshold = Vx; //1.5f * Vs0;
 
         mSquare.SetWidth(1);
 
@@ -2538,15 +2439,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 ///*
                 // Triangle #1 --------------
                 zav = z1;  // in m asml
-                getColor((short) zav);
+                DemColor color = DemGTOPO30.getColor((short) zav);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
                 //-if (agl_ft > 500) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
                 //-else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
                 //-else if (agl_ft > 100) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
                 //-else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-                if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
-                else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
+                if (agl_ft > 100) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
                 else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
 
                 mTriangle.SetVerts(
@@ -2558,11 +2459,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Triangle #2 --------------
                 zav = (z1 + z2) / 2; // take the simple average
 
-                getColor((short) zav);
+                color = DemGTOPO30.getColor((short) zav);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
-                if (agl_ft > 100) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
-                else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
+                if (agl_ft > 100) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
                 else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
 
                 mTriangle.SetVerts(
@@ -2623,8 +2524,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         for (y = 0; y < maxy /*BUFY*/; y++) {
             for (x = 0; x < maxx /*BUFX*/; x++) {
                 //getColor(DemGTOPO30.buff[x][y]);
-                getColor(DemGTOPO30.buff[x][y]);
-                mLine.SetColor(red, green, blue, 1);  // rgb
+                DemColor color = DemGTOPO30.getColor(DemGTOPO30.buff[x][y]);
+                mLine.SetColor(color.red, color.green, color.blue, 1);  // rgb
 
                 mLine.SetWidth(1);
                 mLine.SetVerts(
@@ -2711,7 +2612,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        if ((AGLValue < 0) && (IASValue < Vs0)){
+        if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
             MSLValue = MSLValue + (-AGLValue*125/100);  //1.25
             AGLValue = 0;
         }

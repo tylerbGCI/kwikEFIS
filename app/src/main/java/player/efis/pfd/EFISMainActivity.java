@@ -728,10 +728,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//
     //float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
     //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of Valsbaai -34.359918f
-    //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
     //float _gps_lon = 115.45f;  float _gps_lat = -31.9f;  // Australia north of Rottnest
+    //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
+    //float _gps_lon = 28; float _gps_lat = -33.2f;//-28;// = -33; // South Africa - South of East London
     float _gps_lon =   18.82f;  float _gps_lat = -33.98f; // Stellenbosh
-	float _gps_course = 1.74f;  //in radians
+	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 1000; // meters
 
 	float _gps_speed = 0;       // m/s
@@ -780,15 +781,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
-        //deltaT = 0.00000124f; //  Warp Speed
+        deltaT = 0.00000124f; //  Warp Speed
         //deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(50);// + (float) rnd.nextGaussian() / 200;
-        gps_speed = _gps_speed = 25;//100;  // m/s
-        //gps_altitude = 2000; //900; //3000; //meter
-        //rollValue = 0;// (float) rnd.nextGaussian() / 5;
-        //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
+        gps_course = _gps_course = (float) Math.toRadians(55);// 2 // + (float) rnd.nextGaussian() / 200;
+        gps_speed = _gps_speed = 125;//100;  // m/s
+        gps_altitude = 3048; //900; //3000; //meter
+        rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        pitchValue = 0;//(float) rnd.nextGaussian() / 20;
 
         //gps_lat = -33f; _gps_lon = 28f;  // EL
         //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
