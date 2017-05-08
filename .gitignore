@@ -7,11 +7,12 @@
 /build
 /captures
 /misc
+/apk
 .externalNativeBuild
 
 #built application files
 *.apk
-*.ap_
+*.md5
 
 # files for the dex VM
 *.dex

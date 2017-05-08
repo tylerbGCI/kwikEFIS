@@ -391,7 +391,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderASIMarkers(iasMatrix);
             }
 
-
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
             renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
@@ -517,7 +516,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
      */
     public static int loadShader(int type, String shaderCode)
     {
-
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
@@ -622,10 +620,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Colomban CriCri
                 Vs0 = 61;   // Stall, flap extended
                 Vs1 = 66;   // Stall, flap retracted
-                Vx = 93;   // Best angle climb
-                Vy = 102;  // Best rate climb
+                Vx = 93;    // Best angle climb
+                Vy = 102;   // Best rate climb
                 Vfe = 140;  // Flaps extension
-                Va = 129;  // Maneuvering
+                Va = 129;   // Maneuvering
                 Vno = 172;  // Max structural cruise
                 Vne = 216;  // Never exceed
                 break;
@@ -634,10 +632,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Colomban CriCri
                 Vs0 = 39;  // Stall, flap extended
                 Vs1 = 49;  // Stall, flap retracted
-                Vx = 56;  // Best angle climb
-                Vy = 68;  // Best rate climb
+                Vx = 56;   // Best angle climb
+                Vy = 68;   // Best rate climb
                 Vfe = 70;  // Flaps extension
-                Va = 85;  // Maneuvering
+                Va = 85;   // Maneuvering
                 Vno = 100; // Max structural cruise
                 Vne = 140; // Never exceed
                 break;
@@ -646,10 +644,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // PiperSport Cruzer
                 Vs0 = 32;  // Stall, flap extended
                 Vs1 = 39;  // Stall, flap retracted
-                Vx = 56;  // Best angle climb
-                Vy = 62;  // Best rate climb
+                Vx = 56;   // Best angle climb
+                Vy = 62;   // Best rate climb
                 Vfe = 75;  // Flaps extension
-                Va = 88;  // Maneuvering
+                Va = 88;   // Maneuvering
                 Vno = 108; // Max structural cruise
                 Vne = 138; // Never exceed
                 break;
@@ -658,10 +656,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Jabiru J160-C
                 Vs0 = 40;   // Stall, flap extended
                 Vs1 = 45;   // Stall, flap retracted
-                Vx = 65;   // Best angle climb
-                Vy = 68;   // Best rate climb
+                Vx = 65;    // Best angle climb
+                Vy = 68;    // Best rate climb
                 Vfe = 80;   // Flaps extension
-                Va = 90;   // Maneuvering
+                Va = 90;    // Maneuvering
                 Vno = 108;  // Max structural cruise
                 Vne = 140;  // Never exceed
                 break;
@@ -670,10 +668,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-8A
                 Vs0 = 56;   // Stall, flap extended
                 Vs1 = 56;   // Stall, flap retracted
-                Vx = 72;   // Best angle climb
-                Vy = 90;   // Best rate climb
+                Vx = 72;    // Best angle climb
+                Vy = 90;    // Best rate climb
                 Vfe = 85;   // Flaps extension
-                Va = 120;  // Maneuvering
+                Va = 120;   // Maneuvering
                 Vno = 161;  // Max structural cruise
                 Vne = 200;  // Never exceed
                 break;
@@ -681,10 +679,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             case M20J:
                 Vs0 = 53;   // Stall, flap extended
                 Vs1 = 53;   // Stall, flap retracted
-                Vx = 66;   // Best angle climb
-                Vy = 85;   // Best rate climb
+                Vx = 66;    // Best angle climb
+                Vy = 85;    // Best rate climb
                 Vfe = 115;  // Flaps extension
-                Va = 120;  // Maneuvering
+                Va = 120;   // Maneuvering
                 Vno = 152;  // Max structural cruise
                 Vne = 174;  // Never exceed
                 break;
@@ -694,10 +692,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Piper PA28 Archer II
                 Vs0 = 49;   // Stall, flap extended
                 Vs1 = 55;   // Stall, flap retracted
-                Vx = 64;   // Best angle climb
-                Vy = 76;   // Best rate climb
+                Vx = 64;    // Best angle climb
+                Vy = 76;    // Best rate climb
                 Vfe = 102;  // Flaps extension
-                Va = 89;   // Maneuvering
+                Va = 89;    // Maneuvering
                 Vno = 125;  // Max structural cruise
                 Vne = 154;  // Never exceed
                 break;
@@ -708,10 +706,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-6,7,8
                 Vs0 = 51;    // Stall, flap extended
                 Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;    // Best angle climb
-                Vy = 90;    // Best rate climb
+                Vx = 72;     // Best angle climb
+                Vy = 90;     // Best rate climb
                 Vfe = 85;    // Flaps extension
-                Va = 120;   // Maneuvering
+                Va = 120;    // Maneuvering
                 Vno = 165;   // Max structural cruise
                 Vne = 200;   // Never exceed
                 break;
@@ -720,10 +718,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Witttman Tailwind
                 Vs0 = 48;  // Stall, flap extended
                 Vs1 = 55;  // Stall, flap retracted
-                Vx = 90;  // Best angle climb - tbd
-                Vy = 104; // Best rate climb
+                Vx = 90;   // Best angle climb - tbd
+                Vy = 104;  // Best rate climb
                 Vfe = 91;  // Flaps extension
-                Va = 130; // Maneuvering
+                Va = 130;  // Maneuvering
                 Vno = 155; // Max structural cruise - tbd
                 Vne = 174; // Never exceed
                 break;
@@ -732,10 +730,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // RV-8A
                 Vs0 = 51;    // Stall, flap extended
                 Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;    // Best angle climb
-                Vy = 90;    // Best rate climb
+                Vx = 72;     // Best angle climb
+                Vy = 90;     // Best rate climb
                 Vfe = 85;    // Flaps extension
-                Va = 120;   // Maneuvering
+                Va = 120;    // Maneuvering
                 Vno = 165;   // Max structural cruise
                 Vne = 200;   // Never exceed
                 break;
@@ -2391,7 +2389,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution = 0.6f;
-        float IASValueThreshold = 1.5f * Vs0;
+        float IASValueThreshold = Vx; //1.5f * Vs0;
 
         mSquare.SetWidth(1);
 
@@ -2614,7 +2612,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        if ((AGLValue < 0) && (IASValue < Vs0)){
+        if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
             MSLValue = MSLValue + (-AGLValue*125/100);  //1.25
             AGLValue = 0;
         }
