@@ -57,7 +57,8 @@ public class EFISPrefManage extends PreferenceActivity
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (NameNotFoundException e) {
+        }
+        catch (NameNotFoundException e) {
             e.printStackTrace();
         }
         String version = pInfo.versionName;
