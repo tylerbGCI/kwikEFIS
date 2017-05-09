@@ -17,6 +17,8 @@
 
 package player.efis.data;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -168,11 +170,22 @@ public class EFISDataPac extends Activity
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
+        // Get the bitmap to draw on
         ImageView imgView = new ImageView(this);
         imgView.setImageBitmap(bitmap);
 
+        // Get the version number of the app
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = pInfo.versionName;
+
         TextView txtView = new TextView(this);
-        String buff = "\nKwik EFIS Terrain data\n\n";
+        String buff = "\nKwik EFIS Terrain data. Version " + version + "\n\n";
         for (int i = 0; i < list.length; i++) {
             buff += list[i] + "\t";
 
