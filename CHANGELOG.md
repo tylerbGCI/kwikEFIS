@@ -1,5 +1,10 @@
 Changelog
 =========
+3.1 (Beta)
+------------------
+* Synthetic vision performance optimization
+* Update to Datapac front end
+
 3.0 (2017-05-05)
 ------------------
 * Synthetic vision (DEM) implementation
