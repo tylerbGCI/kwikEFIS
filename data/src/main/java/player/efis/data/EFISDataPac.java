@@ -27,10 +27,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
+/*import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar;*/
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -52,7 +52,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 //------------------------------
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
@@ -76,9 +76,10 @@ public class EFISDataPac extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_kwik_efisdata);
+        //setContentView(R.layout.activity_kwik_efisdata);
+        setContentView(R.layout.main);
 
-        ///*
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
         {
@@ -99,12 +100,12 @@ public class EFISDataPac extends Activity
                 DoSomething();
             }
         });
-        //*/
 
         // disable and hide the buttons
         // -- we may use this again in future
         fab.setVisibility(View.GONE);
         gobutton.setVisibility(View.GONE);
+        //*/
 
         listAssetFiles("terrain");
     }
@@ -133,19 +134,6 @@ public class EFISDataPac extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    private void listAssets()
-    {
-        System.out.println("Hello World");
-        TextView tv = new TextView(this);
-        for (int i = 0; i < 10; i++) {
-            tv.setText("Hello\nWorld");
-            this.setContentView(tv);
-        }
-
-        //this.getAssets()
-
-    }
-
     private boolean listAssetFiles(String path)
     {
 
@@ -167,7 +155,9 @@ public class EFISDataPac extends Activity
         paint.setColor(Color.rgb(173, 214, 255)); // cyanish
         paint.setAlpha(128);
 
+        // overrride what is in the resrource --- for now
         LinearLayout layout = new LinearLayout(this);
+        layout.setBackgroundColor(Color.WHITE);
         layout.setOrientation(LinearLayout.VERTICAL);
 
         // Get the bitmap to draw on
@@ -185,6 +175,9 @@ public class EFISDataPac extends Activity
         String version = pInfo.versionName;
 
         TextView txtView = new TextView(this);
+        txtView.setTextColor(Color.BLACK);
+        txtView.setBackgroundColor(Color.LTGRAY);
+
         String buff = "\nKwik EFIS Terrain data. Version " + version + "\n\n";
         for (int i = 0; i < list.length; i++) {
             buff += list[i] + "\t";

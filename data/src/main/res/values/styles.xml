@@ -1,4 +1,5 @@
 <resources>
+    <string name="hello">Hello, World!</string>
 
     <style name="AppTheme" >
         <!-- Customize your theme here. -->
