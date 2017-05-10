@@ -40,7 +40,7 @@ class Apt
 
 class Gpx
 {
-	Context context;
+	private Context context;
 	public String region = "zar.aus";
 	static ArrayList<Apt> aptList = null;
 	
