@@ -1,6 +1,4 @@
 /*
-/*
-/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,7 +111,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
-    private int Vs0, Vs1, Vfe, Vno;    // Basic Vspeeds
+    private int Vs0, Vs1, Vfe, Vno; // Basic Vspeeds
     private int Vne, Va, Vy, Vx;    // More Vspeeds
     private int IASMaxDisp;         // The highest speed to show on tape
 
@@ -122,7 +120,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private int MSLValue;           // Altitude above mean sea level, MSL
     private float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
     private float baroPressure;     // Barometric pressure in in-Hg
-    private int AGLValue;         // Altitude above ground, AGL
+    private int AGLValue;           // Altitude above ground, AGL
 
     // The following should be read from a calibration file by an init routine
     private int MSLMinDisp;         // The lowest altitude to show on tape
@@ -134,7 +132,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float VSINeedleAngle;   // The angle to set the VSI needle
 
     //DI
-    private float DIInView;            // The indicated units to display above the center line
+    private float DIInView;         // The indicated units to display above the center line
     private float DIValue;          // Altitude MSL
     private float SlipValue;        // was int
     private float BatteryPct;       // Battery usage
@@ -152,15 +150,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float fpvY;            // Flight Path Vector Y
 
     //Flight Director
-    float FDTranslation;            // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
-    float FDRotation;               // = 20;  // command 20 deg roll
+    float FDTranslation;           // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
+    float FDRotation;              // = 20;  // command 20 deg roll
 
     // Onscreen elements
     boolean displayInfoPage;        // Display The Ancillary Information
     boolean displayFlightDirector;  // Display Flight Director
     boolean displayRMI;             // Display RMI
     boolean displayHITS;            // Display the Highway In The Sky
-    private boolean displayDEM;     // todo debugging used for the BIV
+    private boolean displayDEM;     // Display the DEM terrain
 
     //3D map display
     boolean displayAirport;
@@ -170,13 +168,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean displayFPV;
 
 
-    private boolean ServiceableDevice;    // Flag to indicate no faults
-    private boolean ServiceableAh;        // Flag to indicate AH failure
-    private boolean ServiceableAlt;        // Flag to indicate Altimeter failure
-    private boolean ServiceableAsi;    // Flag to indicate Airspeed failure
+    private boolean ServiceableDevice;  // Flag to indicate no faults
+    private boolean ServiceableAh;      // Flag to indicate AH failure
+    private boolean ServiceableAlt;     // Flag to indicate Altimeter failure
+    private boolean ServiceableAsi;     // Flag to indicate Airspeed failure
     private boolean ServiceableDi;      // Flag to indicate DI failure
     private boolean Calibrating;        // no longer used
-    private String CalibratingMsg;     // no longer used
+    private String CalibratingMsg;      // no longer used
 
     private float mX, mY;               // keypress location
 
@@ -186,8 +184,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean bDemoMode;
     private String sDemoMsg;
 
-    private GLText glText;                             // A GLText Instance
-    private Context context;                           // Context (from Activity)
+    private GLText glText;      // A GLText Instance
+    private Context context;    // Context (from Activity)
 
     public enum layout_t
     {
@@ -200,7 +198,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     public EFISRenderer(Context context)
     {
         super();
-        this.context = context;                         // Save Specified Context
+        this.context = context;      // Save Specified Context
 
         // Initialisation of variables
         pitchTranslation = rollRotation = 0; // default object translation and rotation
@@ -392,9 +390,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
 
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
-            renderFixedALTMarkers(mMVPMatrix); // this could be empty argument
+            renderFixedALTMarkers(mMVPMatrix);    // this could be empty argument
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
-            renderFixedASIMarkers(mMVPMatrix); // this could be empty argument
+            renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument
             renderVSIMarkers(mMVPMatrix);
 
             renderFixedDIMarkers(mMVPMatrix);
@@ -436,7 +434,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // this projection matrix is applied to  object coordinates in the onDrawFrame() method
         //b2 Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
-        //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 2, 7); // - this apparently fixed for the Samsung?
+        //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 2, 7); // - this apparently fixed for the Samsung S2?
 
         //b2 start
         // Capture the window scaling for use by the rendering functions
@@ -467,7 +465,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             selAltDec = -0.74f * pixH2;
             selAltInc = -0.90f * pixH2;
-        } else {
+        }
+        else {
             // Portrait
             lineC = -0.90f;
             lineAutoWptDetails = -0.60f;
@@ -745,20 +744,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         String t = CalibratingMsg; //"Calibrating...";
         glText.begin(1.0f, 0f, 0f, 1.0f, matrix); // Red
-        glText.setScale(5.0f);                            //
+        glText.setScale(5.0f);
         glText.drawCX(t, 0, 0);            // Draw  String
         glText.end();
     }
-
-
-	/* // calibrating flag
-    void setCalibrate(boolean cal, String msg)
-	{
-		Calibrating = cal;
-		CalibratingMsg = msg;
-	}
-	*/
-
 
     private void renderDemoMode(float[] matrix)
     {
@@ -857,25 +846,26 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.VertexCount = 7;
             mPolyLine.SetVerts(vertPoly);
             mPolyLine.draw(mMVPMatrix);
-        } else {
+        }
+        else {
             // The lubber line - Flight Director style
             // side lines
             int B2 = 3;
             mLine.SetWidth(2 * B2);
             mLine.SetColor(1, 1, 0, 1);  // light yellow
             mLine.SetVerts(11.0f * pixPerDegree, B2, z,
-                    15.0f * pixPerDegree, B2, z);
+                           15.0f * pixPerDegree, B2, z);
             mLine.draw(mMVPMatrix);
             mLine.SetVerts(-11.0f * pixPerDegree, B2, z,
-                    -15.0f * pixPerDegree, B2, z);
+                           -15.0f * pixPerDegree, B2, z);
             mLine.draw(mMVPMatrix);
 
             mLine.SetColor(0.6f, 0.6f, 0, 1);  // dark yellow
             mLine.SetVerts(11.0f * pixPerDegree, -B2, z,
-                    15.0f * pixPerDegree, -B2, z);
+                           15.0f * pixPerDegree, -B2, z);
             mLine.draw(mMVPMatrix);
             mLine.SetVerts(-11.0f * pixPerDegree, -B2, z,
-                    -15.0f * pixPerDegree, -B2, z);
+                           -15.0f * pixPerDegree, -B2, z);
             mLine.draw(mMVPMatrix);
 
             // outer triangles
@@ -1201,18 +1191,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    /*!
-    Set the pitch angle
-     */
+    //-------------------------------------------------------------------------
+    // Set the pitch angle
+    //
     public void setPitch(float degrees)
     {
         pitch = -degrees;
         pitchTranslation = pitch / pitchInView * pixH;
     }
 
-    /*!
-    Set the roll angle
-     */
+    //-------------------------------------------------------------------------
+    // Set the roll angle
+    //
     void setRoll(float degrees)
     {
         roll = degrees;
@@ -2448,7 +2438,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 //-else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
                 if (agl_ft > 100) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
                 else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
+                else {
+                    caution = (color.red + color.green + color.blue);
+                    mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
+                }
 
                 mTriangle.SetVerts(
                         x1, y1, z,
@@ -2458,7 +2451,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
                 // Triangle #2 --------------
                 zav = (z1 + z2) / 2; // take the simple average
-
                 color = DemGTOPO30.getColor((short) zav);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
