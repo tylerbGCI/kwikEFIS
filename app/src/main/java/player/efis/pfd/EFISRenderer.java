@@ -1222,11 +1222,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float left = 0.80f * pixM2;
         float right = 1.14f * pixM2;
 
+
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
         // square, leaving extra space outside the edges for terrain which can be clipped if required.
 
-        // Altimeter Display
+        // Radio Altimeter (AGL) Display
 
         // Do a dummy glText so that the Heights are correct for the masking box
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
@@ -1245,6 +1246,21 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
+        }
+
+        // if we are below 1000 ft show the warning chevrons
+        if (AGLValue < 1000) {
+            float slant = 0.02f * pixM2;
+            // moving yellow chevrons
+            mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
+            mLine.SetWidth(4);
+            for (float i = left; i < right - AGLValue/1000f*(right-left); i = i + 2 * slant) {
+                mLine.SetVerts(
+                        0 * slant + i, top + glText.getCharHeight(), z,
+                        1 * slant + i, top - glText.getCharHeight(), z
+                );
+                mLine.draw(matrix);
+            }
         }
 
         int aglAlt = Math.round((float) this.AGLValue / 10) * 10;  // round to 10
@@ -1276,9 +1292,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     right, top - glText.getCharHeight(), z,
                     right, top + glText.getCharHeight(), z,
                     left, top + glText.getCharHeight(), z,
-                    //left, top + glText.getCharHeight() / 2, z,
-                    //apex, 0.0f, z,
-                    //left, top - glText.getCharHeight() / 2, z,
                     left, top - glText.getCharHeight(), z,
                     right, top - glText.getCharHeight(), z
             };
@@ -2667,8 +2680,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         String s = String.format("BAT %3.0f", BatteryPct * 100) + "%";
         if (BatteryPct > 0.1) glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        else glText.begin(0.0f, 1.0f, 1.0f, 1.0f, matrix); // cyan
 
-        else glText.begin(0.0f, 1.0f, 1.0f, 1.0f, matrix); // red
         glText.setScale(2.0f);                            //
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.2f) * pixM2 - glText.getCharHeight() / 2); // as part of the ancillaray group
         glText.end();
