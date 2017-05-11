@@ -1249,12 +1249,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // if we are below 1000 ft show the warning chevrons
-        if (AGLValue < 1000) {
+        final float CevronAGL = 500;
+        if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
             // moving yellow chevrons
             mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
             mLine.SetWidth(4);
-            for (float i = left; i < right - AGLValue/1000f*(right-left); i = i + slant) {
+            for (float i = left; i < right - AGLValue/CevronAGL*(right-left); i = i + slant) {
                 mLine.SetVerts(
                         i, top + glText.getCharHeight(), z,
                         slant + i, top - glText.getCharHeight(), z
