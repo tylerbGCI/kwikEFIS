@@ -895,52 +895,53 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			mGLView.setDisplayAirport(true);
 		}
 		else {
-			mGLView.setDemoMode(false, " ");
+            mGLView.setDemoMode(false, " ");
+        }
 
-			//
-			// Calculate the augmented bank angle and also the flight path vector
-			//
-			float deltaA, fpvX = 0, fpvY = 0;
-			//if (hasGps && hasSpeed) {
-			if (hasGps && gps_speed > 5) {
-				// Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
-				// if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
-				rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
-                pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
+        //
+        // Calculate the augmented bank angle and also the flight path vector
+        //
+        float deltaA, fpvX = 0, fpvY = 0;
+        //if (hasGps && hasSpeed) {
+        if (hasGps && gps_speed > 5) {
+            // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
+            // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
+            rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
+            pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
 
 
-				// the Flight Path Vector (FPV)
-				deltaA = compassRose180(gps_course - orientationAzimuth);
-                fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
-                fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
+            // the Flight Path Vector (FPV)
+            deltaA = compassRose180(gps_course - orientationAzimuth);
+            fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
+            fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
 
-				// Pitch and birdie
-				mGLView.setDisplayAirport(true);
-				mGLView.setFPV(fpvX, fpvY); // need to clean this up
-			}
-			else if (hasGps && gps_speed < 9) {  // m/s
-				// taxi mode
-				rollValue = 0;
-				pitchValue = 0;
-			}
-			else {
-				// No GPS no speed ... no idea what the AH is :-(
-				fpvX = 0;
-				fpvY = 0;
+            // Pitch and birdie
+            mGLView.setDisplayAirport(true);
+            mGLView.setFPV(fpvX, fpvY); // need to clean this up
+        }
+        else if (hasGps && gps_speed < 9) {  // m/s
+            // taxi mode
+            rollValue = 0;
+            pitchValue = 0;
+        }
+        else {
+            // No GPS no speed ... no idea what the AH is :-(
+            fpvX = 0;
+            fpvY = 0;
 
-				// The dreaded red crosses are required
-				mGLView.setDisplayAirport(false);
-				mGLView.setUnServiceableAsi();
-				mGLView.setUnServiceableAlt();
-				mGLView.setUnServiceableDi();
-				mGLView.setUnServiceableAh();
+            // The dreaded red crosses are required
+            mGLView.setDisplayAirport(false);
+            mGLView.setUnServiceableAsi();
+            mGLView.setUnServiceableAlt();
+            mGLView.setUnServiceableDi();
+            mGLView.setUnServiceableAh();
 
-				// Force a blank screen and no birdie
-				rollValue = 0;
-				pitchValue = -270;
-				mGLView.setFPV(180, 180);
-			}
-		}
+            // Force a blank screen and no birdie
+            rollValue = 0;
+            pitchValue = -270;
+            mGLView.setFPV(180, 180);
+        }
+
 
 		//
 		// Read and Set the user preferences
