@@ -3,9 +3,10 @@ Changelog
 3.1 (Beta)
 ------------------
 * Synthetic vision performance optimization
+* Improvements to radar altimeter
 * Update to Datapac front end
 
-3.0 (2017-05-05)
+3.0 (2017-05-10)
 ------------------
 * Synthetic vision (DEM) implementation
 * Add digital elevation model (DEM) data packs (zar.aus)
@@ -42,7 +43,7 @@ Prior History
 * Production release 1
 * Minor bugfix in demo mode simulator
 * Add taxi mode. Bufix version display
-* Tweak filter constants. Remove autocalibration
+* Tweak filter constants. Remove auto calibration
 * Set GPS to maximum/realtime performance
 * Change pitch to 25 degrees in view. Change wording for sensor bias choices
 * Introduce calibration routine. Change pitch filter to 32
