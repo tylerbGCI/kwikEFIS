@@ -1249,19 +1249,44 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // if we are below 1000 ft show the warning chevrons
-        final float CevronAGL = 500f;
+        final float CevronAGL = 500.0f;
         if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
+            float step = 0.04f * pixM2;
+            float i;
             // moving yellow chevrons
             mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
             mLine.SetWidth(4);
-            for (float i = left; i < right - AGLValue/CevronAGL*(right-left); i = i + slant) {
+            for (i = left; i < right - (float)AGLValue/CevronAGL*(right-left) - step; i = i + step) {
                 mLine.SetVerts(
                         i, top + glText.getCharHeight(), z,
                         slant + i, top - glText.getCharHeight(), z
                 );
                 mLine.draw(matrix);
             }
+
+            // left filler
+            mLine.SetVerts(
+                    left, top, z,
+                    left + step/2, top - glText.getCharHeight(), z
+            );
+            mLine.draw(matrix);
+
+            // right filler
+            mLine.SetVerts(
+                    i, top + glText.getCharHeight(), z,
+                    slant/2 + i, top, z
+            );
+            mLine.draw(matrix);
+
+            /* this seems a little bit over the top
+            // bar
+            mLine.SetVerts(
+                    step + i, top + glText.getCharHeight(), z,
+                    step + i, top - glText.getCharHeight(), z
+            );
+            mLine.draw(matrix);
+            */
         }
 
         int aglAlt = Math.round((float) this.AGLValue / 10) * 10;  // round to 10
@@ -2618,11 +2643,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        /*if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
-            MSLValue = MSLValue + (-AGLValue*125/100);  //1.25
-            AGLValue = 0;
-        }*/
-
         if (AGLValue < 0) {
             AGLValue = 0;
             if (IASValue < Vx) {        // was Vs0
