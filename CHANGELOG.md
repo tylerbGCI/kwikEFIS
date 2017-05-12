@@ -3,7 +3,7 @@ Changelog
 3.1 (Beta)
 ------------------
 * Synthetic vision performance optimization
-* Improvements to radar altimeter
+* Improvements to radio altimeter
 * Update to Datapac front end
 
 3.0 (2017-05-10)
