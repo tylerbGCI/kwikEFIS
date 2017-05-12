@@ -1249,7 +1249,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // if we are below 1000 ft show the warning chevrons
-        final float CevronAGL = 500;
+        final float CevronAGL = 500f;
         if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
             // moving yellow chevrons
@@ -1274,7 +1274,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (aglAlt > 1000) glText.draw(t, colom * pixM2, top - glText.getCharHeight() / 2);
+        if (aglAlt >= 1000) glText.draw(t, colom * pixM2, top - glText.getCharHeight() / 2);
         if (aglAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
@@ -1352,7 +1352,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (mslAlt > 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
+        if (mslAlt >= 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
         if (mslAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
@@ -2618,9 +2618,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
+        /*if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
             MSLValue = MSLValue + (-AGLValue*125/100);  //1.25
             AGLValue = 0;
+        }*/
+
+        if (AGLValue < 0) {
+            AGLValue = 0;
+            if (IASValue < Vx) {        // was Vs0
+                MSLValue = MSLValue + (-AGLValue * 125 / 100);  //1.25
+            }
         }
     }
 
