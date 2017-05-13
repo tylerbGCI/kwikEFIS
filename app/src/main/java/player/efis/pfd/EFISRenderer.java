@@ -2643,11 +2643,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        if (AGLValue < 0) {
-            if (IASValue < Vx) {        // was Vs0
-                MSLValue = MSLValue + (-AGLValue * 125 / 100);  //1.25
-            }
-            AGLValue = 1;  // do not use 0, it causes problems elsewhere
+        if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
+            // Handle taxi as a special case
+            MSLValue = MSLValue + (-AGLValue*105/100);  // 5% extra to work around tbe rounding
+            AGLValue = 0;
         }
     }
 
