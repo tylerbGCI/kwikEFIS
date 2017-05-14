@@ -1268,8 +1268,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             // right filler
             mLine.SetVerts(
-                    i-1, top + glText.getCharHeight(), z,
-                    slant/2 + i-1, top, z
+                    i, top + glText.getCharHeight(), z,
+                    slant/2 + i-2, top, z
             );
             mLine.draw(matrix);
 
