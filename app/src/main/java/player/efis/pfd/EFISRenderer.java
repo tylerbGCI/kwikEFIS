@@ -26,7 +26,6 @@ import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -233,9 +232,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText = new GLText(context.getAssets());
     }
 
-
-    //	float[] scratch = new float[160];
-
     @Override
     public void onDrawFrame(GL10 gl)
     {
@@ -286,8 +282,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        //if (displayTerrain) renderTerrain(scratch1);
-
         if (displayDEM) {
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
@@ -296,7 +290,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else if (displayTerrain) renderTerrain(scratch1);
 
-        //if (displayDEM) renderDEMBuffer(mMVPMatrix);  /// dddddddd debug dddddddddddd
+        //if (displayDEM) renderDEMBuffer(mMVPMatrix);  // dddd debug dddd
 
 
         renderPitchMarkers(scratch1);
@@ -1567,14 +1561,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void renderVSIMarkers(float[] matrix)
     {
         int i;
-        float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
+        float z, pixPerUnit, innerTic; //, midTic, outerTic;
 
         pixPerUnit = 1.0f * pixM2 / VSIInView;
         z = zfloat;
 
         innerTic = 0.64f * pixM2;    // inner & outer are relative to the vertical scale line
-        outerTic = 0.70f * pixM2;
-        midTic = 0.67f * pixM2;
+        //outerTic = 0.70f * pixM2;
+        //midTic = 0.67f * pixM2;
 
 
         // VSI box
@@ -1689,7 +1683,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float tapeShade = 0.6f; // for grey
         int i, j;
-        float innerTic, midTic, outerTic, topTic, botTic;
+        float innerTic, midTic, outerTic; //, topTic, botTic;
         float z, pixPerUnit, iPix;
 
         z = zfloat;
@@ -2056,9 +2050,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     void renderHDGValue(float[] matrix)
     {
-        float z;
-
-        z = zfloat;
+        //float z;
+        //z = zfloat;
 
         int rd = Math.round(DIValue);           // round to nearest integer
         String t = Integer.toString(rd);
@@ -2204,9 +2197,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float deltaLon = lon2 - lon1;
 
         //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
-        float d = (float) (60 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat));  // in nm, 1 deg of lat
-        return d;
-
+        return (float) (60 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat));  // in nm, 1 deg of lat
     }
 
     //-------------------------------------------------------------------------
@@ -2239,10 +2230,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    static final int MX_NR_APT = 10;
-    static int MX_RANGE = 20;   //nm
-    static int Aptscounter = 0;
-    static int nrAptsFound;
+    //-------------------------------------------------------------------------
+    // Airports / Waypoints
+    //
+
+    //
+    // Variables specific to render APT
+    //
+    private final int MX_NR_APT = 10;
+    private int MX_RANGE = 20;   //nm
+    private int Aptscounter = 0;
+    private int nrAptsFound;
 
     private void renderAPT(float[] matrix)
     {
@@ -2330,7 +2328,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Synthetic Vision
     //
-
     private void __getColor(short c)
     {
         float red = 0;
@@ -2399,7 +2396,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
-        float a = 0;//Float.MAX_VALUE;
+        //float a = 0;//Float.MAX_VALUE;
         //float b = Float.MAX_VALUE;
 
         pixPerDegree = pixM / pitchInView;
@@ -2546,8 +2543,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     public void renderDEMBuffer(float[] matrix)
     {
         float z = zfloat;
-        int x = 0;
-        int y = 0;
+        int x; // = 0;
+        int y; // = 0;
 
         int maxx = DemGTOPO30.BUFX;
         int maxy = DemGTOPO30.BUFY;
@@ -2575,7 +2572,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderHITS(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;
-        float radius = pixM2 / 2; //5;
+        float radius; // = pixM2 / 2; //5;
         float dme;
         float hitRelBrg;
         float obs;
@@ -2728,10 +2725,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     void renderGForceValue(float[] matrix)
     {
-        float z, pixPerUnit;
-
-        pixPerUnit = pixH2 / DIInView;
-        z = zfloat;
+        //float z, pixPerUnit;
+        //pixPerUnit = pixH2 / DIInView;
+        //z = zfloat;
 
         String t = String.format("G %03.1f", GForceValue);
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
@@ -2854,8 +2850,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderSelWptValue(float[] matrix)
     {
-        float z, pixPerDegree, x1, y1;
-        pixPerDegree = pixH2 / PPD_DIV;
+        //float pixPerDegree = pixH2 / PPD_DIV;
+        float z; //, pixPerDegree, x1, y1;
 
         z = zfloat;
         // Draw the selecting triangle spinner buttons
@@ -3115,10 +3111,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderAutoWptRlb(float[] matrix)
     {
-        float z, pixPerUnit;
-
-        pixPerUnit = pixH2 / DIInView;
-        z = zfloat;
+        //float z, pixPerUnit;
+        //pixPerUnit = pixH2 / DIInView;
+        //z = zfloat;
 
         String t = String.format("RLB  %03.0f", mAutoWptRlb);
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
@@ -3177,7 +3172,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderFixedCompassMarkers(float[] matrix)
     {
-        float tapeShade = 0.6f;
+        //float tapeShade = 0.6f;
         int i;
         float z, sinI, cosI;
         float roseRadius = roseScale * pixM2;
