@@ -1248,7 +1248,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.draw(matrix);
         }
 
-        // if we are below 1000 ft show the warning chevrons
+        // if we are below 500 ft show the warning chevrons
         final float CevronAGL = 500.0f;
         if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
@@ -1274,8 +1274,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             // right filler
             mLine.SetVerts(
-                    i, top + glText.getCharHeight(), z,
-                    slant/2 + i, top, z
+                    i-1, top + glText.getCharHeight(), z,
+                    slant/2 + i-1, top, z
             );
             mLine.draw(matrix);
 
@@ -2637,26 +2637,33 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Radio Alitimeter (agl)
     //
-    // There are two events that can change agl: setLatLon and seAlt
+    // There are two events that can change agl: setLatLon and setAlt
     // This function is called directly by them.
     //
     void setAGL()
     {
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
+        else AGLValue = 0;
+        
         if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
             // Handle taxi as a special case
-            MSLValue = MSLValue + (-AGLValue*105/100);  // 5% extra to work around tbe rounding
-            AGLValue = 0;
+            MSLValue = MSLValue + (-AGLValue) + 1;        // Add 1 extra ft to esure we "above the ground"
+            AGLValue = 1;                                 // Just good form, it will get changed on the next update
         }
+
+        if (AGLValue < 0) AGLValue = 0;                   // Clamp negative AGL        
     }
 
+    //-------------------------------------------------------------------------
+    // Geographic coordinates (lat, lon)
+    // in decimal degrees
+    //
     void setLatLon(float lat, float lon)
     {
         LatValue = lat;
         LonValue = lon;
 
-        //if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        setAGL();
+        setAGL(); // calculate and set the AGL
     }
 
     //-------------------------------------------------------------------------
