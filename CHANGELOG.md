@@ -5,6 +5,7 @@ Changelog
 * Synthetic vision performance optimization
 * Improvements to radio altimeter
 * Update to Datapac front end
+* Waypoint database cycle 2017-06 (zar.aus)
 
 3.0 (2017-05-10)
 ------------------
