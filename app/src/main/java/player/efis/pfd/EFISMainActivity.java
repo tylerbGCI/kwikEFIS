@@ -524,8 +524,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
 
-
-
     private void setUserPrefs()
     {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -557,7 +555,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // If the aircraft is changed, update the paramaters
         String s = SP.getString("AircraftModel", "RV8");
-        mGLView.mRenderer.setAircraftData(s);
+        AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
 
         // If the database changed it needs to be re-loaded.
         s = SP.getString("regionDatabase", "zar.aus");
@@ -575,7 +573,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         }
         bLandscapeMode = SP.getBoolean("landscapeMode", false);
     }
-
 
 
 	//-------------------------------------------------------------------------

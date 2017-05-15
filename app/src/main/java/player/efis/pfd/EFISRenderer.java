@@ -31,21 +31,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
-enum AircraftModel
-{
-    GENERIC,
-    AZTEC,
-    CRICRI,
-    CRUZ,
-    J160,
-    LGEZ,
-    M20J,
-    PA28,
-    RV6,
-    RV7,
-    RV8,
-    W10
-}
 
 
 /**
@@ -71,7 +56,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //private final static AircraftModel mAircraftModel = AircraftModel.RV8; //done
     //private final static AircraftModel mAircraftModel = AircraftModel.W10; //done
 
-    private static AircraftModel mAircraftModel = AircraftModel.RV8;
+    //private static AircraftModel mAircraftModel = AircraftModel.RV8;
     private static final String TAG = "EFISRenderer";
 
     private Triangle mTriangle;
@@ -110,8 +95,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
-    private int Vs0, Vs1, Vfe, Vno; // Basic Vspeeds
-    private int Vne, Va, Vy, Vx;    // More Vspeeds
+    //private int Vs0, Vs1, Vfe, Vno; // Basic Vspeeds
+    //private int Vne, Va, Vy, Vx;    // More Vspeeds
     private int IASMaxDisp;         // The highest speed to show on tape
 
     // Altimeter
@@ -548,191 +533,21 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-
-    /**
-     * Returns the rotation angle of the triangle shape (mTriangle).
-     *
-     * @return - A float representing the rotation angle.
-     */
+    //-------------------------------------------------------------------------
+    //  Returns the rotation angle of the triangle shape (mTriangle).
+    //
     public float getAngle()
     {
         return mAngle;
     }
 
-    /**
-     * Sets the rotation angle of the triangle shape (mTriangle).
-     */
+    //-------------------------------------------------------------------------
+    //  Sets the rotation angle of the triangle shape (mTriangle).
+    //
     public void setAngle(float angle)
     {
         mAngle = angle;
     }
-
-
-    //-------------------------------------------------------------------------
-    // Define the various built-in arcraft definitions
-    //
-    public void setAircraftData(String model)
-    {
-        try {
-            mAircraftModel = AircraftModel.valueOf(model);
-        }
-        //catch (IllegalArgumentException e) {
-        catch (Exception e) {
-            mAircraftModel = AircraftModel.RV8;
-        }
-
-
-        // Vs0  Stall, flap extended
-        // Vs1  Stall, flap retracted
-        // Vx   Best angle climb
-        // Vy   Best rate climb
-        // Vfe  Flaps extension
-        // Va   Maneuvering
-        // Vno  Max structural cruise
-        // Vne  Never exceed
-        //
-        // White Arc  Vs0 - Vfe
-        // Green Arc  Vs1 - Vno
-        // Yellow Arc Vno - Vne
-
-        switch (mAircraftModel) {
-            // V Speeds for various aircraft models
-            case GENERIC:
-                // Ultralight
-                Vs0 = 20;  // Stall, flap extended
-                Vs1 = 30;  // Stall, flap retracted
-                Vx =  40;  // Best angle climb
-                Vy =  50;  // Best rate climb
-                Vfe = 60;  // Flaps extension
-                Va =  70;  // Maneuvering
-                Vno = 80;  // Max structural cruise
-                Vne = 90;  // Never exceed
-                break;
-
-            case AZTEC:
-                // Colomban CriCri
-                Vs0 = 61;   // Stall, flap extended
-                Vs1 = 66;   // Stall, flap retracted
-                Vx = 93;    // Best angle climb
-                Vy = 102;   // Best rate climb
-                Vfe = 140;  // Flaps extension
-                Va = 129;   // Maneuvering
-                Vno = 172;  // Max structural cruise
-                Vne = 216;  // Never exceed
-                break;
-
-            case CRICRI:
-                // Colomban CriCri
-                Vs0 = 39;  // Stall, flap extended
-                Vs1 = 49;  // Stall, flap retracted
-                Vx = 56;   // Best angle climb
-                Vy = 68;   // Best rate climb
-                Vfe = 70;  // Flaps extension
-                Va = 85;   // Maneuvering
-                Vno = 100; // Max structural cruise
-                Vne = 140; // Never exceed
-                break;
-
-            case CRUZ:
-                // PiperSport Cruzer
-                Vs0 = 32;  // Stall, flap extended
-                Vs1 = 39;  // Stall, flap retracted
-                Vx = 56;   // Best angle climb
-                Vy = 62;   // Best rate climb
-                Vfe = 75;  // Flaps extension
-                Va = 88;   // Maneuvering
-                Vno = 108; // Max structural cruise
-                Vne = 138; // Never exceed
-                break;
-
-            case J160:
-                // Jabiru J160-C
-                Vs0 = 40;   // Stall, flap extended
-                Vs1 = 45;   // Stall, flap retracted
-                Vx = 65;    // Best angle climb
-                Vy = 68;    // Best rate climb
-                Vfe = 80;   // Flaps extension
-                Va = 90;    // Maneuvering
-                Vno = 108;  // Max structural cruise
-                Vne = 140;  // Never exceed
-                break;
-
-            case LGEZ:
-                // RV-8A
-                Vs0 = 56;   // Stall, flap extended
-                Vs1 = 56;   // Stall, flap retracted
-                Vx = 72;    // Best angle climb
-                Vy = 90;    // Best rate climb
-                Vfe = 85;   // Flaps extension
-                Va = 120;   // Maneuvering
-                Vno = 161;  // Max structural cruise
-                Vne = 200;  // Never exceed
-                break;
-
-            case M20J:
-                Vs0 = 53;   // Stall, flap extended
-                Vs1 = 53;   // Stall, flap retracted
-                Vx = 66;    // Best angle climb
-                Vy = 85;    // Best rate climb
-                Vfe = 115;  // Flaps extension
-                Va = 120;   // Maneuvering
-                Vno = 152;  // Max structural cruise
-                Vne = 174;  // Never exceed
-                break;
-
-
-            case PA28:
-                // Piper PA28 Archer II
-                Vs0 = 49;   // Stall, flap extended
-                Vs1 = 55;   // Stall, flap retracted
-                Vx = 64;    // Best angle climb
-                Vy = 76;    // Best rate climb
-                Vfe = 102;  // Flaps extension
-                Va = 89;    // Maneuvering
-                Vno = 125;  // Max structural cruise
-                Vne = 154;  // Never exceed
-                break;
-
-            case RV6:
-            case RV7:
-            case RV8:
-                // RV-6,7,8
-                Vs0 = 51;    // Stall, flap extended
-                Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;     // Best angle climb
-                Vy = 90;     // Best rate climb
-                Vfe = 85;    // Flaps extension
-                Va = 120;    // Maneuvering
-                Vno = 165;   // Max structural cruise
-                Vne = 200;   // Never exceed
-                break;
-
-            case W10:
-                // Witttman Tailwind
-                Vs0 = 48;  // Stall, flap extended
-                Vs1 = 55;  // Stall, flap retracted
-                Vx = 90;   // Best angle climb - tbd
-                Vy = 104;  // Best rate climb
-                Vfe = 91;  // Flaps extension
-                Va = 130;  // Maneuvering
-                Vno = 155; // Max structural cruise - tbd
-                Vne = 174; // Never exceed
-                break;
-
-            default:
-                // RV-8A
-                Vs0 = 51;    // Stall, flap extended
-                Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;     // Best angle climb
-                Vy = 90;     // Best rate climb
-                Vfe = 85;    // Flaps extension
-                Va = 120;    // Maneuvering
-                Vno = 165;   // Max structural cruise
-                Vne = 200;   // Never exceed
-                break;
-        }
-    }
-
 
     private void renderCalibrate(float[] matrix)
     {
@@ -1742,9 +1557,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //glText.begin( 0.0f, 0.9f, 0.9f, 1.0f, matrix); // cyan
             glText.begin(0.7f, 0.7f, 0.7f, 1.0f, matrix); // grey
             glText.setScale(2.0f);    // was 1.5
-            glText.draw(" Vx", innerTic, (float) Vx * pixPerUnit); // Vx
-            glText.draw(" Vy", innerTic, (float) Vy * pixPerUnit); // Vy
-            glText.draw(" Va", innerTic, (float) Va * pixPerUnit); // Va
+            glText.draw(" Vx", innerTic, (float) AircraftData.Vx * pixPerUnit); // Vx
+            glText.draw(" Vy", innerTic, (float) AircraftData.Vy * pixPerUnit); // Vy
+            glText.draw(" Va", innerTic, (float) AircraftData.Va * pixPerUnit); // Va
             glText.end();
 
 
@@ -1756,10 +1571,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
-                        innerTic, (float) Vs1 * pixPerUnit, z,
-                        innerTic, (float) Vno * pixPerUnit, z,
-                        midTic, (float) Vno * pixPerUnit, z,
-                        midTic, (float) Vs1 * pixPerUnit, z
+                        innerTic, (float) AircraftData.Vs1 * pixPerUnit, z,
+                        innerTic, (float) AircraftData.Vno * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vno * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vs1 * pixPerUnit, z
                 };
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
@@ -1768,10 +1583,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
-                        innerTic, (float) Vs0 * pixPerUnit, z,
-                        innerTic, (float) Vfe * pixPerUnit, z,
-                        midTic, (float) Vfe * pixPerUnit, z,
-                        midTic, (float) Vs0 * pixPerUnit, z
+                        innerTic, (float) AircraftData.Vs0 * pixPerUnit, z,
+                        innerTic, (float) AircraftData.Vfe * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vfe * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vs0 * pixPerUnit, z
                 };
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
@@ -1781,10 +1596,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
-                        innerTic, (float) Vno * pixPerUnit, z,
-                        innerTic, (float) Vne * pixPerUnit, z,
-                        midTic, (float) Vne * pixPerUnit, z,
-                        midTic, (float) Vno * pixPerUnit, z
+                        innerTic, (float) AircraftData.Vno * pixPerUnit, z,
+                        innerTic, (float) AircraftData.Vne * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vne * pixPerUnit, z,
+                        midTic, (float) AircraftData.Vno * pixPerUnit, z
                 };
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
@@ -1795,19 +1610,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
-                        innerTic, (float) Vne * pixPerUnit, z,
-                        innerTic, (float) (Vne + 1) * pixPerUnit, z,
-                        outerTic, (float) (Vne + 1) * pixPerUnit, z,
-                        outerTic, (float) Vne * pixPerUnit, z
+                        innerTic, (float) AircraftData.Vne * pixPerUnit, z,
+                        innerTic, (float) (AircraftData.Vne + 1) * pixPerUnit, z,
+                        outerTic, (float) (AircraftData.Vne + 1) * pixPerUnit, z,
+                        outerTic, (float) AircraftData.Vne * pixPerUnit, z
                 };
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
 
                 float[] squarePoly2 = {
-                        innerTic, (float) Vne * pixPerUnit, z,
+                        innerTic, (float) AircraftData.Vne * pixPerUnit, z,
                         innerTic, (float) (IASMaxDisp + 10) * pixPerUnit, z,
                         midTic, (float) (IASMaxDisp + 10) * pixPerUnit, z,
-                        midTic, (float) Vne * pixPerUnit, z
+                        midTic, (float) AircraftData.Vne * pixPerUnit, z
                 };
                 mSquare.SetVerts(squarePoly2);
                 mSquare.draw(matrix);
@@ -2415,7 +2230,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution = 0.6f;
-        float IASValueThreshold = Vx; //1.5f * Vs0;
+        float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
 
         mSquare.SetWidth(1);
 
@@ -2642,7 +2457,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
         else AGLValue = 0;
         
-        if ((AGLValue < 0) && (IASValue < Vx)) {        // was Vs0
+        if ((AGLValue < 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
             // Handle taxi as a special case
             MSLValue = MSLValue + (-AGLValue) + 1;        // Add 1 extra ft to esure we "above the ground"
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
@@ -2887,7 +2702,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
         float deltaAlt = mAltSelValue - MSLValue;
         float commandPitch;
-        if (deltaAlt > 0) commandPitch = (IASValue - Vy) / 5 * (deltaAlt / 1000);
+        if (deltaAlt > 0) commandPitch = (IASValue - AircraftData.Vy) / 5 * (deltaAlt / 1000);
         else commandPitch = (IASValue) / 5 * (deltaAlt / 1000);
 
         if (commandPitch > MAX_COMMAND) commandPitch = MAX_COMMAND;
