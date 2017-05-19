@@ -1,1 +1,1 @@
-include ':app', ':data'
+include ':app', ':data', ':data.usa.can', ':data.zar.aus'
