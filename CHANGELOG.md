@@ -1,10 +1,16 @@
 Changelog
 =========
-3.1 (Beta)
+3.2 (Beta)
+------------------
+* DataPac enhanced to allow multiple regions
+* Add region: zar.aus - Southern Africa, Australia
+* Add region: usa.can - United States, Canada
+
+3.1 (2017-05-18)
 ------------------
 * Synthetic vision performance optimization
 * Improvements to radio altimeter
-* Update to Datapac front end
+* Update to DataPac front end
 * Waypoint database cycle 2017-06 (zar.aus)
 
 3.0 (2017-05-10)
