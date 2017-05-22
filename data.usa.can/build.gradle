@@ -4,9 +4,9 @@ android {
     compileSdkVersion 19
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId 'player.efis.data'
-        minSdkVersion 9
-        targetSdkVersion 10
+        //applicationId 'player.efis.data.usa.can'
+        //minSdkVersion 9
+        //targetSdkVersion 10
         //versionCode 1
         //versionName "1.0"
     }
@@ -26,14 +26,14 @@ android {
 
 dependencies {
     /*
-                            compile fileTree(include: ['*.jar'], dir: 'libs')
-                            androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-                                exclude group: 'com.android.support', module: 'support-annotations'
-                            })
-                            compile 'com.android.support:appcompat-v7:24.2.1'
-                            compile 'com.android.support.constraint:constraint-layout:1.0.2'
-                            compile 'com.android.support:design:24.2.1'
-                            testCompile 'junit:junit:4.12'
-                            */
+                                    compile fileTree(include: ['*.jar'], dir: 'libs')
+                                    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+                                        exclude group: 'com.android.support', module: 'support-annotations'
+                                    })
+                                    compile 'com.android.support:appcompat-v7:24.2.1'
+                                    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+                                    compile 'com.android.support:design:24.2.1'
+                                    testCompile 'junit:junit:4.12'
+                                    */
     compile project(':data')
 }

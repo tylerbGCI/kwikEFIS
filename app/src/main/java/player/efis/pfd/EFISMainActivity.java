@@ -287,6 +287,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGpx.loadDatabase(region);
 
         mDemGTOPO30 = new DemGTOPO30(this);
+        mDemGTOPO30.loadDatabase(region);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -559,7 +560,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // If the database changed it needs to be re-loaded.
         s = SP.getString("regionDatabase", "zar.aus");
-        if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);
+        if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
+        if (!mDemGTOPO30.region.equals(s)) {
+            mDemGTOPO30.loadDatabase(s);                 // load the dem
+            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // force an update
+        }
 
         // landscape / porait mode toggle
         bLandscapeMode = SP.getBoolean("landscapeMode", false);

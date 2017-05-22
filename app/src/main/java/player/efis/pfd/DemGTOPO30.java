@@ -62,6 +62,7 @@ class DemColor
 public class DemGTOPO30
 {
     Context context;
+    public String region = "zar.aus";
 
     final static float DEM_HORIZON = 20; // nm
 
@@ -355,8 +356,9 @@ public class DemGTOPO30
         setBufferCenter(lat, lon);
 
         // Check to see if player.efis.data is installed
-        if (isAppInstalledOrNot("player.efis.data") == false) {
-            Toast.makeText(context, "DataPac not installed.\nSynthetic vision not available", Toast.LENGTH_LONG).show();
+        if (isAppInstalledOrNot("player.efis.data." + region) == false) {
+            Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -380,7 +382,7 @@ public class DemGTOPO30
 
                 ///*
                 // read from datapac "assets"
-                Context otherContext = context.createPackageContext("player.efis.data", 0);
+                Context otherContext = context.createPackageContext("player.efis.data." + region, 0);
                 InputStream inp = otherContext.getAssets().open("terrain/" + DemFilename + ".DEM");
                 DataInputStream demFile = new DataInputStream(inp);
                 //*/
@@ -452,5 +454,10 @@ public class DemGTOPO30
         }
     }
 
+
+    public void loadDatabase(String database)
+    {
+        region = database;
+    }
 
 }
