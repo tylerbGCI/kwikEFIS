@@ -728,13 +728,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a very simple flight simulator
 	//
-    //float _gps_lon =   28.221832f;  float _gps_lat = -25.656874f;// Wonderboom
-    //float _gps_lon =   18.655624f;  float _gps_lat = -34.259918f;// South of Valsbaai -34.359918f
-    //float _gps_lon = 115.45f;  float _gps_lat = -31.9f;  // Australia north of Rottnest
-    //float _gps_lon = 28; float _gps_lat = -33f;//-28;// = -33; // South Africa - East London
-    //float _gps_lon = 28; float _gps_lat = -33.2f;//-28;// = -33; // South Africa - South of East London
-    //float _gps_lon =   -111.82f;  float _gps_lat = 40.7f; // Salt Lake City
-    //float _gps_lat = 48.14f; float _gps_lon = 11.57f;   // Munich
+    //float _gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
+    //float _gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
+    //float _gps_lat = -31.9f;  float _gps_lon = 115.45f;  // Australia north of Rottnest
+    //float _gps_lat = -33.0f;  float _gps_lon = 28; //-28;// = -33; // South Africa - East London
+    //float _gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
+    //float _gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
+    //float _gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
     float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
     //float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
 	float _gps_course = 0.96f; //1.74f;  //in radians
