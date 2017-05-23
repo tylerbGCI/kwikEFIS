@@ -17,12 +17,14 @@
         </string-array>
     
     <string-array name="region_names">
-        <item>South Africa / Australia</item>
         <item>USA / Canada</item>
+        <item>Europe / Russia</item>
+        <item>Southern Africa / Australia</item>
     </string-array>
     <string-array name="region_values">
-        <item>zar.aus</item>
         <item>usa.can</item>
+        <item>eur.rus</item>
+        <item>zar.aus</item>
     </string-array>
     
     <string-array name="ac_list_names">
