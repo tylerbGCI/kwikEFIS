@@ -209,19 +209,15 @@ public class EFISDataPac extends Activity
                     x1 = twidth * 5;
                     y1 = theight * 0;
                     break;
-                case "E020S90.DEM":
-                    x1 = twidth * 5;
-                    y1 = theight * 0;
-                    break;
-                case "E060S90.DEM":
+                case "E060N90.DEM":
                     x1 = twidth * 6;
                     y1 = theight * 0;
                     break;
-                case "E100S90.DEM":
+                case "E100N90.DEM":
                     x1 = twidth * 7;
                     y1 = theight * 0;
                     break;
-                case "E140S90.DEM":
+                case "E140N90.DEM":
                     x1 = twidth * 8;
                     y1 = theight * 0;
                     break;
@@ -251,25 +247,21 @@ public class EFISDataPac extends Activity
                     x1 = twidth * 5;
                     y1 = theight * 1;
                     break;
-                case "E020S40.DEM":
-                    x1 = twidth * 5;
-                    y1 = theight * 1;
-                    break;
-                case "E060S40.DEM":
+                case "E060N40.DEM":
                     x1 = twidth * 6;
                     y1 = theight * 1;
                     break;
-                case "E100S40.DEM":
+                case "E100N40.DEM":
                     x1 = twidth * 7;
                     y1 = theight * 1;
                     break;
-                case "E140S40.DEM":
+                case "E140N40.DEM":
                     x1 = twidth * 8;
                     y1 = theight * 1;
                     break;
 
                 // bottom row
-                case "W180N1.DEM":
+                case "W180N10.DEM":
                     x1 = twidth * 0;
                     y1 = theight * 2;
                     break;
