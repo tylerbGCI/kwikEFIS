@@ -5,6 +5,7 @@ Changelog
 * DataPac enhanced to allow multiple regions
 * Add region: zar.aus - Southern Africa, Australia
 * Add region: usa.can - United States, Canada
+* Add region: eur.rus - Europe, Russia
 
 3.1 (2017-05-18)
 ------------------
