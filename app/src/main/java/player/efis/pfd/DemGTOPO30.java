@@ -278,7 +278,7 @@ public class DemGTOPO30
 
 
     //-------------------------------------------------------------------------
-    // use the lat lon to determine with region file is active
+    // use the lat lon to determine which region file is active
     //
     public String setDEMRegion(float lat, float lon)
     {
@@ -289,7 +289,7 @@ public class DemGTOPO30
 
         String s = String.format("%c%03d%c%02d", demTopLeftLon < 0 ? 'W' : 'E', (int) Math.abs(demTopLeftLon),
                 demTopLeftLat < 0 ? 'S' : 'N', (int) Math.abs(demTopLeftLat));
-        //DemFilename = s;
+
         return s;
 
     }
@@ -428,7 +428,7 @@ public class DemGTOPO30
                 buffEmpty = false;
             }
             catch (IOException e) {
-                Toast.makeText(context, "Terrain file error: " + DemFilename, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Terrain file error: " + region +"/" + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 buffEmpty = false;
                 fillBuffer((short) 0);

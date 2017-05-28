@@ -271,7 +271,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
-            if (AGLValue > 0) renderDEM(scratch1);  // underground is not valid
+            if (AGLValue > 0) renderDEMTerrain(scratch1);  // underground is not valid
         }
         else if (displayTerrain) renderTerrain(scratch1);
 
@@ -1058,7 +1058,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // if we are below 500 ft show the warning chevrons
-        final float CevronAGL = 500.0f;
+        final float CevronAGL = 1000.0f;
         if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
             float step = 0.04f * pixM2;
@@ -2207,7 +2207,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     // This is the meat and potatoes of the synthetic vision implementation
     //
-    public void renderDEM(float[] matrix)
+    public void renderDEMTerrain(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
@@ -2229,8 +2229,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
         //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        float caution = 0.6f;
-        float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
+        float caution;
+        final float cautionMin = 0.2f;
+        final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
 
         mSquare.SetWidth(1);
 
@@ -2281,18 +2282,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Triangle #1 --------------
                 zav = z1;  // in m asml
                 DemColor color = DemGTOPO30.getColor((short) zav);
+                caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
                 //-if (agl_ft > 500) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
                 //-else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
                 //-else if (agl_ft > 100) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
                 //-else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-                if (agl_ft > 100) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
-                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                else {
-                    caution = (color.red + color.green + color.blue);
-                    mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-                }
+                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or approach
+                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification (yellow)
+                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning (red)
 
                 mTriangle.SetVerts(
                         x1, y1, z,
@@ -2303,10 +2303,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 // Triangle #2 --------------
                 zav = (z1 + z2) / 2; // take the simple average
                 color = DemGTOPO30.getColor((short) zav);
+                caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
-                if (agl_ft > 100) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
                 else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
+                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
                 else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
 
                 mTriangle.SetVerts(
