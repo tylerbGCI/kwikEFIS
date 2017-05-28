@@ -5,8 +5,8 @@ android {
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId 'player.efis.data.zar.aus'
-        //minSdkVersion 9
-        //targetSdkVersion 10
+        minSdkVersion 9
+        targetSdkVersion 10
         //versionCode 1
         //versionName "1.0"
     }
