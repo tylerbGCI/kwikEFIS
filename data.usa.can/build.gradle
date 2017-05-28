@@ -4,9 +4,9 @@ android {
     compileSdkVersion 19
     buildToolsVersion "25.0.0"
     defaultConfig {
-        //applicationId 'player.efis.data.usa.can'
-        //minSdkVersion 9
-        //targetSdkVersion 10
+        applicationId 'player.efis.data.usa.can'
+        minSdkVersion 9
+        targetSdkVersion 10
         //versionCode 1
         //versionName "1.0"
     }
