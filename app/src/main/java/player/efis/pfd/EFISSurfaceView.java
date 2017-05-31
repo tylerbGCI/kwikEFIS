@@ -122,6 +122,14 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    // Radio Altimeter (agl)
+    void setAGL(int value)
+    {
+        mRenderer.setAGL(value);
+        requestRender();
+    }
+
+
     // Air Speed Indicator
     public void setASI(float value)
     {
