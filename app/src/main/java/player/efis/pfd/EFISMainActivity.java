@@ -27,13 +27,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.location.GpsStatus.Listener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Bundle; 
 // sensor imports
@@ -60,10 +60,11 @@ import java.util.Random;
 public class EFISMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
-
 	private EFISSurfaceView mGLView;
+    private MediaPlayer mediaPlayer;
 
-	// sensor members
+
+    // sensor members
 	private SensorManager mSensorManager;
 	//private Sensor mRotationSensor;
 	//private static final int SENSOR_DELAY = 500 * 1000; // 500ms
@@ -93,6 +94,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	protected float gps_lat;
 	protected float gps_lon;
 	protected float gps_altitude;
+    protected float gps_agl;
 	protected float gps_speed;
 	protected float gps_course;
 	protected float gps_rateOfClimb;
@@ -289,6 +291,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mDemGTOPO30 = new DemGTOPO30(this);
         mDemGTOPO30.loadDatabase(region);
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.caution_terrain);
+
+
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
@@ -320,6 +325,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // Commit the edits
         editor.commit();
+
+        // Release the media player
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
 
@@ -426,12 +435,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
-	@Override
+
+
+    @Override
 	public void onLocationChanged(Location location)
 	{
 		if (!bDemoMode) {
 			gps_lat =  (float) location.getLatitude();
 			gps_lon = (float) location.getLongitude();
+
+            gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
 
 			if (location.hasSpeed()) {
 				//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
@@ -636,6 +649,20 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
+    //-------------------------------------------------------------------------
+    // Utility function to calculate above ground altitude
+    // in m
+    private float calculateAgl(float lat, float lon, float alt)
+    {
+        float agl = 0;
+        if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
+
+        if (DemGTOPO30.demDataValid) return Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
+        else return 0;
+    }
+
+
+
 	//-------------------------------------------------------------------------
 	// Utility function to calculate rate of climb
 	// Rate of climb in m/s
@@ -815,7 +842,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
             if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
         }
-	}
+        gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
+
+    }
 
 
 	//for landscape mode
@@ -993,6 +1022,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setSlip(SLIP_SENS * slipValue);
 		mGLView.setHeading((float) Math.toDegrees(gps_course));   // in degrees
 		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
+        mGLView.setAGL((int) (gps_agl * 3.2808f)); 	              // in feet
 		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
 		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
@@ -1010,6 +1040,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // s = String.format("BIAS: %d", (int) (sensorBias*100));
         // mGLView.setMSG(1, s);
 
+
+        // Play the "caution terrain" song
+        if (DemGTOPO30.demDataValid && gps_speed > 35 && gps_agl > 0 && gps_agl < 100) { // meters
+            if (mediaPlayer.isPlaying() == false) {
+                mediaPlayer.start();
+            }
+        }
+
+
 	}
 }
 
@@ -1019,4 +1058,29 @@ new AlertDialog.Builder(this)
                     .setMessage("Hello boys!!!")
                     .setPositiveButton("OK", null)
                     .show();
+*/
+
+
+/*
+if (mediaPlayer.isPlaying()) {
+    mediaPlayer.stop();
+    mediaPlayer.release();
+    mediaPlayer = MediaPlayer.create(context, R.raw.sound);
+}
+
+
+
+    private void playTerrain()
+    {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = MediaPlayer.create(context, R.raw.caution_terrain);
+        }
+    }
+
+
+
+
+
 */
