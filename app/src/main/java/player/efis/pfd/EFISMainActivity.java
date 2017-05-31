@@ -61,7 +61,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
 	private EFISSurfaceView mGLView;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mpCautionTerrian;
+    private MediaPlayer mpFiveHundred;
 
 
     // sensor members
@@ -291,8 +292,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mDemGTOPO30 = new DemGTOPO30(this);
         mDemGTOPO30.loadDatabase(region);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.caution_terrain);
-
+        mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
+        mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -327,8 +328,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.commit();
 
         // Release the media player
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        mpCautionTerrian.stop();
+        mpCautionTerrian.release();
+        mpFiveHundred.stop();
+        mpFiveHundred.release();
     }
 
 
@@ -846,6 +849,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
     }
 
+    //-------------------------------------------------------------------------
+    // determine whether two numbers are "approximately equal" by seeing if they
+    // * are within a certain "tolerance percentage," with `tolerancePercentage` given
+    // as a percentage (such as 10.0 meaning "10%").
+    //
+    // @param tolerancePercentage 1 = 1%, 2.5 = 2.5%, etc.
+    //
+    public static boolean approximatelyEqual(float desiredValue, float actualValue, float tolerancePercentage) {
+        float diff = Math.abs(desiredValue - actualValue);         //  1000 - 950  = 50
+        float tolerance = tolerancePercentage/100 * desiredValue;  //  20/100*1000 = 200
+        return diff < tolerance;                                   //  50<200      = true
+    }
+
 
 	//for landscape mode
 	// private float azimuthValue;
@@ -976,7 +992,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.setFPV(180, 180);
         }
 
-
 		//
 		// Read and Set the user preferences
 		//
@@ -1031,24 +1046,20 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
 
-        //---------------------------------------------------------------------
-        // Was used for debugging
-        // s = String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
-        // mGLView.setMSG(5, s);
-        // s = String.format("RS:%3.0f RG:%3.0f ", gyro_rateOfTurn*1000, gps_rateOfTurn*1000);
-        // mGLView.setMSG(3, s);
-        // s = String.format("BIAS: %d", (int) (sensorBias*100));
-        // mGLView.setMSG(1, s);
+        //
+        // Audio cautions and messages
+        //
+        if (DemGTOPO30.demDataValid) {
+            // Play the "caution terrain" song
+            if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
+                if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+            }
 
-
-        // Play the "caution terrain" song
-        if (DemGTOPO30.demDataValid && gps_speed > 35 && gps_agl > 0 && gps_agl < 100) { // meters
-            if (mediaPlayer.isPlaying() == false) {
-                mediaPlayer.start();
+            // Play the "five hundred" song
+            if (gps_rateOfClimb < 0 &&  approximatelyEqual(gps_agl * 3.2808f, 500, 5)) { // ft
+                if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
             }
         }
-
-
 	}
 }
 
@@ -1062,20 +1073,20 @@ new AlertDialog.Builder(this)
 
 
 /*
-if (mediaPlayer.isPlaying()) {
-    mediaPlayer.stop();
-    mediaPlayer.release();
-    mediaPlayer = MediaPlayer.create(context, R.raw.sound);
+if (mpCautionTerrian.isPlaying()) {
+    mpCautionTerrian.stop();
+    mpCautionTerrian.release();
+    mpCautionTerrian = MediaPlayer.create(context, R.raw.sound);
 }
 
 
 
     private void playTerrain()
     {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = MediaPlayer.create(context, R.raw.caution_terrain);
+        if (mpCautionTerrian.isPlaying()) {
+            mpCautionTerrian.stop();
+            mpCautionTerrian.release();
+            mpCautionTerrian = MediaPlayer.create(context, R.raw.caution_terrain);
         }
     }
 
