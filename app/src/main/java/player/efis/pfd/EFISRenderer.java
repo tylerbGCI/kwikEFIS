@@ -217,15 +217,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText = new GLText(context.getAssets());
     }
 
+    int FrameCounter = 0;
+    private float[] scratch1 = new float[16];  // moved to class scope
+    private float[] scratch2 = new float[16];  // moved to class scope
+    private float[] altMatrix = new float[16]; // moved to class scope
+    private float[] iasMatrix = new float[16]; // moved to class scope
+    private float[] fdMatrix = new float[16];  // moved to class scope
+    private float[] rmiMatrix = new float[16]; // moved to class scope
+
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        float[] scratch1 = new float[16]; // moved to class scope
-        float[] scratch2 = new float[16]; // moved to class scope
-        float[] altMatrix = new float[16]; // moved to class scope
-        float[] iasMatrix = new float[16]; // moved to class scope
-        float[] fdMatrix = new float[16];  // moved to class scope
-        float[] rmiMatrix = new float[16]; // moved to class scope
 
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -247,7 +249,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // for the matrix multiplication product to be correct.
         Matrix.multiplyMM(scratch1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         Matrix.multiplyMM(scratch2, 0, mMVPMatrix, 0, mRotationMatrix, 0);
-
 
         // Pitch
         if (Layout == layout_t.LANDSCAPE) {
@@ -276,8 +277,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         else if (displayTerrain) renderTerrain(scratch1);
 
         //if (displayDEM) renderDEMBuffer(mMVPMatrix);  // dddd debug dddd
-
-
         renderPitchMarkers(scratch1);
 
         // FPV only means anything if we have speed and rate of climb, ie altitude
@@ -1305,7 +1304,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     void setALT(int feet)
     {
         MSLValue = feet;
-        setAGL();
         MSLTranslation = MSLValue / MSLInView * pixH2;
     }
 
@@ -2456,11 +2454,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // There are two events that can change agl: setLatLon and setAlt
     // This function is called directly by them.
     //
-    void setAGL()
+    void setAGL(int agl)
     {
+        AGLValue = agl;
+        /*
         if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
         else AGLValue = 0;
-        
+
         if ((AGLValue < 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
             // Handle taxi as a special case
             MSLValue = MSLValue + (-AGLValue) + 1;        // Add 1 extra ft to esure we "above the ground"
@@ -2468,6 +2468,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         if (AGLValue < 0) AGLValue = 0;                   // Clamp negative AGL
+        */
     }
 
     //-------------------------------------------------------------------------
@@ -2478,8 +2479,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         LatValue = lat;
         LonValue = lon;
-
-        setAGL(); // calculate and set the AGL
     }
 
     //-------------------------------------------------------------------------
