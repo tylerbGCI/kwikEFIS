@@ -533,6 +533,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
+
+
     //-------------------------------------------------------------------------
     //  Returns the rotation angle of the triangle shape (mTriangle).
     //
@@ -1057,7 +1059,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mSquare.draw(matrix);
         }
 
-        // if we are below 500 ft show the warning chevrons
+        // if we are below the preset, show the warning chevrons
         final float CevronAGL = 1000.0f;
         if (AGLValue < CevronAGL) {
             float slant = 0.06f * pixM2;
@@ -2465,7 +2467,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
         }
 
-        if (AGLValue < 0) AGLValue = 0;                   // Clamp negative AGL        
+        if (AGLValue < 0) AGLValue = 0;                   // Clamp negative AGL
     }
 
     //-------------------------------------------------------------------------
