@@ -1066,7 +1066,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float i;
             // moving yellow chevrons
             mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
-            mLine.SetWidth(4);
+            mLine.SetWidth(8); //4
             for (i = left; i < right - (float)AGLValue/CevronAGL*(right-left) - step; i = i + step) {
                 mLine.SetVerts(
                         i, top + glText.getCharHeight(), z,
