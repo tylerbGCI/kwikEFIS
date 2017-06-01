@@ -328,11 +328,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.commit();
 
         // Release the media player
-        mpCautionTerrian.stop();
-        mpCautionTerrian.release();
-        mpFiveHundred.stop();
-        mpFiveHundred.release();
-    }
+            mpCautionTerrian.stop();
+            mpCautionTerrian.release();
+            mpFiveHundred.stop();
+            mpFiveHundred.release();
+        }
 
 
 
@@ -769,6 +769,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
 	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 1000; // meters
+    float _gps_agl = 0; //meters
 
 	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
@@ -849,18 +850,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
     }
 
-    //-------------------------------------------------------------------------
-    // determine whether two numbers are "approximately equal" by seeing if they
-    // * are within a certain "tolerance percentage," with `tolerancePercentage` given
-    // as a percentage (such as 10.0 meaning "10%").
-    //
-    // @param tolerancePercentage 1 = 1%, 2.5 = 2.5%, etc.
-    //
-    public static boolean approximatelyEqual(float desiredValue, float actualValue, float tolerancePercentage) {
-        float diff = Math.abs(desiredValue - actualValue);         //  1000 - 950  = 50
-        float tolerance = tolerancePercentage/100 * desiredValue;  //  20/100*1000 = 200
-        return diff < tolerance;                                   //  50<200      = true
-    }
 
 
 	//for landscape mode
@@ -1049,16 +1038,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Audio cautions and messages
         //
-        if (DemGTOPO30.demDataValid) {
-            // Play the "caution terrain" song
-            if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
-                if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
-            }
+            if (DemGTOPO30.demDataValid) {
+                // Play the "caution terrain" song
+                if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
+                    if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+                }
 
-            // Play the "five hundred" song
-            if (gps_rateOfClimb < 0 &&  approximatelyEqual(gps_agl * 3.2808f, 500, 5)) { // ft
-                if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
-            }
+                // Play the "five hundred" song
+                if ((_gps_agl > 152.4f) && (gps_agl <= 152.4f)) { // 500ft
+                    if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+                }
         }
 	}
 }
