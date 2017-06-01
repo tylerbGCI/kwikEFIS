@@ -63,6 +63,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private EFISSurfaceView mGLView;
     private MediaPlayer mpCautionTerrian;
     private MediaPlayer mpFiveHundred;
+    private MediaPlayer mpSinkRate;
+    private MediaPlayer mpStall;
+
 
 
     // sensor members
@@ -92,14 +95,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	int calibrationCount = 0;
 
 	// Location abstracts
-	protected float gps_lat;
-	protected float gps_lon;
-	protected float gps_altitude;
-    protected float gps_agl;
-	protected float gps_speed;
-	protected float gps_course;
-	protected float gps_rateOfClimb;
-	protected float gps_rateOfTurn;
+	protected float gps_lat;            // in decimal degrees
+	protected float gps_lon;            // in decimal degrees
+	protected float gps_altitude;       // in m
+    protected float gps_agl;            // in m
+	protected float gps_speed;          // in m/s
+	protected float gps_course;         // in radians
+	protected float gps_rateOfClimb;    // in m/s
+	protected float gps_rateOfTurn;     // in rad/s
 
 	protected boolean hasSpeed;
 	protected boolean hasGps;
@@ -353,8 +356,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     {
         mpCautionTerrian.stop();
         mpCautionTerrian.release();
+
         mpFiveHundred.stop();
         mpFiveHundred.release();
+
+        mpSinkRate.stop();
+        mpSinkRate.release();
+
+        mpStall.stop();
+        mpStall.release();
     }
 
     // Release the media player
@@ -362,8 +372,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     {
         mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
         mpCautionTerrian.setLooping(false);
+
         mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
         mpFiveHundred.setLooping(false);
+
+        mpSinkRate = MediaPlayer.create(this, R.raw.sink_rate);
+        mpSinkRate.setLooping(false);
+
+        mpStall = MediaPlayer.create(this, R.raw.stall);
+        mpStall.setLooping(false);
     }
 
 
@@ -1030,7 +1047,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
 
-
 		//
 		// Pass the values to mGLView for updating
 		//
@@ -1055,18 +1071,35 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Audio cautions and messages
         //
+
+        // We are stalling, advise captain "Crash" of his imminent flight emergency
+        if (hasSpeed
+                && (gps_speed < AircraftData.Vs0 / 2) // m/s
+                && (gps_agl > 0) ) {
+            if (!mpStall.isPlaying()) mpStall.start();
+        }
+
+        // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
+        if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
+            if (!mpSinkRate.isPlaying()) mpSinkRate.start();
+        }
+
         if (DemGTOPO30.demDataValid) {
-            // Play the "caution terrain" song
-            if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
+
+            // Play the "caution terrain" song above Vx
+            if ((gps_speed > AircraftData.Vx / 2)  // m/s
+                    && (gps_agl > 0)
+                    && (gps_agl < 100)) { // meters
                 if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
             }
 
-            // Play the "five hundred" song
-            if ((_gps_agl > 152.4f) && (gps_agl <= 152.4f)) { // 500ft
+            // Play the "five hundred" song when decending through 500ft
+            if ((_gps_agl > 152.4f)
+                    && (gps_agl <= 152.4f)) { // 500ft
                 if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
             }
         }
-        _gps_agl = gps_agl;
+        _gps_agl = gps_agl; // save the previous altitude
 	}
 }
 
