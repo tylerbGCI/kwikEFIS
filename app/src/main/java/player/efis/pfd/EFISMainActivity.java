@@ -292,8 +292,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mDemGTOPO30 = new DemGTOPO30(this);
         mDemGTOPO30.loadDatabase(region);
 
-        mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
-        mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
+        createMediaPlayer();
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -326,12 +325,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // Commit the edits
         editor.commit();
-
-        // Release the media player
-            mpCautionTerrian.stop();
-            mpCautionTerrian.release();
-            mpFiveHundred.stop();
-            mpFiveHundred.release();
         }
 
 
@@ -355,9 +348,30 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
-	@Override
+    // Release the media player
+    private void releaseMediaPlayer()
+    {
+        mpCautionTerrian.stop();
+        mpCautionTerrian.release();
+        mpFiveHundred.stop();
+        mpFiveHundred.release();
+    }
+
+    // Release the media player
+    private void createMediaPlayer()
+    {
+        mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
+        mpCautionTerrian.setLooping(false);
+        mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
+        mpFiveHundred.setLooping(false);
+    }
+
+
+    @Override
 	protected void onPause()
 	{
+        releaseMediaPlayer();
+
 		super.onPause();
 		// The following call pauses the rendering thread.
 		// If your OpenGL application is memory intensive,
@@ -367,11 +381,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
+
 	}
 
 	@Override
 	protected void onResume()
 	{
+        createMediaPlayer();
+
 		super.onResume();
 		// The following call resumes a paused rendering thread.
 		// If you de-allocated graphic objects for onPause()
@@ -1038,17 +1055,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Audio cautions and messages
         //
-            if (DemGTOPO30.demDataValid) {
-                // Play the "caution terrain" song
-                if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
-                    if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
-                }
+        if (DemGTOPO30.demDataValid) {
+            // Play the "caution terrain" song
+            if (gps_speed > 40 && gps_agl > 0 && gps_agl < 100) { // meters
+                if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+            }
 
-                // Play the "five hundred" song
-                if ((_gps_agl > 152.4f) && (gps_agl <= 152.4f)) { // 500ft
-                    if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
-                }
+            // Play the "five hundred" song
+            if ((_gps_agl > 152.4f) && (gps_agl <= 152.4f)) { // 500ft
+                if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+            }
         }
+        _gps_agl = gps_agl;
 	}
 }
 
