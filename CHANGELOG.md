@@ -2,6 +2,7 @@ Changelog
 =========
 3.2 (Beta)
 ------------------
+* Add audio annouciations "caution terrain", "five hundred"
 * DataPac enhanced to allow multiple regions
 * Add region: zar.aus - Southern Africa, Australia
 * Add region: usa.can - United States, Canada
