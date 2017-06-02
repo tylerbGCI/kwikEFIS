@@ -95,8 +95,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
-    //private int Vs0, Vs1, Vfe, Vno; // Basic Vspeeds
-    //private int Vne, Va, Vy, Vx;    // More Vspeeds
     private int IASMaxDisp;         // The highest speed to show on tape
 
     // Altimeter
