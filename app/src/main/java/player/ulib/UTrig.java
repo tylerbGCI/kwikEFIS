@@ -169,7 +169,7 @@ public class UTrig {
           FastArcTan = 17.315 ms
           Standard C atan = 60.708 ms
     */
-        public static double fastArcTan(double a)
+    public static double fastArcTan(double a)
     {
         return M_PI_4*a - a*(Math.abs(a) - 1)*(0.2447 + 0.0663*Math.abs(a));
     }
