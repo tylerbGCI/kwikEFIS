@@ -691,8 +691,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     // in m
     private float calculateAgl(float lat, float lon, float alt)
     {
-        float agl = 0;
-        if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
+        //float agl = 0;
+        //if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
 
         if (DemGTOPO30.demDataValid) return Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
         else return 0;
@@ -1072,33 +1072,39 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // Audio cautions and messages
         //
 
-        // We are stalling, advise captain "Crash" of his imminent flight emergency
-        if (hasSpeed
-                && (gps_speed < AircraftData.Vs0 / 2) // m/s
-                && (gps_agl > 0) ) {
-            if (!mpStall.isPlaying()) mpStall.start();
-        }
-
-        // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
-        if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
-            if (!mpSinkRate.isPlaying()) mpSinkRate.start();
-        }
-
-        if (DemGTOPO30.demDataValid) {
-
-            // Play the "caution terrain" song above Vx
-            if ((gps_speed > AircraftData.Vx / 2)  // m/s
-                    && (gps_agl > 0)
-                    && (gps_agl < 100)) { // meters
-                if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+        try {
+            // We are stalling, advise captain "Crash" of his imminent flight emergency
+            if (hasSpeed
+                    && (gps_speed < AircraftData.Vs0 / 2) // m/s
+                    && (gps_agl > 0) ) {
+                if (!mpStall.isPlaying()) mpStall.start();
             }
 
-            // Play the "five hundred" song when decending through 500ft
-            if ((_gps_agl > 152.4f)
-                    && (gps_agl <= 152.4f)) { // 500ft
-                if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+            // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
+            if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
+                if (!mpSinkRate.isPlaying()) mpSinkRate.start();
+            }
+
+            if (DemGTOPO30.demDataValid) {
+
+                // Play the "caution terrain" song above Vx
+                if ((gps_speed > AircraftData.Vx / 2)  // m/s
+                        && (gps_agl > 0)
+                        && (gps_agl < 100)) { // meters
+                    if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+                }
+
+                // Play the "five hundred" song when decending through 500ft
+                if ((_gps_agl > 152.4f)
+                        && (gps_agl <= 152.4f)) { // 500ft
+                    if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+                }
             }
         }
+        catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
         _gps_agl = gps_agl; // save the previous altitude
 	}
 }
