@@ -1,6 +1,6 @@
 Changelog
 =========
-3.2 (Beta)
+3.2 (Current Release Candidate)
 ------------------
 * Add audio annouciations "stall", "sink rate"
 * Add audio annouciations "caution terrain", "five hundred"
