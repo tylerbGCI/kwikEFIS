@@ -2,7 +2,7 @@ Changelog
 =========
 3.2 (2017-06-30)
 ------------------
-* Add audio annouciations (stall, sink, terrain, approach)
+* Add audio annouciations (stall, sink, terrain, 500)
 * DataPac enhanced to allow multiple regions
 * Add region: zar.aus - Southern Africa, Australia
 * Add region: usa.can - United States, Canada

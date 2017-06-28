@@ -13,15 +13,32 @@
           <tr>
             <td width="524"> 
               <p>&nbsp  
+
 							<!-- question --> 
 							<p><b>
+							<p>When I start the program I get "Terrain file error: eur.rus/W020N40" message.
+                            <p><a href = "img/kwik-efis-terrain-error.png">  <img height=250 src="img/kwik-efis-terrain-error.png"> </a>                            
+                            </b>
+                            
+							<!-- answer -->
+							<p style="margin-left: 40px"><u>Terrain Errors</u>
+  						    <br> - Check that the <i>Menu/Manage/Geograpic Region</i> is set to the approriate region.
+                            <br> - Check that you have an approriate corresponding data pac installed.
+                            <br> - Check the GPS has a valid location and you are in the area covered by eur.rus.
+                            
+                            <p style="margin-left: 40px">You need version 3.2 (or later) of Kwik EFIS (player.efis.pfd). 
+
+                            <!-- question --> 
+							<p><hr><b>
 							When I first loaded it on my phone, I still had a couple of red X's on the display. 
-							Finally figured out that if you're not moving, it thinks (knows?) something isn't right?  </b>
+							Finally figured out that if you're not moving, it thinks (knows?) something isn't right?  
+                            </b>
+							<!-- answer -->
 							<p style="margin-left: 40px"><u>Red X's</u>
 							<br>The speed has to be non-zero (from memory I think the threshold is 1 m/s). There are also 
 							different behavior below and above the stall speed, which is why it is important to choose a 
 							suitable aircraft model in the "Manage" section. If yours is not there, let me know the V speeds and I will add it.
-							<!-- answer -->
+
 							<p style="margin-left: 40px"><u>Demo Mode</u>
 							<br>In order to practice with the program, enable the "Demo Mode" and it will simulate movement 
 							allowing you to use it like a simple flight simulator. 
