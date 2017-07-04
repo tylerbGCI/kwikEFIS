@@ -1,5 +1,10 @@
 Changelog
 =========
+3.3 (Release Candidate)
+------------------
+* Add fatfinger support
+* Minor performance tweaks
+
 3.2 (2017-06-30)
 ------------------
 * Add audio annouciations (stall, sink, terrain, 500)

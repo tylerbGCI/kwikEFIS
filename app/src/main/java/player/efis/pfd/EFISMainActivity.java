@@ -150,9 +150,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	@Override
 	public void onBackPressed()
 	{
-		if (bLockedMode == false) {
+        if (mGLView.mRenderer.fatFingerActive == true) {
+            mGLView.mRenderer.fatFingerActive = false;
+            mGLView.mRenderer.setSpinnerParams();
+        }
+		else if (bLockedMode == false) {
 		  finish();
-		  super.onBackPressed(); // remove comment to enable back button
+		  super.onBackPressed();
 		}
 		else {
 			Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();

@@ -299,9 +299,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
             }
             renderFlightDirector(fdMatrix);
-            renderSelWptValue(mMVPMatrix);
+            //renderSelWptValue(mMVPMatrix);
             //renderSelWptDetails(mMVPMatrix);
-            renderSelAltValue(mMVPMatrix);
+            //renderSelAltValue(mMVPMatrix);
         }
 
         // Remote Magnetic Inidicator - RMI
@@ -335,6 +335,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderAutoWptDetails(mMVPMatrix);
         }
 
+        /*
         if (displayFlightDirector || displayRMI || displayHITS) {
             renderSelWptValue(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
@@ -343,6 +344,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (displayFlightDirector || displayHITS) {
             renderSelAltValue(mMVPMatrix);
         }
+        */
 
 
         if (Layout == layout_t.PORTRAIT) {
@@ -397,10 +399,100 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
         if (Calibrating) renderCalibrate(mMVPMatrix);
-
         if (bDemoMode) renderDemoMode(mMVPMatrix);
+
+
+        if (displayFlightDirector || displayRMI || displayHITS) {
+            renderSelWptValue(mMVPMatrix);
+            renderSelWptDetails(mMVPMatrix);
+        }
+
+        if (displayFlightDirector || displayHITS) {
+            renderSelAltValue(mMVPMatrix);
+        }
+
+
     }
 
+    //-------------------------------------------------------------------------
+    //
+    //
+
+    /*
+        if (fatFingerActive) {
+            spinnerStep = 0.5f;
+            leftC = -0.75f;
+            lineC = 0.2f;
+            selWptDec = 0.7f * pixH2;
+            selWptInc = 0.4f * pixH2;
+            selAltDec = -0.4f * pixH2;
+            selAltInc = -0.7f * pixH2;
+            spinnerTextScale = 2f;
+
+     */
+
+    public void setSpinnerParams()
+    {
+        // This code determines where the spinner control
+        // elements are displayed. Used by WPT and ALT
+        if (Layout == layout_t.LANDSCAPE) {
+            // Landscape --------------
+            lineAutoWptDetails = 0.00f;
+            lineAncillaryDetails = -0.30f;
+
+            if (fatFingerActive) {
+                selWptDec = 0.75f * pixH2;
+                selWptInc = 0.45f * pixH2;
+                selAltDec = -0.45f * pixH2;
+                selAltInc = -0.75f * pixH2;
+
+                lineC = 0.2f;
+                leftC = -0.55f;
+                spinnerStep = 0.25f;
+                spinnerTextScale = 2.0f;
+            }
+            else {
+                // Top
+                selWptDec = 0.90f * pixH2;
+                selWptInc = 0.74f * pixH2;
+                selAltDec = -0.74f * pixH2;
+                selAltInc = -0.90f * pixH2;
+
+                lineC = 0.50f;
+                leftC = 0.6f;
+                spinnerStep = 0.1f;
+                spinnerTextScale = 1f;
+            }
+        }
+        else {
+            // Portrait ---------------
+            lineAutoWptDetails = -0.60f;
+            lineAncillaryDetails = -0.85f;
+
+            if (fatFingerActive) {
+                selWptDec = 0.7f * pixH2;
+                selWptInc = 0.4f * pixH2;
+                selAltDec = -0.4f * pixH2;
+                selAltInc = -0.7f * pixH2;
+
+                lineC = 0.15f;
+                leftC = -0.75f;
+                spinnerStep = 0.5f;
+                spinnerTextScale = 2f;
+            }
+            else {
+                selWptDec = -0.30f * pixH2;
+                selWptInc = -0.41f * pixH2;
+                selAltDec = -0.80f * pixH2;
+                selAltInc = -0.91f * pixH2;
+
+                lineC = -0.55f; //lineC = -0.90f;
+                leftC = 0.6f;
+                spinnerStep = 0.1f;
+                spinnerTextScale = 1f;
+            }
+        }
+    }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -427,33 +519,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         pixM = pixM * 88 / 100;
         pixM2 = pixM / 2;
 
-        // This code determines where the spinner control
-        // elements are displayed. Used by WPT and ALT
-        if (Layout == layout_t.LANDSCAPE) {
-            // Landscape
-            lineC = 0.50f;
-            lineAutoWptDetails = 0.00f;
-            lineAncillaryDetails = -0.30f;
-
-            // Top
-            selWptDec = 0.90f * pixH2;
-            selWptInc = 0.74f * pixH2;
-
-            selAltDec = -0.74f * pixH2;
-            selAltInc = -0.90f * pixH2;
-        }
-        else {
-            // Portrait
-            lineC = -0.90f;
-            lineAutoWptDetails = -0.60f;
-            lineAncillaryDetails = -0.85f;
-
-            selWptDec = -0.30f * pixH2;
-            selWptInc = -0.41f * pixH2;
-
-            selAltDec = -0.80f * pixH2;
-            selAltInc = -0.91f * pixH2;
-        }
+        setSpinnerParams(); // Set up the spinner locations and SelWpt display
 
         // Set the window size specific scales, positions and sizes (nothing dynamic yet...)
         pitchInView = 25.0f;      // degrees to display from horizon to top of viewport
@@ -1090,8 +1156,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             /* this seems a little bit over the top
             // bar
             mLine.SetVerts(
-                    step + i, top + glText.getCharHeight(), z,
-                    step + i, top - glText.getCharHeight(), z
+                    spinnerStep + i, top + glText.getCharHeight(), z,
+                    spinnerStep + i, top - glText.getCharHeight(), z
             );
             mLine.draw(matrix);
             */
@@ -2648,6 +2714,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
+
+
+
+
     String mGpsStatus; // = "GPS: 10 / 11";
 
     public void setGpsStatus(String gpsstatus)
@@ -2666,35 +2736,55 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float lineC;          // Selected Wpt - Set in onSurfaceChanged
     float selWptDec;      // = 0.90f * pixH2;
     float selWptInc;      // = 0.74f * pixH2;
-
     float mObsValue;
 
+    float spinnerStep = 0.10f;    // spacing between the spinner buttons
+    float spinnerTextScale = 1;
+    boolean fatFingerActive = false;
 
     private void renderSelWptValue(float[] matrix)
     {
-        //float pixPerDegree = pixH2 / PPD_DIV;
-        float z; //, pixPerDegree, x1, y1;
+        float z = zfloat;
+        float size = spinnerStep * 0.2f; // 0.02f;
 
-        z = zfloat;
+        // This may need to be in a function
+        if (fatFingerActive) {
+            // Mask over the PFD for the input area
+            mSquare.SetColor(0.0f, 0.0f, 0.0f, 0.75f); //black xper
+            mSquare.SetWidth(2);
+            {
+                float[] squarePoly = {
+                        -pixW2+5, +pixH2-5, z,
+                        -pixW2+5, -pixH2+5, z,
+                        +pixW2-5, -pixH2+5, z,
+                        +pixW2-5, +pixH2-5, z,
+                };
+                mSquare.SetVerts(squarePoly);
+                mSquare.draw(matrix);
+            }
+        }
+
         // Draw the selecting triangle spinner buttons
-        mTriangle.SetColor(0.6f, 0.6f, 0.6f, 0);  // gray
+        mTriangle.SetColor(0.996f, 0.996f, 0.996f, 1);  // gray
         for (int i = 0; i < 4; i++) {
-            float xPos = (leftC + (float) i / 10f);
-            mTriangle.SetVerts((xPos - 0.02f) * pixW2, selWptDec, z,  //0.02
-                    (xPos + 0.02f) * pixW2, selWptDec, z,
-                    (xPos + 0.00f) * pixW2, selWptDec + 0.04f * pixM2, z);
+            //float xPos = (leftC + (float) i / 10f);
+            //float xPos = (leftC + i*spinnerStep);
+            float xPos = (leftC + i* spinnerStep);
+
+            mTriangle.SetVerts((xPos - size) * pixW2, selWptDec, z,  //0.02
+                               (xPos + size) * pixW2, selWptDec, z,
+                               (xPos + 0)    * pixW2, selWptDec + 2*size * pixM2, z);
             mTriangle.draw(matrix);
 
-            mTriangle.SetVerts((xPos - 0.02f) * pixW2, selWptInc, z,  //0.02
-                    (xPos + 0.02f) * pixW2, selWptInc, z,
-                    (xPos + 0.00f) * pixW2, selWptInc - 0.04f * pixM2, z);
-            //(xPos + 0.00f) * pixW2, 0.70f * pixH2, z);
+            mTriangle.SetVerts((xPos - size) * pixW2, selWptInc, z,  //0.02
+                               (xPos + size) * pixW2, selWptInc, z,
+                               (xPos + 0)    * pixW2, selWptInc - 2*size * pixM2, z);
             mTriangle.draw(matrix);
 
             // Draw the individual select characters
             if (mWptSelName != null) {
                 glText.begin(1.0f, 0.8f, 1.0f, 1.0f, matrix); //
-                glText.setScale(3f);
+                glText.setScale(3*spinnerTextScale); //3f
                 String s = String.format("%c", mWptSelName.charAt(i));
                 glText.drawCX(s, xPos * pixW2, ((selWptInc + selWptDec) / 2) - (glText.getCharHeight() / 2));
                 glText.end();
@@ -2740,20 +2830,20 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
         glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
-        // Name
-        glText.setScale(2.1f);
-        s = mWptSelComment;
-        glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
+            // Name
+            glText.setScale(2.1f * spinnerTextScale);
+            s = mWptSelComment;
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - glText.getCharHeight() / 2);
 
-        // DME
-        s = String.format("DME %03.1f", mSelWptDme);  // in nm
-        glText.setScale(2.5f);
-        glText.draw(s, leftC * pixW2, (lineC - 0.2f) * pixM2 - glText.getCharHeight() / 2);
+            // BRG
+            s = String.format("BRG  %03.0f", mSelWptBrg);
+            glText.setScale(2.5f * spinnerTextScale);                            //
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - 3*glText.getCharHeight() / 2);
 
-        // BRG
-        s = String.format("BRG  %03.0f", mSelWptBrg);
-        glText.setScale(2.5f);                            //
-        glText.draw(s, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
+            // DME
+            s = String.format("DME %03.1f", mSelWptDme);  // in nm
+            glText.setScale(2.5f * spinnerTextScale);
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - 5*glText.getCharHeight() / 2);
         glText.end();
 
         /*
@@ -2787,25 +2877,30 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float z;
         z = zfloat;
+        float size = spinnerStep * 0.2f; // 0.02f;
 
         // Draw the selecting triangle spinner buttons
-        mTriangle.SetColor(0.6f, 0.6f, 0.6f, 0);  // gray
+        //mTriangle.SetColor(0.6f, 0.6f, 0.6f, 1);  // gray
+        mTriangle.SetColor(0.996f, 0.996f, 0.996f, 1);  // gray
         for (int i = 0; i < 3; i++) {
-            float xPos = (leftC + (float) i / 10f);
-            mTriangle.SetVerts((xPos - 0.02f) * pixW2, selAltDec, z,  //0.02
-                    (xPos + 0.02f) * pixW2, selAltDec, z,
-                    (xPos + 0.00f) * pixW2, selAltDec + 0.04f * pixM2, z);
+            //float xPos = (leftC + (float) i / 10f);
+            float xPos = (leftC + i* spinnerStep);
+
+
+            mTriangle.SetVerts((xPos - size) * pixW2, selAltDec, z,  //0.02
+                               (xPos + size) * pixW2, selAltDec, z,
+                               (xPos + 0.00f) * pixW2, selAltDec + 2*size * pixM2, z);
             mTriangle.draw(matrix);
 
-            mTriangle.SetVerts((xPos - 0.02f) * pixW2, selAltInc, z,  //0.02
-                    (xPos + 0.02f) * pixW2, selAltInc, z,
-                    (xPos + 0.00f) * pixW2, selAltInc - 0.04f * pixM2, z);
+            mTriangle.SetVerts((xPos - size) * pixW2, selAltInc, z,  //0.02
+                               (xPos + size) * pixW2, selAltInc, z,
+                               (xPos + 0.00f) * pixW2, selAltInc - 2*size * pixM2, z);
             mTriangle.draw(matrix);
 
             // Draw the individual select characters
             if (mAltSelName != null) {
                 glText.begin(1.0f, 0.8f, 1.0f, 1.0f, matrix); //
-                glText.setScale(3f);
+                glText.setScale(3*spinnerTextScale); //3f
                 String s = String.format("%c", mAltSelName.charAt(i));
                 glText.drawCX(s, xPos * pixW2, ((selAltInc + selAltDec) / 2) - glText.getCharHeight() / 2);
                 glText.end();
@@ -2827,6 +2922,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     void setActionDown(float x, float y)
     {
+        //float spinnerStep = 0.10f;
+        //float size = 0.02f;
+
         // 0,0 is top left in landscape
         mX = (x / pixW - 0.5f) * 2;
         mY = -(y / pixH - 0.5f) * 2;
@@ -2837,27 +2935,33 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         char[] wpt = mWptSelName.toCharArray();
         char[] alt = mAltSelName.toCharArray();
 
+        // fat finger mode
+        //if (Math.abs(mY - (selWptInc + selAltDec)/2/pixH2) < 0.105) {
+        //if (Math.abs(mY - (lineC - 0.1f * spinnerTextScale ) * pixM2) < 0.105) {
+        if ((Math.abs(mY - lineC + 0.1f) < 0.105) && (mX > leftC )) {
+            fatFingerActive =  !fatFingerActive;
+            setSpinnerParams();
+        }
+
         // Determine if we are counting up or down?
         // wpt character
         // selWptDec
         if (Math.abs(mY - selWptDec / pixH2) < 0.10) inc = -1;
         else if (Math.abs(mY - selWptInc / pixH2) < 0.10) inc = +1;
 
-            // Determine if we are counting up or down?
-            // altitude number
+        // Determine if we are counting up or down?
+        // altitude number
         else if (Math.abs(mY - selAltDec / pixH2) < 0.10) ina = -1;
         else if (Math.abs(mY - selAltInc / pixH2) < 0.10) ina = +1;
 
         // Determine which digit is changing
         for (int i = 0; i < 4; i++) {
-            if (Math.abs(mX - (leftC + 0.0f)) < 0.05) {         //0.6
-                pos = 0;
-            } else if (Math.abs(mX - (leftC + 0.1f)) < 0.05) {  //0.7
-                pos = 1;
-            } else if (Math.abs(mX - (leftC + 0.2f)) < 0.05) {  //0.8
-                pos = 2;
-            } else if (Math.abs(mX - (leftC + 0.3f)) < 0.05) {  //0.9
-                pos = 3;
+            //float xPos = (leftC + (float) i / 10f);
+            float xPos = (leftC + i* spinnerStep);
+
+            if (Math.abs(mX - xPos) < spinnerStep / 2) {       //0.6, 0.7, 0.8, 0.9
+                pos = i;
+                break;
             }
         }
 
