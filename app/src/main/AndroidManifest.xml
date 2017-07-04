@@ -27,7 +27,7 @@
     package="player.efis.pfd"
     android:installLocation="preferExternal"
     android:versionCode="12"
-    android:versionName="3.3-rc1" >
+    android:versionName="3.3" >
 
 
 

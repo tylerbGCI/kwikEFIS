@@ -7,8 +7,6 @@ android {
         applicationId 'player.efis.data.zar.aus'
         minSdkVersion 9
         targetSdkVersion 10
-        //versionCode 1
-        //versionName "1.0"
     }
     buildTypes {
         release {

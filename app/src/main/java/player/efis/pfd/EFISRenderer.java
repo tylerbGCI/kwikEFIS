@@ -132,18 +132,18 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float fpvY;            // Flight Path Vector Y
 
     //Flight Director
-    float FDTranslation;           // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
-    float FDRotation;              // = 20;  // command 20 deg roll
+    private float FDTranslation;           // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
+    private float FDRotation;              // = 20;  // command 20 deg roll
 
     // Onscreen elements
-    boolean displayInfoPage;        // Display The Ancillary Information
-    boolean displayFlightDirector;  // Display Flight Director
-    boolean displayRMI;             // Display RMI
-    boolean displayHITS;            // Display the Highway In The Sky
+    private boolean displayInfoPage;        // Display The Ancillary Information
+    private boolean displayFlightDirector;  // Display Flight Director
+    private boolean displayRMI;             // Display RMI
+    private boolean displayHITS;            // Display the Highway In The Sky
     private boolean displayDEM;     // Display the DEM terrain
 
     //3D map display
-    boolean displayAirport;
+    private boolean displayAirport;
     private boolean displayTerrain;
     private boolean displayTape;
     private boolean displayMirror;
@@ -383,7 +383,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //renderFixedDIMarkers(mMVPMatrix);
         //renderHDGValue(mMVPMatrix);
 
-
         renderTurnMarkers(mMVPMatrix);
         renderSlipBall(mMVPMatrix);
         renderGForceValue(mMVPMatrix);
@@ -403,8 +402,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
         if (displayFlightDirector || displayRMI || displayHITS) {
-            renderSelWptValue(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
+            renderSelWptValue(mMVPMatrix);
         }
 
         if (displayFlightDirector || displayHITS) {
@@ -417,20 +416,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     //
     //
-
-    /*
-        if (fatFingerActive) {
-            spinnerStep = 0.5f;
-            leftC = -0.75f;
-            lineC = 0.2f;
-            selWptDec = 0.7f * pixH2;
-            selWptInc = 0.4f * pixH2;
-            selAltDec = -0.4f * pixH2;
-            selAltInc = -0.7f * pixH2;
-            spinnerTextScale = 2f;
-
-     */
-
     public void setSpinnerParams()
     {
         // This code determines where the spinner control
@@ -644,7 +629,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Flight Director
     //
 
-    float PPD_DIV = 30; // for landscape
+    private float PPD_DIV = 30; // for landscape
 
     private void renderFlightDirector(float[] matrix)
     {
@@ -1087,7 +1072,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // RadAlt Indicator (AGL)
     //
-    void renderFixedRADALTMarkers(float[] matrix)
+    private void renderFixedRADALTMarkers(float[] matrix)
     {
         float z = zfloat;
         String t;
@@ -1207,7 +1192,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Altimeter Indicator
     //
-    void renderFixedALTMarkers(float[] matrix)
+    private void renderFixedALTMarkers(float[] matrix)
     {
         float z = zfloat;
         String t;
@@ -1437,7 +1422,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // VSI Indicator
     //
-    void renderVSIMarkers(float[] matrix)
+    private void renderVSIMarkers(float[] matrix)
     {
         int i;
         float z, pixPerUnit, innerTic; //, midTic, outerTic;
@@ -1492,7 +1477,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Airspeed Indicator
     //
-    void renderFixedASIMarkers(float[] matrix)
+    private void renderFixedASIMarkers(float[] matrix)
     {
         float z = zfloat;
         String t;
@@ -1707,7 +1692,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Direction Indicator
     //   Just a simple text box
     //
-    void renderFixedDIMarkers(float[] matrix)
+    private void renderFixedDIMarkers(float[] matrix)
     {
         float z = zfloat;
         //String t;
@@ -1768,7 +1753,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //---------------------------------------------------------------------------
     // EFIS serviceability ... aka the Red X's
     //
-    void renderUnserviceableDevice(float[] matrix)
+    private void renderUnserviceableDevice(float[] matrix)
     {
         renderUnserviceableAh(matrix);
         renderUnserviceableDi(matrix);
@@ -1776,7 +1761,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         renderUnserviceableAsi(matrix);
     }
 
-    void renderUnserviceableAh(float[] matrix)
+    private void renderUnserviceableAh(float[] matrix)
     {
         float z;
         z = zfloat;
@@ -1796,7 +1781,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mLine.draw(matrix);
     }
 
-    void renderUnserviceableDi(float[] matrix)
+    private void renderUnserviceableDi(float[] matrix)
     {
         float z;
         z = zfloat;
@@ -1817,7 +1802,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    void renderUnserviceableAlt(float[] matrix)
+    private void renderUnserviceableAlt(float[] matrix)
     {
         float z;
         z = zfloat;
@@ -1837,7 +1822,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         mLine.draw(matrix);
     }
 
-    void renderUnserviceableAsi(float[] matrix)
+    private void renderUnserviceableAsi(float[] matrix)
     {
         float z;
         z = zfloat;
@@ -1927,7 +1912,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    void renderHDGValue(float[] matrix)
+    private void renderHDGValue(float[] matrix)
     {
         //float z;
         //z = zfloat;
@@ -1949,7 +1934,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Slip ball
     //
-    void renderSlipBall(float[] matrix)
+    private void renderSlipBall(float[] matrix)
     {
         float z;
 
@@ -2006,7 +1991,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Flight Path Vector
     //
-    void renderFPV(float[] matrix)
+    private void renderFPV(float[] matrix)
     {
         float z, pixPerDegree;
 
@@ -2131,9 +2116,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
-        float dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        float dme;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
         float _dme = 6080000;  // 1,000 nm in ft
-        float aptRelBrg = 0;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
@@ -2177,10 +2162,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 mPolyLine.draw(matrix);
             }
 
-            String s = wptId;
             glText.begin(1.0f, 0.5f, 1.0f, 0, matrix);  // purple
             glText.setScale(2.0f);
-            glText.drawCY(s, x1, y1 + glText.getCharHeight() / 2);
+            glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();
 
             float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
@@ -2209,9 +2193,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     private void __getColor(short c)
     {
-        float red = 0;
-        float blue = 0;
-        float green = 0;
+        float red;
+        float blue;
+        float green;
 
         float r = 600;   //600;
         float r2 = r * 2;
@@ -2221,10 +2205,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         green = (float) c / r;
         if (green > 1) {
             green = 1;
-            red = (float) (c - r) / r;
+            red = (c - r) / r;
             if (red > 1) {
                 red = 1;
-                blue = (float) (c - r2) / r;
+                blue = (c - r2) / r;
                 if (blue > 1) {
                     blue = 1;
                 }
@@ -2271,7 +2255,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     // This is the meat and potatoes of the synthetic vision implementation
     //
-    public void renderDEMTerrain(float[] matrix)
+    private void renderDEMTerrain(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
@@ -2306,14 +2290,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
-                x1 = (float) (demRelBrg * pixPerDegree);
+                x1 = demRelBrg * pixPerDegree;
                 //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
                 y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z2 = DemGTOPO30.getElev(lat, lon);
-                x2 = (float) ((demRelBrg + gridx) * pixPerDegree);
+                x2 = (demRelBrg + gridx) * pixPerDegree;
                 //y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
                 y2 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
 
@@ -2321,14 +2305,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
                 lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z3 = DemGTOPO30.getElev(lat, lon);
-                x3 = (float) ((demRelBrg + gridx) * pixPerDegree);
+                x3 = (demRelBrg + gridx) * pixPerDegree;
                 //y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
                 y3 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z4 = DemGTOPO30.getElev(lat, lon);
-                x4 = (float) ((demRelBrg) * pixPerDegree);
+                x4 = (demRelBrg) * pixPerDegree;
                 //y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
                 y4 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
 
@@ -2476,7 +2460,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             radius = (608.0f * pixM2) / dme;
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
-            x1 = (float) (hitRelBrg * pixPerDegree);
+            x1 = hitRelBrg * pixPerDegree;
             //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
             y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
 
@@ -2554,7 +2538,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Turn Indicator
     //
-    void renderTurnMarkers(float[] matrix)
+    private void renderTurnMarkers(float[] matrix)
     {
         final float STD_RATE = 0.0524f; // = rate 1 = 3deg/s
         float z;
@@ -2595,7 +2579,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     // Percentage battery remaining
     //
-    void renderBatteryPct(float[] matrix)
+    private void renderBatteryPct(float[] matrix)
     {
         String s = String.format("BAT %3.0f", BatteryPct * 100) + "%";
         if (BatteryPct > 0.1) glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
@@ -2611,7 +2595,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         BatteryPct = value;
     }
 
-    void renderGForceValue(float[] matrix)
+    private void renderGForceValue(float[] matrix)
     {
         //float z, pixPerUnit;
         //pixPerUnit = pixH2 / DIInView;
@@ -2629,16 +2613,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         GForceValue = value;
     }
 
-    String mAutoWpt = "YSEN";
+    private String mAutoWpt = "YSEN";
 
     void setAutoWptValue(String wpt)
     {
         mAutoWpt = wpt;
     }
 
-    float mAutoWptBrg;
+    private float mAutoWptBrg;
 
-    void setAutoWptBrg(float brg)
+    private void setAutoWptBrg(float brg)
     {
         mAutoWptBrg = brg;
     }
@@ -2647,17 +2631,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float mSelWptRlb;           // Selected waypoint Relative bearing
     private float mSelWptDme;           // Selected waypoint Dme distance (nm)
 
-    void setSelWptBrg(float brg)
+    private void setSelWptBrg(float brg)
     {
         mSelWptBrg = brg;
     }
 
-    void setSelWptDme(float dme)
+    private void setSelWptDme(float dme)
     {
         mSelWptDme = dme;
     }
 
-    void setSelWptRelBrg(float rlb)
+    private void setSelWptRelBrg(float rlb)
     {
         mSelWptRlb = rlb;
     }
@@ -2666,7 +2650,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Display all the relevant auto wpt information with
     // A combo function to replace the individual ones
     //
-    float lineAutoWptDetails;  // Auto Wpt - Set in onSurfaceChanged
+    private float lineAutoWptDetails;  // Auto Wpt - Set in onSurfaceChanged
 
     private void renderAutoWptDetails(float[] matrix)
     {
@@ -2690,7 +2674,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Display all the relevant ancillary device information with
     // A combo function to replace the individual ones
     //
-    float lineAncillaryDetails;  // Ancillary Details - Set in onSurfaceChanged
+    private float lineAncillaryDetails;  // Ancillary Details - Set in onSurfaceChanged
 
     private void renderAncillaryDetails(float[] matrix)
     {
@@ -2718,7 +2702,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
 
 
-    String mGpsStatus; // = "GPS: 10 / 11";
+    private String mGpsStatus; // = "GPS: 10 / 11";
 
     public void setGpsStatus(String gpsstatus)
     {
@@ -2732,14 +2716,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     float mWptSelLon = 115.871000f;
     String mAltSelName = "00000";
     float mAltSelValue = 0;
-    float leftC = 0.6f;   // Selected Wpt
-    float lineC;          // Selected Wpt - Set in onSurfaceChanged
-    float selWptDec;      // = 0.90f * pixH2;
-    float selWptInc;      // = 0.74f * pixH2;
+    private float leftC = 0.6f;   // Selected Wpt
+    private float lineC;          // Selected Wpt - Set in onSurfaceChanged
+    private float selWptDec;      // = 0.90f * pixH2;
+    private float selWptInc;      // = 0.74f * pixH2;
     float mObsValue;
 
-    float spinnerStep = 0.10f;    // spacing between the spinner buttons
-    float spinnerTextScale = 1;
+    private float spinnerStep = 0.10f;    // spacing between the spinner buttons
+    private float spinnerTextScale = 1;
     boolean fatFingerActive = false;
 
     private void renderSelWptValue(float[] matrix)
@@ -2747,25 +2731,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         float size = spinnerStep * 0.2f; // 0.02f;
 
-        // This may need to be in a function
-        if (fatFingerActive) {
-            // Mask over the PFD for the input area
-            mSquare.SetColor(0.0f, 0.0f, 0.0f, 0.75f); //black xper
-            mSquare.SetWidth(2);
-            {
-                float[] squarePoly = {
-                        -pixW2+5, +pixH2-5, z,
-                        -pixW2+5, -pixH2+5, z,
-                        +pixW2-5, -pixH2+5, z,
-                        +pixW2-5, +pixH2-5, z,
-                };
-                mSquare.SetVerts(squarePoly);
-                mSquare.draw(matrix);
-            }
-        }
-
         // Draw the selecting triangle spinner buttons
-        mTriangle.SetColor(0.996f, 0.996f, 0.996f, 1);  // gray
+        mTriangle.SetColor(0.8f, 0.8f, 0.8f, 1);  // gray
         for (int i = 0; i < 4; i++) {
             //float xPos = (leftC + (float) i / 10f);
             //float xPos = (leftC + i*spinnerStep);
@@ -2810,7 +2777,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float commandRoll = relBrg;
         if (commandRoll > 30) commandRoll = 30;   //
         if (commandRoll < -30) commandRoll = -30;  //
-        setFlightDirector(displayFlightDirector, commandPitch, (float) commandRoll);
+        setFlightDirector(displayFlightDirector, commandPitch, commandRoll);
 
         // BRG
         float absBrg = calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
@@ -2819,59 +2786,65 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // much logical sense. This could be re-factored
         // Perhaps introduce a new function to explicitly
         // handle "navigation"?
-        setSelWptBrg((float) absBrg);
-        setSelWptDme((float) dme / 6080);
-        setSelWptRelBrg((float) relBrg);
+        setSelWptBrg(absBrg);
+        setSelWptDme(dme / 6080);
+        setSelWptRelBrg(relBrg);
     }
 
     private void renderSelWptDetails(float[] matrix)
     {
+        float z = zfloat;
         String s;
+
+        // This may need to be in a function
+        if (fatFingerActive) {
+            // Mask over the PFD for the input area
+            mSquare.SetColor(0.0f, 0.0f, 0.0f, 0.75f); //black xper
+            mSquare.SetWidth(2);
+            {
+                float[] squarePoly = {
+                        -pixW2+5, +pixH2-5, z,
+                        -pixW2+5, -pixH2+5, z,
+                        +pixW2-5, -pixH2+5, z,
+                        +pixW2-5, +pixH2-5, z,
+                };
+                mSquare.SetVerts(squarePoly);
+                mSquare.draw(matrix);
+            }
+        }
 
         //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
         glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
             // Name
             glText.setScale(2.1f * spinnerTextScale);
             s = mWptSelComment;
-            glText.draw(s, leftC * pixW2, lineC*pixH2 - glText.getCharHeight() / 2);
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - 0.5f * glText.getCharHeight());
 
             // BRG
             s = String.format("BRG  %03.0f", mSelWptBrg);
-            glText.setScale(2.5f * spinnerTextScale);                            //
-            glText.draw(s, leftC * pixW2, lineC*pixH2 - 3*glText.getCharHeight() / 2);
+            glText.setScale(2.5f * spinnerTextScale);
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - 1.5f * glText.getCharHeight());
 
             // DME
             s = String.format("DME %03.1f", mSelWptDme);  // in nm
             glText.setScale(2.5f * spinnerTextScale);
-            glText.draw(s, leftC * pixW2, lineC*pixH2 - 5*glText.getCharHeight() / 2);
+            glText.draw(s, leftC * pixW2, lineC*pixH2 - 2.5f * glText.getCharHeight());
         glText.end();
 
-        /*
-        glText.begin(1.0f, 1f, 1.0f, 1.0f, matrix); //white
-        glText.setScale(2.1f);
-        String s = mWptSelComment;
-        glText.draw(s, leftC * pixW2, (lineC + 0.0f) * pixM2 - glText.getCharHeight() / 2);
-        glText.end();
 
-        // DME
-        String t = String.format("DME %03.1f", mSelWptDme);  // in nm
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix);      // white
-        glText.setScale(2.5f);
-        glText.draw(t, leftC * pixW2, (lineC - 0.2f) * pixM2 - glText.getCharHeight() / 2);
-        glText.end();
-
-        // BRG
-        t = String.format("BRG  %03.0f", mSelWptBrg);
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
-        glText.setScale(2.5f);                            //
-        glText.draw(t, leftC * pixW2, (lineC - 0.1f) * pixM2 - glText.getCharHeight() / 2);
-        glText.end();
-        */
+        /* // Guide lines for fatfinger ... ?
+        mLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
+        mLine.SetVerts(leftC * pixW2 - 5, lineC * pixH2 + 0.75f*glText.getCharHeight(), z,
+                               pixW2 - 5, lineC * pixH2 + 0.75f*glText.getCharHeight(), z);
+        mLine.draw(matrix);
+        mLine.SetVerts(leftC * pixW2 - 5, lineC * pixH2 - 2.70f*glText.getCharHeight(), z,
+                               pixW2 - 5, lineC * pixH2 - 2.70f*glText.getCharHeight(), z);
+        mLine.draw(matrix); */
     }
 
 
-    float selAltInc; // = -0.90f * pixH2;
-    float selAltDec; // = -0.74f * pixH2;
+    private float selAltInc; // = -0.90f * pixH2;
+    private float selAltDec; // = -0.74f * pixH2;
 
     private void renderSelAltValue(float[] matrix)
     {
@@ -2880,8 +2853,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float size = spinnerStep * 0.2f; // 0.02f;
 
         // Draw the selecting triangle spinner buttons
-        //mTriangle.SetColor(0.6f, 0.6f, 0.6f, 1);  // gray
-        mTriangle.SetColor(0.996f, 0.996f, 0.996f, 1);  // gray
+        mTriangle.SetColor(0.8f, 0.8f, 0.8f, 1);  // gray
         for (int i = 0; i < 3; i++) {
             //float xPos = (leftC + (float) i / 10f);
             float xPos = (leftC + i* spinnerStep);
@@ -2936,8 +2908,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         char[] alt = mAltSelName.toCharArray();
 
         // fat finger mode
-        //if (Math.abs(mY - (selWptInc + selAltDec)/2/pixH2) < 0.105) {
-        //if (Math.abs(mY - (lineC - 0.1f * spinnerTextScale ) * pixM2) < 0.105) {
         if ((Math.abs(mY - lineC + 0.1f) < 0.105) && (mX > leftC )) {
             fatFingerActive =  !fatFingerActive;
             setSpinnerParams();
@@ -3016,7 +2986,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 }
                 // The selected waypoint has changed
                 // Update the OBS as well
-                mObsValue = (float) calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
+                mObsValue = calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
             }
         }
     }
@@ -3027,8 +2997,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Auto Waypoint handlers
     //
     //-------------------------------------------------------------------------
-    float mAutoWptDme;
-    float mAutoWptRlb;
+    private float mAutoWptDme;
+    private float mAutoWptRlb;
 
     void setAutoWptDme(float dme)
     {
@@ -3094,7 +3064,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     //-----------------------------------------------------------------------------
 
-    float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
+    private float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
 
     private void renderFixedCompassMarkers(float[] matrix)
     {
@@ -3243,7 +3213,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Render the two RMI needles
     //
-    void renderBearing(float[] matrix)
+    private void renderBearing(float[] matrix)
     {
         float z, sinI, cosI, _sinI, _cosI;
         float roseRadius = roseScale * pixM2;
@@ -3350,7 +3320,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    void renderBearingTxt(float[] matrix)
+    private void renderBearingTxt(float[] matrix)
     {
         float roseRadius = roseScale * pixM2;
         float scale = 1.6f;  // not sure why this is > 1.0 Does not really make sense
@@ -3378,7 +3348,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 //-----------------------------------------------------------------------------
 /*
 Some leftover code fragments from the original c code.
-This may still be uselful one day
+This may still be useful one day
 
 void GLPFD::renderDIMarkers()
 {
