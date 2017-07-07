@@ -4,6 +4,7 @@ Changelog
 ------------------
 * Add fatfinger support
 * Minor performance tweaks
+* Waypoint database cycle 2017-07 (zar.aus)
 
 3.2 (2017-06-30)
 ------------------
