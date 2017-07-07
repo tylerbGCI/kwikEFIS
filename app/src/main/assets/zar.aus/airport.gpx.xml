@@ -8899,7 +8899,7 @@
 		<name>YRAM</name>
 		<cmt>Raymore Homestead,AU</cmt>
 	</wpt>
-	<wpt lat="-37.178300" lon="139.750000">
+	<wpt lat="-37.175157" lon="139.805320">
 		<magvar>351.0</magvar>
 		<name>YRBE</name>
 		<cmt>Robe,AU</cmt>
@@ -13692,7 +13692,7 @@
 		<name>YATR</name>
 		<cmt>Amphitheatre,VIC,AU</cmt>
 	</wpt>
-	<wpt lat="-34.366700" lon="115.150000">
+	<wpt lat="-34.329335" lon="115.157455">
 		<magvar>3.2</magvar>
 		<name>YAUG</name>
 		<cmt>Augusta,WA,AU</cmt>
