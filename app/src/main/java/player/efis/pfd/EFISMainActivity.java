@@ -792,9 +792,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
+
 	//-------------------------------------------------------------------------
 	// Utility function to do a simple simulation for demo mode
-	// It acts like a very simple flight simulator
+	// It acts like a crude flight simulator
 	//
     //float _gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
     //float _gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f

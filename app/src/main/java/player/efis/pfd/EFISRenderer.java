@@ -149,7 +149,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean displayMirror;
     private boolean displayFPV;
 
-
     private boolean ServiceableDevice;  // Flag to indicate no faults
     private boolean ServiceableAh;      // Flag to indicate AH failure
     private boolean ServiceableAlt;     // Flag to indicate Altimeter failure
@@ -159,7 +158,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private String CalibratingMsg;      // no longer used
 
     private float mX, mY;               // keypress location
-
     private final float portraitOffset = 0.40f;       // the magic number for portrait offset
 
     //Demo Modes
