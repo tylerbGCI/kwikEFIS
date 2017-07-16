@@ -58,5 +58,5 @@ document.write('              <h1>');
 document.write('                the Kwik EFIS</h1>');
 document.write('            </td>');
 document.write('          </tr>');
-document.write('          <td bgcolor="#99CCFF">');
+//document.write('          <td bgcolor="#99CCFF">'); 
 
