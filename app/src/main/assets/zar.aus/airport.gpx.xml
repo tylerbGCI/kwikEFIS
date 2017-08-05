@@ -2710,7 +2710,7 @@
 		<ele>6.096</ele>
 		<magvar>15.8</magvar>
 		<name>FYMB</name>
-		<cmt>Meob Bay Landing Site,WA</cmt>
+		<cmt>Meob Bay,WA</cmt>
 	</wpt>
 	<wpt lat="-21.023300" lon="16.452800">
 		<ele>1524</ele>
@@ -5120,7 +5120,7 @@
 	<wpt lat="-21.610000" lon="35.340000">
 		<magvar>14.3</magvar>
 		<name>MZ-0005</name>
-		<cmt>Paradise Island (Santa Carolina),MZ</cmt>
+		<cmt>Paradise Island,MZ</cmt>
 	</wpt>
 	<wpt lat="-13.121900" lon="39.052800">
 		<magvar>6.3</magvar>
@@ -5142,13 +5142,13 @@
 		<ele>1242.06</ele>
 		<magvar>13.9</magvar>
 		<name>NA-0002</name>
-		<cmt>Aminuis Pan Landing Site,WA</cmt>
+		<cmt>Aminuis Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-24.434700" lon="18.104400">
 		<ele>1203.96</ele>
 		<magvar>14.9</magvar>
 		<name>NA-0003</name>
-		<cmt>Anib Lodge Landing Site,WA</cmt>
+		<cmt>Anib Lodge,WA</cmt>
 	</wpt>
 	<wpt lat="-24.128300" lon="19.115000">
 		<ele>1189.9392</ele>
@@ -5160,7 +5160,7 @@
 		<ele>1185.9768</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0005</name>
-		<cmt>Aranos Pan Landing Site,WA</cmt>
+		<cmt>Aranos Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-24.822800" lon="18.762800">
 		<ele>1136.904</ele>
@@ -5172,7 +5172,7 @@
 		<ele>1268.8824</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0007</name>
-		<cmt>Basaroot Landing Site,WA</cmt>
+		<cmt>Basaroot,WA</cmt>
 	</wpt>
 	<wpt lat="-23.865800" lon="17.991100">
 		<ele>1264.92</ele>
@@ -5190,13 +5190,13 @@
 		<ele>1285.9512</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0010</name>
-		<cmt>Blumfelde Pan Landing Site,WA</cmt>
+		<cmt>Blumfelde Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-22.327800" lon="19.750600">
 		<ele>1442.9232</ele>
 		<magvar>12.5</magvar>
 		<name>NA-0011</name>
-		<cmt>Bush Breaks Lodge Landing Site,WA</cmt>
+		<cmt>Bush Breaks Lodge,WA</cmt>
 	</wpt>
 	<wpt lat="-18.118100" lon="21.624400">
 		<ele>1010.1072</ele>
@@ -5208,7 +5208,7 @@
 		<ele>1285.9512</ele>
 		<magvar>14.1</magvar>
 		<name>NA-0013</name>
-		<cmt>Derm East Pan Landing Site,WA</cmt>
+		<cmt>Derm East Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-22.954400" lon="17.639700">
 		<ele>1514.856</ele>
@@ -5220,7 +5220,7 @@
 		<ele>1195.1208</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0015</name>
-		<cmt>Eirup Landing Site,WA</cmt>
+		<cmt>Eirup,WA</cmt>
 	</wpt>
 	<wpt lat="-21.198100" lon="17.821100">
 		<ele>1434.084</ele>
@@ -5232,19 +5232,19 @@
 		<ele>1310.0304</ele>
 		<magvar>13.7</magvar>
 		<name>NA-0017</name>
-		<cmt>Georgia Peter Schomarz Landing Site,WA</cmt>
+		<cmt>Georgia Peter Schomarz,WA</cmt>
 	</wpt>
 	<wpt lat="-23.121900" lon="16.733600">
 		<ele>1708.0992</ele>
 		<magvar>13.8</magvar>
 		<name>NA-0018</name>
-		<cmt>Greub Landing Site,WA</cmt>
+		<cmt>Greub,WA</cmt>
 	</wpt>
 	<wpt lat="-23.543100" lon="18.384200">
 		<ele>1298.1432</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0019</name>
-		<cmt>Grootpan East Landing Site,WA</cmt>
+		<cmt>Grootpan East,WA</cmt>
 	</wpt>
 	<wpt lat="-23.361900" lon="17.803900">
 		<ele>1359.1032</ele>
@@ -5262,7 +5262,7 @@
 		<ele>1563.0144</ele>
 		<magvar>12.4</magvar>
 		<name>NA-0022</name>
-		<cmt>Hetaku Game Lodge Landing Site,WA</cmt>
+		<cmt>Hetaku Game Lodge,WA</cmt>
 	</wpt>
 	<wpt lat="-23.745800" lon="18.091100">
 		<ele>1285.0368</ele>
@@ -5274,13 +5274,13 @@
 		<ele>1406.9568</ele>
 		<magvar>13.4</magvar>
 		<name>NA-0024</name>
-		<cmt>Julia Landing Site,WA</cmt>
+		<cmt>Julia,WA</cmt>
 	</wpt>
 	<wpt lat="-24.062200" lon="17.596900">
 		<ele>1225.9056</ele>
 		<magvar>14.6</magvar>
 		<name>NA-0025</name>
-		<cmt>Kalkrand Pan Landing Site,WA</cmt>
+		<cmt>Kalkrand Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-21.614200" lon="16.055600">
 		<ele>1249.0704</ele>
@@ -5292,19 +5292,19 @@
 		<ele>1249.0704</ele>
 		<magvar>12.9</magvar>
 		<name>NA-0027</name>
-		<cmt>Kansimba Landing Site,WA</cmt>
+		<cmt>Kansimba,WA</cmt>
 	</wpt>
 	<wpt lat="-23.862200" lon="17.857200">
 		<ele>1235.964</ele>
 		<magvar>14.4</magvar>
 		<name>NA-0028</name>
-		<cmt>Kentani Landing Site,WA</cmt>
+		<cmt>Kentani,WA</cmt>
 	</wpt>
 	<wpt lat="-22.745000" lon="19.313300">
 		<ele>1388.0592</ele>
 		<magvar>13.0</magvar>
 		<name>NA-0029</name>
-		<cmt>Kentucky Sud Pan Landing Site,WA</cmt>
+		<cmt>Kentucky Sud Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-24.963100" lon="16.013600">
 		<ele>968.9592</ele>
@@ -5322,91 +5322,91 @@
 		<ele>1363.98</ele>
 		<magvar>13.8</magvar>
 		<name>NA-0032</name>
-		<cmt>Kiripotib Landing Site,WA</cmt>
+		<cmt>Kiripotib,WA</cmt>
 	</wpt>
 	<wpt lat="-23.790600" lon="16.658600">
 		<ele>1549.908</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0033</name>
-		<cmt>Klein Aub 15M Landing Site,WA</cmt>
+		<cmt>Klein Aub 15M,WA</cmt>
 	</wpt>
 	<wpt lat="-23.780600" lon="16.645000">
 		<ele>1556.004</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0034</name>
-		<cmt>Klein Aub Pan Ok Landing Site,WA</cmt>
+		<cmt>Klein Aub Pan Ok,WA</cmt>
 	</wpt>
 	<wpt lat="-23.277200" lon="17.723600">
 		<ele>1387.1448</ele>
 		<magvar>13.8</magvar>
 		<name>NA-0035</name>
-		<cmt>Louwater Pan Landing Site,WA</cmt>
+		<cmt>Louwater Pan,WA</cmt>
 	</wpt>
 	<wpt lat="-24.531400" lon="17.184400">
 		<ele>1355.1408</ele>
 		<magvar>15.2</magvar>
 		<name>NA-0036</name>
-		<cmt>Maltahoehe 4 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 4 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-24.110800" lon="17.564200">
 		<ele>1256.0808</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0037</name>
-		<cmt>Maltahoehe 5 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 5 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-24.125300" lon="17.557800">
 		<ele>1253.9472</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0038</name>
-		<cmt>Maltahoehe 6 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 6 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-24.336700" lon="17.340600">
 		<ele>1288.9992</ele>
 		<magvar>14.9</magvar>
 		<name>NA-0039</name>
-		<cmt>Maltahoehe 7 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 7 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-24.343900" lon="17.332200">
 		<ele>1285.0368</ele>
 		<magvar>15.0</magvar>
 		<name>NA-0040</name>
-		<cmt>Maltahoehe 8 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 8 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-24.510800" lon="17.188300">
 		<ele>1353.0072</ele>
 		<magvar>15.1</magvar>
 		<name>NA-0041</name>
-		<cmt>Maltahoehe 9 Kal Landing Site,WA</cmt>
+		<cmt>Maltahoehe 9 Kal,WA</cmt>
 	</wpt>
 	<wpt lat="-23.742500" lon="17.911700">
 		<ele>1288.0848</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0042</name>
-		<cmt>Mbela Big Wings Landing Site,WA</cmt>
+		<cmt>Mbela Big Wings,WA</cmt>
 	</wpt>
 	<wpt lat="-24.891900" lon="16.200300">
 		<ele>1477.9752</ele>
 		<magvar>15.7</magvar>
 		<name>NA-0043</name>
-		<cmt>Meier Airstrip Landing Site,WA</cmt>
+		<cmt>Meier Airstrip,WA</cmt>
 	</wpt>
 	<wpt lat="-25.183300" lon="19.256900">
 		<ele>1061.0088</ele>
 		<magvar>15.6</magvar>
 		<name>NA-0044</name>
-		<cmt>Moscow Landing Site,WA</cmt>
+		<cmt>Moscow,WA</cmt>
 	</wpt>
 	<wpt lat="-27.100300" lon="19.534500">
 		<ele>891.8448</ele>
 		<magvar>17.8</magvar>
 		<name>NA-0045</name>
-		<cmt>Vredeshoop Landing Site,WA</cmt>
+		<cmt>Vredeshoop,WA</cmt>
 	</wpt>
 	<wpt lat="-23.995000" lon="15.930600">
 		<ele>985.1136</ele>
 		<magvar>14.9</magvar>
 		<name>NA-0046</name>
-		<cmt>Namib Naukluft Landing Site,WA</cmt>
+		<cmt>Namib Naukluft,WA</cmt>
 	</wpt>
 	<wpt lat="-17.775300" lon="25.186700">
 		<ele>929.0304</ele>
@@ -5418,13 +5418,13 @@
 		<ele>1560.8808</ele>
 		<magvar>11.6</magvar>
 		<name>NA-0048</name>
-		<cmt>Oha Kaua/Otjiwa Lodge Landing Site,WA</cmt>
+		<cmt>Oha Kaua/Otjiwa Lodge,WA</cmt>
 	</wpt>
 	<wpt lat="-22.271100" lon="19.001900">
 		<ele>1509.9792</ele>
 		<magvar>12.6</magvar>
 		<name>NA-0049</name>
-		<cmt>Ohlsenhagen Landing Site,WA</cmt>
+		<cmt>Ohlsenhagen,WA</cmt>
 	</wpt>
 	<wpt lat="-21.118100" lon="16.085800">
 		<ele>1484.9856</ele>
@@ -5466,67 +5466,67 @@
 		<ele>1234.1352</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0056</name>
-		<cmt>Schlip 1 Road113 Landing Site,WA</cmt>
+		<cmt>Schlip 1 Road113,WA</cmt>
 	</wpt>
 	<wpt lat="-24.051900" lon="17.369700">
 		<ele>1271.9304</ele>
 		<magvar>14.6</magvar>
 		<name>NA-0057</name>
-		<cmt>Schlip 2 67 Road Landing Site,WA</cmt>
+		<cmt>Schlip 2 67 Road,WA</cmt>
 	</wpt>
 	<wpt lat="-24.057200" lon="17.160000">
 		<ele>1335.9384</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0058</name>
-		<cmt>Schlip 2 87 Road Landing Site,WA</cmt>
+		<cmt>Schlip 2 87 Road,WA</cmt>
 	</wpt>
 	<wpt lat="-24.001900" lon="16.894200">
 		<ele>1403.9088</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0059</name>
-		<cmt>Schlip Kalkrand1 Landing Site,WA</cmt>
+		<cmt>Schlip Kalkrand1,WA</cmt>
 	</wpt>
 	<wpt lat="-24.491400" lon="15.823600">
 		<ele>801.0144</ele>
 		<magvar>15.4</magvar>
 		<name>NA-0060</name>
-		<cmt>Sossusvlei Lodge Landing Site,WA</cmt>
+		<cmt>Sossusvlei Lodge,WA</cmt>
 	</wpt>
 	<wpt lat="-24.349700" lon="18.326700">
 		<ele>1164.9456</ele>
 		<magvar>14.8</magvar>
 		<name>NA-0061</name>
-		<cmt>Stamprietpan Ok Landing Site,WA</cmt>
+		<cmt>Stamprietpan Ok,WA</cmt>
 	</wpt>
 	<wpt lat="-24.390000" lon="18.668100">
 		<ele>1170.1272</ele>
 		<magvar>14.8</magvar>
 		<name>NA-0062</name>
-		<cmt>Tatave Landing Site,WA</cmt>
+		<cmt>Tatave,WA</cmt>
 	</wpt>
 	<wpt lat="-23.461700" lon="18.014400">
 		<ele>1336.8528</ele>
 		<magvar>13.9</magvar>
 		<name>NA-0063</name>
-		<cmt>Tivoli Landing Site,WA</cmt>
+		<cmt>Tivoli,WA</cmt>
 	</wpt>
 	<wpt lat="-21.130800" lon="18.789700">
 		<ele>1438.0464</ele>
 		<magvar>11.5</magvar>
 		<name>NA-0064</name>
-		<cmt>Unbekannt Landing Site,WA</cmt>
+		<cmt>Unbekannt,WA</cmt>
 	</wpt>
 	<wpt lat="-24.180800" lon="15.977500">
 		<ele>1086.0024</ele>
 		<magvar>15.0</magvar>
 		<name>NA-0065</name>
-		<cmt>Weltevrede Rest Landing Site,WA</cmt>
+		<cmt>Weltevrede Rest,WA</cmt>
 	</wpt>
 	<wpt lat="-23.463900" lon="18.873300">
 		<ele>1286.8656</ele>
 		<magvar>13.8</magvar>
 		<name>NA-0066</name>
-		<cmt>Wittenau Pfanne Landing Site,WA</cmt>
+		<cmt>Wittenau Pfanne,WA</cmt>
 	</wpt>
 	<wpt lat="-24.673300" lon="15.791900">
 		<ele>732.1296</ele>
@@ -5568,7 +5568,7 @@
 		<ele>1110.996</ele>
 		<magvar>17.0</magvar>
 		<name>NA-0073</name>
-		<cmt>Zuuberg Landing Site,WA</cmt>
+		<cmt>Zuuberg,WA</cmt>
 	</wpt>
 	<wpt lat="-25.937800" lon="19.120600">
 		<ele>967.74</ele>
@@ -5592,7 +5592,7 @@
 		<ele>952.5</ele>
 		<magvar>16.3</magvar>
 		<name>NA-0077</name>
-		<cmt>Mata Mata Landing Site,WA</cmt>
+		<cmt>Mata Mata,WA</cmt>
 	</wpt>
 	<wpt lat="-25.699400" lon="18.053000">
 		<ele>972.312</ele>
@@ -5610,7 +5610,7 @@
 		<ele>1013.46</ele>
 		<magvar>15.9</magvar>
 		<name>NA-0080</name>
-		<cmt>Tweerivier Landing Site,WA</cmt>
+		<cmt>Tweerivier,WA</cmt>
 	</wpt>
 	<wpt lat="-25.197800" lon="18.273600">
 		<ele>1169.8224</ele>
@@ -5628,7 +5628,7 @@
 		<ele>1162.2024</ele>
 		<magvar>15.6</magvar>
 		<name>NA-0083</name>
-		<cmt>Witbooisvley Landing Site,WA</cmt>
+		<cmt>Witbooisvley,WA</cmt>
 	</wpt>
 	<wpt lat="-24.835600" lon="16.975200">
 		<ele>1360.932</ele>
@@ -5652,13 +5652,13 @@
 		<ele>1051.8648</ele>
 		<magvar>15.1</magvar>
 		<name>NA-0087</name>
-		<cmt>Lendepas Landing Site,WA</cmt>
+		<cmt>Lendepas,WA</cmt>
 	</wpt>
 	<wpt lat="-24.701700" lon="15.975300">
 		<ele>909.828</ele>
 		<magvar>15.6</magvar>
 		<name>NA-0088</name>
-		<cmt>Witwater East Landing Site,WA</cmt>
+		<cmt>Witwater East,WA</cmt>
 	</wpt>
 	<wpt lat="-24.639200" lon="19.703300">
 		<ele>1098.804</ele>
@@ -5670,7 +5670,7 @@
 		<ele>1151.2296</ele>
 		<magvar>15.1</magvar>
 		<name>NA-0090</name>
-		<cmt>Kouwater Landing Site,WA</cmt>
+		<cmt>Kouwater,WA</cmt>
 	</wpt>
 	<wpt lat="-24.382700" lon="17.969800">
 		<ele>1177.4424</ele>
@@ -5688,7 +5688,7 @@
 		<ele>1213.7136</ele>
 		<magvar>14.8</magvar>
 		<name>NA-0093</name>
-		<cmt>Kub Landing Site,WA</cmt>
+		<cmt>Kub,WA</cmt>
 	</wpt>
 	<wpt lat="-24.167200" lon="17.989200">
 		<ele>1221.9432</ele>
@@ -5706,13 +5706,13 @@
 		<ele>1177.4424</ele>
 		<magvar>14.4</magvar>
 		<name>NA-0096</name>
-		<cmt>Morester Landing Site,WA</cmt>
+		<cmt>Morester,WA</cmt>
 	</wpt>
 	<wpt lat="-24.081700" lon="18.196700">
 		<ele>1211.58</ele>
 		<magvar>14.6</magvar>
 		<name>NA-0097</name>
-		<cmt>Lidfontein Landing Site,WA</cmt>
+		<cmt>Lidfontein,WA</cmt>
 	</wpt>
 	<wpt lat="-24.074200" lon="17.591900">
 		<ele>1216.7616</ele>
@@ -5724,13 +5724,13 @@
 		<ele>1209.4464</ele>
 		<magvar>14.4</magvar>
 		<name>NA-0099</name>
-		<cmt>Nabus Landing Site,WA</cmt>
+		<cmt>Nabus,WA</cmt>
 	</wpt>
 	<wpt lat="-24.013300" lon="17.744700">
 		<ele>1228.6488</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0100</name>
-		<cmt>Runnersrest Landing Site,WA</cmt>
+		<cmt>Runnersrest,WA</cmt>
 	</wpt>
 	<wpt lat="-23.969700" lon="18.269200">
 		<ele>1233.8304</ele>
@@ -5754,7 +5754,7 @@
 		<ele>1236.8784</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0104</name>
-		<cmt>Droeplaas Landing Site,WA</cmt>
+		<cmt>Droeplaas,WA</cmt>
 	</wpt>
 	<wpt lat="-23.728600" lon="17.440000">
 		<ele>1273.4544</ele>
@@ -5766,13 +5766,13 @@
 		<ele>1284.732</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0106</name>
-		<cmt>Bimsfarm Landing Site,WA</cmt>
+		<cmt>Bimsfarm,WA</cmt>
 	</wpt>
 	<wpt lat="-23.705000" lon="18.361700">
 		<ele>1276.1976</ele>
 		<magvar>14.1</magvar>
 		<name>NA-0107</name>
-		<cmt>Olifantwater West Landing Site,WA</cmt>
+		<cmt>Olifantwater West,WA</cmt>
 	</wpt>
 	<wpt lat="-23.691800" lon="18.272400">
 		<ele>1277.112</ele>
@@ -5784,19 +5784,19 @@
 		<ele>1271.6256</ele>
 		<magvar>14.1</magvar>
 		<name>NA-0109</name>
-		<cmt>Neuloore Landing Site,WA</cmt>
+		<cmt>Neuloore,WA</cmt>
 	</wpt>
 	<wpt lat="-23.633300" lon="16.325000">
 		<ele>1780.6416</ele>
 		<magvar>14.4</magvar>
 		<name>NA-0110</name>
-		<cmt>Nauchas Landing Site,WA</cmt>
+		<cmt>Nauchas,WA</cmt>
 	</wpt>
 	<wpt lat="-23.617800" lon="17.872200">
 		<ele>1314.9072</ele>
 		<magvar>14.1</magvar>
 		<name>NA-0111</name>
-		<cmt>Kaukerus Landing Site,WA</cmt>
+		<cmt>Kaukerus,WA</cmt>
 	</wpt>
 	<wpt lat="-23.544700" lon="17.787800">
 		<ele>1314.9072</ele>
@@ -5808,7 +5808,7 @@
 		<ele>1329.5376</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0113</name>
-		<cmt>Rheinpfalz Landing Site,WA</cmt>
+		<cmt>Rheinpfalz,WA</cmt>
 	</wpt>
 	<wpt lat="-23.501400" lon="18.787800">
 		<ele>1269.7968</ele>
@@ -5820,19 +5820,19 @@
 		<ele>1340.8152</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0115</name>
-		<cmt>Beenbreek Landing Site,WA</cmt>
+		<cmt>Beenbreek,WA</cmt>
 	</wpt>
 	<wpt lat="-23.366700" lon="16.250000">
 		<ele>1793.748</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0116</name>
-		<cmt>Gamsberg Landing Site,WA</cmt>
+		<cmt>Gamsberg,WA</cmt>
 	</wpt>
 	<wpt lat="-23.366700" lon="16.300000">
 		<ele>1848.0024</ele>
 		<magvar>14.2</magvar>
 		<name>NA-0117</name>
-		<cmt>Gams Farm Landing Site,WA</cmt>
+		<cmt>Gams Farm,WA</cmt>
 	</wpt>
 	<wpt lat="-23.321700" lon="17.071100">
 		<ele>1382.8776</ele>
@@ -5844,7 +5844,7 @@
 		<ele>1363.6752</ele>
 		<magvar>13.8</magvar>
 		<name>NA-0119</name>
-		<cmt>Klein Nauas Landing Site,WA</cmt>
+		<cmt>Klein Nauas,WA</cmt>
 	</wpt>
 	<wpt lat="-23.312500" lon="17.044500">
 		<ele>1382.8776</ele>
@@ -5868,7 +5868,7 @@
 		<ele>1808.6832</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0123</name>
-		<cmt>Goellschau Farm Landing Site,WA</cmt>
+		<cmt>Goellschau Farm,WA</cmt>
 	</wpt>
 	<wpt lat="-23.258300" lon="17.969900">
 		<ele>1372.8192</ele>
@@ -5880,13 +5880,13 @@
 		<ele>1447.8</ele>
 		<magvar>13.7</magvar>
 		<name>NA-0125</name>
-		<cmt>Garib Landing Site,WA</cmt>
+		<cmt>Garib,WA</cmt>
 	</wpt>
 	<wpt lat="-23.120300" lon="18.701700">
 		<ele>1273.4544</ele>
 		<magvar>13.5</magvar>
 		<name>NA-0126</name>
-		<cmt>Nossob Gabel Landing Site,WA</cmt>
+		<cmt>Nossob Gabel,WA</cmt>
 	</wpt>
 	<wpt lat="-23.073900" lon="18.051400">
 		<ele>1401.1656</ele>
@@ -5916,13 +5916,13 @@
 		<ele>1362.1512</ele>
 		<magvar>13.1</magvar>
 		<name>NA-0131</name>
-		<cmt>Keitzaub Landing Site,WA</cmt>
+		<cmt>Keitzaub,WA</cmt>
 	</wpt>
 	<wpt lat="-22.785300" lon="18.889700">
 		<ele>1380.1344</ele>
 		<magvar>13.1</magvar>
 		<name>NA-0132</name>
-		<cmt>Spatzenfeld Landing Site,WA</cmt>
+		<cmt>Spatzenfeld,WA</cmt>
 	</wpt>
 	<wpt lat="-22.756400" lon="17.135300">
 		<ele>1773.936</ele>
@@ -5946,7 +5946,7 @@
 		<ele>1474.0128</ele>
 		<magvar>12.7</magvar>
 		<name>NA-0136</name>
-		<cmt>Ninette Landing Site,WA</cmt>
+		<cmt>Ninette,WA</cmt>
 	</wpt>
 	<wpt lat="-22.396400" lon="19.110800">
 		<ele>1483.1568</ele>
@@ -5982,19 +5982,19 @@
 		<ele>1531.0104</ele>
 		<magvar>12.4</magvar>
 		<name>NA-0142</name>
-		<cmt>Drimiopsis Landing Site,WA</cmt>
+		<cmt>Drimiopsis,WA</cmt>
 	</wpt>
 	<wpt lat="-22.000000" lon="20.000000">
 		<ele>1324.356</ele>
 		<magvar>12.2</magvar>
 		<name>NA-0143</name>
-		<cmt>Swa Knie Landing Site,WA</cmt>
+		<cmt>Swa Knie,WA</cmt>
 	</wpt>
 	<wpt lat="-22.000000" lon="20.627800">
 		<ele>1247.8512</ele>
 		<magvar>12.1</magvar>
 		<name>NA-0144</name>
-		<cmt>Wilskrag Landing Site,WA</cmt>
+		<cmt>Wilskrag,WA</cmt>
 	</wpt>
 	<wpt lat="-21.945600" lon="16.070000">
 		<ele>1364.8944</ele>
@@ -6006,31 +6006,31 @@
 		<ele>1610.5632</ele>
 		<magvar>12.3</magvar>
 		<name>NA-0146</name>
-		<cmt>Okahennesiva Landing Site,WA</cmt>
+		<cmt>Okahennesiva,WA</cmt>
 	</wpt>
 	<wpt lat="-21.824400" lon="18.232000">
 		<ele>1640.4336</ele>
 		<magvar>12.3</magvar>
 		<name>NA-0147</name>
-		<cmt>Steinhausen Landing Site,WA</cmt>
+		<cmt>Steinhausen,WA</cmt>
 	</wpt>
 	<wpt lat="-21.808300" lon="19.908300">
 		<ele>1337.7672</ele>
 		<magvar>12.0</magvar>
 		<name>NA-0148</name>
-		<cmt>Fortuna Landing Site,WA</cmt>
+		<cmt>Fortuna,WA</cmt>
 	</wpt>
 	<wpt lat="-21.736900" lon="17.885000">
 		<ele>1688.8968</ele>
 		<magvar>12.2</magvar>
 		<name>NA-0149</name>
-		<cmt>Okamapu Landing Site,WA</cmt>
+		<cmt>Okamapu,WA</cmt>
 	</wpt>
 	<wpt lat="-21.675300" lon="19.216900">
 		<ele>1453.896</ele>
 		<magvar>11.9</magvar>
 		<name>NA-0150</name>
-		<cmt>Epukiro North Landing Site,WA</cmt>
+		<cmt>Epukiro North,WA</cmt>
 	</wpt>
 	<wpt lat="-21.616700" lon="19.400000">
 		<ele>1412.1384</ele>
@@ -6054,7 +6054,7 @@
 		<ele>1087.2216</ele>
 		<magvar>12.4</magvar>
 		<name>NA-0154</name>
-		<cmt>Godehoop Landing Site,WA</cmt>
+		<cmt>Godehoop,WA</cmt>
 	</wpt>
 	<wpt lat="-21.165300" lon="16.402500">
 		<ele>1455.42</ele>
@@ -6066,7 +6066,7 @@
 		<ele>1509.9792</ele>
 		<magvar>12.0</magvar>
 		<name>NA-0156</name>
-		<cmt>Omaha Landing Site,WA</cmt>
+		<cmt>Omaha,WA</cmt>
 	</wpt>
 	<wpt lat="-20.463900" lon="16.647800">
 		<ele>1478.28</ele>
@@ -10191,7 +10191,7 @@
 		<ele>46.0248</ele>
 		<magvar>24.5</magvar>
 		<name>FACT</name>
-		<cmt>Cape Town International,CAPE TOWN,ZA</cmt>
+		<cmt>Cape Town Intl,CAPE TOWN,ZA</cmt>
 	</wpt>
 	<wpt lat="-31.500300" lon="19.725900">
 		<ele>990.6</ele>
@@ -10293,7 +10293,7 @@
 		<ele>1358.7984</ele>
 		<magvar>21.5</magvar>
 		<name>FABL</name>
-		<cmt>J B M Hertzog International,BLOEMFONTEIN,ZA</cmt>
+		<cmt>J B M Hertzog Intl,BLOEMFONTEIN,ZA</cmt>
 	</wpt>
 	<wpt lat="-28.248400" lon="28.336100">
 		<ele>1694.9928</ele>
@@ -10311,7 +10311,7 @@
 		<ele>10.0584</ele>
 		<magvar>24.6</magvar>
 		<name>FADN</name>
-		<cmt>Louis Botha International,DURBAN,ZA</cmt>
+		<cmt>Louis Botha Intl,DURBAN,ZA</cmt>
 	</wpt>
 	<wpt lat="-28.823100" lon="27.908900">
 		<ele>1620.012</ele>
@@ -10491,7 +10491,7 @@
 		<ele>1694.0784</ele>
 		<magvar>18.1</magvar>
 		<name>FAJS</name>
-		<cmt>OR Tambo International,JOHANNESBURG,ZA</cmt>
+		<cmt>OR Tambo Intl,JOHANNESBURG,ZA</cmt>
 	</wpt>
 	<wpt lat="-26.871100" lon="26.718000">
 		<ele>1354.5312</ele>
@@ -10509,7 +10509,7 @@
 		<ele>862.2792</ele>
 		<magvar>18.1</magvar>
 		<name>FAKN</name>
-		<cmt>Kruger Mpumalanga International,SF</cmt>
+		<cmt>Kruger Mpumalanga Intl,SF</cmt>
 	</wpt>
 	<wpt lat="-26.081000" lon="27.725700">
 		<ele>1676.0952</ele>
@@ -10617,13 +10617,13 @@
 		<ele>1274.3688</ele>
 		<magvar>17.0</magvar>
 		<name>FAMM</name>
-		<cmt>Mmabatho International,MAFIKENG,ZA</cmt>
+		<cmt>Mmabatho Intl,ZA</cmt>
 	</wpt>
 	<wpt lat="-25.430000" lon="31.576700">
 		<ele>312.1152</ele>
 		<magvar>18.3</magvar>
 		<name>FAMN</name>
-		<cmt>Riverside,MALELANE,ZA</cmt>
+		<cmt>Riverside,ZA</cmt>
 	</wpt>
 	<wpt lat="-24.750200" lon="31.475700">
 		<ele>396.24</ele>
@@ -10671,7 +10671,7 @@
 		<ele>68.8848</ele>
 		<magvar>27.1</magvar>
 		<name>FAPE</name>
-		<cmt>Verwoerd International,PORT ELIZABETH,ZA</cmt>
+		<cmt>Port Elizabeth Intl,ZA</cmt>
 	</wpt>
 	<wpt lat="-34.090300" lon="23.327800">
 		<ele>141.732</ele>
@@ -10683,7 +10683,7 @@
 		<ele>436.4736</ele>
 		<magvar>16.0</magvar>
 		<name>FAPH</name>
-		<cmt>Hendrik Van Eck,PHALABORWA,ZA</cmt>
+		<cmt>Phalaborwa,ZA</cmt>
 	</wpt>
 	<wpt lat="-23.926100" lon="29.484400">
 		<ele>1327.0992</ele>
@@ -10707,13 +10707,13 @@
 		<ele>1039.9776</ele>
 		<magvar>16.7</magvar>
 		<name>FAPN</name>
-		<cmt>Pilanesberg International,ZA</cmt>
+		<cmt>Pilanesberg Intl,ZA</cmt>
 	</wpt>
 	<wpt lat="-23.845300" lon="29.458600">
 		<ele>1242.3648</ele>
 		<magvar>15.3</magvar>
 		<name>FAPP</name>
-		<cmt>Polokwane International,ZA</cmt>
+		<cmt>Polokwane Intl,ZA</cmt>
 	</wpt>
 	<wpt lat="-26.671000" lon="27.081900">
 		<ele>1377.696</ele>
@@ -10827,19 +10827,19 @@
 		<ele>524.256</ele>
 		<magvar>22.4</magvar>
 		<name>FAUL</name>
-		<cmt>Prince Mangosuthu Buthelezi,ULUNDI,ZA</cmt>
+		<cmt>Ulundi,ZA</cmt>
 	</wpt>
 	<wpt lat="-28.399100" lon="21.260200">
 		<ele>847.9536</ele>
 		<magvar>19.4</magvar>
 		<name>FAUP</name>
-		<cmt>Pierre Van Ryneveld,UPINGTON,ZA</cmt>
+		<cmt>Upington,ZA</cmt>
 	</wpt>
 	<wpt lat="-31.547900" lon="28.674300">
 		<ele>731.52</ele>
 		<magvar>25.6</magvar>
 		<name>FAUT</name>
-		<cmt>K. D. Matanzima,MTHATHA,ZA</cmt>
+		<cmt>Mthatha,ZA</cmt>
 	</wpt>
 	<wpt lat="-26.982400" lon="24.728800">
 		<ele>1194.816</ele>
@@ -10875,7 +10875,7 @@
 		<ele>1256.9952</ele>
 		<magvar>23.4</magvar>
 		<name>FAVW</name>
-		<cmt>Victoria West,VICTORIA WEST,ZA</cmt>
+		<cmt>Victoria West,ZA</cmt>
 	</wpt>
 	<wpt lat="-25.653900" lon="28.224200">
 		<ele>1248.156</ele>
@@ -10983,7 +10983,7 @@
 		<ele>1005.5352</ele>
 		<magvar>15.4</magvar>
 		<name>FBSK</name>
-		<cmt>Sir Seretse Khama International,GABORONE,BC</cmt>
+		<cmt>Gaborone Intl,BC</cmt>
 	</wpt>
 	<wpt lat="-26.893100" lon="27.690000">
 		<ele>1449.0192</ele>
@@ -11031,7 +11031,7 @@
 		<ele>319.4304</ele>
 		<magvar>2.9</magvar>
 		<name>FCBB</name>
-		<cmt>Maya-Maya,BRAZZAVILLE,CF</cmt>
+		<cmt>Brazzaville,CF</cmt>
 	</wpt>
 	<wpt lat="-0.531350" lon="15.950100">
 		<ele>370.0272</ele>
@@ -11061,7 +11061,7 @@
 		<ele>8.8392</ele>
 		<magvar>23.5</magvar>
 		<name>FMSD</name>
-		<cmt>Tôlanaro,TOLAGNARO,MA</cmt>
+		<cmt>Tolanaro,MA</cmt>
 	</wpt>
 	<wpt lat="-22.805300" lon="47.820600">
 		<ele>7.9248</ele>
@@ -11144,7 +11144,7 @@
 		<ele>74.0664</ele>
 		<magvar>5.2</magvar>
 		<name>FNLU</name>
-		<cmt>Quatro De Fevereiro,LUANDA,AO</cmt>
+		<cmt>Luanda Intl,AO</cmt>
 	</wpt>
 	<wpt lat="-9.115960" lon="18.049300">
 		<ele>885.1392</ele>
@@ -11276,7 +11276,7 @@
 		<ele>441.96</ele>
 		<magvar>2.6</magvar>
 		<name>FOON</name>
-		<cmt>M'Vengue El Hadj Omar Bongo Ondimba International Airport,FRANCEVILLE,GB</cmt>
+		<cmt>Franceville Intl,GB</cmt>
 	</wpt>
 	<wpt lat="-0.826667" lon="12.748600">
 		<ele>483.108</ele>
@@ -11407,7 +11407,7 @@
 		<ele>1328.6232</ele>
 		<magvar>10.3</magvar>
 		<name>FVBU</name>
-		<cmt>Joshua Mqabuko Nkomo International,BULAWAYO,ZI</cmt>
+		<cmt>Bulawayo Intl,ZI</cmt>
 	</wpt>
 	<wpt lat="-17.751600" lon="30.924700">
 		<ele>1476.756</ele>
@@ -11425,13 +11425,13 @@
 		<ele>1063.752</ele>
 		<magvar>8.1</magvar>
 		<name>FVFA</name>
-		<cmt>Victoria Falls International,ZI</cmt>
+		<cmt>Victoria Falls Intl,ZI</cmt>
 	</wpt>
 	<wpt lat="-17.931800" lon="31.092800">
 		<ele>1489.5576</ele>
 		<magvar>8.6</magvar>
 		<name>FVHA</name>
-		<cmt>Harare International,ZI</cmt>
+		<cmt>Harare Intl,ZI</cmt>
 	</wpt>
 	<wpt lat="-17.431900" lon="32.184500">
 		<ele>1203.96</ele>
@@ -11449,7 +11449,7 @@
 		<ele>1095.756</ele>
 		<magvar>10.9</magvar>
 		<name>FVMV</name>
-		<cmt>Masvingo International,ZI</cmt>
+		<cmt>Masvingo Intl,ZI</cmt>
 	</wpt>
 	<wpt lat="-16.984800" lon="32.672700">
 		<ele>746.76</ele>
@@ -11491,7 +11491,7 @@
 		<ele>1024.128</ele>
 		<magvar>5.0</magvar>
 		<name>FLCP</name>
-		<cmt>Chipata,CHIPATA,ZA</cmt>
+		<cmt>Chipata,ZA</cmt>
 	</wpt>
 	<wpt lat="-15.413800" lon="28.330700">
 		<ele>1280.16</ele>
@@ -11503,7 +11503,7 @@
 		<ele>1151.8392</ele>
 		<magvar>5.8</magvar>
 		<name>FLLS</name>
-		<cmt>Lusaka International,ZA</cmt>
+		<cmt>Lusaka Intl,ZA</cmt>
 	</wpt>
 	<wpt lat="-13.258900" lon="31.936600">
 		<ele>564.7944</ele>
@@ -11551,7 +11551,7 @@
 		<ele>519.9888</ele>
 		<magvar>6.9</magvar>
 		<name>FVKB</name>
-		<cmt>Kariba International,ZI</cmt>
+		<cmt>Kariba Intl,ZI</cmt>
 	</wpt>
 	<wpt lat="-16.769200" lon="31.559800">
 		<ele>987.552</ele>
@@ -11659,7 +11659,7 @@
 		<ele>28.3464</ele>
 		<magvar>6.3</magvar>
 		<name>FMCH</name>
-		<cmt>Prince Said Ibrahim International,MORONI,CN</cmt>
+		<cmt>Prince Said Ibrahim Intl,MORONI,CN</cmt>
 	</wpt>
 	<wpt lat="-12.298100" lon="43.766400">
 		<ele>14.0208</ele>
@@ -11719,7 +11719,7 @@
 		<ele>778.764</ele>
 		<magvar>7.3</magvar>
 		<name>FWCL</name>
-		<cmt>Chileka International,BLANTYRE,MI</cmt>
+		<cmt>Chileka Intl,BLANTYRE,MI</cmt>
 	</wpt>
 	<wpt lat="-16.633000" lon="30.650000">
 		<ele>1383.792</ele>
@@ -11749,7 +11749,7 @@
 		<ele>1229.868</ele>
 		<magvar>5.4</magvar>
 		<name>FWKI</name>
-		<cmt>Kamuzu International,MI</cmt>
+		<cmt>Kamuzu Intl,MI</cmt>
 	</wpt>
 	<wpt lat="-13.966000" lon="33.701800">
 		<ele>1134.4656</ele>
@@ -11773,7 +11773,7 @@
 		<ele>1630.0704</ele>
 		<magvar>22.5</magvar>
 		<name>FXMM</name>
-		<cmt>Moshoeshoe I International,MASERU,LT</cmt>
+		<cmt>Moshoeshoe I Intl,MASERU,LT</cmt>
 	</wpt>
 	<wpt lat="-29.304100" lon="27.503500">
 		<ele>1556.004</ele>
@@ -11879,13 +11879,13 @@
 		<ele>1719.072</ele>
 		<magvar>13.1</magvar>
 		<name>FYWH</name>
-		<cmt>Hosea Kutako International,WINDHOEK,WA</cmt>
+		<cmt>Hosea Kutako Intl,WINDHOEK,WA</cmt>
 	</wpt>
 	<wpt lat="-4.385750" lon="15.444600">
 		<ele>313.0296</ele>
 		<magvar>2.8</magvar>
 		<name>FZAA</name>
-		<cmt>Ndjili International,KINSHASA,CG</cmt>
+		<cmt>Ndjili Intl,KINSHASA,CG</cmt>
 	</wpt>
 	<wpt lat="-4.326660" lon="15.327500">
 		<ele>278.892</ele>
@@ -11963,7 +11963,7 @@
 		<ele>1309.116</ele>
 		<magvar>3.3</magvar>
 		<name>FZQA</name>
-		<cmt>Lubumbashi International,LUBUMBASHI,CG</cmt>
+		<cmt>Lubumbashi Intl,LUBUMBASHI,CG</cmt>
 	</wpt>
 	<wpt lat="-6.583000" lon="22.500000">
 		<ele>809.8536</ele>
@@ -12251,13 +12251,13 @@
 		<ele>1551.1272</ele>
 		<magvar>359.7</magvar>
 		<name>FZNA</name>
-		<cmt>Goma International,CG</cmt>
+		<cmt>Goma Intl,CG</cmt>
 	</wpt>
 	<wpt lat="-3.324020" lon="29.318500">
 		<ele>786.9936</ele>
 		<magvar>0.0</magvar>
 		<name>HBBA</name>
-		<cmt>Bujumbura International,BY</cmt>
+		<cmt>Bujumbura Intl,BY</cmt>
 	</wpt>
 	<wpt lat="-1.677200" lon="29.258900">
 		<ele>1548.9936</ele>
@@ -12269,7 +12269,7 @@
 		<ele>1481.0232</ele>
 		<magvar>359.7</magvar>
 		<name>HRYR</name>
-		<cmt>Kigali International,RW</cmt>
+		<cmt>Kigali Intl,RW</cmt>
 	</wpt>
 	<wpt lat="-2.462240" lon="28.907900">
 		<ele>1582.5216</ele>
@@ -12305,7 +12305,7 @@
 		<ele>55.4736</ele>
 		<magvar>2.3</magvar>
 		<name>HTDA</name>
-		<cmt>Mwalimu Julius K. Nyerere International,DAR-ES-SALAAM,TZ
+		<cmt>Mwalimu Julius K. Nyerere Intl,DAR-ES-SALAAM,TZ
 		</cmt>
 	</wpt>
 	<wpt lat="-6.170440" lon="35.752600">
@@ -12349,7 +12349,7 @@
 		<ele>1624.584</ele>
 		<magvar>359.9</magvar>
 		<name>HKJK</name>
-		<cmt>Nairobi Jomo Kenyatta International,KE</cmt>
+		<cmt>Nairobi Jomo Kenyatta Intl,KE</cmt>
 	</wpt>
 	<wpt lat="-2.252420" lon="40.913100">
 		<ele>6.096</ele>
@@ -12391,7 +12391,7 @@
 		<ele>893.6736</ele>
 		<magvar>0.5</magvar>
 		<name>HTKJ</name>
-		<cmt>Kilimanjaro International,TZ</cmt>
+		<cmt>Kilimanjaro Intl,TZ</cmt>
 	</wpt>
 	<wpt lat="-0.086139" lon="34.728900">
 		<ele>1138.1232</ele>
@@ -12415,7 +12415,7 @@
 		<ele>60.96</ele>
 		<magvar>1.1</magvar>
 		<name>HKMO</name>
-		<cmt>Mombasa Moi International,KE</cmt>
+		<cmt>Mombasa Moi Intl,KE</cmt>
 	</wpt>
 	<wpt lat="-5.257260" lon="39.811400">
 		<ele>24.384</ele>
@@ -12488,13 +12488,13 @@
 		<ele>17.9832</ele>
 		<magvar>347.8</magvar>
 		<name>NFFN</name>
-		<cmt>Nadi International,FJ</cmt>
+		<cmt>Nadi Intl,FJ</cmt>
 	</wpt>
 	<wpt lat="-18.043300" lon="178.559000">
 		<ele>5.1816</ele>
 		<magvar>347.7</magvar>
 		<name>NFNA</name>
-		<cmt>Nausori International,FJ</cmt>
+		<cmt>Nausori Intl,FJ</cmt>
 	</wpt>
 	<wpt lat="-16.466700" lon="179.340000">
 		<ele>13.4112</ele>
@@ -12569,7 +12569,7 @@
 		<ele>56.0832</ele>
 		<magvar>349.1</magvar>
 		<name>NVSS</name>
-		<cmt>Santo Pekoa International,NH</cmt>
+		<cmt>Santo Pekoa Intl,NH</cmt>
 					
 	</wpt>
 	<wpt lat="-17.699300" lon="168.320000">
@@ -12754,7 +12754,7 @@
 		<ele>37.4904</ele>
 		<magvar>336.6</magvar>
 		<name>NZCH</name>
-		<cmt>Christchurch International,NZ</cmt>
+		<cmt>Christchurch Intl,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.639400" lon="172.525000">
 		<ele>6.096</ele>
@@ -12868,7 +12868,7 @@
 		<ele>7.0104</ele>
 		<magvar>340.5</magvar>
 		<name>NZAA</name>
-		<cmt>Auckland International,NZ</cmt>
+		<cmt>Auckland Intl,NZ</cmt>
 	</wpt>
 	<wpt lat="-37.029700" lon="174.973000">
 		<ele>33.8328</ele>
@@ -12916,7 +12916,7 @@
 		<ele>356.9208</ele>
 		<magvar>336.0</magvar>
 		<name>NZQN</name>
-		<cmt>Queenstown International,NZ</cmt>
+		<cmt>Queenstown Intl,NZ</cmt>
 	</wpt>
 	<wpt lat="-38.109200" lon="176.317000">
 		<ele>284.988</ele>
@@ -12994,7 +12994,7 @@
 		<ele>12.4968</ele>
 		<magvar>337.8</magvar>
 		<name>NZWN</name>
-		<cmt>Wellington International,NZ</cmt>
+		<cmt>Wellington Intl,NZ</cmt>
 	</wpt>
 	<wpt lat="-39.006900" lon="177.407000">
 		<ele>12.8016</ele>
@@ -13046,7 +13046,7 @@
 		<ele>14.3256</ele>
 		<magvar>358.5</magvar>
 		<name>WAAA</name>
-		<cmt>Hasanuddin International,UJUNG PANDANG,ID</cmt>
+		<cmt>Hasanuddin Intl,UJUNG PANDANG,ID</cmt>
 	</wpt>
 	<wpt lat="-8.560710" lon="116.095000">
 		<ele>15.8496</ele>
@@ -13064,7 +13064,7 @@
 		<ele>4.2672</ele>
 		<magvar>358.4</magvar>
 		<name>WADD</name>
-		<cmt>Ngurah Rai (Bali) International,DENPASAR,ID</cmt>
+		<cmt>Ngurah Rai (Bali) Intl,DENPASAR,ID</cmt>
 	</wpt>
 	<wpt lat="-8.489040" lon="117.412000">
 		<ele>4.8768</ele>
@@ -13088,7 +13088,7 @@
 		<ele>3.6576</ele>
 		<magvar>358.9</magvar>
 		<name>WALL</name>
-		<cmt>Sepinggan International,BALIKPAPAN,ID</cmt>
+		<cmt>Sepinggan Intl,BALIKPAPAN,ID</cmt>
 	</wpt>
 	<wpt lat="-0.306075" lon="117.416000">
 		<ele>14.9352</ele>
@@ -13202,7 +13202,7 @@
 		<ele>106.68</ele>
 		<magvar>358.9</magvar>
 		<name>WARJ</name>
-		<cmt>Adi Sutjipto International,YOGYAKARTA,ID</cmt>
+		<cmt>Adi Sutjipto Intl,YOGYAKARTA,ID</cmt>
 	</wpt>
 	<wpt lat="-7.516090" lon="110.757000">
 		<ele>128.3208</ele>
@@ -13328,7 +13328,7 @@
 		<ele>742.4928</ele>
 		<magvar>359.2</magvar>
 		<name>WICC</name>
-		<cmt>Husein Sastranegara International,BANDUNG,ID</cmt>
+		<cmt>Husein Sastranegara Intl,BANDUNG,ID</cmt>
 	</wpt>
 	<wpt lat="-6.756140" lon="108.540000">
 		<ele>27.1272</ele>
@@ -13358,7 +13358,7 @@
 		<ele>25.6032</ele>
 		<magvar>359.3</magvar>
 		<name>WIHH</name>
-		<cmt>Halim Perdanakusuma International,JAKARTA,ID</cmt>
+		<cmt>Halim Perdanakusuma Intl,JAKARTA,ID</cmt>
 	</wpt>
 	<wpt lat="-7.645060" lon="109.034000">
 		<ele>21.0312</ele>
@@ -13376,7 +13376,7 @@
 		<ele>10.3632</ele>
 		<magvar>359.4</magvar>
 		<name>WIII</name>
-		<cmt>Soekarno-Hatta International,JAKARTA,ID</cmt>
+		<cmt>Soekarno-Hatta Intl,JAKARTA,ID</cmt>
 	</wpt>
 	<wpt lat="-0.874989" lon="100.352000">
 		<ele>2.7432</ele>
@@ -13793,7 +13793,7 @@
 		<ele>3.9624</ele>
 		<magvar>348.9</magvar>
 		<name>YBBN</name>
-		<cmt>Brisbane International,BRISBANE,AU</cmt>
+		<cmt>Brisbane Intl,BRISBANE,AU</cmt>
 	</wpt>
 	<wpt lat="-36.136700" lon="143.727000">
 		<ele>27.432</ele>
@@ -13829,7 +13829,7 @@
 		<ele>3.048</ele>
 		<magvar>352.9</magvar>
 		<name>YBCS</name>
-		<cmt>Cairns International,AU</cmt>
+		<cmt>Cairns Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-26.413300" lon="146.262000">
 		<ele>305.7144</ele>
@@ -16697,7 +16697,7 @@
 		<ele>132.2832</ele>
 		<magvar>348.5</magvar>
 		<name>YMML</name>
-		<cmt>Melbourne International,AU</cmt>
+		<cmt>Melbourne Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-27.863300" lon="151.275000">
 		<magvar>349.3</magvar>
@@ -17271,7 +17271,7 @@
 		<ele>6.096</ele>
 		<magvar>351.9</magvar>
 		<name>YPAD</name>
-		<cmt>Adelaide International,AU</cmt>
+		<cmt>Adelaide Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-32.506900" lon="137.717000">
 		<ele>17.0688</ele>
@@ -17497,7 +17497,7 @@
 		<ele>20.4216</ele>
 		<magvar>1.5</magvar>
 		<name>YPPH</name>
-		<cmt>Perth International,AU</cmt>
+		<cmt>Perth Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-34.750000" lon="137.933000">
 		<magvar>352.2</magvar>
@@ -17756,7 +17756,7 @@
 		<ele>574.8528</ele>
 		<magvar>347.6</magvar>
 		<name>YSCB</name>
-		<cmt>Canberra International,AU</cmt>
+		<cmt>Canberra Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-30.320600" lon="153.116000">
 		<ele>5.4864</ele>
@@ -17888,7 +17888,7 @@
 		<ele>113.0808</ele>
 		<magvar>345.1</magvar>
 		<name>YSNF</name>
-		<cmt>Norfolk Island International,NF</cmt>
+		<cmt>Norfolk Island Intl,NF</cmt>
 	</wpt>
 	<wpt lat="-33.800000" lon="138.367000">
 		<magvar>352.2</magvar>
@@ -17954,7 +17954,7 @@
 		<ele>6.4008</ele>
 		<magvar>347.4</magvar>
 		<name>YSSY</name>
-		<cmt>Sydney Kingsford Smith International,AU</cmt>
+		<cmt>Sydney Kingsford Smith Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-36.636700" lon="143.186000">
 		<ele>194.7672</ele>
@@ -18819,7 +18819,7 @@
 		<ele>17.0688</ele>
 		<magvar>357.6</magvar>
 		<name>YBRM</name>
-		<cmt>Broome International,AU</cmt>
+		<cmt>Broome Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-17.370000" lon="123.661000">
 		<ele>7.3152</ele>
@@ -18994,7 +18994,7 @@
 		<ele>10.0584</ele>
 		<magvar>358.2</magvar>
 		<name>YPPD</name>
-		<cmt>Port Hedland International,AU</cmt>
+		<cmt>Port Hedland Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-19.766700" lon="121.167000">
 		<magvar>357.7</magvar>
@@ -19910,7 +19910,7 @@
 		<ele>31.3944</ele>
 		<magvar>356.6</magvar>
 		<name>YPDN</name>
-		<cmt>Darwin International,AU</cmt>
+		<cmt>Darwin Intl,AU</cmt>
 	</wpt>
 	<wpt lat="-12.356400" lon="134.898000">
 		<ele>62.7888</ele>
@@ -20023,13 +20023,13 @@
 		<ele>48.768</ele>
 		<magvar>18.9</magvar>
 		<name>MU-0002</name>
-		<cmt>Plaisance International,MP</cmt>
+		<cmt>Plaisance Intl,MP</cmt>
 	</wpt>
 	<wpt lat="-20.430200" lon="57.683600">
 		<ele>56.6928</ele>
 		<magvar>18.9</magvar>
 		<name>FIMP</name>
-		<cmt>Sir Seewoosagur Ramgoolam International,MAURITIUS,MP
+		<cmt>Sir Seewoosagur Ramgoolam Intl,MAURITIUS,MP
 		</cmt>
 	</wpt>
 	<wpt lat="-20.350000" lon="45.550000">
@@ -20083,7 +20083,7 @@
 		<ele>7.0104</ele>
 		<magvar>8.0</magvar>
 		<name>FMCZ</name>
-		<cmt>Dzaoudzi Pamandzi International,MF</cmt>
+		<cmt>Dzaoudzi Pamandzi Intl,MF</cmt>
 	</wpt>
 	<wpt lat="-12.349400" lon="49.291700">
 		<ele>113.9952</ele>
@@ -20250,7 +20250,7 @@
 		<ele>3.048</ele>
 		<magvar>5.3</magvar>
 		<name>FSIA</name>
-		<cmt>Seychelles International,SEYCHELLES,SE</cmt>
+		<cmt>Seychelles Intl,SEYCHELLES,SE</cmt>
 	</wpt>
 	<wpt lat="-4.319290" lon="55.691400">
 		<ele>3.048</ele>
@@ -20736,7 +20736,7 @@
 		<ele>5.7912</ele>
 		<magvar>355.3</magvar>
 		<name>AYWK</name>
-		<cmt>Wewak International,PP</cmt>
+		<cmt>Wewak Intl,PP</cmt>
 	</wpt>
 	<wpt lat="-3.916670" lon="139.250000">
 		<ele>1879.3968</ele>
@@ -20942,7 +20942,7 @@
 		<ele>44.5008</ele>
 		<magvar>353.7</magvar>
 		<name>AYPY</name>
-		<cmt>Port Moresby Jacksons International,PP</cmt>
+		<cmt>Port Moresby Jacksons Intl,PP</cmt>
 	</wpt>
 	<wpt lat="-6.271110" lon="150.331000">
 		<ele>7.0104</ele>
