@@ -88,7 +88,6 @@ public class DemGTOPO30
     public float lat0;
     public float lon0;
 
-
     public static boolean demDataValid = false;
     public static boolean buffEmpty = false;
 
@@ -278,23 +277,44 @@ public class DemGTOPO30
 
 
     //-------------------------------------------------------------------------
-    // use the lat lon to determine which region file is active
+    // use the lat lon to determine which tile is active
     //
-    public String setDEMRegion(float lat, float lon)
+    public String setDEMRegionTile(float lat, float lon)
     {
-        setBufferCenter(lat, lon);  // set the buffer tile as well
+        //setBufferCenter(lat, lon);  // set the buffer tile as well
 
         demTopLeftLat = 90 - (int) (90 - lat) / TILE_HEIGHT * TILE_HEIGHT;
         demTopLeftLon = -180 + (int) (lon + 180) / TILE_WIDTH * TILE_WIDTH;
 
-        String s = String.format("%c%03d%c%02d", demTopLeftLon < 0 ? 'W' : 'E', (int) Math.abs(demTopLeftLon),
+        String sTile = String.format("%c%03d%c%02d", demTopLeftLon < 0 ? 'W' : 'E', (int) Math.abs(demTopLeftLon),
                 demTopLeftLat < 0 ? 'S' : 'N', (int) Math.abs(demTopLeftLat));
 
-        return s;
+        return sTile;
 
     }
 
+    //-------------------------------------------------------------------------
+    // use the lat lon to determine which region file is active
+    //
+    public String getRegionDatabaseName(float lat, float lon)
+    {
+        String sRegion = "null.null";
+        if (lat <= -10) {
+            sRegion = "zar.aus";
+        }
+        else if ((lat > 20) && (lon >= -20)) {
+            sRegion = "eur.rus";
+        }
+        else if ((lat > -10) && (lon < -60)) {
+            sRegion = "usa.can";
+        }
+        return sRegion;
+    }
 
+
+    //-------------------------------------------------------------------------
+    // Fill the entire with a single value
+    //
     private void fillBuffer(short c)
     {
         if (!buffEmpty) {
@@ -351,14 +371,19 @@ public class DemGTOPO30
     public void loadDemBuffer(float lat, float lon)
     {
         demDataValid = false;
-        //b2 fillBuffer((short) 0);
-        String DemFilename = setDEMRegion(lat, lon);
+        
+        // Automatic region determination with getRegionDatabaseName
+        //   not sure if this is such a good idea. It works but there  
+        //   are some unintended behaviour. For now leave the code, 
+        //   but disable the call here.
+        //region = getRegionDatabaseName(lat, lon); 
+        String DemFilename = setDEMRegionTile(lat, lon);
         setBufferCenter(lat, lon);
 
         // Check to see if player.efis.data is installed
         if (isAppInstalledOrNot("player.efis.data." + region) == false) {
             Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",
-                    Toast.LENGTH_LONG).show();
+                           Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -366,6 +391,8 @@ public class DemGTOPO30
             Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show();
 
             try {
+                // We have 3 possible mechnisms for data. Leave them commented out  
+                // here as a reference for later. 
                 /*
                 // read from local directory "/data/ ...
                 File storage = Environment.getExternalStorageDirectory();
@@ -379,14 +406,11 @@ public class DemGTOPO30
                 InputStream inp = context.getAssets().open("terrain/" + DemFilename + ".DEM");
                 DataInputStream demFile = new DataInputStream(inp);
                 //*/
-
-                ///*
+                
                 // read from datapac "assets"
                 Context otherContext = context.createPackageContext("player.efis.data." + region, 0);
                 InputStream inp = otherContext.getAssets().open("terrain/" + DemFilename + ".DEM");
                 DataInputStream demFile = new DataInputStream(inp);
-                //*/
-
 
                 final int NUM_BYTES_IN_SHORT = 2;
                 short c;
@@ -408,7 +432,6 @@ public class DemGTOPO30
                 if (x0 + BUFX > maxcol) x2 = maxcol;
                 if (y0 + BUFY > maxrow) y2 = maxrow;
 
-
                 demFile.skipBytes(NUM_BYTES_IN_SHORT * (maxcol * y1));
                 demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
                 for (y = y1; y < y2; y++) {
@@ -422,26 +445,22 @@ public class DemGTOPO30
                     demFile.skipBytes(NUM_BYTES_IN_SHORT * (x1));
                 }
                 demFile.close();
-
-
                 demDataValid = true;
                 buffEmpty = false;
             }
             catch (IOException e) {
-                Toast.makeText(context, "Terrain file error: " + region +"/" + DemFilename, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 buffEmpty = false;
                 fillBuffer((short) 0);
-
                 e.printStackTrace();
             }
-            //catch (PackageManager.NameNotFoundException e) {
-            catch (Exception e) {
-                Toast.makeText(context, "Terrain datapac error: " + DemFilename, Toast.LENGTH_LONG).show();
+            catch (PackageManager.NameNotFoundException e) {
+            //catch (Exception e) {
+                Toast.makeText(context, "Terrain file not found: " + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 buffEmpty = false;
                 fillBuffer((short) 0);
-
                 e.printStackTrace();
             }
         }
