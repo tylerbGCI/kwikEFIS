@@ -77,10 +77,10 @@ public class AircraftData
                 // Ultralight
                 Vs0 = 20;  // Stall, flap extended
                 Vs1 = 30;  // Stall, flap retracted
-                Vx = 40;  // Best angle climb
-                Vy = 50;  // Best rate climb
+                Vx = 40;   // Best angle climb
+                Vy = 50;   // Best rate climb
                 Vfe = 60;  // Flaps extension
-                Va = 70;  // Maneuvering
+                Va = 70;   // Maneuvering
                 Vno = 80;  // Max structural cruise
                 Vne = 90;  // Never exceed
                 break;
@@ -155,7 +155,6 @@ public class AircraftData
                 Vno = 152;  // Max structural cruise
                 Vne = 174;  // Never exceed
                 break;
-
 
             case PA28:
                 // Piper PA28 Archer II

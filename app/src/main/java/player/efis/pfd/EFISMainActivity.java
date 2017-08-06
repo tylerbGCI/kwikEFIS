@@ -327,7 +327,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
 
         // need to add the aircraft --- todo
-        //editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
+        // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
         // editor.putString("RegionDatabase", mGpx.region);  // happens automatically ?
 
         // Commit the edits

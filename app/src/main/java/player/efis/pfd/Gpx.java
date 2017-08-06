@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-
 package player.efis.pfd;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
 import android.content.Context;
-//import android.util.Log;
 
 class Apt
 {
@@ -45,7 +41,6 @@ class Gpx
 	static ArrayList<Apt> aptList = null;
 	
 	/*
-	
 	// Replace with individual methods for instantiate and loading
 	
 	public Gpx(Context context) 
@@ -60,9 +55,11 @@ class Gpx
 		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	            parser.setInput(in_s, null);
 	            parseXML(parser);
-		} catch (XmlPullParserException e) {
+		} 
+        catch (XmlPullParserException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} 
+        catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -109,7 +106,7 @@ class Gpx
 			String txt = null;
 			switch (eventType) {
 			case XmlPullParser.START_DOCUMENT:
-			  // aptList = new ArrayList();
+                // aptList = new ArrayList();
 				// To help avoid the ConcurrentModificationException
 				aptList.clear();
 				break;
@@ -157,7 +154,6 @@ class Gpx
 		{
 			Apt currProduct  = it.next();
 			
-			// TODO
 			// add code to determine  the <nr> apts in range 
 			double deltaLat = lat - currProduct.lat;
 			double deltaLon = lon - currProduct.lon;
@@ -181,148 +177,11 @@ class Gpx
 			content = content + "\nName :" +  currProduct.name + "\n";
 			content = content + "Cmt :" +  currProduct.cmt + "\n";
 			//content = content + "Color :" +  currProduct.wpt + "n";
-
 			System.out.println(content); 
 		}
 		//Log.v("b2", "b2 - " + content);
 		//TextView display = (TextView)findViewById(R.id.info);
 		//display.setText(content);
 	}
-	
-	
 }
 
-
-
-/*
-
-<?xml version="1.0" encoding="UTF-8"?>
-<products>
-	<product>     
-		<productname>Jeans</productname>
-		<productcolor>red</productcolor>
-		<productquantity>5</productquantity>
-	</product>
-	<product>     
-		<productname>Tshirt</productname>
-		<productcolor>blue</productcolor>
-		<productquantity>3</productquantity>
-	</product>
-	<product>     
-		<productname>shorts</productname>
-		<productcolor>green</productcolor>
-		<productquantity>4</productquantity>
-	</product>
-</products>
-
-
-class Product
-{
-
-	public String name;
-	public String quantity;
-	public String color;
-
-}
-
-
-public class XMLDemo extends Activity 
-{
-	@Override
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		XmlPullParserFactory pullParserFactory;
-		try {
-			pullParserFactory = XmlPullParserFactory.newInstance();
-			XmlPullParser parser = pullParserFactory.newPullParser();
-
-			    InputStream in_s = getApplicationContext().getAssets().open("apt-b86d7e37-mapsource.gpx.xml");
-		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-	            parser.setInput(in_s, null);
-
-	            parseXML(parser);
-
-		} catch (XmlPullParserException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
-	{
-		ArrayList<product> products = null;
-        int eventType = parser.getEventType();
-        Product currentProduct = null;
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String name = null;
-            switch (eventType){
-                case XmlPullParser.START_DOCUMENT:
-                	products = new ArrayList();
-                    break;
-                case XmlPullParser.START_TAG:
-                    name = parser.getName();
-                    if (name == "product"){
-                        currentProduct = new Product();
-                    } else if (currentProduct != null){
-                        if (name == "productname"){
-                            currentProduct.name = parser.nextText();
-                        } else if (name == "productcolor"){
-                        	currentProduct.color = parser.nextText();
-                        } else if (name == "productquantity"){
-                            currentProduct.quantity= parser.nextText();
-                        }  
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("product") && currentProduct != null) {
-                    	products.add(currentProduct);
-                    } 
-            }
-            eventType = parser.next();
-        }
-
-        printProducts(products);
-	}
-
-	private void printProducts(ArrayList<product> products)
-	{
-		String content = "";
-		Iterator</product><product> it = products.iterator();
-		while(it.hasNext())
-		{
-			Product currProduct  = it.next();
-			content = content + "nnnProduct :" +  currProduct.name + "n";
-			content = content + "Quantity :" +  currProduct.quantity + "n";
-			content = content + "Color :" +  currProduct.color + "n";
-
-		}
-
-		TextView display = (TextView)findViewById(R.id.info);
-		display.setText(content);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-}
-
-ArrayList<String> vars = new ArrayList<String(9);
-for (int i = 1; i <= 9; i++)
-{
-    vars.add("hi" + i);
-    Toast.makeText(this, vars.get(i), Toast.LENGTH_SHORT).show();
-}
-
-*/

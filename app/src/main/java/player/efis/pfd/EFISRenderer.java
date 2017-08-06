@@ -17,20 +17,15 @@
 package player.efis.pfd;
 
 import java.util.Iterator;
-
 import player.ulib.*;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import player.gles20.GLText;
-
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
-
 
 
 /**
@@ -44,19 +39,6 @@ import android.util.Log;
  */
 public class EFISRenderer implements GLSurfaceView.Renderer
 {
-    //private final static AircraftModel mAircraftModel = AircraftModel.GENERIC; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.AZTEC; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.CRICRI; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.CRUZ; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.J160; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.LGEZ; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.PA28; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.RV6; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.RV7; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.RV8; //done
-    //private final static AircraftModel mAircraftModel = AircraftModel.W10; //done
-
-    //private static AircraftModel mAircraftModel = AircraftModel.RV8;
     private static final String TAG = "EFISRenderer";
 
     private Triangle mTriangle;
@@ -136,11 +118,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private float FDRotation;              // = 20;  // command 20 deg roll
 
     // Onscreen elements
-    private boolean displayInfoPage;        // Display The Ancillary Information
-    private boolean displayFlightDirector;  // Display Flight Director
-    private boolean displayRMI;             // Display RMI
-    private boolean displayHITS;            // Display the Highway In The Sky
-    private boolean displayDEM;     // Display the DEM terrain
+    private boolean displayInfoPage;       // Display The Ancillary Information
+    private boolean displayFlightDirector; // Display Flight Director
+    private boolean displayRMI;            // Display RMI
+    private boolean displayHITS;           // Display the Highway In The Sky
+    private boolean displayDEM;            // Display the DEM terrain
 
     //3D map display
     private boolean displayAirport;
@@ -157,8 +139,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean Calibrating;        // no longer used
     private String CalibratingMsg;      // no longer used
 
-    private float mX, mY;               // keypress location
-    private final float portraitOffset = 0.40f;       // the magic number for portrait offset
+    private float mX, mY;                        // keypress location
+    private final float portraitOffset = 0.40f;  // the magic number for portrait offset
 
     //Demo Modes
     private boolean bDemoMode;
