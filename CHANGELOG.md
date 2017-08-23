@@ -1,5 +1,11 @@
 Changelog
 =========
+3.3 (beta)
+------------------
+* Add automatic DEM region dtermination
+* Audio alerts only with valid GPS fix
+* Minor change to startup behavior
+
 3.3 (2017-07-10)
 ------------------
 * Add fatfinger support
