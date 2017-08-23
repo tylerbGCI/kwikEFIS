@@ -62,7 +62,7 @@ class DemColor
 public class DemGTOPO30
 {
     Context context;
-    public String region = "zar.aus";
+    public String region = "null.null";
 
     final static float DEM_HORIZON = 20; // nm
 
@@ -103,7 +103,6 @@ public class DemGTOPO30
         this.context = context;
         //for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcColor(i);
         for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcHSVColor(i); //optimal so far!
-
     }
 
 
@@ -373,17 +372,16 @@ public class DemGTOPO30
         demDataValid = false;
         
         // Automatic region determination with getRegionDatabaseName
-        //   not sure if this is such a good idea. It works but there  
-        //   are some unintended behaviour. For now leave the code, 
-        //   but disable the call here.
-        //region = getRegionDatabaseName(lat, lon); 
+        //   not 100% sure if this is such a good idea. It works but there
+        //   are may be some some unintended behaviour. For now leave the code,
+        //   but can disable the call here.
+        region = getRegionDatabaseName(lat, lon);
         String DemFilename = setDEMRegionTile(lat, lon);
         setBufferCenter(lat, lon);
 
-        // Check to see if player.efis.data is installed
+        // Check to see if player.efis.data.nnn.mmm (datapac) is installed
         if (isAppInstalledOrNot("player.efis.data." + region) == false) {
-            Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",
-                           Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -407,7 +405,7 @@ public class DemGTOPO30
                 DataInputStream demFile = new DataInputStream(inp);
                 //*/
                 
-                // read from datapac "assets"
+                // read from a datapac "assets"
                 Context otherContext = context.createPackageContext("player.efis.data." + region, 0);
                 InputStream inp = otherContext.getAssets().open("terrain/" + DemFilename + ".DEM");
                 DataInputStream demFile = new DataInputStream(inp);
@@ -448,21 +446,25 @@ public class DemGTOPO30
                 demDataValid = true;
                 buffEmpty = false;
             }
+            catch (PackageManager.NameNotFoundException e) {
+                // thrown by: context.createPackageContext
+                Toast.makeText(context, "Data pac file not found: " + region, Toast.LENGTH_LONG).show();
+                demDataValid = false;
+                buffEmpty = false;
+                fillBuffer((short) 0);
+                e.printStackTrace();
+                // Try to fix the problem
+                region = getRegionDatabaseName(lat, lon);
+            }
             catch (IOException e) {
+                // thrown by: otherContext.getAssets().open
                 Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 buffEmpty = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
             }
-            catch (PackageManager.NameNotFoundException e) {
-            //catch (Exception e) {
-                Toast.makeText(context, "Terrain file not found: " + DemFilename, Toast.LENGTH_LONG).show();
-                demDataValid = false;
-                buffEmpty = false;
-                fillBuffer((short) 0);
-                e.printStackTrace();
-            }
+            //catch (Exception e) { }
         }
         else {
             // Not a valid requested location
@@ -474,9 +476,9 @@ public class DemGTOPO30
     }
 
 
-    public void loadDatabase(String database)
+    /*public void loadDatabase(String database)
     {
         region = database;
-    }
+    }*/
 
 }
