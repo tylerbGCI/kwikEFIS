@@ -283,21 +283,27 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
 
+        // Restore last known location
+        _gps_lat = settings.getFloat("GpsLat", gps_lat);
+        _gps_lon = settings.getFloat("GpsLon", gps_lon);
+        gps_lat = _gps_lat;
+        gps_lon = _gps_lon;
+
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-	    String region = settings.getString("RegionDatabase", "zar.aus");
-
         // Use the last orientation to start
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
+        String region = settings.getString("AirportDatabase", "zar.aus");
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
+        Toast.makeText(this, "APT Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        mDemGTOPO30.loadDatabase(region);
+        //mDemGTOPO30.loadDatabase(region); // not used anymore
 
         createMediaPlayer();
 
@@ -325,15 +331,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
         editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
         editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
+        editor.putFloat("GpsLat", gps_lat);
+        editor.putFloat("GpsLon", gps_lon);
 
         // need to add the aircraft --- todo
         // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-        // editor.putString("RegionDatabase", mGpx.region);  // happens automatically ?
+        editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
 
         // Commit the edits
         editor.commit();
-        }
-
+    }
 
 
 	public void registerSensorManagerListeners()
@@ -353,7 +360,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)); //SENSOR_DELAY_FASTEST);
 		//b2 mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION));
 	}
-
 
     // Release the media player
     private void releaseMediaPlayer()
@@ -477,14 +483,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
 
-
     @Override
 	public void onLocationChanged(Location location)
 	{
 		if (!bDemoMode) {
 			gps_lat =  (float) location.getLatitude();
 			gps_lon = (float) location.getLongitude();
-
             gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
 
 			if (location.hasSpeed()) {
@@ -581,47 +585,47 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
     private void setUserPrefs()
     {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        mGLView.setPrefs(prefs_t.TERRAIN, SP.getBoolean("displayTerrain", true));
-        mGLView.setPrefs(prefs_t.DEM, SP.getBoolean("displayDEM", false));
-        mGLView.setPrefs(prefs_t.TAPE, SP.getBoolean("displayTape", true));
-        mGLView.setPrefs(prefs_t.MIRROR, SP.getBoolean("displayMirror", false));
-        mGLView.setPrefs(prefs_t.INFO_PAGE, SP.getBoolean("infoPage", true));
-        mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, SP.getBoolean("displayFlightDirector", false));
-        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, SP.getBoolean("displayRmi", false));
-        mGLView.setPrefs(prefs_t.HITS, SP.getBoolean("displayHITS", false));
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
+        mGLView.setPrefs(prefs_t.DEM, settings.getBoolean("displayDEM", false));
+        mGLView.setPrefs(prefs_t.TAPE, settings.getBoolean("displayTape", true));
+        mGLView.setPrefs(prefs_t.MIRROR, settings.getBoolean("displayMirror", false));
+        mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
+        mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
+        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
+        mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
 
 
-        bLockedMode = SP.getBoolean("lockedMode", false);
-        sensorBias = Float.valueOf(SP.getString("sensorBias", "0.15f"));
+        bLockedMode = settings.getBoolean("lockedMode", false);
+        sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
-        // If we changed to Demo mode, use the current GPS as seed
-        if (bDemoMode != SP.getBoolean("demoMode", false)) {
+        // If we changed to Demo mode, use the current GPS as seed location
+        if (bDemoMode != settings.getBoolean("demoMode", false)) {
             if (gps_lon != 0 && gps_lat != 0) {
                 _gps_lon = gps_lon;
                 _gps_lat = gps_lat;
             }
         }
-        bDemoMode = SP.getBoolean("demoMode", false);
+        bDemoMode = settings.getBoolean("demoMode", false);
 
         // If we changed to or from HUD mode, a calibration is required
-        if (bHudMode != SP.getBoolean("displayMirror", false)) calibrationCount = 0;
-        bHudMode = SP.getBoolean("displayMirror", false);
+        if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
+        bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
-        String s = SP.getString("AircraftModel", "RV8");
+        String s = settings.getString("AircraftModel", "RV8");
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
 
         // If the database changed it needs to be re-loaded.
-        s = SP.getString("regionDatabase", "zar.aus");
+        s = settings.getString("AirportDatabase", "zar.aus");
         if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
-        if (!mDemGTOPO30.region.equals(s)) {
+        /*if (!mDemGTOPO30.region.equals(s)) {
             mDemGTOPO30.loadDatabase(s);                 // load the dem
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // force an update
-        }
+        }*/
 
         // landscape / porait mode toggle
-        bLandscapeMode = SP.getBoolean("landscapeMode", false);
+        bLandscapeMode = settings.getBoolean("landscapeMode", false);
         if (bLandscapeMode) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             mGLView.mRenderer.Layout = EFISRenderer.layout_t.LANDSCAPE;
@@ -630,7 +634,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
         }
-        bLandscapeMode = SP.getBoolean("landscapeMode", false);
+        bLandscapeMode = settings.getBoolean("landscapeMode", false);
     }
 
 
@@ -792,7 +796,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	}
 
 
-
 	//-------------------------------------------------------------------------
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a crude flight simulator
@@ -805,8 +808,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
     //float _gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
     //float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
+    //float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
     //float _gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
-    float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
+    float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
 	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 1000; // meters
     float _gps_agl = 0; //meters
@@ -1077,37 +1081,38 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Audio cautions and messages
         //
-
-        try {
-            // We are stalling, advise captain "Crash" of his imminent flight emergency
-            if (hasSpeed
-                    && (gps_speed < AircraftData.Vs0 / 2) // m/s
-                    && (gps_agl > 0) ) {
-                if (!mpStall.isPlaying()) mpStall.start();
-            }
-
-            // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
-            if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
-                if (!mpSinkRate.isPlaying()) mpSinkRate.start();
-            }
-
-            if (DemGTOPO30.demDataValid) {
-                // Play the "caution terrain" song above Vx
-                if ((gps_speed > AircraftData.Vx / 2)  // m/s
-                        && (gps_agl > 0)
-                        && (gps_agl < 100)) { // meters
-                    if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+        if (hasGps) {
+            try {
+                // We are stalling, advise captain "Crash" of his imminent flight emergency
+                if (hasSpeed
+                        && (gps_speed < AircraftData.Vs0 / 2) // m/s
+                        && (gps_agl > 0)) {
+                    if (!mpStall.isPlaying()) mpStall.start();
                 }
 
-                // Play the "five hundred" song when decending through 500ft
-                if ((_gps_agl > 152.4f)
-                        && (gps_agl <= 152.4f)) { // 500ft
-                    if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+                // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
+                if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
+                    if (!mpSinkRate.isPlaying()) mpSinkRate.start();
+                }
+
+                if (DemGTOPO30.demDataValid) {
+                    // Play the "caution terrain" song above Vx
+                    if ((gps_speed > AircraftData.Vx / 2)  // m/s
+                            && (gps_agl > 0)
+                            && (gps_agl < 100)) { // meters
+                        if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
+                    }
+
+                    // Play the "five hundred" song when decending through 500ft
+                    if ((_gps_agl > 152.4f)
+                            && (gps_agl <= 152.4f)) { // 500ft
+                        if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
+                    }
                 }
             }
-        }
-        catch (IllegalStateException e) {
-            e.printStackTrace();
+            catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
 
         _gps_agl = gps_agl; // save the previous altitude
@@ -1117,32 +1122,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 /*
 new AlertDialog.Builder(this)
-                    .setMessage("Hello boys!!!")
+                    .setMessage("Hello world!")
                     .setPositiveButton("OK", null)
                     .show();
 */
 
 
-/*
-if (mpCautionTerrian.isPlaying()) {
-    mpCautionTerrian.stop();
-    mpCautionTerrian.release();
-    mpCautionTerrian = MediaPlayer.create(context, R.raw.sound);
-}
-
-
-
-    private void playTerrain()
-    {
-        if (mpCautionTerrian.isPlaying()) {
-            mpCautionTerrian.stop();
-            mpCautionTerrian.release();
-            mpCautionTerrian = MediaPlayer.create(context, R.raw.caution_terrain);
-        }
-    }
-
-
-
-
-
-*/
