@@ -46,7 +46,7 @@ public class EFISPrefManage extends PreferenceActivity
         lp = (ListPreference) findPreference("AircraftModel");
         lp.setSummary(lp.getEntry());
 
-        lp = (ListPreference) findPreference("regionDatabase");
+        lp = (ListPreference) findPreference("AirportDatabase");
         lp.setSummary(lp.getEntry());
 
         lp = (ListPreference) findPreference("sensorBias");

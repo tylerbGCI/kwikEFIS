@@ -25,9 +25,9 @@
             android:defaultValue="zar.aus"
             android:entries="@array/region_names"
             android:entryValues="@array/region_values"
-            android:key="regionDatabase"
+            android:key="AirportDatabase"
             android:summary="Select the operational database"
-            android:title="Georaphic Region" />
+            android:title="Airport" />
     </PreferenceCategory>
 
 
