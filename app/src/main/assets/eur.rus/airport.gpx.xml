@@ -12997,246 +12997,246 @@
 <ele>1.2192</ele>
 <magvar>351.7</magvar>
 <name>N55</name>
-<cmt>JALUIT,JABOR JALUIT ATOLL,RM</cmt>
+<cmt>Jaluit,RM</cmt>
 </wpt>
 <wpt lat="7.016667" lon="171.483333">
 <ele>1.2192</ele>
 <magvar>351.6</magvar>
 <name>N20</name>
-<cmt>INE,ARNO ATOLL,RM</cmt>
+<cmt>Ine,ARNO ATOLL,RM</cmt>
 </wpt>
 <wpt lat="6.985083" lon="158.209806">
 <ele>2.7432</ele>
 <magvar>354.0</magvar>
 <name>PTPN</name>
-<cmt>POHNPEI INTL,POHNPEI ISLAND,FM</cmt>
+<cmt>Pohnpei Intl,FM</cmt>
 </wpt>
 <wpt lat="44.342222" lon="6.372778">
 <ele>1199.9976</ele>
 <magvar>359.9</magvar>
 <name>LF0430</name>
-<cmt>SEYNE LES ALPES,FR</cmt>
+<cmt>Seyne Les Alpes,FR</cmt>
 </wpt>
 <wpt lat="44.315278" lon="6.069722">
 <ele>897.636</ele>
 <magvar>0.0</magvar>
 <name>LF0421</name>
-<cmt>CLAMENSANE,FR</cmt>
+<cmt>Clamensane,FR</cmt>
 </wpt>
 <wpt lat="49.022222" lon="5.891667">
 <ele>290.7792</ele>
 <magvar>0.3</magvar>
 <name>LF5424</name>
-<cmt>CHAMBLEY,FR</cmt>
+<cmt>Chambley,FR</cmt>
 </wpt>
 <wpt lat="43.455000" lon="1.076667">
 <ele>318.8208</ele>
 <magvar>1.3</magvar>
 <name>LF3126</name>
-<cmt>SABONNÈRES,FR</cmt>
+<cmt>Sabonnères,FR</cmt>
 </wpt>
 <wpt lat="42.863056" lon="0.515278">
 <ele>1768.7544</ele>
 <magvar>1.4</magvar>
 <name>LF3131</name>
-<cmt>CAP DE BARRES,FR</cmt>
+<cmt>Cap De Barres,FR</cmt>
 </wpt>
 <wpt lat="42.837222" lon="0.502222">
 <ele>1901.952</ele>
 <magvar>1.4</magvar>
 <name>LF3133</name>
-<cmt>HONTEYDE CATHEVIEILLE,FR</cmt>
+<cmt>Honteyde Cathevieille,FR</cmt>
 </wpt>
 <wpt lat="42.892222" lon="0.299722">
 <ele>1721.8152</ele>
 <magvar>1.5</magvar>
 <name>LF6526</name>
-<cmt>QUATRE VEZIAUX PLAGNOT DE SOUBIROU,FR</cmt>
+<cmt>Quatre Veziaux Plagnot De Soubirou,FR</cmt>
 </wpt>
 <wpt lat="42.784722" lon="0.545000">
 <ele>1801.6728</ele>
 <magvar>1.4</magvar>
 <name>LF3132</name>
-<cmt>CAP DE POUY,FR</cmt>
+<cmt>Cap De Pouy,FR</cmt>
 </wpt>
 <wpt lat="43.155556" lon="0.995278">
 <ele>424.8912</ele>
 <magvar>1.3</magvar>
 <name>LF3199</name>
-<cmt>BALESTA NATURE,FR</cmt>
+<cmt>Balesta Nature,FR</cmt>
 </wpt>
 <wpt lat="44.881111" lon="0.746667">
 <magvar>1.6</magvar>
 <name>LF2430</name>
-<cmt>LALINDE,FR</cmt>
+<cmt>Lalinde,FR</cmt>
 </wpt>
 <wpt lat="44.825000" lon="1.841667">
 <ele>426.72</ele>
 <magvar>1.2</magvar>
 <name>LF4625</name>
-<cmt>ST JEAN LA GINESTE,FR</cmt>
+<cmt>St Jean La Gineste,FR</cmt>
 </wpt>
 <wpt lat="44.566667" lon="2.600000">
 <magvar>1.0</magvar>
 <name>LF1222</name>
-<cmt>GOLINHAC,FR</cmt>
+<cmt>Golinhac,FR</cmt>
 </wpt>
 <wpt lat="43.925000" lon="0.666667">
 <ele>161.544</ele>
 <magvar>1.5</magvar>
 <name>LF3222</name>
-<cmt>LECTOURE,FR</cmt>
+<cmt>Lectoure,FR</cmt>
 </wpt>
 <wpt lat="43.678333" lon="0.410278">
 <ele>199.9488</ele>
 <magvar>1.5</magvar>
 <name>LF3225</name>
-<cmt>BIRAN,FR</cmt>
+<cmt>Biran,FR</cmt>
 </wpt>
 <wpt lat="44.220556" lon="5.574722">
 <ele>750.1128</ele>
 <magvar>0.1</magvar>
 <name>LF2635</name>
-<cmt>SÉDERON,FR</cmt>
+<cmt>Séderon,FR</cmt>
 </wpt>
 <wpt lat="44.183333" lon="3.916667">
 <magvar>0.5</magvar>
 <name>LF4822</name>
-<cmt>ST MARTIN,FR</cmt>
+<cmt>St Martin,FR</cmt>
 </wpt>
 <wpt lat="43.878056" lon="3.437500">
 <magvar>0.7</magvar>
 <name>LF3024</name>
-<cmt>LES BAUMES,FR</cmt>
+<cmt>Les Baumes,FR</cmt>
 </wpt>
 <wpt lat="43.878056" lon="3.437500">
 <ele>719.9376</ele>
 <magvar>0.6</magvar>
 <name>LF3025</name>
-<cmt>LES BAUMES VISSEC,FR</cmt>
+<cmt>Les Baumes Vissec,FR</cmt>
 </wpt>
 <wpt lat="44.491111" lon="5.391667">
 <magvar>0.2</magvar>
 <name>LF2625</name>
-<cmt>LA MOTTE CHALANCON,FR</cmt>
+<cmt>La Motte Chalancon,FR</cmt>
 </wpt>
 <wpt lat="46.200833" lon="6.765000">
 <ele>1741.6272</ele>
 <magvar>359.9</magvar>
 <name>LF7427</name>
-<cmt>MORZINE AVORIAZ,FR</cmt>
+<cmt>Morzine Avoriaz,FR</cmt>
 </wpt>
 <wpt lat="45.241667" lon="6.216667">
 <ele>2382.3168</ele>
 <magvar>0.0</magvar>
 <name>LF7326</name>
-<cmt>POINTE DE L'OUILLON ST SORLIN,FR</cmt>
+<cmt>Pointe De L'ouillon St Sorlin,FR</cmt>
 </wpt>
 <wpt lat="45.983333" lon="7.000000">
 <ele>3103.1688</ele>
 <magvar>359.8</magvar>
 <name>LF7426</name>
-<cmt>GLACIER DU TOUR CHAMONIX,FR</cmt>
+<cmt>Glacier Du Tour Chamonix,FR</cmt>
 </wpt>
 <wpt lat="45.776667" lon="6.225556">
 <ele>459.9432</ele>
 <magvar>0.0</magvar>
 <name>LF7455</name>
-<cmt>DOUSSARD,FR</cmt>
+<cmt>Doussard,FR</cmt>
 </wpt>
 <wpt lat="45.625000" lon="6.858889">
 <ele>1901.952</ele>
 <magvar>359.9</magvar>
 <name>LF7330</name>
-<cmt>LA ROSIÈRE,FR</cmt>
+<cmt>La Rosière,FR</cmt>
 </wpt>
 <wpt lat="45.160556" lon="6.138889">
 <ele>3010.8144</ele>
 <magvar>0.0</magvar>
 <name>LF3824</name>
-<cmt>GLACIER DE LA BARBARATE VAUJANY,FR</cmt>
+<cmt>Glacier De La Barbarate Vaujany,FR</cmt>
 </wpt>
 <wpt lat="47.803333" lon="6.948333">
 <ele>557.784</ele>
 <magvar>0.0</magvar>
 <name>LF6821</name>
-<cmt>MASEVEAUX OBERBRUCK,FR</cmt>
+<cmt>Maseveaux Oberbruck,FR</cmt>
 </wpt>
 <wpt lat="46.358333" lon="1.116667">
 <magvar>1.6</magvar>
 <name>LF8722</name>
-<cmt>BRIGUEIL,FR</cmt>
+<cmt>Brigueil,FR</cmt>
 </wpt>
 <wpt lat="46.140278" lon="1.088889">
 <ele>249.936</ele>
 <magvar>1.5</magvar>
 <name>LF8726</name>
-<cmt>BELLAC,FR</cmt>
+<cmt>Bellac,FR</cmt>
 </wpt>
 <wpt lat="45.333333" lon="1.266667">
 <magvar>1.4</magvar>
 <name>LF2437</name>
-<cmt>ST MESMIN,FR</cmt>
+<cmt>St Mesmin,FR</cmt>
 </wpt>
 <wpt lat="45.936111" lon="2.455556">
 <magvar>1.1</magvar>
 <name>LF2323</name>
-<cmt>LIOUX,FR</cmt>
+<cmt>Lioux,FR</cmt>
 </wpt>
 <wpt lat="45.116389" lon="0.638889">
 <magvar>1.6</magvar>
 <name>LF2424</name>
-<cmt>COURSAC,FR</cmt>
+<cmt>Coursac,FR</cmt>
 </wpt>
 <wpt lat="45.005556" lon="1.018056">
 <magvar>1.5</magvar>
 <name>LF2427</name>
-<cmt>FLEURAC,FR</cmt>
+<cmt>Fleurac,FR</cmt>
 </wpt>
 <wpt lat="46.680556" lon="2.580556">
 <ele>230.124</ele>
 <magvar>1.1</magvar>
 <name>LF1822</name>
-<cmt>COLOMBIERS,FR</cmt>
+<cmt>Colombiers,FR</cmt>
 </wpt>
 <wpt lat="46.716667" lon="1.933333">
 <ele>199.9488</ele>
 <magvar>1.4</magvar>
 <name>LF3621</name>
-<cmt>ST AOUT,FR</cmt>
+<cmt>St Aout,FR</cmt>
 </wpt>
 <wpt lat="46.078056" lon="4.547222">
 <ele>750.7224</ele>
 <magvar>0.5</magvar>
 <name>LF6921</name>
-<cmt>CROIX ROZIERS CLAVEISOLLES,FR</cmt>
+<cmt>Croix Roziers Claveisolles,FR</cmt>
 </wpt>
 <wpt lat="45.105556" lon="3.507500">
 <ele>499.872</ele>
 <magvar>0.7</magvar>
 <name>LF4321</name>
-<cmt>MAZEYRAT,FR</cmt>
+<cmt>Mazeyrat,FR</cmt>
 </wpt>
 <wpt lat="47.366667" lon="4.333333">
 <magvar>0.7</magvar>
 <name>LF2125</name>
-<cmt>VIC,FR</cmt>
+<cmt>Vic,FR</cmt>
 </wpt>
 <wpt lat="47.308333" lon="3.647222">
 <magvar>0.9</magvar>
 <name>LF5822</name>
-<cmt>DIROL,FR</cmt>
+<cmt>Dirol,FR</cmt>
 </wpt>
 <wpt lat="47.293889" lon="3.360000">
 <ele>313.944</ele>
 <magvar>0.9</magvar>
 <name>LF5826</name>
-<cmt>CHAMPLEMY VARZY,FR</cmt>
+<cmt>Champlemy Varzy,FR</cmt>
 </wpt>
 <wpt lat="47.600000" lon="3.683333">
 <magvar>0.9</magvar>
 <name>LF8924</name>
-<cmt>MAILLY,FR</cmt>
+<cmt>Mailly,FR</cmt>
 </wpt>
 <wpt lat="52.061389" lon="0.762222">
 <ele>60.96</ele>
@@ -14321,19 +14321,19 @@
 <ele>822.0456</ele>
 <magvar>359.3</magvar>
 <name>DABT</name>
-<cmt>Batna,BATNA,AG</cmt>
+<cmt>Batna,AG</cmt>
 </wpt>
 <wpt lat="19.567000" lon="5.750000">
 <ele>399.8976</ele>
 <magvar>0.5</magvar>
 <name>DATG</name>
-<cmt>In Guezzam,IN GUEZZAM,AG</cmt>
+<cmt>In Guezzam,IN AG</cmt>
 </wpt>
 <wpt lat="33.067800" lon="6.088670">
 <ele>85.0392</ele>
 <magvar>359.5</magvar>
 <name>DAUK</name>
-<cmt>Touggourt Sidi Madhi,TOUGGOURT,AG</cmt>
+<cmt>Touggourt Sidi Madhi,AG</cmt>
 </wpt>
 <wpt lat="33.511400" lon="6.776790">
 <ele>61.8744</ele>
@@ -14392,13 +14392,13 @@
 <ele>187.1472</ele>
 <magvar>0.1</magvar>
 <name>EBCI</name>
-<cmt>Brussels South Charleroi,CHARLEROI,BE</cmt>
+<cmt>Brussels South Charleroi,BE</cmt>
 </wpt>
 <wpt lat="50.817200" lon="3.204720">
 <ele>19.5072</ele>
 <magvar>0.6</magvar>
 <name>EBKT</name>
-<cmt>Wevelgem,KORTRIJK-WEVELGEM,BE</cmt>
+<cmt>Wevelgem,BE</cmt>
 </wpt>
 <wpt lat="50.852800" lon="3.147310">
 <magvar>0.6</magvar>
@@ -14462,13 +14462,13 @@
 <ele>322.4784</ele>
 <magvar>359.3</magvar>
 <name>EDDR</name>
-<cmt>Saarbrücken,SAARBRUCKEN,GM</cmt>
+<cmt>Saarbrücken,GM</cmt>
 </wpt>
 <wpt lat="52.559700" lon="13.287700">
 <ele>37.1856</ele>
 <magvar>357.5</magvar>
 <name>EDDT</name>
-<cmt>Berlin-Tegel Intl,BERLIN,GM</cmt>
+<cmt>Berlin-Tegel Intl,GM</cmt>
 </wpt>
 <wpt lat="50.290600" lon="8.536670">
 <ele>335.8896</ele>
@@ -14582,7 +14582,7 @@
 <ele>597.408</ele>
 <magvar>358.0</magvar>
 <name>EDQM</name>
-<cmt>Hof Plauen,HOF-PLAUEN,GM</cmt>
+<cmt>Hof Plauen,GM</cmt>
 </wpt>
 <wpt lat="49.594400" lon="10.580300">
 <ele>365.1504</ele>
@@ -14606,7 +14606,7 @@
 <ele>680.0088</ele>
 <magvar>358.9</magvar>
 <name>EDTD</name>
-<cmt>Donaueschingen Villingen,DONAUESCHINGEN,GM</cmt>
+<cmt>Donaueschingen Villingen,GM</cmt>
 </wpt>
 <wpt lat="48.053800" lon="9.372830">
 <ele>554.736</ele>
@@ -14630,7 +14630,7 @@
 <ele>3.3528</ele>
 <magvar>359.0</magvar>
 <name>EDWB</name>
-<cmt>Bremerhaven,BREMERHAVEN,GM</cmt>
+<cmt>Bremerhaven,GM</cmt>
 </wpt>
 <wpt lat="53.334200" lon="9.028890">
 <ele>6.096</ele>
@@ -14684,7 +14684,7 @@
 <ele>15.5448</ele>
 <magvar>359.2</magvar>
 <name>EDXW</name>
-<cmt>Westerland Sylt,WESTERLAND/SYLT,GM</cmt>
+<cmt>Westerland Sylt,GM</cmt>
 </wpt>
 <wpt lat="60.654400" lon="24.881100">
 <ele>131.064</ele>
@@ -14696,19 +14696,19 @@
 <ele>139.9032</ele>
 <magvar>351.6</magvar>
 <name>EFJY</name>
-<cmt>Jyvaskyla,JYVASKYLA,FI</cmt>
+<cmt>Jyvaskyla,FI</cmt>
 </wpt>
 <wpt lat="67.701000" lon="24.846800">
 <ele>196.2912</ele>
 <magvar>350.4</magvar>
 <name>EFKT</name>
-<cmt>Kittila,KITTILA,FI</cmt>
+<cmt>Kittila,FI</cmt>
 </wpt>
 <wpt lat="62.692100" lon="22.832300">
 <ele>92.0496</ele>
 <magvar>352.7</magvar>
 <name>EFSI</name>
-<cmt>Seinäjoki,SEINAJOKI,FI</cmt>
+<cmt>Seinäjoki,FI</cmt>
 </wpt>
 <wpt lat="51.338900" lon="1.153060">
 <ele>33.528</ele>
@@ -14756,7 +14756,7 @@
 <ele>19.2024</ele>
 <magvar>0.2</magvar>
 <name>EHWO</name>
-<cmt>Woensdrecht,WOENSDRECHT,NL</cmt>
+<cmt>Woensdrecht,NL</cmt>
 </wpt>
 <wpt lat="55.700300" lon="11.250000">
 <magvar>358.2</magvar>
@@ -14772,7 +14772,7 @@
 <ele>17.0688</ele>
 <magvar>358.5</magvar>
 <name>EKOD</name>
-<cmt>Odense,ODENSE,DA</cmt>
+<cmt>Odense,DA</cmt>
 </wpt>
 <wpt lat="54.870300" lon="9.279010">
 <ele>26.8224</ele>
@@ -14784,7 +14784,7 @@
 <ele>15.8496</ele>
 <magvar>357.0</magvar>
 <name>EKRN</name>
-<cmt>Bornholm,BORNHOLM,DA</cmt>
+<cmt>Bornholm,DA</cmt>
 </wpt>
 <wpt lat="56.410000" lon="9.409100">
 <magvar>358.8</magvar>
@@ -14807,19 +14807,19 @@
 <ele>11.2776</ele>
 <magvar>1.0</magvar>
 <name>ENFL</name>
-<cmt>Florø,FLORO,NO</cmt>
+<cmt>Florø,NO</cmt>
 </wpt>
 <wpt lat="63.111800" lon="7.824520">
 <ele>62.1792</ele>
 <magvar>359.8</magvar>
 <name>ENKB</name>
-<cmt>Kristiansund,KRISTIANSUND,NO</cmt>
+<cmt>Kristiansund,NO</cmt>
 </wpt>
 <wpt lat="71.029700" lon="27.826700">
 <ele>11.8872</ele>
 <magvar>347.6</magvar>
 <name>ENMH</name>
-<cmt>Mehamn,MEHAMN,NO</cmt>
+<cmt>Mehamn,NO</cmt>
 </wpt>
 <wpt lat="65.784000" lon="13.214900">
 <ele>72.2376</ele>
@@ -14831,19 +14831,19 @@
 <ele>71.0184</ele>
 <magvar>0.5</magvar>
 <name>ENOV</name>
-<cmt>Ørsta-Volda,ORSTA-VOLDA,NO</cmt>
+<cmt>Ørsta-Volda,NO</cmt>
 </wpt>
 <wpt lat="68.580800" lon="15.026100">
 <ele>3.3528</ele>
 <magvar>355.7</magvar>
 <name>ENSK</name>
-<cmt>Stokmarknes Skagen,STOKMARKNES,NO</cmt>
+<cmt>Stokmarknes Skagen,NO</cmt>
 </wpt>
 <wpt lat="53.096800" lon="17.977700">
 <ele>71.628</ele>
 <magvar>356.1</magvar>
 <name>EPBY</name>
-<cmt>Bydgoszcz Ignacy Jan Paderewski,BYDGOSZCZ,PL</cmt>
+<cmt>Bydgoszcz Ignacy Jan Paderewski,PL</cmt>
 </wpt>
 <wpt lat="50.885000" lon="19.204700">
 <ele>262.128</ele>
@@ -14922,13 +14922,13 @@
 <ele>42.672</ele>
 <magvar>355.9</magvar>
 <name>ESKN</name>
-<cmt>Stockholm Skavsta,STOCKHOLM,SW</cmt>
+<cmt>Stockholm Skavsta,SW</cmt>
 </wpt>
 <wpt lat="59.675900" lon="12.639400">
 <ele>72.2376</ele>
 <magvar>357.5</magvar>
 <name>ESKV</name>
-<cmt>Arvika,ARVIKA,SW</cmt>
+<cmt>Arvika,SW</cmt>
 </wpt>
 <wpt lat="55.848300" lon="13.328300">
 <magvar>357.4</magvar>
@@ -14944,13 +14944,13 @@
 <ele>275.5392</ele>
 <magvar>353.2</magvar>
 <name>ESNJ</name>
-<cmt>Jokkmokk,JOKKMOKK,SW</cmt>
+<cmt>Jokkmokk,SW</cmt>
 </wpt>
 <wpt lat="67.822000" lon="20.336800">
 <ele>459.6384</ele>
 <magvar>352.8</magvar>
 <name>ESNQ</name>
-<cmt>Kiruna,KIRUNA,SW</cmt>
+<cmt>Kiruna,SW</cmt>
 </wpt>
 <wpt lat="61.190000" lon="14.712600">
 <ele>208.1784</ele>
@@ -14962,7 +14962,7 @@
 <ele>47.8536</ele>
 <magvar>353.1</magvar>
 <name>ESNS</name>
-<cmt>Skellefteå,SKELLEFTEA,SW</cmt>
+<cmt>Skellefteå,SW</cmt>
 </wpt>
 <wpt lat="62.481400" lon="17.002900">
 <ele>270.0528</ele>
@@ -14974,13 +14974,13 @@
 <ele>347.472</ele>
 <magvar>355.2</magvar>
 <name>ESNV</name>
-<cmt>Vilhelmina,VILHELMINA,SW</cmt>
+<cmt>Vilhelmina,SW</cmt>
 </wpt>
 <wpt lat="65.590300" lon="19.281900">
 <ele>379.476</ele>
 <magvar>353.8</magvar>
 <name>ESNX</name>
-<cmt>Arvidsjaur,ARVIDSJAUR,SW</cmt>
+<cmt>Arvidsjaur,SW</cmt>
 </wpt>
 <wpt lat="59.070200" lon="18.117000">
 <magvar>355.4</magvar>
@@ -14991,7 +14991,7 @@
 <ele>111.5568</ele>
 <magvar>356.4</magvar>
 <name>ESSF</name>
-<cmt>Hultsfred,HULTSFRED-VIMMERBY,SW</cmt>
+<cmt>Hultsfred,SW</cmt>
 </wpt>
 <wpt lat="49.650300" lon="7.300070">
 <magvar>359.3</magvar>
@@ -15008,37 +15008,37 @@
 <ele>7.9248</ele>
 <magvar>359.4</magvar>
 <name>ETNT</name>
-<cmt>Wittmundhafen,WITTMUNDHAFEN,GM</cmt>
+<cmt>Wittmundhafen,GM</cmt>
 </wpt>
 <wpt lat="53.602200" lon="13.306000">
 <ele>69.4944</ele>
 <magvar>357.5</magvar>
 <name>ETNU</name>
-<cmt>Neubrandenburg,NEUBRANDENBURG,GM</cmt>
+<cmt>Neubrandenburg,GM</cmt>
 </wpt>
 <wpt lat="50.173800" lon="7.063330">
 <ele>477.9264</ele>
 <magvar>359.4</magvar>
 <name>ETSB</name>
-<cmt>Buchel,BUCHEL,GM</cmt>
+<cmt>Buchel,GM</cmt>
 </wpt>
 <wpt lat="3.755270" lon="8.708720">
 <ele>23.1648</ele>
 <magvar>2.5</magvar>
 <name>FGSL</name>
-<cmt>Malabo,MALABO,EK</cmt>
+<cmt>Malabo,EK</cmt>
 </wpt>
 <wpt lat="2.873890" lon="9.977780">
 <ele>45.1104</ele>
 <magvar>2.4</magvar>
 <name>FKKB</name>
-<cmt>Kribi,KRIBI,CM</cmt>
+<cmt>Kribi,CM</cmt>
 </wpt>
 <wpt lat="4.475000" lon="14.362500">
 <ele>655.9296</ele>
 <magvar>1.1</magvar>
 <name>FKKI</name>
-<cmt>Batouri,BATOURI,CM</cmt>
+<cmt>Batouri,CM</cmt>
 </wpt>
 <wpt lat="5.536920" lon="10.354600">
 <ele>1324.9656</ele>
@@ -15050,7 +15050,7 @@
 <ele>694.3344</ele>
 <magvar>1.9</magvar>
 <name>FKYS</name>
-<cmt>Yaoundé Nsimalen Intl,YAOUNDE,CM</cmt>
+<cmt>Yaoundé Nsimalen Intl,CM</cmt>
 </wpt>
 <wpt lat="10.092500" lon="14.445600">
 <ele>388.9248</ele>
@@ -15110,7 +15110,7 @@
 <ele>1331.3664</ele>
 <magvar>356.5</magvar>
 <name>HESC</name>
-<cmt>St Catherine Intl,ST CATHERINE,EG</cmt>
+<cmt>St Catherine Intl,EG</cmt>
 </wpt>
 <wpt lat="0.271342" lon="34.787300">
 <ele>1530.096</ele>
@@ -15134,19 +15134,19 @@
 <ele>235.6104</ele>
 <magvar>357.3</magvar>
 <name>HSDN</name>
-<cmt>Dongola,DONGOLA,SU</cmt>
+<cmt>Dongola,SU</cmt>
 </wpt>
 <wpt lat="13.614900" lon="25.324600">
 <ele>729.3864</ele>
 <magvar>358.2</magvar>
 <name>HSFS</name>
-<cmt>El Fashir,EL FASHIR,SU</cmt>
+<cmt>El Fashir,SU</cmt>
 </wpt>
 <wpt lat="19.433600" lon="37.234100">
 <ele>41.148</ele>
 <magvar>357.2</magvar>
 <name>HSPN</name>
-<cmt>Port Sudan New Intl,PORT SUDAN,SU</cmt>
+<cmt>Port Sudan New Intl,SU</cmt>
 </wpt>
 <wpt lat="1.758060" lon="31.736700">
 <ele>1173.48</ele>
@@ -15212,7 +15212,7 @@
 <ele>4937.76</ele>
 <magvar>358.0</magvar>
 <name>IN-0003</name>
-<cmt>Daulat Beg Oldi Advanced Landing Ground,IN</cmt>
+<cmt>Daulat Beg Oldi,IN</cmt>
 </wpt>
 <wpt lat="42.834000" lon="74.577400">
 <ele>844.6008</ele>
@@ -15259,13 +15259,13 @@
 <ele>83.5152</ele>
 <magvar>357.6</magvar>
 <name>LDPL</name>
-<cmt>Pula,PULA,HR</cmt>
+<cmt>Pula,HR</cmt>
 </wpt>
 <wpt lat="41.901000" lon="2.760550">
 <ele>142.6464</ele>
 <magvar>0.1</magvar>
 <name>LEGE</name>
-<cmt>Girona,GIRONA,SP</cmt>
+<cmt>Girona,SP</cmt>
 </wpt>
 <wpt lat="51.040600" lon="2.550280">
 <ele>-0.9144</ele>
@@ -15277,7 +15277,7 @@
 <ele>10.9728</ele>
 <magvar>1.1</magvar>
 <name>LFAT</name>
-<cmt>Le Touquet-Côte d'Opale,LE TOUQUET,FR</cmt>
+<cmt>Le Touquet-Côte d'Opale,FR</cmt>
 </wpt>
 <wpt lat="49.411400" lon="5.890560">
 <ele>395.9352</ele>
@@ -15289,13 +15289,13 @@
 <ele>152.0952</ele>
 <magvar>0.6</magvar>
 <name>LFBO</name>
-<cmt>Toulouse-Blagnac,TOULOUSE,FR</cmt>
+<cmt>Toulouse-Blagnac,FR</cmt>
 </wpt>
 <wpt lat="45.198100" lon="0.815556">
 <ele>99.9744</ele>
 <magvar>0.8</magvar>
 <name>LFBX</name>
-<cmt>Périgueux-Bassillac,PERIGUEUX,FR</cmt>
+<cmt>Périgueux-Bassillac,FR</cmt>
 </wpt>
 <wpt lat="44.396900" lon="0.758889">
 <ele>57.912</ele>
@@ -15319,7 +15319,7 @@
 <ele>339.852</ele>
 <magvar>0.4</magvar>
 <name>LFDJ</name>
-<cmt>Pamiers-Les Pujols,PAMIERS,FR</cmt>
+<cmt>Pamiers-Les Pujols,FR</cmt>
 </wpt>
 <wpt lat="46.272800" lon="0.190556">
 <ele>152.0952</ele>
@@ -15367,7 +15367,7 @@
 <ele>374.904</ele>
 <magvar>359.8</magvar>
 <name>LFGW</name>
-<cmt>Verdun-Le Rozelier,VERDUN,FR</cmt>
+<cmt>Verdun-Le Rozelier,FR</cmt>
 </wpt>
 <wpt lat="44.445300" lon="4.333890">
 <ele>110.0328</ele>
@@ -15403,31 +15403,31 @@
 <ele>265.176</ele>
 <magvar>359.6</magvar>
 <name>LFJL</name>
-<cmt>Metz-Nancy-Lorraine,METZ-NANCY/LORRAINE,FR</cmt>
+<cmt>Metz-Nancy-Lorraine,FR</cmt>
 </wpt>
 <wpt lat="41.500600" lon="9.097780">
 <ele>26.5176</ele>
 <magvar>358.7</magvar>
 <name>LFKF</name>
-<cmt>Figari Sud-Corse,FIGARI/SUD CORSE,FR</cmt>
+<cmt>Figari Sud-Corse,FR</cmt>
 </wpt>
 <wpt lat="45.786700" lon="3.169170">
 <ele>332.232</ele>
 <magvar>0.2</magvar>
 <name>LFLC</name>
-<cmt>Clermont-Ferrand Auvergne,CLERMONT-FERRAND/AUVERGN,FR</cmt>
+<cmt>Clermont-Ferrand Auvergne,FR</cmt>
 </wpt>
 <wpt lat="46.826100" lon="4.817630">
 <ele>189.8904</ele>
 <magvar>359.9</magvar>
 <name>LFLH</name>
-<cmt>Chalon-Champforgeuil,CHALON,FR</cmt>
+<cmt>Chalon-Champforgeuil,FR</cmt>
 </wpt>
 <wpt lat="46.295100" lon="4.795770">
 <ele>221.8944</ele>
 <magvar>359.8</magvar>
 <name>LFLM</name>
-<cmt>Mâcon-Charnay,MACON,FR</cmt>
+<cmt>Mâcon-Charnay,FR</cmt>
 </wpt>
 <wpt lat="44.583600" lon="4.740560">
 <ele>73.152</ele>
@@ -15439,7 +15439,7 @@
 <ele>249.0216</ele>
 <magvar>0.1</magvar>
 <name>LFLV</name>
-<cmt>Vichy-Charmeil,VICHY,FR</cmt>
+<cmt>Vichy-Charmeil,FR</cmt>
 </wpt>
 <wpt lat="43.658300" lon="5.013610">
 <ele>74.9808</ele>
@@ -15451,7 +15451,7 @@
 <ele>125.5776</ele>
 <magvar>0.8</magvar>
 <name>LFOJ</name>
-<cmt>Orléans-Bricy (BA 123) Air Base,ORLEANS,FR</cmt>
+<cmt>Orléans-Bricy (BA 123) Air Base,FR</cmt>
 </wpt>
 <wpt lat="49.816900" lon="3.206670">
 <ele>99.06</ele>
@@ -15493,13 +15493,13 @@
 <ele>149.9616</ele>
 <magvar>0.0</magvar>
 <name>LFQV</name>
-<cmt>Charleville-Mézières,CHARLEVILLE-MEZIERES,FR</cmt>
+<cmt>Charleville-Mézières,FR</cmt>
 </wpt>
 <wpt lat="47.948600" lon="0.201667">
 <ele>59.1312</ele>
 <magvar>1.3</magvar>
 <name>LFRM</name>
-<cmt>Le Mans-Arnage,LE MANS,FR</cmt>
+<cmt>Le Mans-Arnage,FR</cmt>
 </wpt>
 <wpt lat="47.274700" lon="6.084170">
 <ele>245.9736</ele>
@@ -15511,13 +15511,13 @@
 <ele>330.4032</ele>
 <magvar>359.6</magvar>
 <name>LFSG</name>
-<cmt>Épinal-Mirecourt,EPINAL,FR</cmt>
+<cmt>Épinal-Mirecourt,FR</cmt>
 </wpt>
 <wpt lat="48.692100" lon="6.230460">
 <ele>228.9048</ele>
 <magvar>359.5</magvar>
 <name>LFSN</name>
-<cmt>Nancy-Essey,NANCY,FR</cmt>
+<cmt>Nancy-Essey,FR</cmt>
 </wpt>
 <wpt lat="47.704700" lon="6.545830">
 <ele>316.992</ele>
@@ -15547,13 +15547,13 @@
 <ele>474.8784</ele>
 <magvar>356.8</magvar>
 <name>LGIO</name>
-<cmt>Ioannina,IOANNINA,GR</cmt>
+<cmt>Ioannina,GR</cmt>
 </wpt>
 <wpt lat="40.446300" lon="21.282200">
 <ele>660.5016</ele>
 <magvar>356.6</magvar>
 <name>LGKA</name>
-<cmt>Kastoria National,KASTORIA,GR</cmt>
+<cmt>Kastoria Intl,GR</cmt>
 </wpt>
 <wpt lat="35.216100" lon="26.101300">
 <ele>114.6048</ele>
@@ -15601,7 +15601,7 @@
 <ele>7.3152</ele>
 <magvar>358.1</magvar>
 <name>LICT</name>
-<cmt>Trapani Birgi,TRAPANI,IT</cmt>
+<cmt>Trapani Birgi,IT</cmt>
 </wpt>
 <wpt lat="44.322400" lon="10.831700">
 <magvar>358.3</magvar>
@@ -15622,7 +15622,7 @@
 <ele>238.3536</ele>
 <magvar>358.5</magvar>
 <name>LIME</name>
-<cmt>Bergamo Orio al Serio,BERGAMO,IT</cmt>
+<cmt>Bergamo Orio al Serio,IT</cmt>
 </wpt>
 <wpt lat="45.445100" lon="9.276740">
 <ele>107.5944</ele>
@@ -15640,7 +15640,7 @@
 <ele>386.1816</ele>
 <magvar>359.0</magvar>
 <name>LIMZ</name>
-<cmt>Cuneo Levaldigi,CUNEO,IT</cmt>
+<cmt>Cuneo Levaldigi,IT</cmt>
 </wpt>
 <wpt lat="45.428300" lon="12.388100">
 <ele>3.9624</ele>
@@ -15652,7 +15652,7 @@
 <ele>2.1336</ele>
 <magvar>357.9</magvar>
 <name>LIPZ</name>
-<cmt>Venice Marco Polo,VENICE,IT</cmt>
+<cmt>Venice Marco Polo,IT</cmt>
 </wpt>
 <wpt lat="43.828200" lon="10.578100">
 <magvar>358.3</magvar>
@@ -15668,7 +15668,7 @@
 <ele>8.8392</ele>
 <magvar>357.7</magvar>
 <name>LIRM</name>
-<cmt>Grazzanise,GRAZZANISE,IT</cmt>
+<cmt>Grazzanise,IT</cmt>
 </wpt>
 <wpt lat="49.740800" lon="14.644700">
 <ele>402.0312</ele>
@@ -15800,7 +15800,7 @@
 <ele>238.9632</ele>
 <magvar>356.7</magvar>
 <name>LQTZ</name>
-<cmt>Tuzla Intl,TUZLA,BK</cmt>
+<cmt>Tuzla Intl,BK</cmt>
 </wpt>
 <wpt lat="44.503200" lon="26.102100">
 <ele>90.5256</ele>
@@ -15818,13 +15818,13 @@
 <ele>190.8048</ele>
 <magvar>355.8</magvar>
 <name>LRCV</name>
-<cmt>Craiova,CRAIOVA,RO</cmt>
+<cmt>Craiova,RO</cmt>
 </wpt>
 <wpt lat="45.809900" lon="21.337900">
 <ele>106.0704</ele>
 <magvar>356.1</magvar>
 <name>LRTR</name>
-<cmt>Timişoara Traian Vuia,TIMISOARA,RO</cmt>
+<cmt>Timişoara Traian Vuia,RO</cmt>
 </wpt>
 <wpt lat="46.755000" lon="7.076110">
 <ele>698.9064</ele>
@@ -15847,13 +15847,13 @@
 <ele>431.5968</ele>
 <magvar>358.9</magvar>
 <name>LSZH</name>
-<cmt>Zurich,ZURICH,SZ</cmt>
+<cmt>Zurich,SZ</cmt>
 </wpt>
 <wpt lat="38.726400" lon="30.601100">
 <ele>1008.888</ele>
 <magvar>355.6</magvar>
 <name>LTAH</name>
-<cmt>Afyon,AFYON,TU</cmt>
+<cmt>Afyon,TU</cmt>
 </wpt>
 <wpt lat="40.829400" lon="35.522000">
 <ele>535.8384</ele>
@@ -15865,13 +15865,13 @@
 <ele>1595.9328</ele>
 <magvar>354.9</magvar>
 <name>LTAR</name>
-<cmt>Sivas,SIVAS,TU</cmt>
+<cmt>Sivas,TU</cmt>
 </wpt>
 <wpt lat="40.137700" lon="26.426800">
 <ele>7.0104</ele>
 <magvar>355.9</magvar>
 <name>LTBH</name>
-<cmt>Canakkale,CANAKKALE,TU</cmt>
+<cmt>Canakkale,TU</cmt>
 </wpt>
 <wpt lat="38.292400" lon="27.157000">
 <ele>125.5776</ele>
@@ -15883,13 +15883,13 @@
 <ele>883.0056</ele>
 <magvar>355.8</magvar>
 <name>LTBO</name>
-<cmt>Usak,USAK,TU</cmt>
+<cmt>Usak,TU</cmt>
 </wpt>
 <wpt lat="38.606900" lon="39.291400">
 <ele>892.1496</ele>
 <magvar>355.0</magvar>
 <name>LTCA</name>
-<cmt>Elazig,ELAZIG,TU</cmt>
+<cmt>Elazig,TU</cmt>
 </wpt>
 <wpt lat="40.562200" lon="43.115000">
 <ele>1794.9672</ele>
@@ -15901,13 +15901,13 @@
 <ele>555.3456</ele>
 <magvar>355.1</magvar>
 <name>LTCJ</name>
-<cmt>Batman,BATMAN,TU</cmt>
+<cmt>Batman,TU</cmt>
 </wpt>
 <wpt lat="37.539000" lon="36.953400">
 <ele>525.1704</ele>
 <magvar>355.3</magvar>
 <name>LTCN</name>
-<cmt>Kahramanmaras,KAHRAMANMARAS,TU</cmt>
+<cmt>Kahramanmaras,TU</cmt>
 </wpt>
 <wpt lat="38.517600" lon="26.977400">
 <ele>3.9624</ele>
@@ -16007,19 +16007,19 @@
 <ele>1184.7576</ele>
 <magvar>357.5</magvar>
 <name>OEBH</name>
-<cmt>Bisha,BISHA,SA</cmt>
+<cmt>Bisha,SA</cmt>
 </wpt>
 <wpt lat="31.411900" lon="37.279500">
 <ele>509.6256</ele>
 <magvar>356.1</magvar>
 <name>OEGT</name>
-<cmt>Guriat Domestic,GURIAT,SA</cmt>
+<cmt>Guriat Domestic,SA</cmt>
 </wpt>
 <wpt lat="28.335200" lon="46.125100">
 <ele>357.8352</ele>
 <magvar>356.9</magvar>
 <name>OEPA</name>
-<cmt>Qaisumah,QAISUMAH,SA</cmt>
+<cmt>Qaisumah,SA</cmt>
 </wpt>
 <wpt lat="24.710300" lon="44.964500">
 <ele>771.144</ele>
@@ -16043,7 +16043,7 @@
 <ele>720.2424</ele>
 <magvar>358.3</magvar>
 <name>OESH</name>
-<cmt>Sharurah,SHARURAH,SA</cmt>
+<cmt>Sharurah,SA</cmt>
 </wpt>
 <wpt lat="25.213000" lon="46.641000">
 <ele>569.976</ele>
@@ -16055,13 +16055,13 @@
 <ele>2.4384</ele>
 <magvar>356.8</magvar>
 <name>OIAM</name>
-<cmt>Mahshahr,BANDAR MAHSHAHR,IR</cmt>
+<cmt>Mahshahr,IR</cmt>
 </wpt>
 <wpt lat="28.944800" lon="50.834600">
 <ele>20.7264</ele>
 <magvar>357.2</magvar>
 <name>OIBB</name>
-<cmt>Bushehr,BUSHEHR,IR</cmt>
+<cmt>Bushehr,IR</cmt>
 </wpt>
 <wpt lat="27.212700" lon="54.318600">
 <ele>411.48</ele>
@@ -16073,25 +16073,25 @@
 <ele>13.1064</ele>
 <magvar>358.1</magvar>
 <name>OIBS</name>
-<cmt>Sirri Island,SIRRI ISLAND,IR</cmt>
+<cmt>Sirri Island,IR</cmt>
 </wpt>
 <wpt lat="35.245900" lon="47.009200">
 <ele>1378.3056</ele>
 <magvar>355.7</magvar>
 <name>OICS</name>
-<cmt>Sanandaj,SANANDAJ,IR</cmt>
+<cmt>Sanandaj,IR</cmt>
 </wpt>
 <wpt lat="32.297200" lon="50.842200">
 <ele>2049.1704</ele>
 <magvar>356.5</magvar>
 <name>OIFS</name>
-<cmt>Shahre Kord,SHAHRE KORD,IR</cmt>
+<cmt>Shahre Kord,IR</cmt>
 </wpt>
 <wpt lat="34.869200" lon="48.552500">
 <ele>1754.124</ele>
 <magvar>355.8</magvar>
 <name>OIHH</name>
-<cmt>Hamadan,HAMADAN,IR</cmt>
+<cmt>Hamadan,IR</cmt>
 </wpt>
 <wpt lat="35.211600" lon="48.653400">
 <ele>1709.6232</ele>
@@ -16121,7 +16121,7 @@
 <ele>994.5624</ele>
 <magvar>356.1</magvar>
 <name>OIMM</name>
-<cmt>Mashhad Intl,MASHHAD,IR</cmt>
+<cmt>Mashhad Intl,IR</cmt>
 </wpt>
 <wpt lat="27.674700" lon="54.383300">
 <ele>804.9768</ele>
@@ -16133,7 +16133,7 @@
 <ele>1359.1032</ele>
 <magvar>355.0</magvar>
 <name>OITT</name>
-<cmt>Tabriz Intl,TABRIZ,IR</cmt>
+<cmt>Tabriz Intl,IR</cmt>
 </wpt>
 <wpt lat="31.722600" lon="35.993200">
 <ele>729.996</ele>
@@ -16151,19 +16151,19 @@
 <ele>46.3296</ele>
 <magvar>358.5</magvar>
 <name>OMFJ</name>
-<cmt>Fujairah Intl,FUJAIRAH,AE</cmt>
+<cmt>Fujairah Intl,AE</cmt>
 </wpt>
 <wpt lat="25.328600" lon="55.517200">
 <ele>33.8328</ele>
 <magvar>358.4</magvar>
 <name>OMSJ</name>
-<cmt>Sharjah Intl,SHARJAH,AE</cmt>
+<cmt>Sharjah Intl,AE</cmt>
 </wpt>
 <wpt lat="23.593300" lon="58.284400">
 <ele>14.6304</ele>
 <magvar>359.0</magvar>
 <name>OOMS</name>
-<cmt>Muscat Intl,MUSCAT,MU</cmt>
+<cmt>Muscat Intl,MU</cmt>
 </wpt>
 <wpt lat="28.284200" lon="68.449700">
 <ele>56.388</ele>
@@ -16175,7 +16175,7 @@
 <ele>28.956</ele>
 <magvar>359.3</magvar>
 <name>OPNH</name>
-<cmt>Nawabshah,NAWABSHAH,PK</cmt>
+<cmt>Nawabshah,PK</cmt>
 </wpt>
 <wpt lat="33.560200" lon="73.033200">
 <ele>481.8888</ele>
@@ -16199,13 +16199,13 @@
 <ele>388.9248</ele>
 <magvar>355.5</magvar>
 <name>OSAP</name>
-<cmt>Aleppo Intl,ALEPPO,SY</cmt>
+<cmt>Aleppo Intl,SY</cmt>
 </wpt>
 <wpt lat="15.476300" lon="44.219700">
 <ele>2199.4368</ele>
 <magvar>358.2</magvar>
 <name>OYSN</name>
-<cmt>Sana'a Intl,SANAA,YM</cmt>
+<cmt>Sana'a Intl,YM</cmt>
 </wpt>
 <wpt lat="32.424500" lon="71.458500">
 <ele>196.596</ele>
@@ -16234,25 +16234,25 @@
 <ele>31.3944</ele>
 <magvar>3.3</magvar>
 <name>RCQC</name>
-<cmt>Makung,MAGONG,TW</cmt>
+<cmt>Makung,TW</cmt>
 </wpt>
 <wpt lat="36.166800" lon="137.923000">
 <ele>665.0736</ele>
 <magvar>7.3</magvar>
 <name>RJAF</name>
-<cmt>Matsumoto,MATSUMOTO,JA</cmt>
+<cmt>Matsumoto,JA</cmt>
 </wpt>
 <wpt lat="33.585900" lon="130.451000">
 <ele>9.7536</ele>
 <magvar>6.8</magvar>
 <name>RJFF</name>
-<cmt>Fukuoka,FUKUOKA,JA</cmt>
+<cmt>Fukuoka,JA</cmt>
 </wpt>
 <wpt lat="32.083600" lon="131.451000">
 <ele>78.9432</ele>
 <magvar>6.4</magvar>
 <name>RJFN</name>
-<cmt>Nyutabaru,NYUTABARU,JA</cmt>
+<cmt>Nyutabaru,JA</cmt>
 </wpt>
 <wpt lat="33.685000" lon="131.040000">
 <ele>16.764</ele>
@@ -16276,7 +16276,7 @@
 <ele>46.3296</ele>
 <magvar>8.2</magvar>
 <name>RJSH</name>
-<cmt>Hachinohe,HACHINOHE,JA</cmt>
+<cmt>Hachinohe,JA</cmt>
 </wpt>
 <wpt lat="35.748500" lon="139.348000">
 <ele>141.1224</ele>
@@ -16288,7 +16288,7 @@
 <ele>28.0416</ele>
 <magvar>8.2</magvar>
 <name>RKND</name>
-<cmt>Sokcho,SOKCHO,KS</cmt>
+<cmt>Sokcho,KS</cmt>
 </wpt>
 <wpt lat="37.239400" lon="127.007000">
 <ele>26.8224</ele>
@@ -16306,13 +16306,13 @@
 <ele>28.3464</ele>
 <magvar>3.9</magvar>
 <name>ROIG</name>
-<cmt>Ishigaki,ISHIGAKI I,JA</cmt>
+<cmt>Ishigaki,I,JA</cmt>
 </wpt>
 <wpt lat="24.826700" lon="125.145000">
 <ele>16.4592</ele>
 <magvar>4.1</magvar>
 <name>RORS</name>
-<cmt>Shimojishima,SHIMOJISHIMA,JA</cmt>
+<cmt>Shimojishima,JA</cmt>
 </wpt>
 <wpt lat="57.300000" lon="28.433300">
 <ele>67.056</ele>
@@ -16389,7 +16389,7 @@
 <ele>355.092</ele>
 <magvar>350.7</magvar>
 <name>UACC</name>
-<cmt>Astana Intl,ASTANA,KZ</cmt>
+<cmt>Astana Intl,KZ</cmt>
 </wpt>
 <wpt lat="40.737700" lon="46.317600">
 <ele>330.0984</ele>
@@ -16401,7 +16401,7 @@
 <ele>872.6424</ele>
 <magvar>354.7</magvar>
 <name>UBBN</name>
-<cmt>Nakhchivan,NAKHCHIVAN,AJ</cmt>
+<cmt>Nakhchivan,AJ</cmt>
 </wpt>
 <wpt lat="47.918600" lon="80.452800">
 <ele>645.8712</ele>
@@ -16431,7 +16431,7 @@
 <ele>14.0208</ele>
 <magvar>10.0</magvar>
 <name>UHWW</name>
-<cmt>Vladivostok Intl,VLADIVOSTOK,RS</cmt>
+<cmt>Vladivostok Intl,RS</cmt>
 </wpt>
 <wpt lat="48.043300" lon="33.210000">
 <ele>124.3584</ele>
@@ -16479,13 +16479,13 @@
 <ele>23.1648</ele>
 <magvar>343.0</magvar>
 <name>USHH</name>
-<cmt>Khanty Mansiysk,KHANTY-MANSIYSK,RS</cmt>
+<cmt>Khanty Mansiysk,RS</cmt>
 </wpt>
 <wpt lat="39.083300" lon="63.613300">
 <ele>192.024</ele>
 <magvar>355.4</magvar>
 <name>UTAV</name>
-<cmt>Turkmenabat,TURKMENABAT,TX</cmt>
+<cmt>Turkmenabat,TX</cmt>
 </wpt>
 <wpt lat="55.972600" lon="37.414600">
 <ele>189.5856</ele>
@@ -16497,7 +16497,7 @@
 <ele>76.8096</ele>
 <magvar>348.5</magvar>
 <name>UWLW</name>
-<cmt>Ulyanovsk East,ULYANOVSK,RS</cmt>
+<cmt>Ulyanovsk East,RS</cmt>
 </wpt>
 <wpt lat="53.504900" lon="50.164300">
 <ele>145.3896</ele>
@@ -16515,31 +16515,31 @@
 <ele>13.4112</ele>
 <magvar>0.3</magvar>
 <name>VABV</name>
-<cmt>Bhavnagar,BHAVNAGAR,IN</cmt>
+<cmt>Bhavnagar,IN</cmt>
 </wpt>
 <wpt lat="22.309200" lon="70.779500">
 <ele>134.4168</ele>
 <magvar>0.1</magvar>
 <name>VARK</name>
-<cmt>Rajkot,RAJKOT,IN</cmt>
+<cmt>Rajkot,IN</cmt>
 </wpt>
 <wpt lat="8.301490" lon="80.427900">
 <ele>98.7552</ele>
 <magvar>2.4</magvar>
 <name>VCCA</name>
-<cmt>Anuradhapura,ANURADHAPURA,CE</cmt>
+<cmt>Anuradhapura,CE</cmt>
 </wpt>
 <wpt lat="5.993680" lon="80.320300">
 <ele>3.048</ele>
 <magvar>2.8</magvar>
 <name>VCCK</name>
-<cmt>Koggala,KOGGALA,CE</cmt>
+<cmt>Koggala,CE</cmt>
 </wpt>
 <wpt lat="13.531900" lon="106.015000">
 <ele>61.8744</ele>
 <magvar>0.7</magvar>
 <name>VDST</name>
-<cmt>Stung Treng,STUNG TRENG,CB</cmt>
+<cmt>Stung Treng,CB</cmt>
 </wpt>
 <wpt lat="22.654700" lon="88.446700">
 <ele>4.8768</ele>
@@ -16551,7 +16551,7 @@
 <ele>774.192</ele>
 <magvar>0.7</magvar>
 <name>VEIM</name>
-<cmt>Imphal,IMPHAL,IN</cmt>
+<cmt>Imphal,IN</cmt>
 </wpt>
 <wpt lat="24.308200" lon="92.007200">
 <ele>24.0792</ele>
@@ -16563,7 +16563,7 @@
 <ele>148.4376</ele>
 <magvar>0.7</magvar>
 <name>VEMR</name>
-<cmt>Dimapur,DIMAPUR,IN</cmt>
+<cmt>Dimapur,IN</cmt>
 </wpt>
 <wpt lat="26.119100" lon="85.313700">
 <ele>53.0352</ele>
@@ -16587,7 +16587,7 @@
 <ele>3.6576</ele>
 <magvar>0.8</magvar>
 <name>VGCB</name>
-<cmt>Cox's Bazar,COX'S BAZAR,BG</cmt>
+<cmt>Cox's Bazar,BG</cmt>
 </wpt>
 <wpt lat="30.368100" lon="76.816700">
 <ele>277.0632</ele>
@@ -16653,7 +16653,7 @@
 <ele>164.592</ele>
 <magvar>359.8</magvar>
 <name>VNNG</name>
-<cmt>Nepalgunj,NEPALGUNJ,NP</cmt>
+<cmt>Nepalgunj,NP</cmt>
 </wpt>
 <wpt lat="17.908100" lon="77.487100">
 <ele>663.8544</ele>
@@ -16713,7 +16713,7 @@
 <ele>4.8768</ele>
 <magvar>0.3</magvar>
 <name>VTSC</name>
-<cmt>Narathiwat,NARATHIWAT,TH</cmt>
+<cmt>Narathiwat,TH</cmt>
 </wpt>
 <wpt lat="9.547790" lon="100.062000">
 <ele>19.5072</ele>
@@ -16725,7 +16725,7 @@
 <ele>24.9936</ele>
 <magvar>0.7</magvar>
 <name>VTSP</name>
-<cmt>Phuket Intl,PHUKET,TH</cmt>
+<cmt>Phuket Intl,TH</cmt>
 </wpt>
 <wpt lat="21.221200" lon="105.807000">
 <ele>11.8872</ele>
@@ -16755,7 +16755,7 @@
 <ele>22.86</ele>
 <magvar>0.8</magvar>
 <name>VYME</name>
-<cmt>Myeik,MYEIK,BM</cmt>
+<cmt>Myeik,BM</cmt>
 </wpt>
 <wpt lat="16.893700" lon="97.674600">
 <ele>45.72</ele>
@@ -16827,7 +16827,7 @@
 <ele>43.5864</ele>
 <magvar>4.0</magvar>
 <name>ZSCN</name>
-<cmt>Nanchang Changbei Intl,NANCHANG,CH</cmt>
+<cmt>Nanchang Changbei Intl,CH</cmt>
 </wpt>
 <wpt lat="37.038500" lon="79.864900">
 <ele>1424.0256</ele>
@@ -16839,13 +16839,13 @@
 <ele>647.7</ele>
 <magvar>357.5</magvar>
 <name>ZWWW</name>
-<cmt>Ürümqi Diwopu Intl,URUMQI,CH</cmt>
+<cmt>Ürümqi Diwopu Intl,CH</cmt>
 </wpt>
 <wpt lat="46.843400" lon="130.465000">
 <ele>79.8576</ele>
 <magvar>11.1</magvar>
 <name>ZYJM</name>
-<cmt>Jiamusi,JIAMUSI,CH</cmt>
+<cmt>Jiamusi,CH</cmt>
 </wpt>
 <wpt lat="41.639800" lon="123.483000">
 <ele>60.3504</ele>
@@ -16857,7 +16857,7 @@
 <ele>190.1952</ele>
 <magvar>9.8</magvar>
 <name>ZYYJ</name>
-<cmt>Yanji,YANJI,CH</cmt>
+<cmt>Yanji,CH</cmt>
 </wpt>
 <wpt lat="41.613900" lon="64.233200">
 <ele>425.5008</ele>
@@ -16941,7 +16941,7 @@
 <ele>74.3712</ele>
 <magvar>11.6</magvar>
 <name>UHHH</name>
-<cmt>Khabarovsk-Novy,KHABAROVSK,RS</cmt>
+<cmt>Khabarovsk-Novy,RS</cmt>
 </wpt>
 <wpt lat="55.178300" lon="166.048000">
 <ele>14.9352</ele>
@@ -17061,7 +17061,7 @@
 <ele>4.2672</ele>
 <magvar>359.7</magvar>
 <name>WBGJ</name>
-<cmt>Limbang,LIMBANG,MY</cmt>
+<cmt>Limbang,MY</cmt>
 </wpt>
 <wpt lat="6.654170" lon="121.980000">
 <ele>308.1528</ele>
@@ -17078,7 +17078,7 @@
 <ele>8.2296</ele>
 <magvar>0.7</magvar>
 <name>RPVI</name>
-<cmt>Iloilo Intl,ILOILO,RP</cmt>
+<cmt>Iloilo Intl,RP</cmt>
 </wpt>
 <wpt lat="1.549260" lon="124.926000">
 <ele>80.4672</ele>
@@ -17102,49 +17102,49 @@
 <ele>183.1848</ele>
 <magvar>0.2</magvar>
 <name>RPML</name>
-<cmt>Cagayan De Oro,CAGAYAN DE ORO,RP</cmt>
+<cmt>Cagayan De Oro,RP</cmt>
 </wpt>
 <wpt lat="8.708333" lon="171.233333">
 <ele>1.2192</ele>
 <magvar>351.8</magvar>
 <name>3N1</name>
-<cmt>MALOELAP,TAORA IS  MALOELAP ATOLL,RM</cmt>
+<cmt>Maloelap,TAORA IS,RM</cmt>
 </wpt>
 <wpt lat="52.832542" lon="173.175554">
 <ele>26.8224</ele>
 <magvar>359.0</magvar>
 <name>PAAT</name>
-<cmt>CASCO COVE CGS,ATTU,AK,US</cmt>
+<cmt>Casco Cove Cgs,AK,US</cmt>
 </wpt>
 <wpt lat="7.000000" lon="134.233333">
 <ele>2.7432</ele>
 <magvar>359.2</magvar>
 <name>C23</name>
-<cmt>PELELIU,BABELTHUAP ISLAND,PS</cmt>
+<cmt>Peleliu,Babelthuap Island,PS</cmt>
 </wpt>
 <wpt lat="9.498911" lon="138.082484">
 <ele>27.7368</ele>
 <magvar>359.1</magvar>
 <name>PTYA</name>
-<cmt>YAP INTL,YAP ISLAND,FM</cmt>
+<cmt>Yap Intl,FM</cmt>
 </wpt>
 <wpt lat="13.583884" lon="144.930057">
 <ele>188.3664</ele>
 <magvar>358.7</magvar>
 <name>PGUA</name>
-<cmt>ANDERSEN AFB,ANDERSEN,MARIANA ISLAND,GQ</cmt>
+<cmt>Andersen Afb,MARIANA ISLAND,GQ</cmt>
 </wpt>
 <wpt lat="5.356972" lon="162.958389">
 <ele>3.6576</ele>
 <magvar>352.8</magvar>
 <name>PTSA</name>
-<cmt>KOSRAE,KOSRAE,FM</cmt>
+<cmt>Kosrae,FM</cmt>
 </wpt>
 <wpt lat="52.712258" lon="174.113589">
 <ele>29.8704</ele>
 <magvar>358.5</magvar>
 <name>PASY</name>
-<cmt>EARECKSON AS,SHEMYA,AK,US</cmt>
+<cmt>Eareckson As,SHEMYA,AK,US</cmt>
 </wpt>
 <wpt lat="44.928333" lon="6.678056">
 <ele>1399.9464</ele>
@@ -17156,324 +17156,324 @@
 <ele>1579.7784</ele>
 <magvar>0.0</magvar>
 <name>LF3826</name>
-<cmt>NOTRE DAME DE LA SALETTE,FR</cmt>
+<cmt>Notre Dame De La Salette,FR</cmt>
 </wpt>
 <wpt lat="44.790556" lon="5.688333">
 <ele>790.0416</ele>
 <magvar>0.1</magvar>
 <name>LF3831</name>
-<cmt>PRÉBOIS,FR</cmt>
+<cmt>Prébois,FR</cmt>
 </wpt>
 <wpt lat="44.563611" lon="5.758889">
 <ele>819.912</ele>
 <magvar>0.0</magvar>
 <name>LF0528</name>
-<cmt>LA FAURIE,FR</cmt>
+<cmt>La Faurie,FR</cmt>
 </wpt>
 <wpt lat="44.538333" lon="6.456389">
 <ele>784.86</ele>
 <magvar>359.9</magvar>
 <name>LF0532</name>
-<cmt>LES CROTS,FR</cmt>
+<cmt>Les Crots,FR</cmt>
 </wpt>
 <wpt lat="44.325278" lon="6.030833">
 <ele>649.8336</ele>
 <magvar>0.0</magvar>
 <name>LF0431</name>
-<cmt>LA MOTTE DU CAIRE,FR</cmt>
+<cmt>La Motte Du Caire,FR</cmt>
 </wpt>
 <wpt lat="43.777778" lon="6.906944">
 <ele>1155.192</ele>
 <magvar>359.8</magvar>
 <name>LF0622</name>
-<cmt>CIPIÈRES,FR</cmt>
+<cmt>Cipières,FR</cmt>
 </wpt>
 <wpt lat="43.749167" lon="6.471389">
 <ele>740.0544</ele>
 <magvar>359.9</magvar>
 <name>LF8322</name>
-<cmt>TRIGANCE,FR</cmt>
+<cmt>Trigance,FR</cmt>
 </wpt>
 <wpt lat="49.188889" lon="6.555556">
 <magvar>0.1</magvar>
 <name>LF5721</name>
-<cmt>DENTING,FR</cmt>
+<cmt>Denting,FR</cmt>
 </wpt>
 <wpt lat="49.116667" lon="6.733333">
 <magvar>0.1</magvar>
 <name>LF5723</name>
-<cmt>ST AVOLD,FR</cmt>
+<cmt>St Avold,FR</cmt>
 </wpt>
 <wpt lat="48.233333" lon="5.850000">
 <ele>371.856</ele>
 <magvar>0.3</magvar>
 <name>LF8806</name>
-<cmt>VITTEL AUZAINVILLIER,FR</cmt>
+<cmt>Vittel Auzainvillier,FR</cmt>
 </wpt>
 <wpt lat="48.233333" lon="5.850000">
 <ele>377.0376</ele>
 <magvar>0.2</magvar>
 <name>LF8822</name>
-<cmt>VITTEL AUZAINVILLIER,FR</cmt>
+<cmt>Vittel Auzainvillier,FR</cmt>
 </wpt>
 <wpt lat="49.066667" lon="7.450000">
 <ele>299.9232</ele>
 <magvar>359.9</magvar>
 <name>LF5703</name>
-<cmt>BITCHE,FR</cmt>
+<cmt>Bitche,FR</cmt>
 </wpt>
 <wpt lat="43.373333" lon="0.853056">
 <ele>259.9944</ele>
 <magvar>1.4</magvar>
 <name>LF3134</name>
-<cmt>L'ISLE EN DODON,FR</cmt>
+<cmt>L'isle En Dodon,FR</cmt>
 </wpt>
 <wpt lat="42.902778" lon="0.100000">
 <magvar>1.6</magvar>
 <name>LF6528</name>
-<cmt>CASTILLON DE LA LAQUETTE,FR</cmt>
+<cmt>Castillon De La Laquette,FR</cmt>
 </wpt>
 <wpt lat="42.851944" lon="0.848889">
 <ele>2001.9264</ele>
 <magvar>1.3</magvar>
 <name>LF3130</name>
-<cmt>ULS MELLES,FR</cmt>
+<cmt>Uls Melles,FR</cmt>
 </wpt>
 <wpt lat="42.608333" lon="2.011111">
 <ele>2352.4464</ele>
 <magvar>1.0</magvar>
 <name>LF6621</name>
-<cmt>COSTE DEL PALM,FR</cmt>
+<cmt>Coste Del Palm,FR</cmt>
 </wpt>
 <wpt lat="42.788889" lon="0.458333">
 <ele>1901.952</ele>
 <magvar>1.4</magvar>
 <name>LF3129</name>
-<cmt>PENE DE SOULIT GARIN,FR</cmt>
+<cmt>Pene De Soulit Garin,FR</cmt>
 </wpt>
 <wpt lat="44.730278" lon="0.448611">
 <magvar>1.6</magvar>
 <name>LF2436</name>
-<cmt>ST JULIEN,FR</cmt>
+<cmt>St Julien,FR</cmt>
 </wpt>
 <wpt lat="44.766667" lon="1.608333">
 <ele>311.8104</ele>
 <magvar>1.2</magvar>
 <name>LF4630</name>
-<cmt>BIGUES CARLUCET,FR</cmt>
+<cmt>Bigues Carlucet,FR</cmt>
 </wpt>
 <wpt lat="44.966667" lon="1.254167">
 <ele>249.936</ele>
 <magvar>1.4</magvar>
 <name>LF2434</name>
-<cmt>ST CRÉPIN CARLUCET,FR</cmt>
+<cmt>St Crépin Carlucet,FR</cmt>
 </wpt>
 <wpt lat="44.224167" lon="1.731389">
 <ele>335.28</ele>
 <magvar>1.2</magvar>
 <name>LF8226</name>
-<cmt>CAYLUS,FR</cmt>
+<cmt>Caylus,FR</cmt>
 </wpt>
 <wpt lat="44.191389" lon="1.641111">
 <magvar>1.2</magvar>
 <name>LF8227</name>
-<cmt>SEPTFONDS,FR</cmt>
+<cmt>Septfonds,FR</cmt>
 </wpt>
 <wpt lat="44.181667" lon="1.596111">
 <ele>196.2912</ele>
 <magvar>1.2</magvar>
 <name>LF8230</name>
-<cmt>SEPTFONDS,FR</cmt>
+<cmt>Septfonds,FR</cmt>
 </wpt>
 <wpt lat="44.111667" lon="0.466667">
 <ele>120.0912</ele>
 <magvar>1.5</magvar>
 <name>LF4729</name>
-<cmt>SAUMONT GENTIEU,FR</cmt>
+<cmt>Saumont Gentieu,FR</cmt>
 </wpt>
 <wpt lat="44.697222" lon="0.646389">
 <ele>120.0912</ele>
 <magvar>1.5</magvar>
 <name>LF4722</name>
-<cmt>CASTILLONNÈS CAVARC,FR</cmt>
+<cmt>Castillonnès Cavarc,FR</cmt>
 </wpt>
 <wpt lat="44.365556" lon="0.492222">
 <ele>29.8704</ele>
 <magvar>1.5</magvar>
 <name>LF4724</name>
-<cmt>MONTPEZAT D'AGENAIS,FR</cmt>
+<cmt>Montpezat D'agenais,FR</cmt>
 </wpt>
 <wpt lat="42.800000" lon="3.000000">
 <ele>0.9144</ele>
 <magvar>0.7</magvar>
 <name>LF6628</name>
-<cmt>PERPIGNAN LA SALANQUE,FR</cmt>
+<cmt>Perpignan La Salanque,FR</cmt>
 </wpt>
 <wpt lat="44.950000" lon="5.625000">
 <ele>850.0872</ele>
 <magvar>0.1</magvar>
 <name>LF3867</name>
-<cmt>GRISAIL,FR</cmt>
+<cmt>Grisail,FR</cmt>
 </wpt>
 <wpt lat="44.891667" lon="2.956944">
 <magvar>0.9</magvar>
 <name>LF1521</name>
-<cmt>LA TAILLADE,FR</cmt>
+<cmt>La Taillade,FR</cmt>
 </wpt>
 <wpt lat="44.891667" lon="2.956944">
 <ele>888.7968</ele>
 <magvar>0.8</magvar>
 <name>LF1523</name>
-<cmt>LA TAILLADE NEUVÉGLISE,FR</cmt>
+<cmt>La Taillade Neuvéglise,FR</cmt>
 </wpt>
 <wpt lat="43.748611" lon="5.276111">
 <ele>132.8928</ele>
 <magvar>0.1</magvar>
 <name>LF8425</name>
-<cmt>PUGET,FR</cmt>
+<cmt>Puget,FR</cmt>
 </wpt>
 <wpt lat="44.353611" lon="5.303056">
 <ele>440.1312</ele>
 <magvar>0.1</magvar>
 <name>LF2634</name>
-<cmt>STE JALLE,FR</cmt>
+<cmt>Ste Jalle,FR</cmt>
 </wpt>
 <wpt lat="46.219592" lon="7.326764">
 <ele>483.108</ele>
 <magvar>359.5</magvar>
 <name>LSMS</name>
-<cmt>SION MUNI ARPT,SZ</cmt>
+<cmt>Sion Muni Arpt,SZ</cmt>
 </wpt>
 <wpt lat="46.288889" lon="6.463333">
 <ele>1113.1296</ele>
 <magvar>0.0</magvar>
 <name>LF7469</name>
-<cmt>HABÈRE POCHE,FR</cmt>
+<cmt>Habère Poche,FR</cmt>
 </wpt>
 <wpt lat="46.100000" lon="6.600000">
 <ele>625.1448</ele>
 <magvar>0.0</magvar>
 <name>LF7450</name>
-<cmt>TANINGES,FR</cmt>
+<cmt>Taninges,FR</cmt>
 </wpt>
 <wpt lat="45.425000" lon="6.894444">
 <ele>2917.8504</ele>
 <magvar>359.8</magvar>
 <name>LF7324</name>
-<cmt>GLACIER DE LA GRANDE MOTTE TIGNES,FR</cmt>
+<cmt>Glacier De La Grande Motte Tignes,FR</cmt>
 </wpt>
 <wpt lat="45.281944" lon="6.573611">
 <ele>2447.544</ele>
 <magvar>359.9</magvar>
 <name>LF7327</name>
-<cmt>VAL THORENS,FR</cmt>
+<cmt>Val Thorens,FR</cmt>
 </wpt>
 <wpt lat="45.571667" lon="6.735000">
 <ele>750.1128</ele>
 <magvar>359.9</magvar>
 <name>LF7359</name>
-<cmt>LANDRY,FR</cmt>
+<cmt>Landry,FR</cmt>
 </wpt>
 <wpt lat="45.058333" lon="5.933333">
 <ele>2051.9136</ele>
 <magvar>0.0</magvar>
 <name>LF3827</name>
-<cmt>LAC FOURCHU,FR</cmt>
+<cmt>Lac Fourchu,FR</cmt>
 </wpt>
 <wpt lat="46.833333" lon="5.666667">
 <magvar>0.2</magvar>
 <name>LF7022</name>
-<cmt>FRANCOURT,FR</cmt>
+<cmt>Francourt,FR</cmt>
 </wpt>
 <wpt lat="47.302778" lon="6.452778">
 <ele>496.824</ele>
 <magvar>0.0</magvar>
 <name>LF2521</name>
-<cmt>LANANS,FR</cmt>
+<cmt>Lanans,FR</cmt>
 </wpt>
 <wpt lat="46.550000" lon="0.630556">
 <magvar>1.8</magvar>
 <name>LF8624</name>
-<cmt>POUILLE,FR</cmt>
+<cmt>Pouille,FR</cmt>
 </wpt>
 <wpt lat="46.649444" lon="2.731667">
 <magvar>1.1</magvar>
 <name>LF0321</name>
-<cmt>ST BONNET TRONCAIS,FR</cmt>
+<cmt>St Bonnet Troncais,FR</cmt>
 </wpt>
 <wpt lat="46.691667" lon="1.530556">
 <ele>163.068</ele>
 <magvar>1.4</magvar>
 <name>LF3626</name>
-<cmt>BRANDES,FR</cmt>
+<cmt>Brandes,FR</cmt>
 </wpt>
 <wpt lat="46.960000" lon="1.660000">
 <ele>164.592</ele>
 <magvar>1.4</magvar>
 <name>LF3624</name>
-<cmt>LEVROUX GRANGE DIEU,FR</cmt>
+<cmt>Levroux Grange Dieu,FR</cmt>
 </wpt>
 <wpt lat="47.220833" lon="1.293889">
 <ele>160.9344</ele>
 <magvar>1.6</magvar>
 <name>LF3724</name>
-<cmt>ORBIGNY LES PALLIS,FR</cmt>
+<cmt>Orbigny Les Pallis,FR</cmt>
 </wpt>
 <wpt lat="46.613889" lon="5.347222">
 <magvar>0.3</magvar>
 <name>LF7121</name>
-<cmt>SAGY,FR</cmt>
+<cmt>Sagy,FR</cmt>
 </wpt>
 <wpt lat="47.476667" lon="5.356944">
 <ele>228.9048</ele>
 <magvar>0.3</magvar>
 <name>LF2123</name>
-<cmt>DAMPIERRE ET FLEY,FR</cmt>
+<cmt>Dampierre Et Fley,FR</cmt>
 </wpt>
 <wpt lat="47.309722" lon="4.819722">
 <ele>341.9856</ele>
 <magvar>0.5</magvar>
 <name>LF2124</name>
-<cmt>LE CHÂTEAU LA CHASSAGNE,FR</cmt>
+<cmt>Le Château La Chassagne,FR</cmt>
 </wpt>
 <wpt lat="47.160833" lon="3.556944">
 <magvar>0.9</magvar>
 <name>LF5821</name>
-<cmt>CRUX,FR</cmt>
+<cmt>Crux,FR</cmt>
 </wpt>
 <wpt lat="48.212500" lon="1.675000">
 <ele>145.0848</ele>
 <magvar>1.6</magvar>
 <name>LF2829</name>
-<cmt>VOVES VIABON,FR</cmt>
+<cmt>Voves Viabon,FR</cmt>
 </wpt>
 <wpt lat="49.250000" lon="1.033333">
 <magvar>1.9</magvar>
 <name>LF2721</name>
-<cmt>ST CYR LA CAMPAGNE,FR</cmt>
+<cmt>St Cyr La Campagne,FR</cmt>
 </wpt>
 <wpt lat="49.644444" lon="0.730556">
 <ele>142.6464</ele>
 <magvar>2.1</magvar>
 <name>LF7622</name>
-<cmt>YVETOT,FR</cmt>
+<cmt>Yvetot,FR</cmt>
 </wpt>
 <wpt lat="48.660000" lon="3.833333">
 <ele>100.2792</ele>
 <magvar>0.9</magvar>
 <name>LF5121</name>
-<cmt>MARIGNY LE GRAND,FR</cmt>
+<cmt>Marigny Le Grand,FR</cmt>
 </wpt>
 <wpt lat="48.089722" lon="4.441667">
 <ele>283.464</ele>
 <magvar>0.7</magvar>
 <name>LF1022</name>
-<cmt>VILLE SUR ARCE,FR</cmt>
+<cmt>Ville Sur Arce,FR</cmt>
 </wpt>
 <wpt lat="48.466667" lon="5.412500">
 <magvar>0.4</magvar>
 <name>LF5523</name>
-<cmt>CHASSEY,FR</cmt>
+<cmt>Chassey,FR</cmt>
 </wpt>
 <wpt lat="52.705833" lon="1.192778">
 <ele>36.576</ele>
@@ -17497,7 +17497,7 @@
 <ele>140.208</ele>
 <magvar>2.3</magvar>
 <name>UK463</name>
-<cmt>Nuthampstead - VRP,UK</cmt>
+<cmt>Nuthampstead,UK</cmt>
 </wpt>
 <wpt lat="52.450278" lon="1.115000">
 <ele>57.3024</ele>
@@ -18695,7 +18695,7 @@
 <ele>397.1544</ele>
 <magvar>1.2</magvar>
 <name>DATM</name>
-<cmt>Bordj Badji Mokhtar,BORDJ MOKHTAR,AG</cmt>
+<cmt>Bordj Badji Mokhtar,AG</cmt>
 </wpt>
 <wpt lat="31.673000" lon="6.140440">
 <ele>141.1224</ele>
@@ -18760,7 +18760,7 @@
 <ele>28.3464</ele>
 <magvar>357.2</magvar>
 <name>EDAH</name>
-<cmt>Heringsdorf,HERINGSDORF,GM</cmt>
+<cmt>Heringsdorf,GM</cmt>
 </wpt>
 <wpt lat="52.390600" lon="14.097200">
 <ele>56.0832</ele>
@@ -18796,13 +18796,13 @@
 <ele>48.768</ele>
 <magvar>359.3</magvar>
 <name>EDDG</name>
-<cmt>Munster Osnabruck,MUNSTER/OSNABRUCK,GM</cmt>
+<cmt>Munster Osnabruck,GM</cmt>
 </wpt>
 <wpt lat="52.461100" lon="9.685080">
 <ele>55.7784</ele>
 <magvar>358.6</magvar>
 <name>EDDV</name>
-<cmt>Hannover,HANNOVER,GM</cmt>
+<cmt>Hannover,GM</cmt>
 </wpt>
 <wpt lat="51.129300" lon="10.621000">
 <ele>197.8152</ele>
@@ -18904,13 +18904,13 @@
 <ele>38.1</ele>
 <magvar>359.6</magvar>
 <name>EDLN</name>
-<cmt>Monchengladbach,MONCHENGLADBACH,GM</cmt>
+<cmt>Monchengladbach,GM</cmt>
 </wpt>
 <wpt lat="48.081400" lon="11.283100">
 <ele>593.4456</ele>
 <magvar>358.2</magvar>
 <name>EDMO</name>
-<cmt>Oberpfaffenhofen,OBERPFAFFENHOFEN,GM</cmt>
+<cmt>Oberpfaffenhofen,GM</cmt>
 </wpt>
 <wpt lat="48.703900" lon="10.852200">
 <ele>399.8976</ele>
@@ -19054,7 +19054,7 @@
 <ele>0.6096</ele>
 <magvar>359.5</magvar>
 <name>EDWE</name>
-<cmt>Emden,EMDEN,GM</cmt>
+<cmt>Emden,GM</cmt>
 </wpt>
 <wpt lat="54.427200" lon="9.541670">
 <ele>15.8496</ele>
@@ -19078,7 +19078,7 @@
 <ele>4.2672</ele>
 <magvar>353.9</magvar>
 <name>EEKE</name>
-<cmt>Kuressaare,KURESSAARE,EN</cmt>
+<cmt>Kuressaare,EN</cmt>
 </wpt>
 <wpt lat="67.603600" lon="23.971700">
 <ele>224.9424</ele>
@@ -19120,7 +19120,7 @@
 <ele>5.1816</ele>
 <magvar>354.5</magvar>
 <name>EFMA</name>
-<cmt>Mariehamn,MARIEHAMN,FI</cmt>
+<cmt>Mariehamn,FI</cmt>
 </wpt>
 <wpt lat="60.876400" lon="22.744700">
 <ele>100.8888</ele>
@@ -19168,7 +19168,7 @@
 <ele>-3.9624</ele>
 <magvar>0.0</magvar>
 <name>EHLE</name>
-<cmt>Lelystad,LELYSTAD,NL</cmt>
+<cmt>Lelystad,NL</cmt>
 </wpt>
 <wpt lat="52.216600" lon="5.799920">
 <magvar>359.9</magvar>
@@ -19179,7 +19179,7 @@
 <ele>-4.572</ele>
 <magvar>0.3</magvar>
 <name>EHRD</name>
-<cmt>Rotterdam,ROTTERDAM,NL</cmt>
+<cmt>Rotterdam,NL</cmt>
 </wpt>
 <wpt lat="56.300000" lon="10.619000">
 <ele>24.9936</ele>
@@ -19191,7 +19191,7 @@
 <ele>5.1816</ele>
 <magvar>357.7</magvar>
 <name>EKCH</name>
-<cmt>Copenhagen Kastrup,COPENHAGEN,DA</cmt>
+<cmt>Copenhagen Kastrup,DA</cmt>
 </wpt>
 <wpt lat="55.756500" lon="10.248500">
 <magvar>358.5</magvar>
@@ -19229,7 +19229,7 @@
 <ele>12.8016</ele>
 <magvar>347.0</magvar>
 <name>ENBV</name>
-<cmt>Berlevag,BERLEVAG,NO</cmt>
+<cmt>Berlevag,NO</cmt>
 </wpt>
 <wpt lat="60.818100" lon="11.068000">
 <ele>217.3224</ele>
@@ -19241,7 +19241,7 @@
 <ele>26.2128</ele>
 <magvar>0.7</magvar>
 <name>ENHD</name>
-<cmt>Haugesund,HAUGESUND,NO</cmt>
+<cmt>Haugesund,NO</cmt>
 </wpt>
 <wpt lat="59.969300" lon="11.036100">
 <ele>107.8992</ele>
@@ -19265,19 +19265,19 @@
 <ele>26.8224</ele>
 <magvar>354.3</magvar>
 <name>ENSB</name>
-<cmt>Svalbard, Longyear,SVALBARD,NO</cmt>
+<cmt>Svalbard,Longyear,NO</cmt>
 </wpt>
 <wpt lat="68.243300" lon="14.669200">
 <ele>8.2296</ele>
 <magvar>355.9</magvar>
 <name>ENSH</name>
-<cmt>Svolvær Helle,SVOLVAER,NO</cmt>
+<cmt>Svolvær Helle,NO</cmt>
 </wpt>
 <wpt lat="58.876700" lon="5.637780">
 <ele>8.8392</ele>
 <magvar>0.4</magvar>
 <name>ENZV</name>
-<cmt>Stavanger, Sola,STAVANGER,NO</cmt>
+<cmt>Stavanger, Sola,NO</cmt>
 </wpt>
 <wpt lat="49.805000" lon="19.001900">
 <ele>402.0312</ele>
@@ -19330,7 +19330,7 @@
 <ele>239.268</ele>
 <magvar>357.2</magvar>
 <name>ESGK</name>
-<cmt>Falköping,FALKOPING,SW</cmt>
+<cmt>Falköping,SW</cmt>
 </wpt>
 <wpt lat="57.124600" lon="12.228300">
 <magvar>357.8</magvar>
@@ -19382,25 +19382,25 @@
 <ele>144.4752</ele>
 <magvar>357.1</magvar>
 <name>ESOH</name>
-<cmt>Hagfors,HAGFORS,SW</cmt>
+<cmt>Hagfors,SW</cmt>
 </wpt>
 <wpt lat="59.444700" lon="13.337400">
 <ele>107.2896</ele>
 <magvar>357.3</magvar>
 <name>ESOK</name>
-<cmt>Karlstad,KARLSTAD,SW</cmt>
+<cmt>Karlstad,SW</cmt>
 </wpt>
 <wpt lat="65.543800" lon="22.122000">
 <ele>19.812</ele>
 <magvar>352.4</magvar>
 <name>ESPA</name>
-<cmt>Luleå,LULEA,SW</cmt>
+<cmt>Luleå,SW</cmt>
 </wpt>
 <wpt lat="60.422000" lon="15.515200">
 <ele>153.3144</ele>
 <magvar>356.3</magvar>
 <name>ESSD</name>
-<cmt>Borlange,BORLANGE,SW</cmt>
+<cmt>Borlange,SW</cmt>
 </wpt>
 <wpt lat="58.098400" lon="14.402600">
 <magvar>356.9</magvar>
@@ -19411,13 +19411,13 @@
 <ele>119.7864</ele>
 <magvar>357.4</magvar>
 <name>ESST</name>
-<cmt>Torsby,TORSBY,SW</cmt>
+<cmt>Torsby,SW</cmt>
 </wpt>
 <wpt lat="57.662800" lon="18.346200">
 <ele>49.9872</ele>
 <magvar>355.5</magvar>
 <name>ESSV</name>
-<cmt>Visby,VISBY,SW</cmt>
+<cmt>Visby,SW</cmt>
 </wpt>
 <wpt lat="59.575800" lon="16.503200">
 <magvar>356.0</magvar>
@@ -19428,7 +19428,7 @@
 <ele>20.7264</ele>
 <magvar>357.6</magvar>
 <name>ESTA</name>
-<cmt>Ängelholm-Helsingborg,ANGELHOLM,SW</cmt>
+<cmt>Ängelholm-Helsingborg,SW</cmt>
 </wpt>
 <wpt lat="61.512500" lon="16.372500">
 <magvar>355.8</magvar>
@@ -19449,7 +19449,7 @@
 <ele>458.1144</ele>
 <magvar>356.0</magvar>
 <name>ESUT</name>
-<cmt>Hemavan,HEMAVAN,SW</cmt>
+<cmt>Hemavan,SW</cmt>
 </wpt>
 <wpt lat="59.022300" lon="16.220300">
 <magvar>356.1</magvar>
@@ -19460,7 +19460,7 @@
 <ele>364.8456</ele>
 <magvar>359.5</magvar>
 <name>ETAD</name>
-<cmt>Spangdahlem Air Base,SPANGDAHLEM,GM</cmt>
+<cmt>Spangdahlem Air Base,GM</cmt>
 </wpt>
 <wpt lat="52.291200" lon="7.387000">
 <ele>39.3192</ele>
@@ -19490,13 +19490,13 @@
 <ele>21.336</ele>
 <magvar>358.7</magvar>
 <name>ETNS</name>
-<cmt>Schleswig,SCHLESWIG,GM</cmt>
+<cmt>Schleswig,GM</cmt>
 </wpt>
 <wpt lat="48.711000" lon="11.211500">
 <ele>380.6952</ele>
 <magvar>358.2</magvar>
 <name>ETSN</name>
-<cmt>Neuburg,NEUBURG,GM</cmt>
+<cmt>Neuburg,GM</cmt>
 </wpt>
 <wpt lat="1.905470" lon="9.805680">
 <ele>3.9624</ele>
@@ -19514,7 +19514,7 @@
 <ele>1114.044</ele>
 <magvar>0.7</magvar>
 <name>FKKN</name>
-<cmt>N'Gaoundéré,N'GAOUNDERE,CM</cmt>
+<cmt>N'Gaoundéré,CM</cmt>
 </wpt>
 <wpt lat="6.039240" lon="10.122600">
 <ele>1239.012</ele>
@@ -19550,7 +19550,7 @@
 <ele>365.1504</ele>
 <magvar>359.7</magvar>
 <name>FTTA</name>
-<cmt>Sarh,SARH,CD</cmt>
+<cmt>Sarh,CD</cmt>
 </wpt>
 <wpt lat="2.170660" lon="21.496900">
 <ele>459.9432</ele>
@@ -19562,7 +19562,7 @@
 <ele>743.1024</ele>
 <magvar>359.0</magvar>
 <name>FZJH</name>
-<cmt>Matari,ISIRO-MATARI,CG</cmt>
+<cmt>Matari,CG</cmt>
 </wpt>
 <wpt lat="0.783000" lon="24.467000">
 <ele>420.0144</ele>
@@ -19574,7 +19574,7 @@
 <ele>1822.0944</ele>
 <magvar>357.8</magvar>
 <name>HABD</name>
-<cmt>Bahir Dar,BAHIR DAR,ET</cmt>
+<cmt>Bahir Dar,ET</cmt>
 </wpt>
 <wpt lat="30.917700" lon="29.696400">
 <ele>53.9496</ele>
@@ -19592,7 +19592,7 @@
 <ele>58.5216</ele>
 <magvar>356.9</magvar>
 <name>HEKG</name>
-<cmt>El Kharga,EL KHARGA,EG</cmt>
+<cmt>El Kharga,EG</cmt>
 </wpt>
 <wpt lat="0.404458" lon="35.238900">
 <ele>2115.6168</ele>
@@ -19628,7 +19628,7 @@
 <ele>509.3208</ele>
 <magvar>357.5</magvar>
 <name>HSKA</name>
-<cmt>Kassala,KASSALA,SU</cmt>
+<cmt>Kassala,SU</cmt>
 </wpt>
 <wpt lat="2.250000" lon="32.917000">
 <ele>1091.184</ele>
@@ -19746,13 +19746,13 @@
 <ele>86.868</ele>
 <magvar>355.7</magvar>
 <name>LBGO</name>
-<cmt>Gorna Oryahovitsa,GORNA ORYAHOVITSA,BU</cmt>
+<cmt>Gorna Oryahovitsa,BU</cmt>
 </wpt>
 <wpt lat="43.232100" lon="27.825100">
 <ele>70.104</ele>
 <magvar>355.4</magvar>
 <name>LBWN</name>
-<cmt>Varna,VARNA,BU</cmt>
+<cmt>Varna,BU</cmt>
 </wpt>
 <wpt lat="45.216900" lon="14.570300">
 <ele>84.7344</ele>
@@ -19770,13 +19770,13 @@
 <ele>88.0872</ele>
 <magvar>357.4</magvar>
 <name>LDZD</name>
-<cmt>Zadar,ZADAR,HR</cmt>
+<cmt>Zadar,HR</cmt>
 </wpt>
 <wpt lat="39.551700" lon="2.738810">
 <ele>8.2296</ele>
 <magvar>0.0</magvar>
 <name>LEPA</name>
-<cmt>Palma De Mallorca,PALMA DE MALLORCA,SP</cmt>
+<cmt>Palma De Mallorca,SP</cmt>
 </wpt>
 <wpt lat="45.903300" lon="0.920000">
 <ele>274.9296</ele>
@@ -19788,7 +19788,7 @@
 <ele>115.5192</ele>
 <magvar>0.6</magvar>
 <name>LFBV</name>
-<cmt>Brive-La Roche,BRIVE,FR</cmt>
+<cmt>Brive-La Roche,FR</cmt>
 </wpt>
 <wpt lat="42.800000" lon="0.600000">
 <ele>618.1344</ele>
@@ -19800,7 +19800,7 @@
 <ele>277.9776</ele>
 <magvar>0.6</magvar>
 <name>LFCC</name>
-<cmt>Cahors-Lalbenque,CAHORS,FR</cmt>
+<cmt>Cahors-Lalbenque,FR</cmt>
 </wpt>
 <wpt lat="46.179200" lon="1.958330">
 <ele>367.8936</ele>
@@ -19812,13 +19812,13 @@
 <ele>171.9072</ele>
 <magvar>0.4</magvar>
 <name>LFCI</name>
-<cmt>Albi-Le Séquestre,ALBI,FR</cmt>
+<cmt>Albi-Le Séquestre,FR</cmt>
 </wpt>
 <wpt lat="43.556300" lon="2.289180">
 <ele>240.1824</ele>
 <magvar>0.3</magvar>
 <name>LFCK</name>
-<cmt>Castres-Mazamet,CASTRES-MAZAMET,FR</cmt>
+<cmt>Castres-Mazamet,FR</cmt>
 </wpt>
 <wpt lat="45.534700" lon="2.423890">
 <ele>740.0544</ele>
@@ -19884,13 +19884,13 @@
 <ele>980.8464</ele>
 <magvar>0.2</magvar>
 <name>LFHQ</name>
-<cmt>Saint-Flour-Coltines,ST FLOUR,FR</cmt>
+<cmt>Saint-Flour-Coltines,FR</cmt>
 </wpt>
 <wpt lat="45.901900" lon="4.634910">
 <ele>327.9648</ele>
 <magvar>359.9</magvar>
 <name>LFHV</name>
-<cmt>Villefranche-Tarare,VILLEFRANCHE,FR</cmt>
+<cmt>Villefranche-Tarare,FR</cmt>
 </wpt>
 <wpt lat="44.694500" lon="5.151110">
 <ele>246.888</ele>
@@ -19908,7 +19908,7 @@
 <ele>5.4864</ele>
 <magvar>358.7</magvar>
 <name>LFKJ</name>
-<cmt>Ajaccio-Napoléon Bonaparte,AJACCIO,FR</cmt>
+<cmt>Ajaccio-Napoléon Bonaparte,FR</cmt>
 </wpt>
 <wpt lat="45.711700" lon="4.697780">
 <ele>316.992</ele>
@@ -19932,7 +19932,7 @@
 <ele>463.6008</ele>
 <magvar>359.5</magvar>
 <name>LFLP</name>
-<cmt>Annecy-Haute-Savoie-Mont Blanc,ANNECY,FR</cmt>
+<cmt>Annecy-Haute-Savoie-Mont Blanc,FR</cmt>
 </wpt>
 <wpt lat="44.891400" lon="2.421940">
 <ele>638.8608</ele>
@@ -19944,13 +19944,13 @@
 <ele>22.5552</ele>
 <magvar>359.6</magvar>
 <name>LFML</name>
-<cmt>Marseille Provence,MARSEILLE/PROVENCE,FR</cmt>
+<cmt>Marseille Provence,FR</cmt>
 </wpt>
 <wpt lat="43.323500" lon="3.353900">
 <ele>17.0688</ele>
 <magvar>0.0</magvar>
 <name>LFMU</name>
-<cmt>Béziers-Vias,BEZIERS,FR</cmt>
+<cmt>Béziers-Vias,FR</cmt>
 </wpt>
 <wpt lat="43.737800" lon="5.784170">
 <ele>274.9296</ele>
@@ -19968,7 +19968,7 @@
 <ele>109.4232</ele>
 <magvar>0.8</magvar>
 <name>LFOB</name>
-<cmt>Paris Beauvais Tillé,BEAUVAIS,FR</cmt>
+<cmt>Paris Beauvais Tillé,FR</cmt>
 </wpt>
 <wpt lat="48.776100" lon="4.184490">
 <ele>178.9176</ele>
@@ -19980,7 +19980,7 @@
 <ele>156.0576</ele>
 <magvar>1.1</magvar>
 <name>LFOP</name>
-<cmt>Rouen,ROUEN/VALLEE DE SEINE,FR</cmt>
+<cmt>Rouen,FR</cmt>
 </wpt>
 <wpt lat="48.458900" lon="1.523890">
 <ele>155.1432</ele>
@@ -19998,7 +19998,7 @@
 <ele>66.4464</ele>
 <magvar>0.6</magvar>
 <name>LFPB</name>
-<cmt>Paris-Le Bourget,PARIS,FR</cmt>
+<cmt>Paris-Le Bourget,FR</cmt>
 </wpt>
 <wpt lat="48.823100" lon="2.623890">
 <ele>107.8992</ele>
@@ -20040,7 +20040,7 @@
 <ele>269.748</ele>
 <magvar>359.1</magvar>
 <name>LFSB</name>
-<cmt>EuroAirport Basel-Mulhouse-Freiburg,BASLE-MULHOUSE,FR</cmt>
+<cmt>Basel-Mulhouse-Freiburg,FR</cmt>
 </wpt>
 <wpt lat="48.794300" lon="7.817610">
 <ele>149.6568</ele>
@@ -20052,7 +20052,7 @@
 <ele>317.2968</ele>
 <magvar>359.3</magvar>
 <name>LFSM</name>
-<cmt>Montbéliard-Courcelles,MONTBELIARD,FR</cmt>
+<cmt>Montbéliard-Courcelles,FR</cmt>
 </wpt>
 <wpt lat="44.458300" lon="5.728330">
 <ele>714.756</ele>
@@ -20105,7 +20105,7 @@
 <ele>16.4592</ele>
 <magvar>356.4</magvar>
 <name>LGSK</name>
-<cmt>Skiathos Island National,SKIATHOS,GR</cmt>
+<cmt>Skiathos Island National,GR</cmt>
 </wpt>
 <wpt lat="36.399200" lon="25.479300">
 <ele>38.7096</ele>
@@ -20135,7 +20135,7 @@
 <ele>109.4232</ele>
 <magvar>355.8</magvar>
 <name>LHDC</name>
-<cmt>Debrecen,DEBRECEN,HU</cmt>
+<cmt>Debrecen,HU</cmt>
 </wpt>
 <wpt lat="47.363600" lon="17.500800">
 <ele>142.0368</ele>
@@ -20165,25 +20165,25 @@
 <ele>14.3256</ele>
 <magvar>357.1</magvar>
 <name>LIBR</name>
-<cmt>Brindisi Casale,BRINDISI,IT</cmt>
+<cmt>Brindisi Casale,IT</cmt>
 </wpt>
 <wpt lat="38.905400" lon="16.242300">
 <ele>11.8872</ele>
 <magvar>357.5</magvar>
 <name>LICA</name>
-<cmt>Lamezia Terme,LAMEZIA,IT</cmt>
+<cmt>Lamezia Terme,IT</cmt>
 </wpt>
 <wpt lat="37.466800" lon="15.066400">
 <ele>11.8872</ele>
 <magvar>357.8</magvar>
 <name>LICC</name>
-<cmt>Catania Fontanarossa,CATANIA,IT</cmt>
+<cmt>Catania Fontanarossa,IT</cmt>
 </wpt>
 <wpt lat="38.176000" lon="13.091000">
 <ele>19.812</ele>
 <magvar>358.0</magvar>
 <name>LICJ</name>
-<cmt>Palermo,PALERMO,IT</cmt>
+<cmt>Palermo,IT</cmt>
 </wpt>
 <wpt lat="44.398200" lon="11.854800">
 <magvar>358.1</magvar>
@@ -20206,13 +20206,13 @@
 <ele>3.9624</ele>
 <magvar>358.7</magvar>
 <name>LIMJ</name>
-<cmt>Genoa Cristoforo Colombo,GENOA,IT</cmt>
+<cmt>Genoa Cristoforo Colombo,IT</cmt>
 </wpt>
 <wpt lat="44.194800" lon="12.070100">
 <ele>29.5656</ele>
 <magvar>358.0</magvar>
 <name>LIPK</name>
-<cmt>Forli,FORLI,IT</cmt>
+<cmt>Forli,IT</cmt>
 </wpt>
 <wpt lat="45.684900" lon="12.082900">
 <ele>41.7576</ele>
@@ -20235,7 +20235,7 @@
 <ele>2.1336</ele>
 <magvar>357.7</magvar>
 <name>LJPZ</name>
-<cmt>Portoroz,PORTOROZ,SI</cmt>
+<cmt>Portoroz,SI</cmt>
 </wpt>
 <wpt lat="48.790000" lon="16.892500">
 <ele>161.8488</ele>
@@ -20253,7 +20253,7 @@
 <ele>225.8568</ele>
 <magvar>357.0</magvar>
 <name>LKPD</name>
-<cmt>Pardubice,PARDUBICE,EZ</cmt>
+<cmt>Pardubice,EZ</cmt>
 </wpt>
 <wpt lat="50.403900" lon="13.751900">
 <ele>267.9192</ele>
@@ -20283,7 +20283,7 @@
 <ele>454.7616</ele>
 <magvar>356.3</magvar>
 <name>LLOV</name>
-<cmt>Ovda Intl,OVDA,IS</cmt>
+<cmt>Ovda Intl,IS</cmt>
 </wpt>
 <wpt lat="47.458300" lon="15.330000">
 <ele>515.112</ele>
@@ -20331,7 +20331,7 @@
 <ele>1026.5664</ele>
 <magvar>359.3</magvar>
 <name>LSGC</name>
-<cmt>Les Eplatures,LES EPLATURES,SZ</cmt>
+<cmt>Les Eplatures,SZ</cmt>
 </wpt>
 <wpt lat="46.761900" lon="6.613330">
 <ele>433.1208</ele>
