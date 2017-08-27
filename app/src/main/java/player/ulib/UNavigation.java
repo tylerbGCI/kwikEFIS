@@ -80,8 +80,30 @@ public class UNavigation {
         return (float) Math.sqrt(h); // in nm
     }
 
+    //-------------------------------------------------------------------------
+    // Utility function to normalize an angle from any angle to
+    // 0 to +180 and 0 to -180
+    //
+    public static float compassRose180(float angle)
+    {
+        angle = (angle) % 360;
 
+        if (angle >  180) angle = angle - 360;
+        if (angle < -180) angle = angle + 360;
+        return angle;
+    }
 
+    //-------------------------------------------------------------------------
+    // Utility function to normalize an angle from any angle to
+    // 0 to +360
+    //
+    public static float compassRose360(float angle)
+    {
+        angle = (angle) % 360;
+
+        if (angle <  0) angle = angle + 360;
+        return angle;
+    }
 
 
 }
