@@ -16,7 +16,6 @@
 
 package player.efis.pfd; 
 
-
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
@@ -36,24 +35,24 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Bundle; 
+
 // sensor imports
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
+
 //import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-
 import java.util.Random;
 
 
@@ -65,33 +64,24 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;
-
-
-
     // sensor members
 	private SensorManager mSensorManager;
 	//private Sensor mRotationSensor;
 	//private static final int SENSOR_DELAY = 500 * 1000; // 500ms
-
 	//b2b2 private SensorFusion sensorFusion;
 	private SensorComplementaryFilter sensorComplementaryFilter;
-
 	// location members
 	private LocationManager locationManager;
 	private String provider;
 	private GpsStatus mGpsStatus = null;
-
 	private boolean bDemoMode = false;
 	private boolean bLockedMode = false;
 	private boolean bHudMode = false;
     private boolean bLandscapeMode = false;
-
 	private static final int SLIP_SENS = 25; //50;	// Arbitrary choice
 	private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
-
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
-
 	int calibrationCount = 0;
 
 	// Location abstracts
@@ -103,35 +93,30 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	protected float gps_course;         // in radians
 	protected float gps_rateOfClimb;    // in m/s
 	protected float gps_rateOfTurn;     // in rad/s
-
 	protected boolean hasSpeed;
 	protected boolean hasGps;
 	protected float orientationAzimuth;
 	protected float orientationPitch;
 	protected float orientationRoll;
-
 	private int gps_insky;
 	private int gps_infix;
-
-	private float sensorBias;
-
-	private Gpx mGpx;  // wpt database
-    private DemGTOPO30 mDemGTOPO30;  // dem database
+	private float sensorBias;           // gyroscope / GPS bias
+	private Gpx mGpx;                   // wpt database
+    private DemGTOPO30 mDemGTOPO30;     // dem database
 
 	// Digital filters
-	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16);   //8
-	DigitalFilter filterSlip = new DigitalFilter(32);  //32
-	DigitalFilter filterRoll = new DigitalFilter(8);   //16
-	DigitalFilter filterPitch = new DigitalFilter(8); //16
-	DigitalFilter filterRateOfClimb = new DigitalFilter(4); //8
+	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16); //8
+	DigitalFilter filterSlip = new DigitalFilter(32);           //32
+	DigitalFilter filterRoll = new DigitalFilter(8);            //16
+	DigitalFilter filterPitch = new DigitalFilter(8);           //16
+	DigitalFilter filterRateOfClimb = new DigitalFilter(4);     //8
 	//not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
-	DigitalFilter filterfpvX = new DigitalFilter(256); //128
-	DigitalFilter filterfpvY = new DigitalFilter(256); //128
-	DigitalFilter filterG = new DigitalFilter(32); //32
-	DigitalFilter filterGpsSpeed = new DigitalFilter(6); //4
-	DigitalFilter filterGpsAltitude = new DigitalFilter(6); //4
-	DigitalFilter filterGpsCourse = new DigitalFilter(6); //4
-
+	DigitalFilter filterfpvX = new DigitalFilter(256);          //128
+	DigitalFilter filterfpvY = new DigitalFilter(256);          //128
+	DigitalFilter filterG = new DigitalFilter(32);              //32
+	DigitalFilter filterGpsSpeed = new DigitalFilter(6);        //4
+	DigitalFilter filterGpsAltitude = new DigitalFilter(6);     //4
+	DigitalFilter filterGpsCourse = new DigitalFilter(6);       //4
 
 	//
 	//  Add the action bar buttons
@@ -315,7 +300,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
 	@Override
-  protected void onStop()
+    protected void onStop()
     {
         super.onStop();
 
@@ -408,7 +393,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
-
 	}
 
 	@Override
@@ -476,7 +460,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		case Sensor.TYPE_PRESSURE:
 			// altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
 			break;
-
 		}
 		updateEFIS(/*event.values*/);
 	}
@@ -582,7 +565,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// end location abs ------------------------
 
 
-
     private void setUserPrefs()
     {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -594,7 +576,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
-
 
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
@@ -619,10 +600,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // If the database changed it needs to be re-loaded.
         s = settings.getString("AirportDatabase", "zar.aus");
         if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
-        /*if (!mDemGTOPO30.region.equals(s)) {
-            mDemGTOPO30.loadDatabase(s);                 // load the dem
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // force an update
-        }*/
 
         // landscape / porait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
@@ -636,36 +613,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
     }
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to normalize an angle from any angle to
-	// 0 to +180 and 0 to -180
-	//
-	private float compassRose180(float angle)
-	{
-		angle = (angle) % 360;
-
-		if (angle >  180) angle = angle - 360;
-		if (angle < -180) angle = angle + 360;
-
-		return angle;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to normalize an angle from any angle to
-	// 0 to +360
-	//
-	private float compassRose360(float angle)
-	{
-		angle = (angle) % 360;
-
-		if (angle <  0) angle = angle + 360;
-
-		return angle;
-	}
-
 
 	//-------------------------------------------------------------------------
 	// Utility function to determine the direction of the turn and try to eliminate
@@ -696,7 +643,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
     //-------------------------------------------------------------------------
     // Utility function to calculate above ground altitude
-    // in m
+    // in m using the DEM
     private float calculateAgl(float lat, float lon, float alt)
     {
         //float agl = 0;
@@ -994,7 +941,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 
             // the Flight Path Vector (FPV)
-            deltaA = compassRose180(gps_course - orientationAzimuth);
+            deltaA = UNavigation.compassRose180(gps_course - orientationAzimuth);
             fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
             fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
 
@@ -1032,7 +979,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Apply a little filtering to the pitch and bank
 		pitchValue = filterPitch.runningAverage(pitchValue);
-		rollValue = filterRoll.runningAverage(compassRose180(rollValue));
+		rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
 
 		//
 		// Get the battery percentage
