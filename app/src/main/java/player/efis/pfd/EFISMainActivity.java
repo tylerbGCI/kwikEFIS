@@ -1032,7 +1032,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             try {
                 // We are stalling, advise captain "Crash" of his imminent flight emergency
                 if (hasSpeed
-                        && (gps_speed < AircraftData.Vs0 / 2) // m/s
+                        && (gps_speed < 3 + AircraftData.Vs0 / 2) // m/s, warn 3 m/s before stall
                         && (gps_agl > 0)) {
                     if (!mpStall.isPlaying()) mpStall.start();
                 }
