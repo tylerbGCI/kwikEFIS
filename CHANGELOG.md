@@ -2,7 +2,7 @@ Changelog
 =========
 3.3 (2017-08-28)
 ------------------
-* Add automatic DEM region dtermination
+* Add automatic DEM region determination
 * Audio alerts only with valid GPS fix
 * Minor change to startup behavior
 * Waypoint database cycle 2017-08 (eur.rus)
