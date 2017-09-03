@@ -271,7 +271,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             if (Layout == layout_t.LANDSCAPE) {
                 // Slide FD to current value
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
-            } else {
+            } 
+            else {
                 //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
                 // Slide pitch to current value adj for portrait
                 float Adjust = pixH2 * portraitOffset;
@@ -295,7 +296,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = -0.74f * pixW2; // top left -0.75
                 xly = 0.50f * pixH2; // top left  0.55
                 roseScale = 0.44f;
-            } else {
+            } 
+            else {
                 //Portrait
                 xlx = -0.00f * pixW2;
                 xly = -0.44f * pixH2;  //0.45f
@@ -352,10 +354,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
             renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument
             renderVSIMarkers(mMVPMatrix);
-
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
-
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
         //-----------------------------
