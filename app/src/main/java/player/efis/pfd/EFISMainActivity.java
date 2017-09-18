@@ -43,7 +43,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
 
-//import android.view.KeyEvent;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;
@@ -139,13 +139,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.mRenderer.fatFingerActive = false;
             mGLView.mRenderer.setSpinnerParams();
         }
-		else if (bLockedMode == false) {
+        else openOptionsMenu();
+		/*else if (bLockedMode == false) {
 		  finish();
 		  super.onBackPressed();
 		}
 		else {
 			Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
-		}
+		}*/
 	}
 
 	// This method is called once the menu is selected
@@ -164,6 +165,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
                 Intent j = new Intent(this, EFISPrefManage.class);
                 startActivity(j);
                 break;
+            case R.id.quit:
+                // Quit the app
+                finish();
+                break;
                 // more code...
             default:
                 return super.onOptionsItemSelected(item);
@@ -171,8 +176,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return true;
 	}
 
-	/*  
-	It causes problems with the new "improved" Samsung devices.
+	/*
+	// It causes problems with the new "improved" Samsung devices.
 	
 	// This code will catch the actual keypress.
 	// for now we will leave the menu bar in case it is needed later 
@@ -181,13 +186,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			//do your work ...
 			// Launch settings activity
-			Intent i = new Intent(this, AppPreferences.class); 
-			startActivity(i);  
+			//Intent i = new Intent(this, AppPreferences.class);
+			//startActivity(i);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);  
 	} 
-	*/
+	//*/
 
 	/* This does not seem to do anything 
 	@Override
@@ -243,7 +248,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Define the criteria how to select the location provider -> use default
 		//Criteria criteria = new Criteria();
 		//provider = locationManager.getBestProvider(criteria, false);
-		provider = LocationManager.GPS_PROVIDER;
+		provider = LocationManager.GPS_PROVIDER;  // Always use the GPS as the provide
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		locationManager.addGpsStatusListener(this);
 		Location location = locationManager.getLastKnownLocation(provider);
