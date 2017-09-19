@@ -35,7 +35,7 @@
     <!-- it is overridden in the gradle files -->
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="10" />
     <!--
     <uses-sdk
         android:minSdkVersion="11"

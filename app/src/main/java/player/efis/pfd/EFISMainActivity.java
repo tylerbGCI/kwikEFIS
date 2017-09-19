@@ -167,7 +167,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
                 break;
             case R.id.quit:
                 // Quit the app
-                finish();
+                if (bLockedMode == false) finish();
+                else Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
                 break;
                 // more code...
             default:
