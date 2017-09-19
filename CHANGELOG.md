@@ -1,6 +1,11 @@
 Changelog
 =========
-3.3 (2017-08-28)
+3.5 (beta)
+------------------
+* Changes to menu behaviour
+* Add region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
+
+3.4 (2017-08-28)
 ------------------
 * Add automatic DEM region determination
 * Audio alerts only with valid GPS fix
