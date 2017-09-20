@@ -4,7 +4,7 @@ Changelog
 ------------------
 * Activate main menu on Back key
 * Add Quit option to main menu
-* Add region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
+* Add DEM region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
 * Waypoint database cycle 2017-10 (zar.aus)
 
 3.4 (2017-08-28)
