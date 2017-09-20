@@ -652,7 +652,7 @@
 		<ele>576.072</ele>
 		<magvar>22.3</magvar>
 		<name>FANV</name>
-		<cmt>Nieuwoudtville Airfield,ZA</cmt>
+		<cmt>Nieuwoudtville,ZA</cmt>
 	</wpt>
 	<wpt lat="-27.871000" lon="26.693400">
 		<ele>408.432</ele>
@@ -688,7 +688,7 @@
 		<ele>737.616</ele>
 		<magvar>16.0</magvar>
 		<name>FAOR</name>
-		<cmt>Olifants River Bridge Landing Strip,ZA</cmt>
+		<cmt>Olifants River Bridge,ZA</cmt>
 	</wpt>
 	<wpt lat="-26.798300" lon="26.000300">
 		<ele>1481.328</ele>
@@ -2470,7 +2470,7 @@
 		<ele>2519.7816</ele>
 		<magvar>22.9</magvar>
 		<name>FXML</name>
-		<cmt>Malefiloane Airstrip,LT</cmt>
+		<cmt>Malefiloane,LT</cmt>
 	</wpt>
 	<wpt lat="-29.546100" lon="28.271000">
 		<ele>2164.08</ele>
@@ -2596,7 +2596,7 @@
 		<ele>1222.8576</ele>
 		<magvar>14.0</magvar>
 		<name>FYAM</name>
-		<cmt>Aminuis Airstrip,WA</cmt>
+		<cmt>Aminuis,WA</cmt>
 	</wpt>
 	<wpt lat="-26.693900" lon="16.318900">
 		<ele>1480.1088</ele>
@@ -2638,7 +2638,7 @@
 		<ele>1132.0272</ele>
 		<magvar>15.3</magvar>
 		<name>FYGC</name>
-		<cmt>Gochas Airstrip,WA</cmt>
+		<cmt>Gochas,WA</cmt>
 	</wpt>
 	<wpt lat="-24.630000" lon="15.939200">
 		<ele>261.2136</ele>
@@ -2722,7 +2722,7 @@
 		<ele>1374.9528</ele>
 		<magvar>15.4</magvar>
 		<name>FYMH</name>
-		<cmt>Maltahoehe Airstrip,WA</cmt>
+		<cmt>Maltahoehe,WA</cmt>
 	</wpt>
 	<wpt lat="-18.812800" lon="17.059400">
 		<ele>1117.092</ele>
@@ -2758,7 +2758,7 @@
 		<ele>1317.0408</ele>
 		<magvar>12.7</magvar>
 		<name>FYON</name>
-		<cmt>Okahandja Airstrip,WA</cmt>
+		<cmt>Okahandja,WA</cmt>
 	</wpt>
 	<wpt lat="-19.149200" lon="15.911900">
 		<ele>1192.0728</ele>
@@ -2812,7 +2812,7 @@
 		<ele>1356.0552</ele>
 		<magvar>12.8</magvar>
 		<name>FYSN</name>
-		<cmt>Osona Airstrip,WA</cmt>
+		<cmt>Osona,WA</cmt>
 	</wpt>
 	<wpt lat="-23.900800" lon="16.004700">
 		<ele>1063.1424</ele>
@@ -2830,7 +2830,7 @@
 		<ele>747.9792</ele>
 		<magvar>15.4</magvar>
 		<name>FYSS</name>
-		<cmt>Sesriem Airstrip,WA</cmt>
+		<cmt>Sesriem,WA</cmt>
 	</wpt>
 	<wpt lat="-23.967800" lon="18.548900">
 		<ele>1224.9912</ele>
@@ -5025,7 +5025,7 @@
 		<ele>1559.6616</ele>
 		<magvar>359.7</magvar>
 		<name>KE-6121</name>
-		<cmt>Musiara Airstrip,KE</cmt>
+		<cmt>Musiara,KE</cmt>
 	</wpt>
 	<wpt lat="-2.550000" lon="36.783300">
 		<ele>1359.7128</ele>
@@ -5154,7 +5154,7 @@
 		<ele>1189.9392</ele>
 		<magvar>14.5</magvar>
 		<name>NA-0004</name>
-		<cmt>Aranos Airstrip,WA</cmt>
+		<cmt>Aranos,WA</cmt>
 	</wpt>
 	<wpt lat="-24.109400" lon="19.288300">
 		<ele>1185.9768</ele>
@@ -5388,7 +5388,7 @@
 		<ele>1477.9752</ele>
 		<magvar>15.7</magvar>
 		<name>NA-0043</name>
-		<cmt>Meier Airstrip,WA</cmt>
+		<cmt>Meier,WA</cmt>
 	</wpt>
 	<wpt lat="-25.183300" lon="19.256900">
 		<ele>1061.0088</ele>
@@ -5430,7 +5430,7 @@
 		<ele>1484.9856</ele>
 		<magvar>12.1</magvar>
 		<name>NA-0050</name>
-		<cmt>Okosongoro Airport,WA</cmt>
+		<cmt>Okosongoro,WA</cmt>
 	</wpt>
 	<wpt lat="-21.608300" lon="19.408600">
 		<ele>1409.0904</ele>
@@ -5550,7 +5550,7 @@
 		<ele>1246.9368</ele>
 		<magvar>17.4</magvar>
 		<name>NA-0070</name>
-		<cmt>Guibes Landing Strip,WA</cmt>
+		<cmt>Guibes,WA</cmt>
 	</wpt>
 	<wpt lat="-26.593100" lon="18.142200">
 		<ele>984.8088</ele>
@@ -5562,7 +5562,7 @@
 		<ele>1293.876</ele>
 		<magvar>17.2</magvar>
 		<name>NA-0072</name>
-		<cmt>Klipdrif Airstrip,WA</cmt>
+		<cmt>Klipdrif,WA</cmt>
 	</wpt>
 	<wpt lat="-26.266700" lon="17.000000">
 		<ele>1110.996</ele>
@@ -5580,13 +5580,13 @@
 		<ele>960.7296</ele>
 		<magvar>16.5</magvar>
 		<name>NA-0075</name>
-		<cmt>Tses Airstrip,WA</cmt>
+		<cmt>Tses,WA</cmt>
 	</wpt>
 	<wpt lat="-25.863300" lon="16.810000">
 		<ele>1390.8024</ele>
 		<magvar>16.6</magvar>
 		<name>NA-0076</name>
-		<cmt>Helmering Airstrip,WA</cmt>
+		<cmt>Helmering,WA</cmt>
 	</wpt>
 	<wpt lat="-25.767800" lon="20.000000">
 		<ele>952.5</ele>
@@ -5598,13 +5598,13 @@
 		<ele>972.312</ele>
 		<magvar>16.3</magvar>
 		<name>NA-0078</name>
-		<cmt>Brukkaros Landing Strip,WA</cmt>
+		<cmt>Brukkaros,WA</cmt>
 	</wpt>
 	<wpt lat="-25.497200" lon="18.172500">
 		<ele>1054.9128</ele>
 		<magvar>16.1</magvar>
 		<name>NA-0079</name>
-		<cmt>Finger Gottes Airstrip,WA</cmt>
+		<cmt>Finger Gottes,WA</cmt>
 	</wpt>
 	<wpt lat="-25.456400" lon="19.438300">
 		<ele>1013.46</ele>
@@ -5646,7 +5646,7 @@
 		<ele>1346.9112</ele>
 		<magvar>15.4</magvar>
 		<name>NA-0086</name>
-		<cmt>Maltahoehe Airstrip,WA</cmt>
+		<cmt>Maltahoehe,WA</cmt>
 	</wpt>
 	<wpt lat="-24.745300" lon="20.000000">
 		<ele>1051.8648</ele>
@@ -5664,7 +5664,7 @@
 		<ele>1098.804</ele>
 		<magvar>15.0</magvar>
 		<name>NA-0089</name>
-		<cmt>Wandervogel Airstrip,WA</cmt>
+		<cmt>Wandervogel,WA</cmt>
 	</wpt>
 	<wpt lat="-24.626400" lon="18.043600">
 		<ele>1151.2296</ele>
@@ -5676,7 +5676,7 @@
 		<ele>1177.4424</ele>
 		<magvar>14.9</magvar>
 		<name>NA-0091</name>
-		<cmt>Salzbrunn Airstrip,WA</cmt>
+		<cmt>Salzbrunn,WA</cmt>
 	</wpt>
 	<wpt lat="-24.252600" lon="16.315500">
 		<ele>1378.0008</ele>
@@ -5694,7 +5694,7 @@
 		<ele>1221.9432</ele>
 		<magvar>14.7</magvar>
 		<name>NA-0094</name>
-		<cmt>Twilight Airstrip,WA</cmt>
+		<cmt>Twilight,WA</cmt>
 	</wpt>
 	<wpt lat="-24.116700" lon="16.366700">
 		<ele>1560.576</ele>
@@ -5736,7 +5736,7 @@
 		<ele>1233.8304</ele>
 		<magvar>14.4</magvar>
 		<name>NA-0101</name>
-		<cmt>Victory Airstrip,WA</cmt>
+		<cmt>Victory,WA</cmt>
 	</wpt>
 	<wpt lat="-23.966700" lon="16.563900">
 		<ele>1494.1296</ele>
@@ -5802,7 +5802,7 @@
 		<ele>1314.9072</ele>
 		<magvar>14.1</magvar>
 		<name>NA-0112</name>
-		<cmt>Cowdray Airstrip,WA</cmt>
+		<cmt>Cowdray,WA</cmt>
 	</wpt>
 	<wpt lat="-23.528900" lon="17.990000">
 		<ele>1329.5376</ele>
@@ -5850,7 +5850,7 @@
 		<ele>1382.8776</ele>
 		<magvar>14.0</magvar>
 		<name>NA-0120</name>
-		<cmt>Rehoboth Airstrip,WA</cmt>
+		<cmt>Rehoboth,WA</cmt>
 	</wpt>
 	<wpt lat="-23.310600" lon="17.188300">
 		<ele>1382.8776</ele>
@@ -5892,19 +5892,19 @@
 		<ele>1401.1656</ele>
 		<magvar>13.5</magvar>
 		<name>NA-0127</name>
-		<cmt>Doornpoort Airstrip,WA</cmt>
+		<cmt>Doornpoort,WA</cmt>
 	</wpt>
 	<wpt lat="-23.007500" lon="17.116900">
 		<ele>1661.16</ele>
 		<magvar>13.6</magvar>
 		<name>NA-0128</name>
-		<cmt>Oamites Landing Strip,WA</cmt>
+		<cmt>Oamites,WA</cmt>
 	</wpt>
 	<wpt lat="-22.973300" lon="17.144700">
 		<ele>1681.5816</ele>
 		<magvar>13.6</magvar>
 		<name>NA-0129</name>
-		<cmt>Bergland Landing Strip,WA</cmt>
+		<cmt>Bergland,WA</cmt>
 	</wpt>
 	<wpt lat="-22.961400" lon="16.934500">
 		<ele>1758.0864</ele>
@@ -5952,31 +5952,31 @@
 		<ele>1483.1568</ele>
 		<magvar>12.7</magvar>
 		<name>NA-0137</name>
-		<cmt>Solingen Airstrip,WA</cmt>
+		<cmt>Solingen,WA</cmt>
 	</wpt>
 	<wpt lat="-22.353100" lon="18.245000">
 		<ele>1511.1984</ele>
 		<magvar>12.8</magvar>
 		<name>NA-0138</name>
-		<cmt>Eintracht Airstrip,WA</cmt>
+		<cmt>Eintracht,WA</cmt>
 	</wpt>
 	<wpt lat="-22.290300" lon="17.771400">
 		<ele>1608.1248</ele>
 		<magvar>12.8</magvar>
 		<name>NA-0139</name>
-		<cmt>Otjihaenena Landing Strip,WA</cmt>
+		<cmt>Otjihaenena,WA</cmt>
 	</wpt>
 	<wpt lat="-22.280300" lon="20.000000">
 		<ele>1268.2728</ele>
 		<magvar>12.5</magvar>
 		<name>NA-0140</name>
-		<cmt>Sandfontein Airstrip,WA</cmt>
+		<cmt>Sandfontein,WA</cmt>
 	</wpt>
 	<wpt lat="-22.266700" lon="20.000000">
 		<ele>1283.208</ele>
 		<magvar>12.4</magvar>
 		<name>NA-0141</name>
-		<cmt>Buitepos Airstrip,WA</cmt>
+		<cmt>Buitepos,WA</cmt>
 	</wpt>
 	<wpt lat="-22.066700" lon="19.066700">
 		<ele>1531.0104</ele>
@@ -6101,7 +6101,7 @@
 		<ele>3.3528</ele>
 		<magvar>347.7</magvar>
 		<name>NFNB</name>
-		<cmt>Levuka Airfield,FJ</cmt>
+		<cmt>Levuka,FJ</cmt>
 	</wpt>
 	<wpt lat="-18.115600" lon="179.340000">
 		<ele>15.24</ele>
@@ -6148,7 +6148,7 @@
 	<wpt lat="-13.328000" lon="166.638000">
 		<magvar>349.6</magvar>
 		<name>NVSD</name>
-		<cmt>Torres Airstrip,NH</cmt>
+		<cmt>Torres,NH</cmt>
 	</wpt>
 	<wpt lat="-17.090300" lon="168.343000">
 		<ele>2.1336</ele>
@@ -6314,7 +6314,7 @@
 		<ele>93.2688</ele>
 		<magvar>348.7</magvar>
 		<name>NWWC</name>
-		<cmt>Belep Islands Airport,NC</cmt>
+		<cmt>Belep Islands,NC</cmt>
 	</wpt>
 	<wpt lat="-20.967000" lon="164.700000">
 		<ele>10.0584</ele>
@@ -6361,7 +6361,7 @@
 		<ele>195.072</ele>
 		<magvar>338.4</magvar>
 		<name>NZDV</name>
-		<cmt>Dannevirke Aerodrome,NZ</cmt>
+		<cmt>Dannevirke,NZ</cmt>
 	</wpt>
 	<wpt lat="-40.255800" lon="175.605000">
 		<ele>65.2272</ele>
@@ -6373,13 +6373,13 @@
 		<ele>11.8872</ele>
 		<magvar>338.3</magvar>
 		<name>NZFP</name>
-		<cmt>Foxpine Aerodrome,NZ</cmt>
+		<cmt>Foxpine,NZ</cmt>
 	</wpt>
 	<wpt lat="-41.243300" lon="175.960000">
 		<ele>14.0208</ele>
 		<magvar>337.7</magvar>
 		<name>NZFT</name>
-		<cmt>Flat Point Aerodrome,NZ</cmt>
+		<cmt>Flat Point,NZ</cmt>
 	</wpt>
 	<wpt lat="-39.553300" lon="174.267000">
 		<ele>113.0808</ele>
@@ -6403,7 +6403,7 @@
 		<ele>256.032</ele>
 		<magvar>338.6</magvar>
 		<name>NZKY</name>
-		<cmt>Kowhai Aerodrome,NZ</cmt>
+		<cmt>Kowhai,NZ</cmt>
 	</wpt>
 	<wpt lat="-41.759200" lon="172.746000">
 		<ele>520.9032</ele>
@@ -6437,7 +6437,7 @@
 	<wpt lat="-43.641200" lon="170.902000">
 		<magvar>336.7</magvar>
 		<name>NZ-0001</name>
-		<cmt>Mesopotamia Station Airstrip,NZ</cmt>
+		<cmt>Mesopotamia Station,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.466300" lon="171.162000">
 		<magvar>336.8</magvar>
@@ -6448,7 +6448,7 @@
 		<ele>609.6</ele>
 		<magvar>336.7</magvar>
 		<name>NZ-0004</name>
-		<cmt>Hakatere Airstrip,NZ</cmt>
+		<cmt>Hakatere,NZ</cmt>
 	</wpt>
 	<wpt lat="-42.601200" lon="171.699000">
 		<ele>182.88</ele>
@@ -6470,31 +6470,31 @@
 	<wpt lat="-44.511500" lon="170.670000">
 		<magvar>336.1</magvar>
 		<name>NZ-0008</name>
-		<cmt>Cattle Creek Airstrip,NZ</cmt>
+		<cmt>Cattle Creek,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.274600" lon="171.218000">
 		<ele>548.64</ele>
 		<magvar>336.9</magvar>
 		<name>NZ-0009</name>
-		<cmt>Manuka Point Lodge Airstrip,NZ</cmt>
+		<cmt>Manuka Point Lodge,NZ</cmt>
 	</wpt>
 	<wpt lat="-44.438100" lon="169.391000">
 		<ele>304.8</ele>
 		<magvar>336.4</magvar>
 		<name>NZ-0010</name>
-		<cmt>Dingleburn Station Airstrip,NZ</cmt>
+		<cmt>Dingleburn Station,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.903300" lon="171.797000">
 		<ele>92.0496</ele>
 		<magvar>336.4</magvar>
 		<name>NZAS</name>
-		<cmt>Ashburton Aerodrome,NZ</cmt>
+		<cmt>Ashburton,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.363100" lon="170.134000">
 		<ele>73.152</ele>
 		<magvar>337.1</magvar>
 		<name>NZFJ</name>
-		<cmt>Franz Josef Aerodrome,NZ</cmt>
+		<cmt>Franz Josef,NZ</cmt>
 	</wpt>
 	<wpt lat="-42.461700" lon="171.190000">
 		<ele>3.048</ele>
@@ -6506,7 +6506,7 @@
 		<ele>3.9624</ele>
 		<magvar>336.9</magvar>
 		<name>NZHT</name>
-		<cmt>Haast Aerodrome,NZ</cmt>
+		<cmt>Haast,NZ</cmt>
 	</wpt>
 	<wpt lat="-41.236700" lon="172.105000">
 		<ele>9.144</ele>
@@ -6518,7 +6518,7 @@
 		<ele>348.0816</ele>
 		<magvar>336.6</magvar>
 		<name>NZMW</name>
-		<cmt>Makarora Airstrip,NZ</cmt>
+		<cmt>Makarora,NZ</cmt>
 	</wpt>
 	<wpt lat="-44.486700" lon="169.986000">
 		<ele>420.9288</ele>
@@ -6542,13 +6542,13 @@
 		<ele>3.048</ele>
 		<magvar>340.5</magvar>
 		<name>NZCX</name>
-		<cmt>Coromandel Aerodrome,NZ</cmt>
+		<cmt>Coromandel,NZ</cmt>
 	</wpt>
 	<wpt lat="-35.939700" lon="173.894000">
 		<ele>3.048</ele>
 		<magvar>341.2</magvar>
 		<name>NZDA</name>
-		<cmt>Dargaville Aerodrome,NZ</cmt>
+		<cmt>Dargaville,NZ</cmt>
 	</wpt>
 	<wpt lat="-38.148300" lon="175.550000">
 		<ele>135.0264</ele>
@@ -6560,7 +6560,7 @@
 		<ele>6.096</ele>
 		<magvar>340.8</magvar>
 		<name>NZGB</name>
-		<cmt>Great Barrier Aerodrome,NZ</cmt>
+		<cmt>Great Barrier,NZ</cmt>
 	</wpt>
 	<wpt lat="-36.597500" lon="175.767000">
 		<ele>54.864</ele>
@@ -6650,13 +6650,13 @@
 		<ele>474.8784</ele>
 		<magvar>336.7</magvar>
 		<name>NZPH</name>
-		<cmt>Pudding Hill Aerodrome,NZ</cmt>
+		<cmt>Pudding Hill,NZ</cmt>
 	</wpt>
 	<wpt lat="-36.651900" lon="174.436000">
 		<ele>14.9352</ele>
 		<magvar>340.7</magvar>
 		<name>NZPI</name>
-		<cmt>Parakai Aerodrome,NZ</cmt>
+		<cmt>Parakai,NZ</cmt>
 	</wpt>
 	<wpt lat="-36.928300" lon="174.812000">
 		<magvar>340.5</magvar>
@@ -6667,25 +6667,25 @@
 		<ele>49.0728</ele>
 		<magvar>337.9</magvar>
 		<name>NZPN</name>
-		<cmt>Picton Aerodrome,NZ</cmt>
+		<cmt>Picton,NZ</cmt>
 	</wpt>
 	<wpt lat="-40.280800" lon="176.652000">
 		<ele>60.96</ele>
 		<magvar>338.3</magvar>
 		<name>NZPO</name>
-		<cmt>Porangahau Aerodrome,NZ</cmt>
+		<cmt>Porangahau,NZ</cmt>
 	</wpt>
 	<wpt lat="-37.804700" lon="174.860000">
 		<ele>3.048</ele>
 		<magvar>340.0</magvar>
 		<name>NZRA</name>
-		<cmt>Raglan Airfield,NZ</cmt>
+		<cmt>Raglan,NZ</cmt>
 	</wpt>
 	<wpt lat="-46.899700" lon="168.101000">
 		<ele>18.8976</ele>
 		<magvar>334.6</magvar>
 		<name>NZRC</name>
-		<cmt>Ryans Creek Aerodrome,NZ</cmt>
+		<cmt>Ryans Creek,NZ</cmt>
 	</wpt>
 	<wpt lat="-44.085000" lon="171.416000">
 		<ele>87.7824</ele>
@@ -6697,7 +6697,7 @@
 		<ele>708.0504</ele>
 		<magvar>339.2</magvar>
 		<name>NZRK</name>
-		<cmt>Rangitaiki Airfield,NZ</cmt>
+		<cmt>Rangitaiki,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.290000" lon="172.542000">
 		<ele>54.864</ele>
@@ -6709,13 +6709,13 @@
 		<ele>18.8976</ele>
 		<magvar>341.1</magvar>
 		<name>NZRW</name>
-		<cmt>Ruawai Aerodrome,NZ</cmt>
+		<cmt>Ruawai,NZ</cmt>
 	</wpt>
 	<wpt lat="-45.511700" lon="169.317000">
 		<ele>141.1224</ele>
 		<magvar>335.5</magvar>
 		<name>NZRX</name>
-		<cmt>Roxburgh Aerodrome,NZ</cmt>
+		<cmt>Roxburgh,NZ</cmt>
 	</wpt>
 	<wpt lat="-39.318900" lon="174.310000">
 		<ele>289.8648</ele>
@@ -6733,19 +6733,19 @@
 		<ele>9.144</ele>
 		<magvar>340.1</magvar>
 		<name>NZTA</name>
-		<cmt>Te Aroha Airfield,NZ</cmt>
+		<cmt>Te Aroha,NZ</cmt>
 	</wpt>
 	<wpt lat="-37.744200" lon="175.161000">
 		<ele>14.9352</ele>
 		<magvar>340.0</magvar>
 		<name>NZTE</name>
-		<cmt>Te Kowhai Airfield,NZ</cmt>
+		<cmt>Te Kowhai,NZ</cmt>
 	</wpt>
 	<wpt lat="-37.156700" lon="175.550000">
 		<ele>3.048</ele>
 		<magvar>340.3</magvar>
 		<name>NZTH</name>
-		<cmt>Thames Aerodrome,NZ</cmt>
+		<cmt>Thames,NZ</cmt>
 	</wpt>
 	<wpt lat="-45.860000" lon="170.358000">
 		<ele>28.0416</ele>
@@ -6763,7 +6763,7 @@
 		<ele>790.956</ele>
 		<magvar>336.5</magvar>
 		<name>NZTL</name>
-		<cmt>Tekapo Aerodrome,NZ</cmt>
+		<cmt>Tekapo,NZ</cmt>
 	</wpt>
 	<wpt lat="-38.839400" lon="175.262000">
 		<ele>274.9296</ele>
@@ -6781,13 +6781,13 @@
 		<ele>21.0312</ele>
 		<magvar>339.8</magvar>
 		<name>NZTS</name>
-		<cmt>Taharoa Aerodrome,NZ</cmt>
+		<cmt>Taharoa,NZ</cmt>
 	</wpt>
 	<wpt lat="-38.303300" lon="175.147000">
 		<ele>49.0728</ele>
 		<magvar>339.7</magvar>
 		<name>NZTT</name>
-		<cmt>Te Kuiti Airfield,NZ</cmt>
+		<cmt>Te Kuiti,NZ</cmt>
 	</wpt>
 	<wpt lat="-45.462800" lon="167.701000">
 		<ele>241.0968</ele>
@@ -6805,7 +6805,7 @@
 		<ele>106.9848</ele>
 		<magvar>335.2</magvar>
 		<name>NZVL</name>
-		<cmt>Mandeville Aerodrome,NZ</cmt>
+		<cmt>Mandeville,NZ</cmt>
 	</wpt>
 	<wpt lat="-39.685000" lon="175.789000">
 		<ele>472.44</ele>
@@ -6823,7 +6823,7 @@
 		<ele>95.0976</ele>
 		<magvar>336.6</magvar>
 		<name>NZWL</name>
-		<cmt>West Melton Aerodrome,NZ</cmt>
+		<cmt>West Melton,NZ</cmt>
 	</wpt>
 	<wpt lat="-44.790000" lon="171.092000">
 		<ele>24.0792</ele>
@@ -7178,7 +7178,7 @@
 	<wpt lat="-8.443610" lon="126.989000">
 		<magvar>357.6</magvar>
 		<name>WPFL</name>
-		<cmt>Abisu Airfield,TT</cmt>
+		<cmt>Abisu,TT</cmt>
 	</wpt>
 	<wpt lat="-8.972240" lon="125.215000">
 		<magvar>357.7</magvar>
@@ -8994,7 +8994,7 @@
 		<ele>14.3256</ele>
 		<magvar>348.4</magvar>
 		<name>YSLE</name>
-		<cmt>St Leonards Airfield,AU</cmt>
+		<cmt>St Leonards,AU</cmt>
 	</wpt>
 	<wpt lat="-15.898300" lon="143.383000">
 		<magvar>353.6</magvar>
@@ -9531,7 +9531,7 @@
 		<ele>1620.012</ele>
 		<magvar>24.3</magvar>
 		<name>Z007</name>
-		<cmt>Stockdale Landing Strip,ZA</cmt>
+		<cmt>Stockdale,ZA</cmt>
 	</wpt>
 	<wpt lat="-30.775700" lon="25.787500">
 		<ele>1280.16</ele>
@@ -9627,7 +9627,7 @@
 		<ele>1524</ele>
 		<magvar>17.9</magvar>
 		<name>Z024</name>
-		<cmt>Sun Valley Airfield,ZA</cmt>
+		<cmt>Sun Valley,ZA</cmt>
 	</wpt>
 	<wpt lat="-25.903200" lon="28.082000">
 		<ele>1554.48</ele>
@@ -9669,7 +9669,7 @@
 		<ele>1611.7824</ele>
 		<magvar>18.9</magvar>
 		<name>Z031</name>
-		<cmt>Evander Landing Strip,ZA</cmt>
+		<cmt>Evander,ZA</cmt>
 	</wpt>
 	<wpt lat="-26.300000" lon="30.733300">
 		<ele>1609.344</ele>
@@ -9831,7 +9831,7 @@
 		<ele>835.152</ele>
 		<magvar>24.2</magvar>
 		<name>Z058</name>
-		<cmt>Alverstone Airfield,ZA</cmt>
+		<cmt>Alverstone,ZA</cmt>
 	</wpt>
 	<wpt lat="-29.761700" lon="30.339700">
 		<ele>844.9056</ele>
@@ -10215,7 +10215,7 @@
 		<ele>18.288</ele>
 		<magvar>24.3</magvar>
 		<name>FADX</name>
-		<cmt>Delta 200 Airstrip,ZA</cmt>
+		<cmt>Delta 200,ZA</cmt>
 	</wpt>
 	<wpt lat="-30.491000" lon="21.121700">
 		<ele>989.9904</ele>
@@ -12155,7 +12155,7 @@
 		<ele>3.9624</ele>
 		<magvar>357.4</magvar>
 		<name>WA23</name>
-		<cmt>Kornasoren Airfield,ID</cmt>
+		<cmt>Kornasoren,ID</cmt>
 	</wpt>
 	<wpt lat="-6.956610" lon="115.931000">
 		<ele>6.096</ele>
@@ -12673,19 +12673,19 @@
 		<ele>49.0728</ele>
 		<magvar>334.8</magvar>
 		<name>NZBA</name>
-		<cmt>Balclutha Aerodrome,NZ</cmt>
+		<cmt>Balclutha,NZ</cmt>
 	</wpt>
 	<wpt lat="-46.040000" lon="168.312000">
 		<ele>86.868</ele>
 		<magvar>335.3</magvar>
 		<name>NZCB</name>
-		<cmt>Centre Bush Aerodrome,NZ</cmt>
+		<cmt>Centre Bush,NZ</cmt>
 	</wpt>
 	<wpt lat="-45.048600" lon="169.171000">
 		<ele>260.9088</ele>
 		<magvar>335.9</magvar>
 		<name>NZCS</name>
-		<cmt>Cromwell Racecourse Aerodrome,NZ</cmt>
+		<cmt>Cromwell Racecourse,NZ</cmt>
 	</wpt>
 	<wpt lat="-46.156700" lon="168.898000">
 		<ele>60.96</ele>
@@ -12748,7 +12748,7 @@
 		<ele>106.0704</ele>
 		<magvar>336.7</magvar>
 		<name>NZMJ</name>
-		<cmt>Martins Bay Aerodrome,NZ</cmt>
+		<cmt>Martins Bay,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.489400" lon="172.532000">
 		<ele>37.4904</ele>
@@ -12772,7 +12772,7 @@
 		<ele>116.1288</ele>
 		<magvar>336.7</magvar>
 		<name>NZFF</name>
-		<cmt>Forest Field Aerodrome,NZ</cmt>
+		<cmt>Forest Field,NZ</cmt>
 	</wpt>
 	<wpt lat="-41.796700" lon="172.315000">
 		<ele>161.8488</ele>
@@ -12820,7 +12820,7 @@
 		<ele>44.5008</ele>
 		<magvar>337.4</magvar>
 		<name>NZHK</name>
-		<cmt>Hokitika Airfield,NZ</cmt>
+		<cmt>Hokitika,NZ</cmt>
 	</wpt>
 	<wpt lat="-43.765000" lon="170.133000">
 		<ele>656.2344</ele>
@@ -12862,7 +12862,7 @@
 		<ele>181.0512</ele>
 		<magvar>339.5</magvar>
 		<name>NZGA</name>
-		<cmt>Galatea Airfield,NZ</cmt>
+		<cmt>Galatea,NZ</cmt>
 	</wpt>
 	<wpt lat="-37.008100" lon="174.792000">
 		<ele>7.0104</ele>
@@ -12946,7 +12946,7 @@
 		<ele>371.856</ele>
 		<magvar>339.6</magvar>
 		<name>NZTO</name>
-		<cmt>Tokoroa Airfield,NZ</cmt>
+		<cmt>Tokoroa,NZ</cmt>
 	</wpt>
 	<wpt lat="-44.302800" lon="171.225000">
 		<ele>27.1272</ele>
@@ -13029,7 +13029,7 @@
 	<wpt lat="-8.500000" lon="157.683000">
 		<magvar>351.7</magvar>
 		<name>SB-VIU</name>
-		<cmt>Viru Harbour Airstrip,BP</cmt>
+		<cmt>Viru Harbour,BP</cmt>
 	</wpt>
 	<wpt lat="-8.750000" lon="158.200000">
 		<magvar>351.6</magvar>
@@ -15155,7 +15155,7 @@
 		<ele>6.096</ele>
 		<magvar>348.3</magvar>
 		<name>YEVD</name>
-		<cmt>Evans Head Aerodrome,AU</cmt>
+		<cmt>Evans Head,AU</cmt>
 	</wpt>
 	<wpt lat="-27.016700" lon="132.717000">
 		<magvar>355.0</magvar>
@@ -20060,7 +20060,7 @@
 		<ele>17.9832</ele>
 		<magvar>19.9</magvar>
 		<name>FMEP</name>
-		<cmt>St Pierre Pierrefonds,ST PIERRE,RE</cmt>
+		<cmt>St Pierre Pierrefonds,RE</cmt>
 	</wpt>
 	<wpt lat="-21.201800" lon="48.358300">
 		<ele>6.096</ele>
@@ -20190,7 +20190,7 @@
 		<ele>6.7056</ele>
 		<magvar>14.7</magvar>
 		<name>FMMT</name>
-		<cmt>Toamasina,TOAMASINA,MA</cmt>
+		<cmt>Toamasina,MA</cmt>
 	</wpt>
 	<wpt lat="-17.650000" lon="48.217000">
 		<ele>785.1648</ele>
@@ -20214,7 +20214,7 @@
 		<ele>26.5176</ele>
 		<magvar>11.1</magvar>
 		<name>FMNM</name>
-		<cmt>Amborovy Airport,MAHAJANGA,MA</cmt>
+		<cmt>Amborovy,MAHAJANGA,MA</cmt>
 	</wpt>
 	<wpt lat="-15.436700" lon="49.688300">
 		<ele>3.9624</ele>
@@ -20250,7 +20250,7 @@
 		<ele>3.048</ele>
 		<magvar>5.3</magvar>
 		<name>FSIA</name>
-		<cmt>Seychelles Intl,SEYCHELLES,SE</cmt>
+		<cmt>Seychelles Intl,SE</cmt>
 	</wpt>
 	<wpt lat="-4.319290" lon="55.691400">
 		<ele>3.048</ele>
@@ -20403,7 +20403,7 @@
 		<ele>6.096</ele>
 		<magvar>354.6</magvar>
 		<name>AYDU</name>
-		<cmt>Daru,DARU,PP</cmt>
+		<cmt>Daru,PP</cmt>
 	</wpt>
 	<wpt lat="-6.147740" lon="143.657000">
 		<ele>1731.264</ele>
@@ -20551,7 +20551,7 @@
 		<ele>10.3632</ele>
 		<magvar>354.5</magvar>
 		<name>YBAM</name>
-		<cmt>Bamaga Injinoo,BAMAGA,AU</cmt>
+		<cmt>Bamaga Injinoo,AU</cmt>
 	</wpt>
 	<wpt lat="-10.150000" lon="141.175000">
 		<ele>4.2672</ele>

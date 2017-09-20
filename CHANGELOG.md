@@ -2,8 +2,10 @@ Changelog
 =========
 3.5 (beta)
 ------------------
-* Changes to menu behaviour
+* Activate main menu on Back key
+* Add Quit option to main menu
 * Add region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
+* Waypoint database cycle 2017-10 (zar.aus)
 
 3.4 (2017-08-28)
 ------------------
@@ -22,9 +24,9 @@ Changelog
 ------------------
 * Add audio annouciations (stall, sink, terrain, 500)
 * DataPac enhanced to allow multiple regions
-* Add region: zar.aus - Southern Africa, Australia
-* Add region: usa.can - United States, Canada
-* Add region: eur.rus - Europe, Russia
+* Add DEM region: zar.aus - Southern Africa, Australia
+* Add DEM region: usa.can - United States, Canada
+* Add DEM region: eur.rus - Europe, Russia
 
 3.1 (2017-05-18)
 ------------------
