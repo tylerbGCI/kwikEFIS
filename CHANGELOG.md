@@ -1,6 +1,6 @@
 Changelog
 =========
-3.5 (beta)
+3.5 (2017-09-21)
 ------------------
 * Activate main menu on Back key
 * Add Quit option to main menu
