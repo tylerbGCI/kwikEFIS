@@ -317,17 +317,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderAutoWptDetails(mMVPMatrix);
         }
 
-        /*
-        if (displayFlightDirector || displayRMI || displayHITS) {
-            renderSelWptValue(mMVPMatrix);
-            renderSelWptDetails(mMVPMatrix);
-        }
-
-        if (displayFlightDirector || displayHITS) {
-            renderSelAltValue(mMVPMatrix);
-        }
-        */
-
 
         if (Layout == layout_t.PORTRAIT) {
             // Slide pitch to current value adj for portrait
