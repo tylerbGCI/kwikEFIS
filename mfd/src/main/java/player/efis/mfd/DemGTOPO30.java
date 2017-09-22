@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package player.efis.pfd;
+package player.efis.mfd;
 
 // Standard imports
 
