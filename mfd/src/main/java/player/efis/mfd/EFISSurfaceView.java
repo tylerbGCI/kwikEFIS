@@ -322,5 +322,11 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    public void setMapZoom(float zoom)
+    {
+        mRenderer.setMapZoom(zoom);
+        requestRender();
+    }
+
 
 }

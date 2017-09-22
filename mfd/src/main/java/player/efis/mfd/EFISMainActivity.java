@@ -83,8 +83,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 	int calibrationCount = 0;
+    private float mMapZoom = 20;
 
-	// Location abstracts
+    // Location abstracts
 	protected float gps_lat;            // in decimal degrees
 	protected float gps_lon;            // in decimal degrees
 	protected float gps_altitude;       // in m
@@ -177,23 +178,23 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return true;
 	}
 
-	/*
 	// It causes problems with the new "improved" Samsung devices.
-	
 	// This code will catch the actual keypress.
 	// for now we will leave the menu bar in case it is needed later 
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{ 
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			//do your work ...
-			// Launch settings activity
-			//Intent i = new Intent(this, AppPreferences.class);
-			//startActivity(i);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);  
-	} 
-	//*/
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+            if (mMapZoom < 90) mMapZoom += 5;
+            return true;
+        }
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
+            if (mMapZoom > 10) mMapZoom -= 5;
+            return true;
+        }
+		return super.onKeyDown(keyCode, event);
+	}
+
 
 	/* This does not seem to do anything 
 	@Override
@@ -785,8 +786,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
-        deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
-        //deltaT = 0.000000224f; // Super Speed2
+        //deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
+        deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
@@ -1000,6 +1001,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		//mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
+        mGLView.setMapZoom(mMapZoom);
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
