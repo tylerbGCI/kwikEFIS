@@ -246,7 +246,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayDEM) {
+        if (displayDEM && !fatFingerActive) {
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
@@ -2185,8 +2185,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-
-
     //-------------------------------------------------------------------------
     // DemGTOPO30 Sky.
     //
@@ -2235,7 +2233,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         z = zfloat;
 
         float dme;             //in nm
-        float step = 0.50f;    //in nm
+        float step = 0.50f;    //in nm, normally this should be = gridy
         float agl_ft;          //in feet
 
         // oversize 20% a little to help with
@@ -2337,7 +2335,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 //*/
 
                 /*
-
                 //
                 //  69%
                 //
@@ -2385,10 +2382,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         for (y = 0; y < maxy /*BUFY*/; y++) {
             for (x = 0; x < maxx /*BUFX*/; x++) {
-                //getColor(DemGTOPO30.buff[x][y]);
                 DemColor color = DemGTOPO30.getColor(DemGTOPO30.buff[x][y]);
                 mLine.SetColor(color.red, color.green, color.blue, 1);  // rgb
-
                 mLine.SetWidth(1);
                 mLine.SetVerts(
                         x - pixW2, -y + pixH2 / 10, z,
@@ -2760,6 +2755,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         setSelWptRelBrg(relBrg);
     }
 
+    private void dimScreen(float[] matrix, float alpha)
+    {
+        float z = zfloat;
+        // Mask over the PFD for the input area
+        mSquare.SetColor(0.0f, 0.0f, 0.0f, alpha); //black xper .. 0.75f
+        mSquare.SetWidth(2);
+        {
+            float[] squarePoly = {
+                    -pixW2+5, +pixH2-5, z,
+                    -pixW2+5, -pixH2+5, z,
+                    +pixW2-5, -pixH2+5, z,
+                    +pixW2-5, +pixH2-5, z,
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+    }
+
     private void renderSelWptDetails(float[] matrix)
     {
         float z = zfloat;
@@ -2767,19 +2780,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // This may need to be in a function
         if (fatFingerActive) {
-            // Mask over the PFD for the input area
-            mSquare.SetColor(0.0f, 0.0f, 0.0f, 0.75f); //black xper
-            mSquare.SetWidth(2);
-            {
-                float[] squarePoly = {
-                        -pixW2+5, +pixH2-5, z,
-                        -pixW2+5, -pixH2+5, z,
-                        +pixW2-5, -pixH2+5, z,
-                        +pixW2-5, +pixH2-5, z,
-                };
-                mSquare.SetVerts(squarePoly);
-                mSquare.draw(matrix);
-            }
+            dimScreen(matrix, 0.75f);
         }
 
         //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
