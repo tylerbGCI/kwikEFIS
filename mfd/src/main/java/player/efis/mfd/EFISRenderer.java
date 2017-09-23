@@ -311,20 +311,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = -0.00f * pixW2;
                 xly = -0.44f * pixH2;  //0.45f
                 roseScale = 0.52f; //0.45f; //0.50f;
+
+                xlx = -0.00f * pixW2;
+                xly = -0.20f * pixH2;  //0.45f
+                roseScale = 1.00f; //0.45f; //0.50f;
             }
 
             roseScale = roseScale*1.9f;
-            //-- in middle for mfd - //Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             // Create a rotation for the RMI
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
             Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
             renderBearingTxt(mMVPMatrix);
             renderFixedCompassMarkers(mMVPMatrix);
-            //-- in middle for mfd - //Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             renderCompassRose(rmiMatrix);
-            renderBearing(rmiMatrix);
-            renderAutoWptDetails(mMVPMatrix);
+            //renderBearing(rmiMatrix);
+            //renderAutoWptDetails(mMVPMatrix);
         }
 
 
