@@ -2102,19 +2102,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
 
             String wptId = currApt.name;
-            dme = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
+            dme = calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
 
             // Apply selection criteria
-            if (dme < 5 * 6080)
+            if (dme < 5)
                 nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE * 6080))
+            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
                 nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
             else
                 continue;                                                                // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
             x1 = (float) (aptRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme)) * pixPerDegree);    // we do not take apt elevation into account
+            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme * 6080)) * pixPerDegree);    // we do not take apt elevation into account
 
             mPolyLine.SetWidth(3);
             mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
@@ -2141,7 +2141,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
                 setAutoWptValue(wptId);
-                setAutoWptDme(dme / 6080);  // 1nm = 6080ft
+                setAutoWptDme(dme);  // 1nm = 6080ft
                 setAutoWptBrg(absBrg);
                 _dme = dme;
             }
