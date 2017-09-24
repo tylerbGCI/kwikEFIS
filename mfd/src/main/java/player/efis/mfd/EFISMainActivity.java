@@ -185,7 +185,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{ 
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            if (mMapZoom < 90) mMapZoom += 5;
+            if (mMapZoom < 120) mMapZoom += 5;
             return true;
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
@@ -276,12 +276,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
 
         // Restore last known location
-        /*
         _gps_lat = settings.getFloat("GpsLat", gps_lat);
         _gps_lon = settings.getFloat("GpsLon", gps_lon);
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
-        */
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
@@ -740,7 +738,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     float _gps_altitude = 3000; // meters
     float _gps_agl = 0; //meters
 
-	float _gps_speed = 0;       // m/s
+	float _gps_speed = 60;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
 
@@ -781,25 +779,23 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		sim_ms = time.toMillis(true);
 		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
 
-        ///*
+        /*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
-        //deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
-        deltaT = 0.000000224f; // Super Speed2
+        deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
+        //deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 2270; //2048; //900; //3048; //meter
-        _gps_altitude = 2270; //2048; //900; //3048; //meter
+        gps_altitude = 270; //2048; //900; //3048; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
 
         //gps_lat = -33f; _gps_lon = 28f;  // EL
-        //_gps_lat = -33.98f; _gps_lon =   18.82f;  // Stellenbosh
-        //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
+        //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
         //gps_lat = -33.4f; gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
         //gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
         //gps_lat = 0f; gps_lon = 0f; _gps_lat = 0f; _gps_lon = 0f;  // Trapped on Null Island

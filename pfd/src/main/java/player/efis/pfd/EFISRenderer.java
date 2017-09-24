@@ -2136,10 +2136,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();
 
-            float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
+                float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
                 setAutoWptValue(wptId);
                 setAutoWptDme(dme);  // 1nm = 6080ft
                 setAutoWptBrg(absBrg);
@@ -3100,11 +3100,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
             glText.setScale(1.5f);
-            float angleDeg = 90 - i;
             switch (i) {
                 case 0:
                     t = "N";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
                     glText.setScale(2.0f);
                     break;
@@ -3116,7 +3114,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 90:
                     t = "E";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
                     glText.setScale(1.5f);
                     break;
@@ -3128,7 +3125,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 180:
                     t = "S";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
                     glText.setScale(1.5f);
                     break;
@@ -3140,7 +3136,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 270:
                     t = "W";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
                     glText.setScale(1.5f);
                     break;
@@ -3157,7 +3152,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             //glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
             //glText.setScale(1.5f); // seems to have a weird effect here?
-            glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); //90-i
+            glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, -i); // angleDeg=90-i, Use 360-DIValue for vertical text
             glText.end();
             for (j = 10; j <= 20; j = j + 10) {
                 sinI = UTrig.isin((i + j));

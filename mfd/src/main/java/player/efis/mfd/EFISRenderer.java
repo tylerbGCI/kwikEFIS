@@ -251,6 +251,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for perfromance
+        if (displayAirport  ) renderDctTrack(mMVPMatrix);
+
         /*if (displayDEM) {
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
@@ -308,9 +310,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             } 
             else {
                 //Portrait
-                xlx = -0.00f * pixW2;
-                xly = -0.44f * pixH2;  //0.45f
-                roseScale = 0.52f; //0.45f; //0.50f;
+                //xlx = -0.00f * pixW2;
+                //xly = -0.44f * pixH2;  //0.45f
+                //roseScale = 0.52f; //0.45f; //0.50f;
 
                 xlx = -0.00f * pixW2;
                 xly = -0.20f * pixH2;  //0.45f
@@ -322,7 +324,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Create a rotation for the RMI
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
             Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            renderBearingTxt(mMVPMatrix);
+            //renderBearingTxt(mMVPMatrix);
             renderFixedCompassMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
@@ -339,6 +341,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         //renderFixedHorizonMarkers();
         //renderRollMarkers(scratch2);
+
 
         //-----------------------------
         {
@@ -383,9 +386,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (Calibrating) renderCalibrate(mMVPMatrix);*/
         if (bDemoMode) renderDemoMode(mMVPMatrix);
 
-        //dimScreen(mMVPMatrix, 0.250f);
+        renderACSymbol(mMVPMatrix);
+
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
 
+        // Do this last so that every else wil be dimmed for fatfinger entry
+        //dimScreen(mMVPMatrix, 0.250f);
         if (displayFlightDirector || displayRMI || displayHITS) {
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
@@ -2166,14 +2172,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();
 
-            float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
 
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
+                float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float relBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+
                 setAutoWptValue(wptId);
-                //setAutoWptDme(dme / 6080);  // 1nm = 6080ft
                 setAutoWptDme(dme);  // 1nm = 6080ft
                 setAutoWptBrg(absBrg);
+                setAutoWptRelBrg(relBrg);
                 _dme = dme;
             }
         }
@@ -2278,7 +2286,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-        float zoom_ft = mMapZoom * 60;
+        //float zoom_ft = mMapZoom * 60;
 
         //float radius = (mMapZoom / 5) + (dme / mMapZoom); //mapzoom=30 radius= 5 to 6
 
@@ -2306,8 +2314,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
                 x1 = demRelBrg * pixPerDegree;
                 y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
-                x1 = zoom_ft * (lon - LonValue);
-                y1 = zoom_ft * (lat - LatValue);
+                //x1 = zoom_ft * (lon - LonValue);
+                //y1 = zoom_ft * (lat - LatValue);
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
                 y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
 
@@ -2364,26 +2372,23 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     }
                 }
                 if (true) {
-                    mPolygon.SetWidth(3);
-                    mPolygon.SetColor(0.0f, 0.50f, 0.0f, 1);
+                    //mLine.SetWidth(3);
                     DemColor color = DemGTOPO30.getColor((short) z1);
-                    mPolygon.SetColor(color.red, color.green, color.blue, 1);
-                    {
-                        // use a little trick, scale the radius to the dme
-                        float radius = (mMapZoom / 5) + (dme / mMapZoom); //mapzoom=30 radius= 5 to 6
+                    mLine.SetColor(color.red, color.green, color.blue, 1);
 
-                        float[] vertPoly = {
-                                x1 + 2.0f * radius, y1 + 0.0f * radius, z,
-                                x1 + 0.0f * radius, y1 + 2.0f * radius, z,
-                                x1 - 2.0f * radius, y1 + 0.0f * radius, z,
-                                x1 - 0.0f * radius, y1 - 2.0f * radius, z,
-                                x1 + 2.0f * radius, y1 + 0.0f * radius, z
-                        };
-                        mPolygon.VertexCount = 5;
-                        mPolygon.SetVerts(vertPoly);
-                        mPolygon.draw(matrix);
-
-                    }
+                    // use a little trick, scale the radius to the dme
+                    float radius = (mMapZoom / 5) + (dme / mMapZoom); //mapzoom=30 radius= 5 to 6
+                    mLine.SetWidth(3*radius);
+                    mLine.SetVerts(
+                            x1 - radius, y1, z,
+                            x1 + radius, y1, z
+                    );
+                    mLine.draw(matrix);
+                    mLine.SetVerts(
+                            x1, y1 - radius, z,
+                            x1, y1 + radius, z
+                    );
+                    mLine.draw(matrix);
                 }
 
 
@@ -3186,7 +3191,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z, sinI, cosI;
         String t;
         float roseRadius = roseScale * pixM2;
-        float mult = 1.9f;
+        float txtxMult = 1.9f;
 
         z = zfloat;
 
@@ -3204,14 +3209,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
-            glText.setScale(1.5f*mult);
-            float angleDeg = 90 - i;
+            glText.setScale(1.5f*txtxMult);
             switch (i) {
                 case 0:
                     t = "N";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(2.0f*mult);
+                    glText.setScale(2.0f*txtxMult);
                     break;
                 case 30:
                     t = "3";
@@ -3221,9 +3224,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 90:
                     t = "E";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*mult);
+                    glText.setScale(1.5f*txtxMult);
                     break;
                 case 120:
                     t = "12";
@@ -3233,9 +3235,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 180:
                     t = "S";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*mult);
+                    glText.setScale(1.5f*txtxMult);
                     break;
                 case 220:
                     t = "21";
@@ -3245,9 +3246,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     break;
                 case 270:
                     t = "W";
-                    angleDeg = -i;
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*mult);
+                    glText.setScale(1.5f*txtxMult);
                     break;
                 case 300:
                     t = "30";
@@ -3262,7 +3262,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             //glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
             //glText.setScale(1.5f); // seems to have a weird effect here?
-            glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); //90-i
+            //glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); // angleDeg=90-i, Use 360-DIValue for vertical text
+            glText.drawC(t, 0.80f * roseRadius * cosI, 0.80f * roseRadius * sinI, -i); // angleDeg=90-i, Use 360-DIValue for vertical text
             glText.end();
             for (j = 10; j <= 20; j = j + 10) {
                 sinI = UTrig.isin((i + j));
@@ -3417,7 +3418,101 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.drawC(mAutoWpt, 0, -0.12f * roseRadius, 0);
         glText.end();
     }
+
+    //-------------------------------------------------------------------------
+    // Render the Direct To bearing line
+    //
+    private void renderDctTrack(float[] matrix)
+    {
+        float z, x1, y1; //sinI, cosI, _sinI, _cosI;
+        float roseRadius = roseScale * pixM2;
+
+        z = zfloat;
+
+        //
+        // Direct Track to Selected Waypoint
+        //
+        mLine.SetWidth(20); //8
+        mLine.SetColor(0.5f, 0.250f, 0.5f, 0.125f); // purple'ish
+
+        x1 = mMapZoom * (mSelWptDme * UTrig.icos(90-(int)mSelWptRlb));
+        y1 = mMapZoom * (mSelWptDme * UTrig.isin(90-(int)mSelWptRlb));
+        mLine.SetVerts(
+                0, 0, z,
+                x1, y1, z
+        );
+        mLine.draw(matrix);
+        // Skunk stripe
+        mLine.SetWidth(4); //8
+        mLine.SetColor(0.0f, 0.0f, 0.0f, 1); // black
+        mLine.draw(matrix);
+
+        //
+        // Direct Track to Automatic Waypoint
+        //
+        /* Not sure I like this feature ...
+        mLine.SetWidth(2); //8
+        mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
+
+        x1 = mMapZoom * (mAutoWptDme * UTrig.icos(90-(int)mAutoWptRlb));
+        y1 = mMapZoom * (mAutoWptDme * UTrig.isin(90-(int)mAutoWptRlb));
+        mLine.SetVerts(
+                0, 0, z,
+                x1, y1, z
+        );
+        mLine.draw(matrix);
+        */
+
+    }
+
+    //-------------------------------------------------------------------------
+    // Render a little airplane symbol
+    //
+    private void renderACSymbol(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        // Wings
+        mLine.SetWidth(8);
+        mLine.SetColor(1, 1, 1, 1); // white
+        mLine.SetVerts(
+                -0.10f*pixM2, 0, z,
+                 0.10f*pixM2, 0, z
+        );
+        mLine.draw(matrix);
+        // L
+        mLine.SetVerts(
+                -0.10f*pixM2, 0, z,
+                0,  0.025f*pixM2, z
+        );
+        mLine.draw(matrix);
+        // R
+        mLine.SetVerts(
+                0.10f*pixM2, 0, z,
+                0,  0.025f*pixM2, z
+        );
+        mLine.draw(matrix);
+
+        // Fuselage
+        mLine.SetVerts(
+                0, -0.10f*pixM2, z,
+                0,  0.075f*pixM2, z
+        );
+        mLine.draw(matrix);
+        // Tail
+        mLine.SetVerts(
+                -0.05f*pixM2, -0.10f*pixM2, z,
+                 0.05f*pixM2, -0.10f*pixM2, z
+        );
+        mLine.draw(matrix);
+    }
+
+
+
+
 }
+
 
 
 //-----------------------------------------------------------------------------
