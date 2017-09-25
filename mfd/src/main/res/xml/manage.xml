@@ -61,8 +61,7 @@
                 android:title="Locked" />
         </PreferenceScreen>
 
-
-
+        <!--
         <ListPreference
             android:defaultValue="0.15f"
             android:entries="@array/sensor_bias_names"
@@ -70,6 +69,7 @@
             android:key="sensorBias"
             android:summary="Select the bank sensor/GPS bias"
             android:title="Bank Sensor" />
+            -->
 
         <PreferenceScreen
             android:defaultValue="0.0"

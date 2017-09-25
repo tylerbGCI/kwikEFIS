@@ -17,6 +17,9 @@
 package player.efis.mfd;
 
 import java.util.Iterator;
+
+import player.dem.DemColor;
+import player.dem.DemGTOPO30;
 import player.ulib.*;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -251,7 +254,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for perfromance
-        if (displayAirport  ) renderDctTrack(mMVPMatrix);
 
         /*if (displayDEM) {
             // Make the blue sky for the DEM.
@@ -392,7 +394,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // Do this last so that every else wil be dimmed for fatfinger entry
         //dimScreen(mMVPMatrix, 0.250f);
-        if (displayFlightDirector || displayRMI || displayHITS) {
+        //if (displayFlightDirector || displayRMI || displayHITS) {
+        if (displayFlightDirector) {
+            renderDctTrack(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }

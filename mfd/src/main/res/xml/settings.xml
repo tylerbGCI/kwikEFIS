@@ -2,11 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="DISPLAY" style="?android:attr/listSeparatorTextViewStyle">
+        <!--
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayTerrain"
             android:summary="Display full color artificial horizon"
             android:title="Color earth and sky" />
+            -->
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -14,11 +16,13 @@
             android:summary="Enable synthetic vision DEM terrain"
             android:title="Synthetic vision" />
 
+        <!--    
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayTape"
             android:summary="Airspeed and Altimeter tapes"
             android:title="Tapes" />
+            -->
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -40,11 +44,13 @@
             android:key="displayRmi"
             android:summary="Engage Compass and Bearing Indicator"
             android:title="Compass Rose" />
+        <!--
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayHITS"
             android:summary="Enable HITS display"
             android:title="Highway In The Sky" />
+            -->
 
 
 
