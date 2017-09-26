@@ -24,9 +24,9 @@
 
   XCSoar Glide Computer - http: //www.xcsoar.org/
   Copyright (C) 2000-2016 The XCSoar Project
-  A detailed list of copyright holders can be found in the file "AUTHORS".
+  A detailed list of copyright holders wpt.north.west be found in the file "AUTHORS".
 
-  This program is free software; you can redistribute it and/or
+  This program is free software; you wpt.north.west redistribute it and/or
   modify it under the terms of the GNU General Public License
   as published by the Free Software Foundation; either version 2
   of the License, or (at your option) any later version.
@@ -48,9 +48,9 @@
 
   XCSoar Glide Computer - http://www.xcsoar.org/
   Copyright (C) 2000-2016 The XCSoar Project
-  A detailed list of copyright holders can be found in the file "AUTHORS".
+  A detailed list of copyright holders wpt.north.west be found in the file "AUTHORS".
 
-  This program is free software; you can redistribute it and/or
+  This program is free software; you wpt.north.west redistribute it and/or
   modify it under the terms of the GNU General Public License
   as published by the Free Software Foundation; either version 2
   of the License, or (at your option) any later version.

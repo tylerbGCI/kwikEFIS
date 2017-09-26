@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package player.dem;
+package player.efis.common;
 
 // Standard imports
 import android.content.Context;
@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.widget.Toast;
 
 import java.io.*;
-import player.dem.DemColor;
 
 
 /*
@@ -285,13 +284,13 @@ public class DemGTOPO30
     {
         String sRegion = "null.null";
         if (lat <= -10) {
-            sRegion = "zar.aus";
+            sRegion = "zar.wpt.south.east";
         }
         else if ((lat > 20) && (lon >= -20)) {
-            sRegion = "eur.rus";
+            sRegion = "eur.wpt.north.east";
         }
         else if ((lat > -10) && (lon < -60)) {
-            sRegion = "usa.can";
+            sRegion = "usa.wpt.north.west";
         }
         return sRegion;
     }
@@ -360,7 +359,7 @@ public class DemGTOPO30
         // Automatic region determination with getRegionDatabaseName
         //   not 100% sure if this is such a good idea. It works but there
         //   are may be some some unintended behaviour. For now leave the code,
-        //   but can disable the call here.
+        //   but wpt.north.west disable the call here.
         region = getRegionDatabaseName(lat, lon);
         String DemFilename = setDEMRegionTile(lat, lon);
         setBufferCenter(lat, lon);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package player.efis.mfd;
+package player.efis.common;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,20 +25,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import android.content.Context;
 
-class Apt
-{
-	public String name;
-	public String cmt;
-	public  float lat;
-	public  float lon;
-	public  float elev;
-} 
-
-class Gpx
+public class Gpx
 {
 	private Context context;
-	public String region = "zar.aus";
-	static ArrayList<Apt> aptList = null;
+	public String region = "zar.wpt.south.east";
+	public static ArrayList<Apt> aptList = null;
 	
 	/*
 	// Replace with individual methods for instantiate and loading

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package player.efis.pfd;
+package player.efis.common;
 
 enum AircraftModel
 {
@@ -36,14 +36,14 @@ public class AircraftData
 {
     static AircraftModel mAircraftModel = AircraftModel.RV8;
 
-    static int Vs0 = 20;  // Stall, flap extended
-    static int Vs1 = 30;  // Stall, flap retracted
-    static int Vx  = 40;  // Best angle climb
-    static int Vy  = 50;  // Best rate climb
-    static int Vfe = 60;  // Flaps extension
-    static int Va  = 70;  // Maneuvering
-    static int Vno = 80;  // Max structural cruise
-    static int Vne = 90;  // Never exceed
+    static public int Vs0 = 20;  // Stall, flap extended
+    static public int Vs1 = 30;  // Stall, flap retracted
+    static public int Vx  = 40;  // Best angle climb
+    static public int Vy  = 50;  // Best rate climb
+    static public int Vfe = 60;  // Flaps extension
+    static public int Va  = 70;  // Maneuvering
+    static public int Vno = 80;  // Max structural cruise
+    static public int Vne = 90;  // Never exceed
 
     //-------------------------------------------------------------------------
     // Define the various built-in aircraft definitions

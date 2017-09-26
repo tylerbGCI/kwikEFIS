@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-package player.efis.pfd;
+package player.gles20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -58,12 +58,38 @@ public class PolyLine {
 	static float LineWidth = 1.0f;
 
 	//private final int VertexCount = LineCoords.length / COORDS_PER_VERTEX;
-	int VertexCount; // = LineCoords.length / COORDS_PER_VERTEX;
+	public int VertexCount; // = LineCoords.length / COORDS_PER_VERTEX;
 	private final int VertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
 	// Set color with red, green, blue and alpha (opacity) values
 	float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
+    
+    /**
+     * Utility method for compiling a OpenGL shader.
+     * <p>
+     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
+     * method to debug shader coding errors.</p>
+     *
+     * @param type       - Vertex or fragment shader type.
+     * @param shaderCode - String containing the shader code.
+     * @return - Returns an id for the shader.
+     */
+    public static int loadShader(int type, String shaderCode)
+    {
+        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        int shader = GLES20.glCreateShader(type);
+
+        // add the source code to the shader and compile it
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
+    }
+
+    
+    
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
@@ -82,10 +108,10 @@ public class PolyLine {
 		mVertexBuffer.position(0);
 
 		// prepare shaders and OpenGL program
-		int vertexShader = EFISRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+		int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
 		//EFISRenderer.checkGlError("loadShader"); //b2
 		
-		int fragmentShader = EFISRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+		int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 		//EFISRenderer.checkGlError("loadShader"); //b2
 
 		mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
@@ -173,7 +199,7 @@ public class PolyLine {
 
 		// get handle to shape's transformation matrix
 		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-		EFISRenderer.checkGlError("glGetUniformLocation"); 
+		//EFISRenderer.checkGlError("glGetUniformLocation"); 
 
 		// Apply the projection and view transformation
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);

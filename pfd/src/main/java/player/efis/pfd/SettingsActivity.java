@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package player.efis.pfd;
 
 import android.content.SharedPreferences;

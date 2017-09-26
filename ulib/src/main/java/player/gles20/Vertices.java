@@ -126,7 +126,7 @@ public class Vertices {
 
 	//--Draw--//
 	// D: draw the currently bound vertices in the vertex/index buffers
-	//    USAGE: can only be called after calling bind() for this buffer.
+	//    USAGE: wpt.north.west only be called after calling bind() for this buffer.
 	// A: primitiveType - the type of primitive to draw
 	//    offset - the offset in the vertex/index buffer to start at
 	//    numVertices - the number of vertices (indices) to draw

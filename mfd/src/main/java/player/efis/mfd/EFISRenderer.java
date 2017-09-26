@@ -18,8 +18,16 @@ package player.efis.mfd;
 
 import java.util.Iterator;
 
-import player.dem.DemColor;
-import player.dem.DemGTOPO30;
+import player.efis.common.DemColor;
+import player.efis.common.DemGTOPO30;
+import player.efis.common.AircraftData;
+import player.efis.common.Apt;
+import player.efis.common.Gpx;
+import player.gles20.Line;
+import player.gles20.PolyLine;
+import player.gles20.Polygon;
+import player.gles20.Square;
+import player.gles20.Triangle;
 import player.ulib.*;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -300,28 +308,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
-            float xlx; // = -0.78f*pixW2;
-            float xly; // = -0.40f*pixH2;
+            float xlx;
+            float xly;
 
             // Add switch for orientation
             if (Layout == layout_t.LANDSCAPE) {
                 // Landscape
-                xlx = -0.74f * pixW2; // top left -0.75
-                xly = 0.50f * pixH2; // top left  0.55
-                roseScale = 0.44f;
-            } 
+                xlx = 0; //-0.00f * pixW2;
+                xly = -1.80f * pixH2;  //0.45f
+                roseScale = 1.9f;
+                GLES20.glViewport(0, pixH2, pixW, pixH); // Portrait //
+            }
             else {
                 //Portrait
-                //xlx = -0.00f * pixW2;
-                //xly = -0.44f * pixH2;  //0.45f
-                //roseScale = 0.52f; //0.45f; //0.50f;
-
-                xlx = -0.00f * pixW2;
+                xlx = 0; //-0.00f * pixW2;
                 xly = -0.20f * pixH2;  //0.45f
-                roseScale = 1.00f; //0.45f; //0.50f;
+                roseScale = 1.9f; //0.45f; //0.50f;
             }
 
-            roseScale = roseScale*1.9f;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             // Create a rotation for the RMI
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
@@ -379,6 +383,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
         }
+        renderMapScale(mMVPMatrix);
 
         /*if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
@@ -524,28 +529,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    /**
-     * Utility method for compiling a OpenGL shader.
-     * <p>
-     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
-     * method to debug shader coding errors.</p>
-     *
-     * @param type       - Vertex or fragment shader type.
-     * @param shaderCode - String containing the shader code.
-     * @return - Returns an id for the shader.
-     */
-    public static int loadShader(int type, String shaderCode)
-    {
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        int shader = GLES20.glCreateShader(type);
-
-        // add the source code to the shader and compile it
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
-
-        return shader;
-    }
+    
 
     /**
      * Utility method for debugging OpenGL calls. Provide the name of the call
@@ -2051,7 +2035,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         fpvY = y;
     }
 
-
     //-------------------------------------------------------------------------
     // Calculate the DME distance in nm
     //
@@ -2134,23 +2117,15 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
 
             String wptId = currApt.name;
-            /*dme = 6080 * calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
-            // Apply selection criteria
-            if (dme < 5 * 6080)
-                nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE * 6080))
-                nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
-            else
-                continue;*/                                                                // we already have all the apts as we wish to display
+            dme = calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
 
-            dme = calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
             // Apply selection criteria
             if (dme < 5)
                 nrAptsFound++;                                              // always show apts closer then 5nm
             else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
                 nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
             else
-                continue;                                                                // we already have all the apts as we wish to display
+                continue;  // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
             x1 = mMapZoom * (dme * UTrig.icos(90-(int)aptRelBrg));
@@ -2290,19 +2265,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-        //float zoom_ft = mMapZoom * 60;
 
-        //float radius = (mMapZoom / 5) + (dme / mMapZoom); //mapzoom=30 radius= 5 to 6
-
-        //20:1
-        //mMapZoom = 10;
-        /*float scaler = 1f;
-        //float scaler = mMapZoom/20f; // 30/20   ~1.4
-        gridy *= scaler;
-        gridx *= scaler;
-        step *= scaler;*/
-
-        //for (dme = 0; dme <= scaler*DemGTOPO30.DEM_HORIZON; dme += step) { // DEM_HORIZON=20, was 30
         for (dme = 0; dme <= 700 / mMapZoom; dme += step) { // DEM_HORIZON=20, was 30
             for (demRelBrg = -180; demRelBrg < 180; demRelBrg = demRelBrg + 1) {
                 /*
@@ -3188,6 +3151,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     }
 
+    private float roseTextScale = 1.9f;
     private void renderCompassRose(float[] matrix)
     {
         float tapeShade = 0.6f;
@@ -3195,7 +3159,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z, sinI, cosI;
         String t;
         float roseRadius = roseScale * pixM2;
-        float txtxMult = 1.9f;
 
         z = zfloat;
 
@@ -3213,12 +3176,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
-            glText.setScale(1.5f*txtxMult);
+            glText.setScale(1.5f* roseTextScale);
             switch (i) {
                 case 0:
                     t = "N";
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(2.0f*txtxMult);
+                    glText.setScale(2.0f* roseTextScale);
                     break;
                 case 30:
                     t = "3";
@@ -3229,7 +3192,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 case 90:
                     t = "E";
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*txtxMult);
+                    glText.setScale(1.5f* roseTextScale);
                     break;
                 case 120:
                     t = "12";
@@ -3240,7 +3203,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 case 180:
                     t = "S";
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*txtxMult);
+                    glText.setScale(1.5f* roseTextScale);
                     break;
                 case 220:
                     t = "21";
@@ -3251,7 +3214,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 case 270:
                     t = "W";
                     glText.begin(1, 1, 1, 1.0f, matrix); // white
-                    glText.setScale(1.5f*txtxMult);
+                    glText.setScale(1.5f* roseTextScale);
                     break;
                 case 300:
                     t = "30";
@@ -3403,7 +3366,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderBearingTxt(float[] matrix)
     {
         float roseRadius = roseScale * pixM2;
-        float scale = 2.4f; //1.6f;  // not sure why this is > 1.0 Does not really make sense
+        float scale = 1.6f * roseTextScale;  // not sure why this is > 1.0 Does not really make sense
         // it is somehow related to which matrix it is drawn on
 
         //
@@ -3429,8 +3392,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private void renderDctTrack(float[] matrix)
     {
         float z, x1, y1; //sinI, cosI, _sinI, _cosI;
-        float roseRadius = roseScale * pixM2;
-
         z = zfloat;
 
         //
@@ -3510,6 +3471,62 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                  0.05f*pixM2, -0.10f*pixM2, z
         );
         mLine.draw(matrix);
+    }
+
+    //-------------------------------------------------------------------------
+    // Render map scale ruler
+    //
+    private void renderMapScale(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        //mMapZoom;
+        // 700/mMapZoom = 35nm
+        //x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
+        //y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+
+        float len = 20;//20;
+        float x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
+
+        while (x1 > pixW2/2) {
+            if (len > 5) len = len - 5;
+            else len = 1;
+
+            x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
+        }
+
+        // Scale line
+        mLine.SetWidth(1);
+        mLine.SetColor(1, 1, 1, 1); // white
+        mLine.SetVerts(
+                -0.95f*pixW2 + 0,  -0.95f*pixH2, z,
+                -0.95f*pixW2 + x1, -0.95f*pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.95f*pixW2 + 0, -0.95f*pixH2, z,
+                -0.95f*pixW2 + 0, -0.92f*pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.95f*pixW2 + x1, -0.95f*pixH2, z,
+                -0.95f*pixW2 + x1, -0.92f*pixH2, z
+        );
+        mLine.draw(matrix);
+
+        // leader line
+        mLine.SetVerts(
+                0, 0, z,
+                0, x1, z
+        );
+        mLine.draw(matrix);
+
+        //t = String.format("%03.0f", (float) aglAlt % 1000);
+        String t = String.format("%3.0f nm", len);
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // White
+        glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
+        glText.end();
     }
 
 

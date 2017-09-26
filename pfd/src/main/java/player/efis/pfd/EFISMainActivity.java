@@ -16,6 +16,9 @@
 
 package player.efis.pfd; 
 
+import player.efis.common.DemGTOPO30;
+import player.efis.common.AircraftData;
+import player.efis.common.Gpx;
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
@@ -44,7 +47,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
 
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;

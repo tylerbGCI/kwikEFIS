@@ -1,6 +1,6 @@
 import java.util.*;
 
-// this can now be called multiple times to load several airspaces.
+// this wpt.north.west now be called multiple times to load several airspaces.
 
 public class TempAirspaceType
 {

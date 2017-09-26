@@ -16,7 +16,9 @@
 
 package player.efis.mfd; 
 
-import player.dem.DemGTOPO30;
+import player.efis.common.DemGTOPO30;
+import player.efis.common.AircraftData;
+import player.efis.common.Gpx;
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
@@ -938,7 +940,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             fpvY = 0;
 
             // The dreaded red crosses are required
-            mGLView.setDisplayAirport(false);
+            //mGLView.setDisplayAirport(false); // for mfd = always on
             mGLView.setUnServiceableAsi();
             mGLView.setUnServiceableAlt();
             mGLView.setUnServiceableDi();

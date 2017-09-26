@@ -1,10 +1,10 @@
-package player.efis.mfd;
+package player.efis.common;
 
 public class DemColor
 {
-    float red;
-    float blue;
-    float green;
+    public float red;
+    public float blue;
+    public float green;
 
     public DemColor(float r, float g, float b)
     {

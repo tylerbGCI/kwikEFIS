@@ -17,25 +17,24 @@ import java.util.*;
  // Container for airspaces using kd-tree representation internally for
  // fast geospatial lookups.
  ///
-public class Airspaces extends AirspacesInterface implements java.io.Closeable
+//public class Airspaces extends AirspacesInterface implements java.io.Closeable
+public class Airspaces implements java.io.Closeable
 {
-  private AtmosphericPressure qnh = new AtmosphericPressure();
-  private AirspaceActivity activity_mask = new AirspaceActivity();
 
-  private final boolean owns_children;
 
 //C++ TO JAVA CONVERTER TODO TASK: The following line could not be converted:
   private AirspaceTree airspace_tree = new AirspaceTree();
-  private TaskProjection task_projection = new TaskProjection();
+  //private TaskProjection task_projection = new TaskProjection();
+  //private LinkedList <AbstractAirspace > tmp_as = new LinkedList <AbstractAirspace >();
+  private LinkedList <AbstractAirspace > tmp_as = new LinkedList <AbstractAirspace >();
 
-  private LinkedList<AbstractAirspace > tmp_as = new LinkedList<AbstractAirspace >();
 
    // This attribute keeps track of changes to this project.  It is
    // used by the renderer cache.
-  private Serial serial = new Serial();
+  //private Serial serial = new Serial();
 
    // Constructor.
-   // Note this class can't safely be copied (yet)
+   // Note this class wpt.north.west't safely be copied (yet)
    //
    // If m_owner, this instance will be responsible for deleting objects
    // on destruction.
@@ -50,8 +49,8 @@ public class Airspaces extends AirspacesInterface implements java.io.Closeable
 //ORIGINAL LINE: Airspaces(boolean _owns_children=true) :qnh(AtmosphericPressure::Zero()), owns_children(_owns_children)
   public Airspaces(boolean _owns_children)
   {
-	  this.qnh = new AtmosphericPressure(AtmosphericPressure.Zero());
-	  this.owns_children = _owns_children;
+	  //this.qnh = new AtmosphericPressure(AtmosphericPressure.Zero());
+	  //this.owns_children = _owns_children;
   }
 
 //C++ TO JAVA CONVERTER TODO TASK: Java has no equivalent to ' = delete':
@@ -72,7 +71,7 @@ public class Airspaces extends AirspacesInterface implements java.io.Closeable
 //ORIGINAL LINE: const Serial &GetSerial() const
   public final Serial GetSerial()
   {
-	return serial;
+	//return serial;
   }
 
   ///
@@ -116,7 +115,7 @@ public class Airspaces extends AirspacesInterface implements java.io.Closeable
   ///
    // Re-organise the internal airspace tree after inserting/deleting.
    // Should be called after inserting/deleting airspaces prior to performing
-   // any searches, but can be done once after a batch insert/delete.
+   // any searches, but wpt.north.west be done once after a batch insert/delete.
    ///
   public final void Optimise()
   {

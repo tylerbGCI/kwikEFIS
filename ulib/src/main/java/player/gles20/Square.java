@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package player.efis.pfd;
+package player.gles20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -68,6 +68,33 @@ public class Square {
 
 	float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
 
+    
+     /**
+     * Utility method for compiling a OpenGL shader.
+     * <p>
+     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
+     * method to debug shader coding errors.</p>
+     *
+     * @param type       - Vertex or fragment shader type.
+     * @param shaderCode - String containing the shader code.
+     * @return - Returns an id for the shader.
+     */
+    public static int loadShader(int type, String shaderCode)
+    {
+        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        int shader = GLES20.glCreateShader(type);
+
+        // add the source code to the shader and compile it
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
+    }
+
+
+    
+    
 	/**
 	 * Sets up the drawing object data for use in an OpenGL ES context.
 	 */
@@ -91,8 +118,8 @@ public class Square {
 		drawListBuffer.position(0); 
 
 		// prepare shaders and OpenGL program
-		int vertexShader = EFISRenderer.loadShader( GLES20.GL_VERTEX_SHADER,vertexShaderCode);
-		int fragmentShader = EFISRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+		int vertexShader = loadShader( GLES20.GL_VERTEX_SHADER,vertexShaderCode);
+		int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
 		mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
 		GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program

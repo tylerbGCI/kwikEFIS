@@ -17,6 +17,17 @@
 package player.efis.pfd;
 
 import java.util.Iterator;
+
+import player.efis.common.DemColor;
+import player.efis.common.DemGTOPO30;
+import player.efis.common.AircraftData;
+import player.efis.common.Apt;
+import player.efis.common.Gpx;
+import player.gles20.Line;
+import player.gles20.PolyLine;
+import player.gles20.Polygon;
+import player.gles20.Square;
+import player.gles20.Triangle;
 import player.ulib.*;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -206,7 +217,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onDrawFrame(GL10 gl)
     {
-
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -499,28 +509,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    /**
-     * Utility method for compiling a OpenGL shader.
-     * <p>
-     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
-     * method to debug shader coding errors.</p>
-     *
-     * @param type       - Vertex or fragment shader type.
-     * @param shaderCode - String containing the shader code.
-     * @return - Returns an id for the shader.
-     */
-    public static int loadShader(int type, String shaderCode)
-    {
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        int shader = GLES20.glCreateShader(type);
-
-        // add the source code to the shader and compile it
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
-
-        return shader;
-    }
+    
 
     /**
      * Utility method for debugging OpenGL calls. Provide the name of the call
@@ -1187,9 +1176,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         {
             float[] squarePoly = {
                     right, -glText.getCharHeight(), z,//+0.1f,
-                    right, glText.getCharHeight(), z,//+0.1f,
-                    left, glText.getCharHeight(), z,//+0.1f,
-                    left, -glText.getCharHeight(), z,//+0.1f
+                    right,  glText.getCharHeight(), z,//+0.1f,
+                    left,   glText.getCharHeight(), z,//+0.1f,
+                    left,  -glText.getCharHeight(), z,//+0.1f
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -1470,8 +1459,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         {
             float[] squarePoly = {
                     left, -glText.getCharHeight(), z,
-                    left, glText.getCharHeight(), z,
-                    right, glText.getCharHeight(), z,
+                    left,  glText.getCharHeight(), z,
+                    right,  glText.getCharHeight(), z,
                     right, -glText.getCharHeight(), z,
             };
             mSquare.SetVerts(squarePoly);
@@ -1491,13 +1480,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.SetWidth(2);
             float[] vertPoly = {
                     left, -glText.getCharHeight(), z,
-                    left, glText.getCharHeight(), z,
+                    left,  glText.getCharHeight(), z,
                     right, glText.getCharHeight(), z,
                     right, glText.getCharHeight() / 2, z,
                     apex, 0.0f, z,
                     right, -glText.getCharHeight() / 2, z,
                     right, -glText.getCharHeight(), z,
-                    left, -glText.getCharHeight(), z
+                    left,  -glText.getCharHeight(), z
             };
 
             mPolyLine.VertexCount = 8;
@@ -1505,7 +1494,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             mPolyLine.draw(matrix);
         }
         t = Integer.toString(Math.round(IASValue));
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix);     // white
         glText.setScale(3.5f);                            // was 2.5
         glText.drawC(t, -0.85f * pixM2, glText.getCharHeight() / 2);
         glText.end();
@@ -2110,7 +2099,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
                 nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
             else
-                continue;                                                                // we already have all the apts as we wish to display
+                continue;  // we already have all the apts as we wish to display
 
             aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
             x1 = (float) (aptRelBrg * pixPerDegree);
@@ -2140,9 +2129,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
                 float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float relBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+
                 setAutoWptValue(wptId);
                 setAutoWptDme(dme);  // 1nm = 6080ft
                 setAutoWptBrg(absBrg);
+                setAutoWptRelBrg(relBrg);
                 _dme = dme;
             }
         }
@@ -2386,8 +2378,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 mLine.SetColor(color.red, color.green, color.blue, 1);  // rgb
                 mLine.SetWidth(1);
                 mLine.SetVerts(
-                        x - pixW2, -y + pixH2 / 10, z,
-                        x - pixW2 + 1, -y + pixH2 / 10, z
+                        x - maxx/2,     -y + pixH2 / 10, z,
+                        x - maxx/2 + 1, -y + pixH2 / 10, z
                 );
                 mLine.draw(matrix);
             }
