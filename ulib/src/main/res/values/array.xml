@@ -17,8 +17,8 @@
         </string-array>
     
     <string-array name="region_names">
-        <item>North West (USA, Canada)</item>
-        <item>North East (Europe, Russia, Japan)</item>
+        <item>North West (Americas)</item>
+        <item>North East (Europe, Russia, Asia)</item>
         <item>South West (South America)</item>
         <item>South East (Southern Africa, Oceania)</item>
     </string-array>
