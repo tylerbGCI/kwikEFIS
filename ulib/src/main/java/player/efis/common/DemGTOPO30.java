@@ -284,13 +284,13 @@ public class DemGTOPO30
     {
         String sRegion = "null.null";
         if (lat <= -10) {
-            sRegion = "zar.wpt.south.east";
+            sRegion = "zar.aus";
         }
         else if ((lat > 20) && (lon >= -20)) {
-            sRegion = "eur.wpt.north.east";
+            sRegion = "eur.rus";
         }
         else if ((lat > -10) && (lon < -60)) {
-            sRegion = "usa.wpt.north.west";
+            sRegion = "usa.can";
         }
         return sRegion;
     }
