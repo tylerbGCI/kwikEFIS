@@ -11,6 +11,8 @@ import java.util.*;
 //class AirspacePredicate;
 
 
+//B2 --  I think this is all pretty useless guff
+
 /*
 
 ///
