@@ -907,19 +907,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		else {
             mGLView.setDemoMode(false, " ");
+            mGLView.setDisplayAirport(true);
         }
 
+        /*
         //
         // Calculate the augmented bank angle and also the flight path vector
         //
         float deltaA, fpvX = 0, fpvY = 0;
-        //if (hasGps && hasSpeed) {
         if (hasGps && gps_speed > 5) {
             // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
             // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
             rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
             pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
-
 
             // the Flight Path Vector (FPV)
             deltaA = UNavigation.compassRose180(gps_course - orientationAzimuth);
@@ -941,7 +941,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             fpvY = 0;
 
             // The dreaded red crosses are required
-            //mGLView.setDisplayAirport(false); // for mfd = always on
+            mGLView.setDisplayAirport(false);
             mGLView.setUnServiceableAsi();
             mGLView.setUnServiceableAlt();
             mGLView.setUnServiceableDi();
@@ -952,6 +952,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             pitchValue = -270;
             mGLView.setFPV(180, 180);
         }
+        */
 
 		//
 		// Read and Set the user preferences
