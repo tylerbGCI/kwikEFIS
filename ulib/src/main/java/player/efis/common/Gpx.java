@@ -97,7 +97,6 @@ public class Gpx
 			String txt = null;
 			switch (eventType) {
 			case XmlPullParser.START_DOCUMENT:
-                // aptList = new ArrayList();
 				// To help avoid the ConcurrentModificationException
 				aptList.clear();
 				break;
@@ -132,7 +131,7 @@ public class Gpx
 			}
 			eventType = parser.next();
 		}
-		// printProducts(aptList); // only used for debugging
+		// printProducts(openairList); // only used for debugging
 	}
 	
 	public static ArrayList<Apt> getAptSelect(float lat, float lon, int range, int nr) 

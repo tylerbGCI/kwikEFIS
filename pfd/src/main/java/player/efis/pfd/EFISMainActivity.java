@@ -941,7 +941,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // Calculate the augmented bank angle and also the flight path vector
         //
         float deltaA, fpvX = 0, fpvY = 0;
-        //if (hasGps && hasSpeed) {
         if (hasGps && gps_speed > 5) {
             // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
             // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
