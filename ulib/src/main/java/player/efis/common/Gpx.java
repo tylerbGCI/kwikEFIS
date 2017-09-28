@@ -28,7 +28,7 @@ import android.content.Context;
 public class Gpx
 {
 	private Context context;
-	public String region = "zar.aus";
+	public String region = "gpx.south.east";
 	public static ArrayList<Apt> aptList = null;
 	
 	/*

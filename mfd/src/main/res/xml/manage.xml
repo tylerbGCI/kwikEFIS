@@ -22,7 +22,7 @@
             android:title="Aircraft" />
 
         <ListPreference
-            android:defaultValue="zar.aus"
+            android:defaultValue="gpx.south.east"
             android:entries="@array/region_names"
             android:entryValues="@array/region_values"
             android:key="AirportDatabase"
