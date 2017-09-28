@@ -2035,6 +2035,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         fpvY = y;
     }
 
+    /*
     //-------------------------------------------------------------------------
     // Calculate the DME distance in nm
     //
@@ -2075,6 +2076,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         while (absBrg < 0) absBrg += 360;
         return absBrg;
     }
+    */
 
 
     //-------------------------------------------------------------------------
@@ -2117,7 +2119,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
 
             String wptId = currApt.name;
-            dme = calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
+            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
 
             // Apply selection criteria
             if (dme < 5)
@@ -2127,7 +2129,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             else
                 continue;  // we already have all the apts as we wish to display
 
-            aptRelBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
             x1 = mMapZoom * (dme * UTrig.icos(90-(int)aptRelBrg));
             y1 = mMapZoom * (dme * UTrig.isin(90-(int)aptRelBrg));
 
@@ -2154,8 +2156,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
-                float absBrg = calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-                float relBrg = calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
 
                 setAutoWptValue(wptId);
                 setAutoWptDme(dme);  // 1nm = 6080ft
@@ -2495,8 +2497,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float hitLat = mWptSelLat + i / 60 * (float) Math.cos(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
             float hitLon = mWptSelLon + i / 60 * (float) Math.sin(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
 
-            dme = 6080 * calcDme(LatValue, LonValue, hitLat, hitLon);
-            hitRelBrg = calcRelBrg(LatValue, LonValue, hitLat, hitLon);  // the relative bearing to the hitpoint
+            dme = 6080 * UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
+            hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
             radius = (608.0f * pixM2) / dme;
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
@@ -2799,8 +2801,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
 
         // Calculate the relative bearing to the selected wpt
-        float dme = 6080 * calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in ft
-        float relBrg = calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
+        float dme = 6080 * UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in ft
+        float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
 
         // Calculate how many degrees of pitch to command
         final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
@@ -2820,7 +2822,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         setFlightDirector(displayFlightDirector, commandPitch, commandRoll);
 
         // BRG
-        float absBrg = calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
+        float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
 
         // Setting data in this renderer does not make
         // much logical sense. This could be re-factored
@@ -3032,7 +3034,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 }
                 // The selected waypoint has changed
                 // Update the OBS as well
-                mObsValue = calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
+                mObsValue = UNavigation.calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
             }
         }
     }
