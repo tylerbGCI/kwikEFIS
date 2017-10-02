@@ -5,99 +5,9 @@ import android.widget.Toast;
 
 
 
-enum __AirspaceClass
-{
-    A,    //", AirspaceClass.CLASSA),
-    B,    //", AirspaceClass.CLASSB),
-    C,    //", AirspaceClass.CLASSC),
-    D,    //", AirspaceClass.CLASSD),
-    E,    //", AirspaceClass.CLASSE),
-    F,    //", AirspaceClass.CLASSF),
-    G,    //", AirspaceClass.CLASSG),
-    R,    //", AirspaceClass.RESTRICT),
-    Q,    //", AirspaceClass.DANGER),
-    P,    //", AirspaceClass.PROHIBITED),
-    W,    //", AirspaceClass.WAVE),
-    GP,   //", AirspaceClass.NOGLIDER),
-    CTR,    //TR", AirspaceClass.CTR),
-    TMZ,  //", AirspaceClass.TMZ),
-    RMZ,  //", AirspaceClass.RMZ),
-    MATZ, //", AirspaceClass.MATZ),
-    GSEC, //", AirspaceClass.WAVE)
-}
-
-enum AirspaceClass
-{
-    CLASSA,
-    CLASSB,
-    CLASSC,
-    CLASSD,
-    CLASSE,
-    CLASSF,
-    CLASSG,
-    RESTRICT,
-    DANGER,
-    PROHIBITED,
-    WAVE,
-    NOGLIDER,
-    CTR,
-    TMZ,
-    RMZ,
-    MATZ,
-    GWAVE
-}
 
 public class GlobalMembers
 {
-    public static final AirspaceClassStringCouple[] airspace_class_strings =
-            {
-                    new AirspaceClassStringCouple("R", AirspaceClass.RESTRICT),
-                    new AirspaceClassStringCouple("Q", AirspaceClass.DANGER),
-                    new AirspaceClassStringCouple("P", AirspaceClass.PROHIBITED),
-                    new AirspaceClassStringCouple("CTR", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("A", AirspaceClass.CLASSA),
-                    new AirspaceClassStringCouple("B", AirspaceClass.CLASSB),
-                    new AirspaceClassStringCouple("C", AirspaceClass.CLASSC),
-                    new AirspaceClassStringCouple("D", AirspaceClass.CLASSD),
-                    new AirspaceClassStringCouple("GP", AirspaceClass.NOGLIDER),
-                    new AirspaceClassStringCouple("W", AirspaceClass.WAVE),
-                    new AirspaceClassStringCouple("E", AirspaceClass.CLASSE),
-                    new AirspaceClassStringCouple("F", AirspaceClass.CLASSF),
-                    new AirspaceClassStringCouple("TMZ", AirspaceClass.TMZ),
-                    new AirspaceClassStringCouple("G", AirspaceClass.CLASSG),
-                    new AirspaceClassStringCouple("RMZ", AirspaceClass.RMZ),
-                    new AirspaceClassStringCouple("MATZ", AirspaceClass.MATZ),
-                    new AirspaceClassStringCouple("GSEC", AirspaceClass.WAVE)
-            };
-
-
-
-    public static final AirspaceClassStringCouple[] airspace_tnp_type_strings =
-            {
-                    new AirspaceClassStringCouple("C", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("CTA", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("CTR", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("CTA/CTR", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("CTR/CTA", AirspaceClass.CTR),
-                    new AirspaceClassStringCouple("R", AirspaceClass.RESTRICT),
-                    new AirspaceClassStringCouple("RESTRICTED", AirspaceClass.RESTRICT),
-                    new AirspaceClassStringCouple("P", AirspaceClass.PROHIBITED),
-                    new AirspaceClassStringCouple("PROHIBITED", AirspaceClass.PROHIBITED),
-                    new AirspaceClassStringCouple("D", AirspaceClass.DANGER),
-                    new AirspaceClassStringCouple("DANGER", AirspaceClass.DANGER),
-                    new AirspaceClassStringCouple("G", AirspaceClass.WAVE),
-                    new AirspaceClassStringCouple("GSEC", AirspaceClass.WAVE),
-                    new AirspaceClassStringCouple("T", AirspaceClass.TMZ),
-                    new AirspaceClassStringCouple("TMZ", AirspaceClass.TMZ),
-                    new AirspaceClassStringCouple("CYR", AirspaceClass.RESTRICT),
-                    new AirspaceClassStringCouple("CYD", AirspaceClass.DANGER),
-                    new AirspaceClassStringCouple("CYA", AirspaceClass.CLASSF),
-                    new AirspaceClassStringCouple("MATZ", AirspaceClass.MATZ),
-                    new AirspaceClassStringCouple("RMZ", AirspaceClass.RMZ)
-            };
-
-
-
 
 
     public static boolean ShowParseWarning(int line, String str /*, OperationEnvironment operation*/)

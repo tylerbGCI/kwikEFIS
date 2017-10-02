@@ -3,15 +3,10 @@ package player.airspace;
 import java.util.*;
 
 
-//C++ TO JAVA CONVERTER NOTE: Java has no need of forward class declarations:
-//class RasterTerrain;
-//C++ TO JAVA CONVERTER NOTE: Java has no need of forward class declarations:
-//class AirspaceIntersectionVisitor;
-//C++ TO JAVA CONVERTER NOTE: Java has no need of forward class declarations:
-//class AirspacePredicate;
-
-
+//
 //B2 --  I think this is all pretty useless guff
+//
+
 
 /*
 

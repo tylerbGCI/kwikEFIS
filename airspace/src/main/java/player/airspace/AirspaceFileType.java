@@ -20,4 +20,5 @@ public enum AirspaceFileType
 	{
 		return values()[value];
 	}
+
 }

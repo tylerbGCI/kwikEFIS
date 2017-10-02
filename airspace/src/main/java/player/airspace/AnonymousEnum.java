@@ -10,17 +10,5 @@ public enum AnonymousEnum
 	SFC,
 	FL,
 	STD,
-	UNLIMITED;
-
-	public static final int SIZE = java.lang.Integer.SIZE;
-
-	public int getValue()
-	{
-		return this.ordinal();
-	}
-
-	public static AnonymousEnum forValue(int value)
-	{
-		return values()[value];
-	}
+	UNLIMITED
 }

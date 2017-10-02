@@ -2,13 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="DISPLAY" style="?android:attr/listSeparatorTextViewStyle">
-        <!--
+
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="displayTerrain"
-            android:summary="Display full color artificial horizon"
-            android:title="Color earth and sky" />
-            -->
+            android:key="displayAirspace"
+            android:summary="Enable Airspace"
+            android:title="Airspace" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -16,13 +15,6 @@
             android:summary="Enable synthetic vision DEM terrain"
             android:title="Synthetic vision" />
 
-        <!--    
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="displayTape"
-            android:summary="Airspeed and Altimeter tapes"
-            android:title="Tapes" />
-            -->
 
         <CheckBoxPreference
             android:defaultValue="true"

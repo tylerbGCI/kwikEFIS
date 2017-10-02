@@ -5,9 +5,6 @@ package player.airspace;
 public abstract class AbstractAirspace implements java.io.Closeable
 {
 /*
-
-
-
   public enum Shape
   {
 	CIRCLE,

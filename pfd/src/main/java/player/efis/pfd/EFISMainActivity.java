@@ -817,8 +817,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f; //  Ludicrous Speed
-        //deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
-        deltaT = 0.000000224f; // Super Speed2
+        deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
+        //deltaT = 0.000000224f; // Super Speed2
 
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(2);// 50 // + (float) rnd.nextGaussian() / 200;

@@ -294,6 +294,12 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    void setDisplayAirspace(boolean display)
+    {
+        mRenderer.setDisplayAirspace(display);
+        requestRender();
+    }
+
     /*
     void setCalibratingMsg(boolean cal, String msg)
     {
@@ -327,6 +333,5 @@ public class EFISSurfaceView extends GLSurfaceView
         mRenderer.setMapZoom(zoom);
         requestRender();
     }
-
 
 }

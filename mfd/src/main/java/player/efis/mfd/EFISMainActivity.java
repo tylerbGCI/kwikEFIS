@@ -19,6 +19,7 @@ package player.efis.mfd;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.Gpx;
+import player.efis.common.OpenAir;
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
@@ -87,9 +88,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 	int calibrationCount = 0;
-    private float mMapZoom = 20;
+    private float mMapZoom = 20; //4 //5->5, 10->2, 20->2
 
-    // Location abstracts
+	// Location abstracts
 	protected float gps_lat;            // in decimal degrees
 	protected float gps_lon;            // in decimal degrees
 	protected float gps_altitude;       // in m
@@ -108,6 +109,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float sensorBias;           // gyroscope / GPS bias
 	private Gpx mGpx;                   // wpt database
     private DemGTOPO30 mDemGTOPO30;     // dem database
+    private OpenAir mAirspace;
 
 	// Digital filters
 	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16); //8
@@ -189,11 +191,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{ 
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            if (mMapZoom < 120) mMapZoom += 5;
+            if (mMapZoom < 5) mMapZoom += 1;
+            else if (mMapZoom < 120) mMapZoom += 5;
+
             return true;
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
-            if (mMapZoom > 10) mMapZoom -= 5;
+            if (mMapZoom > 5) mMapZoom -= 5;
+            if (mMapZoom <= 5) mMapZoom -= 1;
+            if (mMapZoom <= 1) mMapZoom = 1;
+
             return true;
         }
 		return super.onKeyDown(keyCode, event);
@@ -285,7 +292,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
-
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
@@ -297,12 +303,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
 		mGpx.loadDatabase(region);
-        Toast.makeText(this, "APT Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
+
+        mAirspace = new OpenAir(this);
+        mAirspace.loadDatabase(region);
 
         mDemGTOPO30 = new DemGTOPO30(this);
         //mDemGTOPO30.loadDatabase(region); // not used anymore
 
-        //createMediaPlayer();
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -363,7 +371,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     @Override
 	protected void onPause()
 	{
-        //releaseMediaPlayer();
 
 		super.onPause();
 		// The following call pauses the rendering thread.
@@ -379,7 +386,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	@Override
 	protected void onResume()
 	{
-        //createMediaPlayer();
 
 		super.onResume();
 		// The following call resumes a paused rendering thread.
@@ -556,6 +562,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
+        mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
 
         bLockedMode = settings.getBoolean("lockedMode", false);
@@ -735,15 +742,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     //float _gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
     //float _gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
     //float _gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
-    float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
+    //float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
     //float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
     //float _gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
-    //float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
+    float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
 	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 3000; // meters
     float _gps_agl = 0; //meters
 
-	float _gps_speed = 60;       // m/s
+	float _gps_speed = 90;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
 
@@ -792,16 +799,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
         //deltaT = 0.000000224f; // Super Speed2
 
+        // YCMH 090 from Perth
+
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 270; //2048; //900; //3048; //meter
+        gps_altitude = 3270; //2048; //900; //3048; //meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
 
         //gps_lat = -33f; _gps_lon = 28f;  // EL
         //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
         //gps_lat = -33.4f; gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
+        //_gps_lat = -33.4f; _gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
         //gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
         //gps_lat = 0f; gps_lon = 0f; _gps_lat = 0f; _gps_lon = 0f;  // Trapped on Null Island
         //deltaT = 0; // freeze time, ie force stationary
@@ -819,7 +829,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
         }
         gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
-
     }
 
 
@@ -904,10 +913,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			mGLView.setServiceableAlt();
 			mGLView.setServiceableAh();
 			mGLView.setDisplayAirport(true);
+            mGLView.setDisplayAirspace(true);
 		}
 		else {
             mGLView.setDemoMode(false, " ");
             mGLView.setDisplayAirport(true);
+            mGLView.setDisplayAirspace(true);
         }
 
         /*

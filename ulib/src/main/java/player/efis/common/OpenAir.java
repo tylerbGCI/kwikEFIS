@@ -16,221 +16,370 @@
 
 package player.efis.common;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+
 import android.content.Context;
 
+import player.ulib.UNavigation;
+import player.ulib.UTrig;
 
 
 public class OpenAir
 {
-	private Context context;
-	public String region = "gpx.south.east";
-	public static ArrayList<Apt> openairList = null;
-	
-    // b2- private Airspaces airspaces;
-    /*
+    private Context context;
+    public String region = "gpx.south.east";
+    public static ArrayList<OpenAirRec> airspacelst = null;
 
-    public AirspaceParser(Airspaces _airspaces)
-    {
-        this.airspaces = new Airspaces(_airspaces);
-    }
-
-    public final boolean Parse(TLineReader reader, OperationEnvironment operation)
+    ///*
+    public final boolean Parse(DataInputStream reader) //, OperationEnvironment operation)
     {
         boolean ignore = false;
 
         // Create and init ProgressDialog
-        operation.SetProgressRange(1024);
+        //operation.SetProgressRange(1024);
 
-        final int file_size = reader.GetSize();
+        //final int file_size = reader.GetSize();
 
-        TempAirspaceType temp_area = new TempAirspaceType();
-        AirspaceFileType filetype = AirspaceFileType.UNKNOWN;
+        //TempAirspaceType temp_area = new TempAirspaceType();
+        //AirspaceFileType filetype = AirspaceFileType.UNKNOWN;
+
+        //OpenAirPoint pnt = new OpenAirPoint();
+        //OpenAirRec rec = new OpenAirRec();
+
+        float arcLat = 0;
+        float arcLon = 0;
+        int angleInc = +10; // deg clockwise
+        int angleDir = +1;
 
         String line;
 
         // Iterate through the lines
-        for (int line_num = 1; (line = reader.ReadLine()) != null; line_num++) {
-            StripRight(line);
+        //for (int line_num = 1; (line = reader.ReadLine()) != null; line_num++) {
 
-            // Skip empty line
-            if (GlobalMembers.StringIsEmpty(line)) {
-                continue;
-            }
+        try {
+            // for testing there is just one rec
+            //OpenAirRec rec;// = new OpenAirRec();  // todo
+            OpenAirRec rec = null;  // todo
 
-            if (filetype == AirspaceFileType.UNKNOWN) {
-                filetype = GlobalMembers.DetectFileType(line);
-                if (filetype == AirspaceFileType.UNKNOWN) {
+            while ((line = reader.readLine()) != null) {
+                line.trim();
+
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("*")) {
                     continue;
                 }
-            }
 
-            // Parse the line
-            if (filetype == AirspaceFileType.OPENAIR) {
-                tangible.RefObject<String> tempRef_line = new tangible.RefObject<String>(line);
-                if (!GlobalMembers.ParseLine(airspaces, tempRef_line, temp_area) && !GlobalMembers.ShowParseWarning(line_num, line, operation)) {
-                    line = tempRef_line.argValue;
-                    return false;
+                if (line.startsWith("AC")) {
+                    if (rec != null) airspacelst.add(rec);
+                    rec = new OpenAirRec();
+                    rec.ac = line.substring(3);
                 }
-                else {
-                    line = tempRef_line.argValue;
+                else if (line.startsWith("AN")) {
+                    rec.an = line.substring(3);
                 }
-            }
+                else if (line.startsWith("AL")) {
+                    if (line.contains("FL")) {
+                        String s = line.replaceAll("[^0-9]", "");
+                        rec.al = 100 * Integer.valueOf(s);
+                    }
+                    if (line.contains("FT")) {
+                        String s = line.replaceAll("[^0-9]", "");
+                        rec.al = Integer.valueOf(s);
+                    }
+                }
+                else if (line.startsWith("AH")) {
+                    if (line.contains("FL")) {
+                        String s = line.replaceAll("[^0-9]", "");
+                        rec.ah = 100 * Integer.valueOf(s);
+                    }
+                    if (line.contains("FT")) {
+                        String s = line.replaceAll("[^0-9]", "");
+                        rec.ah = Integer.valueOf(s);
+                    }
+                }
+                // DP = Polygon point
+                else if (line.startsWith("DP")) {
+                    String s = line.substring(3).replaceAll(" ", "");  // kill spaces
+                    String slat = s.split("[NS]")[0];
+                    String slon = s.split("[NS]")[1].split("[EW]")[0];
+                    float lat = UNavigation.DMStoD(slat); if (s.contains("S")) lat = -lat;
+                    float lon = UNavigation.DMStoD(slon); if (s.contains("W")) lon = -lon;
+                    OpenAirPoint pnt = new OpenAirPoint(lat, lon);
+                    rec.pointList.add(pnt);
+                    //
+                    rec.clat = lat;
+                    rec.clon = lon;
+                }
+                // DB = Arc from point 1 to point 2 centered on V X=
+                else if (line.startsWith("DB")) {
+                    String s0 = line.substring(3).replaceAll(" ", "");  // kill spaces
+                    String s[] = s0.split(",");
 
-            if (filetype == AirspaceFileType.TNP) {
-                StringParser<Byte> input = new StringParser<Byte>(line);
-                tangible.RefObject<Boolean> tempRef_ignore = new tangible.RefObject<Boolean>(ignore);
-                if (!GlobalMembers.ParseLineTNP(airspaces, input, temp_area, tempRef_ignore) && !GlobalMembers.ShowParseWarning(line_num, line, operation)) {
-                    ignore = tempRef_ignore.argValue;
-                    return false;
-                }
-                else {
-                    ignore = tempRef_ignore.argValue;
-                }
-            }
+                    // Point 1
+                    String slat = s[0].split("[NS]")[0];
+                    String slon = s[0].split("[NS]")[1].split("[EW]")[0];
+                    float lat1 = UNavigation.DMStoD(slat);
+                    if (s[0].contains("S")) lat1 = -lat1;
+                    float lon1 = UNavigation.DMStoD(slon);
+                    if (s[0].contains("W")) lon1 = -lon1;
 
-            // Update the ProgressDialog
-            if ((line_num & 0xff) == 0) {
-                operation.SetProgressPosition(reader.Tell() * 1024 / file_size);
+                    float dme = UNavigation.calcDme(arcLat, arcLon, lat1, lon1);
+                    float absBrg1 = UNavigation.calcAbsBrg(arcLat, arcLon, lat1, lon1);
+
+                    OpenAirPoint pnt = new OpenAirPoint(lat1, lon1);
+                    rec.pointList.add(pnt);
+
+                    // Point 2
+                    slat = s[1].split("[NS]")[0];
+                    slon = s[1].split("[NS]")[1].split("[EW]")[0];
+                    float lat2 = UNavigation.DMStoD(slat);
+                    if (s[1].contains("S")) lat2 = -lat2;
+                    float lon2 = UNavigation.DMStoD(slon);
+                    if (s[1].contains("W")) lon2 = -lon2;
+                    float absBrg2 = UNavigation.calcAbsBrg(arcLat, arcLon, lat2, lon2);
+
+                    float lat, lon;
+                    absBrg1 = UNavigation.compassRose180(absBrg1);
+                    absBrg2 = UNavigation.compassRose180(absBrg2);
+
+                    // do the arc
+                    if (angleDir == -1) {
+                        for (float i = absBrg1; i >= absBrg2; i = i - angleInc) {
+                            lat = arcLat + dme/60f * UTrig.isin(90- (int) i);
+                            lon = arcLon + dme/60f * UTrig.icos(90- (int) i);
+
+                            pnt = new OpenAirPoint(lat, lon);
+                            rec.pointList.add(pnt);
+                        }
+                    }
+                    if (angleDir == +1) {
+                        for (float i = absBrg1; i <= absBrg2; i = i + angleInc) {
+                            lat = arcLat + dme/60f * UTrig.isin(90- (int) i);
+                            lon = arcLon + dme/60f * UTrig.icos(90- (int) i);
+
+                            pnt = new OpenAirPoint(lat, lon);
+                            rec.pointList.add(pnt);
+                        }
+                    }
+
+                    // Add point 2
+                    pnt = new OpenAirPoint(lat2, lon2);
+                    rec.pointList.add(pnt);
+                }
+                // DC = Circle centered on V X=
+                else if (line.startsWith("DC")) {
+                    // TODO
+                    String s = line.substring(3).replaceAll(" ", "");  // kill spaces
+                    float dme = Float.valueOf(s);
+
+                    float lat, lon;
+                    for (float i = 0; i <= 360; i = i + angleInc) {
+                        lat = arcLat + dme/60f * UTrig.isin(90- (int) i);
+                        lon = arcLon + dme/60f * UTrig.icos(90- (int) i);
+
+                        OpenAirPoint pnt = new OpenAirPoint(lat, lon);
+                        rec.pointList.add(pnt);
+                    }
+                }
+                // V D = Arc direction
+                else if (line.startsWith("V D=")) {
+                    if (line.contains("-")) {
+                        angleDir = -1; // deg counterclockwise
+                    }
+                    if (line.contains("+")) {
+                        angleDir = +1; // deg clockwise
+                    }
+                }
+                // V X = Arc center
+                else if (line.startsWith("V X=")) {
+                    String s = line.substring(4).replaceAll(" ", "");  // kill spaces
+                    String slat = s.split("[NS]")[0];
+                    String slon = s.split("[NS]")[1].split("[EW]")[0];
+                    arcLat = UNavigation.DMStoD(slat); if (s.contains("S")) arcLat = -arcLat;
+                    arcLon = UNavigation.DMStoD(slon); if (s.contains("W")) arcLon = -arcLon;
+                }
+
+
+
+                /*if (filetype == AirspaceFileType.UNKNOWN) {
+                    filetype = GlobalMembers.DetectFileType(line);
+                    if (filetype == AirspaceFileType.UNKNOWN) {
+                        continue;
+                    }
+                }*/
+
+                // Parse the line
+                /*if (filetype == AirspaceFileType.OPENAIR) {
+                    tangible.RefObject<String> tempRef_line = new tangible.RefObject<String>(line);
+                    if (!GlobalMembers.ParseLine(airspaces, tempRef_line, temp_area) && !GlobalMembers.ShowParseWarning(line_num, line, operation)) {
+                        line = tempRef_line.argValue;
+                        return false;
+                    }
+                    else {
+                        line = tempRef_line.argValue;
+                    }
+                /}
+
+
+                /*if (filetype == AirspaceFileType.TNP) {
+                    StringParser<Byte> input = new StringParser<Byte>(line);
+                    tangible.RefObject<Boolean> tempRef_ignore = new tangible.RefObject<Boolean>(ignore);
+                    if (!GlobalMembers.ParseLineTNP(airspaces, input, temp_area, tempRef_ignore) && !GlobalMembers.ShowParseWarning(line_num, line, operation)) {
+                        ignore = tempRef_ignore.argValue;
+                        return false;
+                    }
+                    else {
+                        ignore = tempRef_ignore.argValue;
+                    }
+                }*/
+
+                // Update the ProgressDialog
+                //if ((line_num & 0xff) == 0) {
+                //    operation.SetProgressPosition(reader.Tell() * 1024 / file_size);
+                //}
             }
+            // Add the very last rec
+            if (rec != null) airspacelst.add(rec);
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
 
+
+        /*
         if (filetype == AirspaceFileType.UNKNOWN) {
             operation.SetErrorMessage(_("Unknown airspace filetype"));
             return false;
-        }
+        }*/
 
         // Process final area (if any)
-        temp_area.AddPolygon(airspaces);
+        //temp_area.AddPolygon(airspaces);
+        // openairList.add() // todo
 
         return true;
     }
-    // */
+    // ------------------------------------------ */
 
-	
-	public OpenAir(Context context)
-	{
-		this.context = context;
-	  openairList = new ArrayList();
-	}
-	
-	
-	public void loadDatabase(String database)
-	{
-		region = database;
-		openairList.clear();
-		
-		XmlPullParserFactory pullParserFactory;
-		try {
-			pullParserFactory = XmlPullParserFactory.newInstance();
-			XmlPullParser parser = pullParserFactory.newPullParser();
+    //
+    // Contructor
+    //
+    public OpenAir(Context context)
+    {
+        this.context = context;
+        airspacelst = new ArrayList();
+    }
 
-            //
-			//InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
-            InputStream in_s = context.getAssets().open(region + "/Australia_Airspace.txt");
-			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			parser.setInput(in_s, null);
-			parseXML(parser);
-		}
-		catch (XmlPullParserException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
-	{
-		int eventType = parser.getEventType();
-		Apt currentWpt = null;
+    public void loadDatabase(String database)
+    {
+        region = database;
+        airspacelst.clear();
 
-		while (eventType != XmlPullParser.END_DOCUMENT) {
-			String txt = null;
-			switch (eventType) {
-			case XmlPullParser.START_DOCUMENT:
-				// To help avoid the ConcurrentModificationException
-				openairList.clear();
-				break;
+        try {
+            InputStream in_s = context.getAssets().open(region + "/airspace.txt.air");
+            //InputStream in_s = context.getAssets().open(region + "/Australia_Airspace.txt");
+            //InputStream in_s = context.getAssets().open(region + "/bevrly14.txt");
 
-			case XmlPullParser.START_TAG:
-				txt = parser.getName();
-				if (txt.equals("wpt")) {
-					currentWpt = new Apt();
-					if (parser.getAttributeCount() == 2) {
-						String sLat = parser.getAttributeValue(0);
-						String sLon = parser.getAttributeValue(1);
-						currentWpt.lat = Float.valueOf(parser.getAttributeValue(0));
-						currentWpt.lon = Float.valueOf(parser.getAttributeValue(1));
-					}
-				}
-				else if (currentWpt != null) {
-					if (txt.equals("name")) {
-						currentWpt.name = parser.nextText();
-					}
-					else if (txt.equals("cmt")) {
-						currentWpt.cmt = parser.nextText();
-					}
-				}
-				break;
+            DataInputStream in = new DataInputStream(in_s);
+            Parse(in);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-			case XmlPullParser.END_TAG:
-				txt = parser.getName();
-				// Only add non null wpt's that contain exactly 4 upper-case letters
-				if (txt.equalsIgnoreCase("wpt") && currentWpt != null && currentWpt.name.length() == 4 && currentWpt.name.matches("[A-Z]+")) {
-					openairList.add(currentWpt);
-				}
-			}
-			eventType = parser.next();
-		}
-		// printProducts(openairList); // only used for debugging
-	}
-	
-	public static ArrayList<Apt> getAptSelect(float lat, float lon, int range, int nr) 
-	{
-		//ArrayList<Apt> nearestAptList = null;
-		ArrayList<Apt> nearestAptList = new ArrayList();
 
-		Iterator <Apt> it = openairList.iterator();
-		while (it.hasNext())
-		{
-			Apt currProduct  = it.next();
-			
-			// add code to determine  the <nr> apts in range 
-			double deltaLat = lat - currProduct.lat;
-			double deltaLon = lon - currProduct.lon;
-			//double d =  Math.hypot(deltaLon, deltaLat);  // in degree, 1 deg = 60 nm 
-			double d =  Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // faster then hypot, see www 
-			
-			if (d < range) {
-				nearestAptList.add(currProduct);
-			}
-		}
-		return nearestAptList;
-	}
+    private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
+    {
+        int eventType = parser.getEventType();
+        OpenAirRec currentWpt = null;
 
-	private void printProducts(ArrayList<Apt> list)
-	{
-		String content = "";
-		Iterator <Apt> it = list.iterator(); 
-		while (it.hasNext())  
-		{
-			Apt currProduct  = it.next();
-			content = content + "\nName :" +  currProduct.name + "\n";
-			content = content + "Cmt :" +  currProduct.cmt + "\n";
-			//content = content + "Color :" +  currProduct.wpt + "n";
-			System.out.println(content); 
-		}
-		//Log.v("b2", "b2 - " + content);
-		//TextView display = (TextView)findViewById(R.id.info);
-		//display.setText(content);
-	}
+        /*
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            String txt = null;
+            switch (eventType) {
+                case XmlPullParser.START_DOCUMENT:
+                    // To help avoid the ConcurrentModificationException
+                    airspacelst.clear();
+                    break;
+
+                case XmlPullParser.START_TAG:
+                    txt = parser.getName();
+                    if (txt.equals("wpt")) {
+                        currentWpt = new OpenAirRec();
+                        if (parser.getAttributeCount() == 2) {
+                            String sLat = parser.getAttributeValue(0);
+                            String sLon = parser.getAttributeValue(1);
+                            currentWpt.lat = Float.valueOf(parser.getAttributeValue(0));
+                            currentWpt.lon = Float.valueOf(parser.getAttributeValue(1));
+                        }
+                    }
+                    else if (currentWpt != null) {
+                        if (txt.equals("name")) {
+                            //currentWpt.name = parser.nextText();
+                        }
+                        else if (txt.equals("cmt")) {
+                            //currentWpt.cmt = parser.nextText();
+                        }
+                    }
+                    break;
+
+                case XmlPullParser.END_TAG:
+                    txt = parser.getName();
+                    // Only add non null wpt's that contain exactly 4 upper-case letters
+                    ///f (txt.equalsIgnoreCase("wpt") && currentWpt != null && currentWpt.name.length() == 4 && currentWpt.name.matches("[A-Z]+")) {
+                    //    pointlst.add(currentWpt);
+                    //}
+            }
+            eventType = parser.next();
+        }
+        */
+        // printProducts(openairList); // only used for debugging
+    }
+
+    public static ArrayList<OpenAirRec> getAptSelect(float lat, float lon, int range, int nr)
+    {
+        //ArrayList<Apt> nearestAptList = null;
+        ArrayList<OpenAirRec> nearestAptList = new ArrayList();
+
+        Iterator<OpenAirRec> it = airspacelst.iterator();
+        while (it.hasNext()) {
+            OpenAirRec currProduct = it.next();
+
+            // add code to determine  the <nr> apts in range
+            double deltaLat = lat - currProduct.clat;
+            double deltaLon = lon - currProduct.clon;
+            //double d =  Math.hypot(deltaLon, deltaLat);  // in degree, 1 deg = 60 nm
+            double d = Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat);  // faster then hypot, see www
+
+            if (d < range) {
+                nearestAptList.add(currProduct);
+            }
+        }
+        return nearestAptList;
+    }
+
+    private void printProducts(ArrayList<OpenAirRec> list)
+    {
+        String content = "";
+        Iterator<OpenAirRec> it = list.iterator();
+        while (it.hasNext()) {
+            OpenAirRec currProduct = it.next();
+            //content = content + "\nName :" + currProduct.name + "\n";
+            //content = content + "Cmt :" + currProduct.cmt + "\n";
+            //content = content + "Color :" +  currProduct.wpt + "n";
+            System.out.println(content);
+        }
+        //Log.v("b2", "b2 - " + content);
+        //TextView display = (TextView)findViewById(R.id.info);
+        //display.setText(content);
+    }
 }
 

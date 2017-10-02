@@ -32,9 +32,12 @@ cd h:/src/kwikEFIS/apk
 #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-usa.can.apk
 #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-eur.rus.apk
 
+if [ $1 -eq '-l' ] 
+then
 #wifi nexus 7
 adb -s 015d2ea4a467ec11 install -r ./kwik-efis.apk
 adb -s 015d2ea4a467ec11 install -r ./kwik-dmap.apk
 #adb -s 015d2ea4a467ec11 install -r ./kwik-efis-datapac-zar.aus.apk
+fi
 
 pskill java

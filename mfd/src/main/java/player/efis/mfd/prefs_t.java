@@ -26,6 +26,7 @@ public enum prefs_t
 	FLIGHT_DIRECTOR,
 	REMOTE_INDICATOR,
 	AIRPORT,
+    AIRSPACE,
     HITS,
 	DEMO_MODE
 }

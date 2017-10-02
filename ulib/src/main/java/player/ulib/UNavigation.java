@@ -105,5 +105,14 @@ public class UNavigation {
         return angle;
     }
 
+    //36:24:22 = 36.4061
+    public static float DMStoD(String dms)
+    {
+        int d = Integer.valueOf(dms.split(":")[0]);
+        int m = Integer.valueOf(dms.split(":")[1]);
+        int s = Integer.valueOf(dms.split(":")[2]);
+        return (float)d + (float)m/60f + (float)s/3600f;
+    }
+
 
 }
