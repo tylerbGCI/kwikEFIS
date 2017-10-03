@@ -1,2 +1,1 @@
-//include ':pfd', ':data', ':data.usa.can', ':data.zar.aus', ':data.eur.rus', ':data.sah.jap'
-include ':pfd', ':mfd', ':data', ':data.usa.can', ':data.zar.aus', ':data.eur.rus', ':data.sah.jap', ':airspace', ':airspace', ':ulib'
+include ':pfd', ':mfd', ':data', ':data.usa.can', ':data.zar.aus', ':data.eur.rus', ':data.sah.jap', ':ulib'
