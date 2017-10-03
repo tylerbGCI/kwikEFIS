@@ -1,8 +1,11 @@
 Changelog
 =========
-3.6 (beta)
+3.6 (2017-10-04)
 ------------------
 * Minor bugfix in compass rose
+* Minor performance tweak to data loading
+* Add app: Kwik Moving Map (MMAP)
+* Refactor EFIS/MMAP to common code
 
 3.5 (2017-09-21)
 ------------------
