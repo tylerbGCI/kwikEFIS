@@ -391,7 +391,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // North Que
             {
                 float xlx = -0.82f * pixW2;
-                float xly = -0.45f * pixH2;
+                float xly = (lineAncillaryDetails +0.10f) * pixM2;
+
                 Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
                 Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
                 Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
