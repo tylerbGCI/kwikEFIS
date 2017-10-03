@@ -1001,14 +1001,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
 
-        if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-        }
-
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
+            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        }
+        // See if we are stuck on null island or even on the tile
+        else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         }
 
