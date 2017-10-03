@@ -198,8 +198,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
             if (mMapZoom > 5) mMapZoom -= 5;
-            if (mMapZoom <= 5) mMapZoom -= 1;
-            if (mMapZoom <= 1) mMapZoom = 1;
+            else if (mMapZoom > 1) mMapZoom -= 1;
+
+            /*if (mMapZoom > 5) mMapZoom -= 5;
+            else if (mMapZoom <= 5) mMapZoom -= 1;
+            else if (mMapZoom <= 1) mMapZoom = 1;*/
 
             return true;
         }
@@ -292,6 +295,24 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
+         /*
+        // Some debugging positions for testing
+        //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
+        //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
+        _gps_lat = -31.9f;  float _gps_lon = 115.45f;  // Australia north of Rottnest
+        //_gps_lat = -33.0f;  float _gps_lon = 28; //-28;// = -33; // South Africa - East London
+        //_gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
+        //_gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
+        //_gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
+        //_gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
+        //_gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
+        //_gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
+        gps_lat = _gps_lat;
+        gps_lon = _gps_lon;
+        // */
+
+
+
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
@@ -306,10 +327,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mAirspace = new OpenAir(this);
-        mAirspace.loadDatabase(region);
+        //mAirspace.loadDatabase(region); // automatic based on coor, not used anymore
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.loadDatabase(region); // not used anymore
+        //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
 
 
 		// Overall the device is now ready.
@@ -735,16 +756,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a crude flight simulator
 	//
-    //float _gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
-    //float _gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
-    //float _gps_lat = -31.9f;  float _gps_lon = 115.45f;  // Australia north of Rottnest
-    //float _gps_lat = -33.0f;  float _gps_lon = 28; //-28;// = -33; // South Africa - East London
-    //float _gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
-    //float _gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
-    //float _gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
-    //float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
-    //float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
-    //float _gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
     float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
 	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 3000; // meters
@@ -805,15 +816,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
         gps_altitude = 3270; //2048; //900; //3048; //meter
-        rollValue = 0;// (float) rnd.nextGaussian() / 5;
-        pitchValue = 0;//(float) rnd.nextGaussian() / 20;
-
-        //gps_lat = -33f; _gps_lon = 28f;  // EL
-        //gps_lat = -33.98f; gps_lon =   18.82f;  // Stellenbosh
-        //gps_lat = -33.4f; gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
-        //_gps_lat = -33.4f; _gps_lon = 19f;  // Stellenbosh ++ somewhere ??possible hole??
-        //gps_lat = -33.52f; gps_lon = 19f;  // Stellenbosh ++ somewhere
-        //gps_lat = 0f; gps_lon = 0f; _gps_lat = 0f; _gps_lon = 0f;  // Trapped on Null Island
+        //rollValue = 0;// (float) rnd.nextGaussian() / 5;
+        //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //deltaT = 0; // freeze time, ie force stationary
         //
         // todo: Hardcoded for debugging
@@ -830,8 +834,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         }
         gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
     }
-
-
 
 	//for landscape mode
 	// private float azimuthValue;
@@ -921,58 +923,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.setDisplayAirspace(true);
         }
 
-        /*
-        //
-        // Calculate the augmented bank angle and also the flight path vector
-        //
-        float deltaA, fpvX = 0, fpvY = 0;
-        if (hasGps && gps_speed > 5) {
-            // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
-            // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
-            rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn, gps_speed);
-            pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
-
-            // the Flight Path Vector (FPV)
-            deltaA = UNavigation.compassRose180(gps_course - orientationAzimuth);
-            fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
-            fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
-
-            // Pitch and birdie
-            mGLView.setDisplayAirport(true);
-            mGLView.setFPV(fpvX, fpvY); // need to clean this up
-        }
-        else if (hasGps && gps_speed < 9) {  // m/s
-            // taxi mode
-            rollValue = 0;
-            pitchValue = 0;
-        }
-        else {
-            // No GPS no speed ... no idea what the AH is :-(
-            fpvX = 0;
-            fpvY = 0;
-
-            // The dreaded red crosses are required
-            mGLView.setDisplayAirport(false);
-            mGLView.setUnServiceableAsi();
-            mGLView.setUnServiceableAlt();
-            mGLView.setUnServiceableDi();
-            mGLView.setUnServiceableAh();
-
-            // Force a blank screen and no birdie
-            rollValue = 0;
-            pitchValue = -270;
-            mGLView.setFPV(180, 180);
-        }
-        */
-
 		//
 		// Read and Set the user preferences
 		//
 		setUserPrefs();
-
-		// Apply a little filtering to the pitch and bank
-		//pitchValue = filterPitch.runningAverage(pitchValue);
-		//rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
 
 		//
 		// Get the battery percentage
@@ -986,15 +940,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
 
-        if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-        }
-
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+            mAirspace.loadDatabase(gps_lat, gps_lon);
+        }
+        // See if we are stuck on null island or even on the tile
+        else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
+            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+            mAirspace.loadDatabase(gps_lat, gps_lon);
         }
 
 		//

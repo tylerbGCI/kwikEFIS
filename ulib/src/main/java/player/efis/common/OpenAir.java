@@ -21,11 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
+import android.widget.Toast;
 
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
@@ -34,8 +31,38 @@ import player.ulib.UTrig;
 public class OpenAir
 {
     private Context context;
-    public String region = "gpx.south.east";
+    public String _region, region = "gpx.south.east";
     public static ArrayList<OpenAirRec> airspacelst = null;
+
+
+    //-------------------------------------------------------------------------
+    // use the lat lon to determine which region file is active
+    //
+    public String getRegionDatabaseName(float lat, float lon)
+    {
+        // TODO: 2017-10-03 make work for individual countries
+        String sRegion = "null";
+        if ((lat <= -10) && (lon > -20) && (lon < +60)) {
+            sRegion = "zar";
+        }
+        else if ((lat <= -10) && (lon > +60) /*&& (lon < 60)*/) {
+            sRegion = "aus";
+        }
+        else if ((lat > +20) && (lon >= -20)  && (lon < +30)) {
+            sRegion = "eur";
+        }
+        else if ((lat > +20) && (lon >= -20) && (lon > +30)) {
+            sRegion = "rus";
+        }
+        else if ((lat > -10) && (lon < -60) && (lat > +25) && (lat < +49)) {
+            sRegion = "usa";
+        }
+        else if ((lat > -10) && (lon < -60) && (lat > +49)) {
+            sRegion = "can";
+        }
+        return sRegion;
+    }
+
 
     ///*
     public final boolean Parse(DataInputStream reader) //, OperationEnvironment operation)
@@ -277,15 +304,24 @@ public class OpenAir
         airspacelst = new ArrayList();
     }
 
+
+    public void loadDatabase(float lat, float lon)
+    {
+        region = getRegionDatabaseName(lat, lon);
+        if (!region.equals(_region))
+          loadDatabase(region);
+
+        _region = region;
+    }
+
     public void loadDatabase(String database)
     {
         region = database;
-        airspacelst.clear();
 
+        airspacelst.clear();
         try {
-            InputStream in_s = context.getAssets().open(region + "/airspace.txt.air");
-            //InputStream in_s = context.getAssets().open(region + "/Australia_Airspace.txt");
-            //InputStream in_s = context.getAssets().open(region + "/bevrly14.txt");
+            //InputStream in_s = context.getAssets().open(region + "/airspace.txt.air");
+            InputStream in_s = context.getAssets().open("airspace/" + region + ".txt.air");
 
             DataInputStream in = new DataInputStream(in_s);
             Parse(in);
@@ -296,53 +332,6 @@ public class OpenAir
     }
 
 
-    private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
-    {
-        int eventType = parser.getEventType();
-        OpenAirRec currentWpt = null;
-
-        /*
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String txt = null;
-            switch (eventType) {
-                case XmlPullParser.START_DOCUMENT:
-                    // To help avoid the ConcurrentModificationException
-                    airspacelst.clear();
-                    break;
-
-                case XmlPullParser.START_TAG:
-                    txt = parser.getName();
-                    if (txt.equals("wpt")) {
-                        currentWpt = new OpenAirRec();
-                        if (parser.getAttributeCount() == 2) {
-                            String sLat = parser.getAttributeValue(0);
-                            String sLon = parser.getAttributeValue(1);
-                            currentWpt.lat = Float.valueOf(parser.getAttributeValue(0));
-                            currentWpt.lon = Float.valueOf(parser.getAttributeValue(1));
-                        }
-                    }
-                    else if (currentWpt != null) {
-                        if (txt.equals("name")) {
-                            //currentWpt.name = parser.nextText();
-                        }
-                        else if (txt.equals("cmt")) {
-                            //currentWpt.cmt = parser.nextText();
-                        }
-                    }
-                    break;
-
-                case XmlPullParser.END_TAG:
-                    txt = parser.getName();
-                    // Only add non null wpt's that contain exactly 4 upper-case letters
-                    ///f (txt.equalsIgnoreCase("wpt") && currentWpt != null && currentWpt.name.length() == 4 && currentWpt.name.matches("[A-Z]+")) {
-                    //    pointlst.add(currentWpt);
-                    //}
-            }
-            eventType = parser.next();
-        }
-        */
-        // printProducts(openairList); // only used for debugging
-    }
 
     public static ArrayList<OpenAirRec> getAptSelect(float lat, float lon, int range, int nr)
     {

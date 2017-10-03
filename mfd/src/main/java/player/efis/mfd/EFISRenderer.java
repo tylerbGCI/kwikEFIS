@@ -343,16 +343,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             //renderAutoWptDetails(mMVPMatrix);
         }
 
-        // North Que
-        {
-            float xlx = -0.85f * pixW2;
-            float xly = +0.92f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
-            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-            renderNorthQue(rmiMatrix);
-        }
 
 
         if (Layout == layout_t.PORTRAIT) {
@@ -397,6 +387,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (displayInfoPage) {
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
+
+            // North Que
+            {
+                float xlx = -0.82f * pixW2;
+                float xly = -0.45f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
+                Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+                renderNorthQue(rmiMatrix);
+            }
         }
         renderMapScale(mMVPMatrix);
 
@@ -2329,21 +2330,25 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float  z = zfloat;
 
-        // right triangle
         mTriangle.SetWidth(1);
-        mTriangle.SetColor(0.6f, 0.6f, 0, 1);
-        mTriangle.SetVerts(0,           -0.12f*pixM2, z,
+        // Right triangle
+        mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
+        mTriangle.SetVerts(0,           -0.08f*pixM2, z,
                            0,            0.12f*pixM2, z,
-                           0.02f*pixM2, -0.12f*pixM2,z);
+                           0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
-        mTriangle.SetColor(0.4f, 0.4f, 0, 1);
-        mTriangle.SetVerts(0,           -0.12f*pixM2, z,
+        mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
+        mTriangle.SetVerts(0,           -0.08f*pixM2, z,
                            0,            0.12f*pixM2, z,
-                          -0.02f*pixM2, -0.12f*pixM2,z);
+                          -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
+        glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
+        glText.setScale(1.5f); // 2 seems full size
+        glText.drawCX("N", 0, 0.12f*pixM2);
+        glText.end();
     }
 
 
