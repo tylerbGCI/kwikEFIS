@@ -27,7 +27,7 @@
     package="player.efis.pfd"
     android:installLocation="preferExternal"
     android:versionCode="15"
-    android:versionName="3.6 rc-8" >
+    android:versionName="3.6" >
 
 
 
