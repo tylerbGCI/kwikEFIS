@@ -293,8 +293,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
-		mGpx.loadDatabase(region);
-        Toast.makeText(this, "APT Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
+		//mGpx.loadDatabase(region);
+        //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mDemGTOPO30 = new DemGTOPO30(this);
         //mDemGTOPO30.loadDatabase(region); // not used anymore
@@ -859,7 +859,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float gyro_rateOfTurn;
 	private float loadfactor;
 	private float slipValue;
-
+    int ctr = 0;
 
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
@@ -1004,12 +1004,19 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
+        // Wait for 100 cycles to allow at least some
+        // prior drawing to take place on startup
+        if (ctr++ > 100) {
         if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
         }
         // See if we are stuck on null island or even on the tile
         else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
             mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
+            }
+            ctr = 0;
         }
 
 		//

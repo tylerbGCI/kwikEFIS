@@ -28,33 +28,27 @@ import android.content.Context;
 public class Gpx
 {
 	private Context context;
-	public String region = "gpx.south.east";
+	public String _region, region = "gpx.south.east";
 	public static ArrayList<Apt> aptList = null;
-	
-	/*
-	// Replace with individual methods for instantiate and loading
-	
-	public Gpx(Context context) 
-	{
-		XmlPullParserFactory pullParserFactory; 
-		try {
-			pullParserFactory = XmlPullParserFactory.newInstance();
-			XmlPullParser parser = pullParserFactory.newPullParser();
 
-			    //InputStream in_s = context.getAssets().open("airport.gpx.xml");
-			    InputStream in_s = context.getAssets().open(region + "/airport.gpx.xml");
-		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-	            parser.setInput(in_s, null);
-	            parseXML(parser);
-		} 
-        catch (XmlPullParserException e) {
-			e.printStackTrace();
-		} 
-        catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
+    //-------------------------------------------------------------------------
+    // use the lat lon to determine which region file is active
+    //
+    public String getRegionDatabaseName(float lat, float lon)
+    {
+        // TODO: Double check this ... It is probably just the quadrants
+        String sRegion = "null";
+        if ((lat < -10) && (lon > -20)) {
+            sRegion = "zar.aus";
+        }
+        else if ((lat > +20) && (lon >= -20)) {
+            sRegion = "eur.rus";
+        }
+        else if ((lat > -10) && (lon < -60)) {
+            sRegion = "usa.can";
+        }
+        return sRegion;
+    }
 	
 	
 	public Gpx(Context context) 
@@ -62,8 +56,16 @@ public class Gpx
 		this.context = context;
 	  aptList = new ArrayList();
 	}
-	
-	
+
+    public void loadDatabase(float lat, float lon)
+    {
+        region = getRegionDatabaseName(lat, lon);
+        if (!region.equals(_region))
+            loadDatabase(region);
+
+        _region = region;
+    }
+
 	public void loadDatabase(String database)
 	{
 		region = database;
