@@ -25,7 +25,6 @@ import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.orientation_t;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,14 +39,12 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Bundle; 
-
 // sensor imports
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
-
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
@@ -245,7 +242,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			e.printStackTrace();
 		}
 		String version = pInfo.versionName;
-		Toast.makeText(this, "kwik EFIS version: " + version, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
 
 		try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
@@ -295,13 +292,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
-         /*
+        /*
         // Some debugging positions for testing
         //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
         //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
-        _gps_lat = -31.9f;  float _gps_lon = 115.45f;  // Australia north of Rottnest
-        //_gps_lat = -33.0f;  float _gps_lon = 28; //-28;// = -33; // South Africa - East London
-        //_gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
+        //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
+        //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
+        _gps_lat = +50f;  _gps_lon = -124f; // Vancouver
+
         //_gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
         //_gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
         //_gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
@@ -310,7 +308,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
         // */
-
 
 
     	// This should never happen but we catch and force it to something known it just in case
@@ -323,8 +320,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
-		mGpx.loadDatabase(region);
-        Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
+		//mGpx.loadDatabase(region);
+        //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mAirspace = new OpenAir(this);
         //mAirspace.loadDatabase(region); // automatic based on coor, not used anymore
@@ -337,7 +334,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
-	}
+    }
 
 
 	@Override
@@ -842,7 +839,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private float gyro_rateOfTurn;
 	private float loadfactor;
 	private float slipValue;
-
+    int ctr = 0;
 
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
@@ -918,7 +915,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.setDisplayAirspace(true);
 		}
 		else {
-            mGLView.setDemoMode(false, " ");
+            mGLView.setDemoMode(false, "");
             mGLView.setDisplayAirport(true);
             mGLView.setDisplayAirspace(true);
         }
@@ -943,14 +940,21 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
-        if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-            mAirspace.loadDatabase(gps_lat, gps_lon);
-        }
-        // See if we are stuck on null island or even on the tile
-        else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-            mAirspace.loadDatabase(gps_lat, gps_lon);
+        // Wait for 100 cycles to allow at least some
+        // prior drawing to take place on startup
+        if (ctr++ > 100) {
+            if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
+                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
+                mAirspace.loadDatabase(gps_lat, gps_lon);
+            }
+            // See if we are stuck on null island or even on the tile
+            else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
+                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
+                mAirspace.loadDatabase(gps_lat, gps_lon);
+            }
+            ctr = 0;
         }
 
 		//

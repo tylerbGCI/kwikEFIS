@@ -4,8 +4,8 @@ Changelog
 ------------------
 * Minor bugfix in compass rose
 * Minor performance tweak to data loading
-* Add app: Kwik Moving Map (MMAP)
-* Refactor EFIS/MMAP to common code
+* Add app: Kwik Digital Map (DMAP)
+* Refactor EFIS/DMAP to common code
 
 3.5 (2017-09-21)
 ------------------

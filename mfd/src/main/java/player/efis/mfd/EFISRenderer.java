@@ -2335,14 +2335,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Right triangle
         mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
         mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                           0,            0.12f*pixM2, z,
+                           0,            0.10f*pixM2, z,
                            0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
         mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
         mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                           0,            0.12f*pixM2, z,
+                           0,            0.10f*pixM2, z,
                           -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
