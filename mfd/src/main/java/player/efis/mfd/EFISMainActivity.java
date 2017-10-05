@@ -298,13 +298,14 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
         //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
         //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
-        _gps_lat = +50f;  _gps_lon = -124f; // Vancouver
 
+        //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
         //_gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
         //_gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
         //_gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
         //_gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
         //_gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
+        _gps_lat = 55.86f; float _gps_lon = 37.6f;   //Moscow
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
         // */

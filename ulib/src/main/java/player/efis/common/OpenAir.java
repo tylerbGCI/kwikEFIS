@@ -69,17 +69,6 @@ public class OpenAir
     {
         boolean ignore = false;
 
-        // Create and init ProgressDialog
-        //operation.SetProgressRange(1024);
-
-        //final int file_size = reader.GetSize();
-
-        //TempAirspaceType temp_area = new TempAirspaceType();
-        //AirspaceFileType filetype = AirspaceFileType.UNKNOWN;
-
-        //OpenAirPoint pnt = new OpenAirPoint();
-        //OpenAirRec rec = new OpenAirRec();
-
         float arcLat = 0;
         float arcLon = 0;
         int angleInc = +10; // deg clockwise
@@ -88,17 +77,16 @@ public class OpenAir
         String line;
 
         // Iterate through the lines
-        //for (int line_num = 1; (line = reader.ReadLine()) != null; line_num++) {
-
         try {
-            // for testing there is just one rec
-            //OpenAirRec rec;// = new OpenAirRec();  // todo
-            OpenAirRec rec = null;  // todo
+            OpenAirRec rec = null;
 
             while ((line = reader.readLine()) != null) {
+                android.util.Log.d("mmap", line);
+                line = line.toUpperCase();
                 line.trim();
 
                 // Skip empty lines and comments
+                if (line.contains("*")) line = line.substring(0, line.indexOf('*'));
                 if (line.isEmpty() || line.startsWith("*")) {
                     continue;
                 }
