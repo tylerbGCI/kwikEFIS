@@ -2,9 +2,9 @@ Changelog
 =========
 3.6 (2017-10-04)
 ------------------
+* Add app: Kwik Digital Map (DMAP)
 * Minor bugfix in compass rose
 * Minor performance tweak to data loading
-* Add app: Kwik Digital Map (DMAP)
 * Refactor EFIS/DMAP to common code
 
 3.5 (2017-09-21)
