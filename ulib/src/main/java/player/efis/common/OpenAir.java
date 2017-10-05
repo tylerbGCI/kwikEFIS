@@ -81,7 +81,7 @@ public class OpenAir
             OpenAirRec rec = null;
 
             while ((line = reader.readLine()) != null) {
-                android.util.Log.d("mmap", line);
+                //android.util.Log.d("mmap", line);
                 line = line.toUpperCase();
                 line.trim();
 
