@@ -31,7 +31,7 @@ import player.ulib.UTrig;
 public class OpenAir
 {
     private Context context;
-    public String _region, region = "gpx.south.east";
+    public String _region, region = "null";
     public static ArrayList<OpenAirRec> airspacelst = null;
 
 
@@ -309,10 +309,9 @@ public class OpenAir
     {
         region = getRegionDatabaseName(lat, lon);
         if (!region.equals(_region))
-          loadDatabase(region);
-
-        _region = region;
-    }
+            loadDatabase(region);
+            _region = region;
+        }
 
     public void loadDatabase(String database)
     {

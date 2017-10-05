@@ -85,7 +85,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 	int calibrationCount = 0;
-    private float mMapZoom = 20; //4 //5->5, 10->2, 20->2
+    private float mMapZoom = 20; // Zoom multiplier for map. 1 (max out) to 200 (max in)
 
 	// Location abstracts
 	protected float gps_lat;            // in decimal degrees
@@ -242,7 +242,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			e.printStackTrace();
 		}
 		String version = pInfo.versionName;
-		Toast.makeText(this, "kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
 
 		try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
@@ -316,7 +316,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // Use the last orientation to start
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
-        String region = settings.getString("AirportDatabase", "zar.aus");
+        //String region = settings.getString("AirportDatabase", "zar.aus");
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -359,7 +359,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // need to add the aircraft --- todo
         // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-        editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
+        //editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
 
         // Commit the edits
         editor.commit();
@@ -604,8 +604,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
 
         // If the database changed it needs to be re-loaded.
-        s = settings.getString("AirportDatabase", "zar.aus");
-        if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
+        //s = settings.getString("AirportDatabase", "zar.aus");
+        //if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
 
         // landscape / porait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
@@ -912,12 +912,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			mGLView.setServiceableAlt();
 			mGLView.setServiceableAh();
 			mGLView.setDisplayAirport(true);
-            mGLView.setDisplayAirspace(true);
 		}
 		else {
             mGLView.setDemoMode(false, "");
             mGLView.setDisplayAirport(true);
-            mGLView.setDisplayAirspace(true);
         }
 
 		//

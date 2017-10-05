@@ -28,7 +28,7 @@ import android.content.Context;
 public class Gpx
 {
 	private Context context;
-	public String _region, region = "gpx.south.east";
+	public String _region, region = "gpx.null.null";
 	public static ArrayList<Apt> aptList = null;
 
     //-------------------------------------------------------------------------
@@ -39,13 +39,13 @@ public class Gpx
         // TODO: Double check this ... It is probably just the quadrants
         String sRegion = "null";
         if ((lat < -10) && (lon > -20)) {
-            sRegion = "zar.aus";
+            sRegion = "gpx.south.east";
         }
         else if ((lat > +20) && (lon >= -20)) {
-            sRegion = "eur.rus";
+            sRegion = "gpx.north.east";
         }
         else if ((lat > -10) && (lon < -60)) {
-            sRegion = "usa.can";
+            sRegion = "gpx.north.west";
         }
         return sRegion;
     }

@@ -16,7 +16,7 @@
 -->
 <resources>
 
-    <string name="hello">Hello, OpenGL ES 2.0!</string>
+    <!-- <string name="hello">Hello, OpenGL ES 2.0!</string> -->
     <string name="app_name">Kwik EFIS</string>
     <string name="copyright">Nine Lima, 2017</string>
     

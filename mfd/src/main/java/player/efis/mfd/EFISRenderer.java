@@ -2238,6 +2238,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
             _x1 = 0; _y1 = 0;
             String airspaceDesc = String.format("%s LL FL%d", currAirspace.ac, currAirspace.al);
+            // TODO: 2017-10-05 : Implement airspace filters here
             if (!(false
                       || currAirspace.ac.equals("A")
                       || currAirspace.ac.equals("B")
@@ -2249,6 +2250,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                       || currAirspace.ac.equals("P")   // Prohibited
                       || currAirspace.ac.equals("CTR") // CTR
             )) continue;
+            // For now, ignore Q (Danger) areas by default.
+            if (
+              currAirspace.ac.equals("Q") // Danger (also GFA)
+            ) continue;
+
 
             if (currAirspace.ac.equals("A") ||
                 //currAirspace.ac.equals("C")) color = new DemColor(0.1f, 0.1f, 0.4f);
@@ -2289,9 +2295,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     mLine.draw(matrix);
                 }
                 else {
-                    // Draw the name at the first coordinate
+                    // Draw the airspace description at the first coordinate
                     glText.begin(color.red, color.green, color.blue, 0.95f, matrix);
-                    glText.setScale(0.95f);
+                    glText.setScale(1.5f);
                     glText.drawCY(airspaceDesc, x1, y1 + glText.getCharHeight() / 2);
                     glText.end();
                 }
@@ -3563,6 +3569,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //t = String.format("%03.0f", (float) aglAlt % 1000);
         String t = String.format("%3.0f nm", len);
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // White
+        glText.setScale(1.5f);
         glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
         glText.end();
     }

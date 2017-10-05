@@ -46,10 +46,8 @@ public class EFISPrefManage extends PreferenceActivity
         lp = (ListPreference) findPreference("AircraftModel");
         lp.setSummary(lp.getEntry());
 
-        lp = (ListPreference) findPreference("AirportDatabase");
-        lp.setSummary(lp.getEntry());
-
-
+        //lp = (ListPreference) findPreference("AirportDatabase");
+        //lp.setSummary(lp.getEntry());
 
         // Get the version number of the app
         PackageInfo pInfo = null;

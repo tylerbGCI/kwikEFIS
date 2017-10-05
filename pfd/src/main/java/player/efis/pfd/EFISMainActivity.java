@@ -233,7 +233,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 			e.printStackTrace();
 		}
 		String version = pInfo.versionName;
-		Toast.makeText(this, "kwik EFIS version: " + version, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Kwik EFIS version: " + version, Toast.LENGTH_LONG).show();
 
 		try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
@@ -283,13 +283,31 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
+        /*
+        // Some debugging positions for testing
+        //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
+        //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
+        //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
+        //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
+        _gps_lat = +50f;  _gps_lon = -124f; // Vancouver
+
+        //_gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
+        //_gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
+        //_gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
+        //_gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
+        //_gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
+        gps_lat = _gps_lat;
+        gps_lon = _gps_lon;
+        // */
+
+
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
         // Use the last orientation to start
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
-        String region = settings.getString("AirportDatabase", "zar.aus");
+        //String region = settings.getString("AirportDatabase", "zar.aus");
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -297,7 +315,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.loadDatabase(region); // not used anymore
+        //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
 
         createMediaPlayer();
 
@@ -330,7 +348,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // need to add the aircraft --- todo
         // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-        editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
+        //editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
 
         // Commit the edits
         editor.commit();
@@ -607,8 +625,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
 
         // If the database changed it needs to be re-loaded.
-        s = settings.getString("AirportDatabase", "zar.aus");
-        if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
+        //s = settings.getString("AirportDatabase", "zar.aus");
+        //if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
 
         // landscape / porait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
@@ -756,16 +774,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	// Utility function to do a simple simulation for demo mode
 	// It acts like a crude flight simulator
 	//
-    //float _gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
-    //float _gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
-    //float _gps_lat = -31.9f;  float _gps_lon = 115.45f;  // Australia north of Rottnest
-    //float _gps_lat = -33.0f;  float _gps_lon = 28; //-28;// = -33; // South Africa - East London
-    //float _gps_lat = -33.2f;  float _gps_lon = 28; //-28;// = -33; // South Africa - South of East London
-    //float _gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
-    //float _gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
-    //float _gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
-    //float _gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
-    //float _gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
     float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
 	float _gps_course = 0.96f; //1.74f;  //in radians
     float _gps_altitude = 1000; // meters
