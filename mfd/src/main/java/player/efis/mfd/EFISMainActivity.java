@@ -196,7 +196,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
             if (mMapZoom > 5) mMapZoom -= 5;
-            else if (mMapZoom > 1) mMapZoom -= 1;
+            else if (mMapZoom > 2) mMapZoom -= 1;
 
             /*if (mMapZoom > 5) mMapZoom -= 5;
             else if (mMapZoom <= 5) mMapZoom -= 1;
@@ -286,6 +286,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
+        mMapZoom = settings.getFloat("mMapZoom", mMapZoom);
 
         // Restore last known location
         _gps_lat = settings.getFloat("GpsLat", gps_lat);
@@ -305,16 +306,15 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //_gps_lat =  48.14f;  _gps_lon = 11.57f;   // Munich
         //_gps_lat = 47.26f;  _gps_lon = 11.34f;   //Innsbruck
         //_gps_lat =  55.67f;  _gps_lon = 12.57f;   // Copenhagen
-        _gps_lat =  46.93f;  _gps_lon =  7.45f;   // Bern
+        //_gps_lat =  46.93f;  _gps_lon =  7.45f;   // Bern
 
-        //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+        _gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
         //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
         //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
 
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
         // */
-
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
@@ -362,6 +362,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
         editor.putFloat("GpsLat", gps_lat);
         editor.putFloat("GpsLon", gps_lon);
+        editor.putFloat("mMapZoom", mMapZoom);
+
 
         // need to add the aircraft --- todo
         // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
