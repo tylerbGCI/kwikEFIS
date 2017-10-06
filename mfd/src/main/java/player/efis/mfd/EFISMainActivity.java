@@ -16,6 +16,7 @@
 
 package player.efis.mfd; 
 
+import player.efis.common.AirspaceClass;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.Gpx;
@@ -583,6 +584,18 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
         mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
+
+        AirspaceClass.A = settings.getBoolean("classA", true);
+        AirspaceClass.B = settings.getBoolean("classB", true);
+        AirspaceClass.C = settings.getBoolean("classC", true);
+        AirspaceClass.D = settings.getBoolean("classD", true);
+        AirspaceClass.E = settings.getBoolean("classE", true);
+        AirspaceClass.F = settings.getBoolean("classF", true);
+        AirspaceClass.G = settings.getBoolean("classG", true);
+        AirspaceClass.P = settings.getBoolean("classP", true);
+        AirspaceClass.R= settings.getBoolean("classR", true);
+        AirspaceClass.Q = settings.getBoolean("classQ", true);
+        AirspaceClass.CTR = settings.getBoolean("classCTR", true);
 
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));

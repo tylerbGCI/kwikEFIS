@@ -1,5 +1,10 @@
 Changelog
 =========
+3.7 (Under Development)
+------------------
+* DMAP: Airspace class filtering
+* DMAP: Auto zoom
+
 3.6 (2017-10-04)
 ------------------
 * Add app: Kwik Digital Map (DMAP)

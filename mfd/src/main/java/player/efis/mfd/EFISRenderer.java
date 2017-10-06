@@ -18,6 +18,7 @@ package player.efis.mfd;
 
 import java.util.Iterator;
 
+import player.efis.common.AirspaceClass;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
@@ -146,6 +147,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private boolean displayMirror;
     private boolean displayFPV;
 
+    // Flags
     private boolean ServiceableDevice;  // Flag to indicate no faults
     private boolean ServiceableAh;      // Flag to indicate AH failure
     private boolean ServiceableAlt;     // Flag to indicate Altimeter failure
@@ -2238,7 +2240,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             }
             _x1 = 0; _y1 = 0;
             String airspaceDesc = String.format("%s LL FL%d", currAirspace.ac, currAirspace.al);
-            // TODO: 2017-10-05 : Implement airspace filters here
+
+            /*// TODO: 2017-10-05 : Implement airspace filters here
             if (!(false
                       || currAirspace.ac.equals("A")
                       || currAirspace.ac.equals("B")
@@ -2253,16 +2256,23 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // For now, ignore Q (Danger) areas by default.
             if (
               currAirspace.ac.equals("Q") // Danger (also GFA)
-            ) continue;
+            ) continue;*/
 
-
-            if (currAirspace.ac.equals("A") ||
-                //currAirspace.ac.equals("C")) color = new DemColor(0.1f, 0.1f, 0.4f);
-                //currAirspace.ac.equals("C")) color = new DemColor(0.61f, 0.70f, 0.87f); // Powder blue
-                currAirspace.ac.equals("C")) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
+            // Set the individual airspace colors
+            /*if      (currAirspace.ac.equals("A")) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
+            else if (currAirspace.ac.equals("C")) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
             else if (currAirspace.ac.equals("R")) color = new DemColor(0.45f, 0.20f, 0.20f);
-            else color = new DemColor(0.4f, 0.4f, 0.4f);
+            else color = new DemColor(0.4f, 0.4f, 0.4f);*/
 
+            // Set the individual airspace colors
+            if      (currAirspace.ac.equals("A") && AirspaceClass.A) color = new DemColor(0.37f, 0.62f, 0.42f); // ?
+            else if (currAirspace.ac.equals("B") && AirspaceClass.B) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
+            else if (currAirspace.ac.equals("C") && AirspaceClass.C) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
+            else if (currAirspace.ac.equals("P") && AirspaceClass.P) color = new DemColor(0.45f, 0.20f, 0.20f);
+            else if (currAirspace.ac.equals("R") && AirspaceClass.R) color = new DemColor(0.45f, 0.20f, 0.20f);
+            else if (currAirspace.ac.equals("Q") && AirspaceClass.Q) color = new DemColor(0.25f, 0.10f, 0.10f);
+            else if (currAirspace.ac.equals("CTR") && AirspaceClass.CTR) color = new DemColor(0.4f, 0.4f, 0.4f); // grey
+            else continue; //color = new DemColor(0.4f, 0.4f, 0.4f);
 
             Iterator<OpenAirPoint> it2 = currAirspace.pointList.iterator();
             while (it2.hasNext()) {
