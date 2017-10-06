@@ -4,6 +4,7 @@ Changelog
 ------------------
 * DMAP: Airspace class filtering
 * DMAP: Auto zoom
+* eur.txt.air (Denmark, Germany, Switzerland)
 
 3.6 (2017-10-04)
 ------------------
