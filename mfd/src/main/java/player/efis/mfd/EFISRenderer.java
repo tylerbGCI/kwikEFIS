@@ -343,40 +343,43 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderCompassRose(rmiMatrix);
             //renderBearing(rmiMatrix);
             //renderAutoWptDetails(mMVPMatrix);
-        }
-
-
-
-        if (Layout == layout_t.PORTRAIT) {
-            // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset;
-            GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
-        }
-        //renderFixedHorizonMarkers();
-        //renderRollMarkers(scratch2);
-
-
-        //-----------------------------
-        {
-            if (Layout == layout_t.LANDSCAPE)
-                GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
-            else
-                GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
-
-            /*if (displayTape) {
-                renderALTMarkers(altMatrix);
-                renderASIMarkers(iasMatrix);
-            }*/
-
-            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
-            //renderFixedALTMarkers(mMVPMatrix);    // this could be empty argument
-            //renderFixedRADALTMarkers(mMVPMatrix); // AGL
-            //renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument
-            //renderVSIMarkers(mMVPMatrix);
-            renderFixedDIMarkers(mMVPMatrix);
-            renderHDGValue(mMVPMatrix);
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
+
+        //if (Layout == layout_t.PORTRAIT) {
+        //    // Slide pitch to current value adj for portrait
+        //    float Adjust = pixH2 * portraitOffset;
+        //    GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
+        //}
+
+        //renderFixedHorizonMarkers();
+        //renderRollMarkers(scratch2);
+        if (displayAirspace) renderAirspace(mMVPMatrix);
+        if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
+
+        //-----------------------------
+        //if (Layout == layout_t.LANDSCAPE)
+        //    GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
+        //else
+        //    GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
+
+        if (displayFlightDirector) renderDctTrack(mMVPMatrix);
+        renderMapScale(mMVPMatrix);  // do before the DI
+
+        /*if (displayTape) {
+            renderALTMarkers(altMatrix);
+            renderASIMarkers(iasMatrix);
+        }*/
+
+        //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
+        //renderFixedALTMarkers(mMVPMatrix);    // this could be empty argument // todo: maybe later
+        //renderFixedRADALTMarkers(mMVPMatrix); // AGL
+        //renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument // todo: maybe later
+        //renderVSIMarkers(mMVPMatrix);
+
+        renderFixedDIMarkers(mMVPMatrix);
+        renderHDGValue(mMVPMatrix);
+        //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         //-----------------------------
 
         //renderFixedDIMarkers(mMVPMatrix);
@@ -402,10 +405,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderNorthQue(rmiMatrix);
             }
         }
-        renderMapScale(mMVPMatrix);
+        //renderMapScale(mMVPMatrix); // b2 this works
 
-        if (displayAirspace) renderAirspace(mMVPMatrix);
-        if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
 
         /*if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
@@ -421,7 +422,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         //dimScreen(mMVPMatrix, 0.250f);
         //if (displayFlightDirector || displayRMI || displayHITS) {
         if (displayFlightDirector) {
-            renderDctTrack(mMVPMatrix);
+            //renderDctTrack(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }
@@ -3569,19 +3570,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         );
         mLine.draw(matrix);
 
+        String t = String.format("%3.0f nm", len);
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // White
+        glText.setScale(1.5f);
+        glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
+        glText.end();
+
         // leader line
         mLine.SetVerts(
                 0, 0, z,
                 0, x1, z
         );
         mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.025f*pixM2, x1, z,
+                +0.025f*pixM2, x1, z
+        );
+        mLine.draw(matrix);
 
-        //t = String.format("%03.0f", (float) aglAlt % 1000);
-        String t = String.format("%3.0f nm", len);
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // White
-        glText.setScale(1.5f);
-        glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
-        glText.end();
     }
 
 
