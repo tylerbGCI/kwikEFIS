@@ -2,9 +2,7 @@ Changelog
 =========
 3.7 (Under Development)
 ------------------
-* DMAP: Airspace class filtering
-* DMAP: Auto zoom
-* eur.txt.air (Denmark, Germany, Switzerland)
+* DMAP: Terrain awareness
 
 3.6 (2017-10-04)
 ------------------
@@ -12,6 +10,9 @@ Changelog
 * Minor bugfix in compass rose
 * Minor performance tweak to data loading
 * Refactor EFIS/DMAP to common code
+* DMAP: Airspace class filtering
+* DMAP: Auto zoom
+* eur.txt.air (Denmark, Germany, Switzerland)
 
 3.5 (2017-09-21)
 ------------------
