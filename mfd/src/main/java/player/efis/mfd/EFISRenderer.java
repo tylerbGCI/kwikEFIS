@@ -2447,7 +2447,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         float dme;             //in nm
         float step = 0.50f;    //in nm, normally this should be = gridy
-        //float agl_ft;          //in feet
+        float agl_ft;          //in feet
 
         // oversize 20% a little to help with
         // bleed through caused by itrig truncating
@@ -2469,7 +2469,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float _x1=0, _y1=0;
             for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 2*m*step) { //1
 
-                dme_ft = dme * 6080;
+                //dme_ft = dme * 6080;
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
@@ -2481,7 +2481,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                     float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
 
                     DemColor color = DemGTOPO30.getColor((short) z1);
-                    mLine.SetColor(color.red, color.green, color.blue, 1);
+
+                    caution = cautionMin + (color.red + color.green + color.blue);
+                    agl_ft = MSLValue - z1 * 3.28084f;  // in ft
+                    if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);   // Enroute
+                    else if (IASValue < IASValueThreshold) mLine.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
+                    else if (agl_ft > 200) mLine.SetColor(caution, caution, 0, 1f);             // Proximity notification
+                    else mLine.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
+
                     mLine.SetWidth(wid);
                     mLine.SetVerts(
                             _x1, _y1, z,
@@ -2529,7 +2536,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float z, pixPerDegree, x1, y1;
         float radius; // = pixM2 / 2; //5;
-        float dme;
+        float dme_ft;
         float hitRelBrg;
         float obs;
         final float altMult = 10;
@@ -2546,14 +2553,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float hitLat = mWptSelLat + i / 60 * (float) Math.cos(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
             float hitLon = mWptSelLon + i / 60 * (float) Math.sin(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
 
-            dme = 6080 * UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
+            dme_ft = 6080 * UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
-            radius = (608.0f * pixM2) / dme;
-            float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
+            radius = (608.0f * pixM2) / dme_ft;
+            float skew = (float) Math.cos(Math.toRadians(hitRelBrg)); // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = hitRelBrg * pixPerDegree;
             //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
-            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
+            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme_ft)) * pixPerDegree * altMult);
 
             // De-clutter the gates
             //

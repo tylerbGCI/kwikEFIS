@@ -23,6 +23,7 @@ import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
+import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.orientation_t;
@@ -295,7 +296,10 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lon = _gps_lon;
 
         /*
+        //------------------------------------------------------------------------------------------
+        // todo: Hardcoded for debugging
         // Some debugging positions for testing
+        //
         //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
         //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
         //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
@@ -314,6 +318,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
+        //------------------------------------------------------------------------------------------
         // */
 
     	// This should never happen but we catch and force it to something known it just in case
@@ -830,14 +835,13 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         // YCMH 090 from Perth
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(150);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 3270; //2048; //900; //3048; //meter
+        gps_altitude = UMath.toMeter(1500); //2048; //900; //3048; //meter
         //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //deltaT = 0; // freeze time, ie force stationary
         //
-        // todo: Hardcoded for debugging
         //------------------------------------------------------------------------------------------
         // */
 
@@ -986,9 +990,9 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//mGLView.setGForce(loadfactor);                            // in gunits
 		//mGLView.setSlip(SLIP_SENS * slipValue);
 		mGLView.setHeading((float) Math.toDegrees(gps_course));   // in degrees
-		//mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
-        //mGLView.setAGL((int) (gps_agl * 3.2808f)); 	              // in feet
-		//mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
+		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
+        mGLView.setAGL((int) (gps_agl * 3.2808f)); 	              // in feet
+		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
 		//mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		//mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
