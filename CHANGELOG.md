@@ -2,7 +2,7 @@ Changelog
 =========
 3.7 (Under Development)
 ------------------
-* DMAP: Terrain awareness
+* DMAP: Add terrain awareness
 
 3.6 (2017-10-04)
 ------------------
