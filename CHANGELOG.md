@@ -1,17 +1,20 @@
 Changelog
 =========
-3.7 (Under Development)
+3.8 (Under Development)
+* DMAP: Auto zoom
+
+3.7 (2017-10-16)
 ------------------
 * DMAP: Add terrain awareness
+* Release DMAP v1.1
 
 3.6 (2017-10-04)
 ------------------
-* Add app: Kwik Digital Map (DMAP)
+* Add app: Kwik Digital Map (DMAP v1.0)
 * Minor bugfix in compass rose
 * Minor performance tweak to data loading
 * Refactor EFIS/DMAP to common code
 * DMAP: Airspace class filtering
-* DMAP: Auto zoom
 * eur.txt.air (Denmark, Germany, Switzerland)
 
 3.5 (2017-09-21)
