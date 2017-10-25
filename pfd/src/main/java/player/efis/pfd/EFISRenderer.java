@@ -103,7 +103,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // VSI
     private float VSIInView;        // Vertical speed to display above the centerline
-    private int VSIValue;           // Vertical speed in feet/minute
+    private int VSIValue;           // Vertical speed in Feet/minute
     private float VSINeedleAngle;   // The angle to set the VSI needle
 
     //DI
@@ -297,8 +297,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
-            float xlx; // = -0.78f*pixW2;
-            float xly; // = -0.40f*pixH2;
+            float xlx;
+            float xly;
 
             // Add switch for orientation
             if (Layout == layout_t.LANDSCAPE) {
@@ -306,10 +306,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = -0.74f * pixW2; // top left -0.75
                 xly = 0.50f * pixH2; // top left  0.55
                 roseScale = 0.44f;
+                GLES20.glViewport(0, 0, pixW, pixH); 
             } 
             else {
                 //Portrait
-                xlx = -0.00f * pixW2;
+                xlx = 0; //-0.00f * pixW2;
                 xly = -0.44f * pixH2;  //0.45f
                 roseScale = 0.52f; //0.45f; //0.50f;
             }
@@ -325,6 +326,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderCompassRose(rmiMatrix);
             renderBearing(rmiMatrix);
             renderAutoWptDetails(mMVPMatrix);
+            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
 
 
@@ -337,7 +339,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         renderRollMarkers(scratch2);
 
         //-----------------------------
-        {
             if (Layout == layout_t.LANDSCAPE)
                 GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
             else
@@ -356,7 +357,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
-        }
         //-----------------------------
 
         //renderFixedDIMarkers(mMVPMatrix);
@@ -2076,14 +2076,14 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
-        float dme;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float _dme = 6080000;  // 1,000 nm in ft
+        float dme;
+        float _dme = 1000;
         float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
         while (it.hasNext()) {
-            Apt currApt;//  = it.next();
+            Apt currApt; //  = it.next();
             try {
                 currApt = it.next();
             }
@@ -2105,17 +2105,17 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
             x1 = (float) (aptRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, dme * 6080)) * pixPerDegree);    // we do not take apt elevation into account
+            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree);    // we do not take apt elevation into account
 
             mPolyLine.SetWidth(3);
             mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
             {
                 float[] vertPoly = {
-                        x1 + 2.0f * radius, y1 + 0.0f * radius, z,
-                        x1 + 0.0f * radius, y1 + 2.0f * radius, z,
-                        x1 - 2.0f * radius, y1 + 0.0f * radius, z,
-                        x1 - 0.0f * radius, y1 - 2.0f * radius, z,
-                        x1 + 2.0f * radius, y1 + 0.0f * radius, z
+                        x1 + 2.0f * radius, y1, z,
+                        x1, y1 + 2.0f * radius, z,
+                        x1 - 2.0f * radius, y1, z,
+                        x1, y1 - 2.0f * radius, z,
+                        x1 + 2.0f * radius, y1, z
                 };
                 mPolyLine.VertexCount = 5;
                 mPolyLine.SetVerts(vertPoly);  //crash here
@@ -2134,7 +2134,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
 
                 setAutoWptValue(wptId);
-                setAutoWptDme(dme);  // 1nm = 6080ft
+                setAutoWptDme(dme);
                 setAutoWptBrg(absBrg);
                 setAutoWptRelBrg(relBrg);
                 _dme = dme;
@@ -2215,6 +2215,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Render the Digital Elevation Model (DEM).
     //
     // This is the meat and potatoes of the synthetic vision implementation
+    // The loops are very performance intensive, therefore all the hardcoded
+    // magic numbers
     //
     private void renderDEMTerrain(float[] matrix)
     {
@@ -2228,7 +2230,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         float dme;             //in nm
         float step = 0.50f;    //in nm, normally this should be = gridy
-        float agl_ft;          //in feet
+        float agl_ft;          //in Feet
 
         // oversize 20% a little to help with
         // bleed through caused by itrig truncating
@@ -2413,14 +2415,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float hitLat = mWptSelLat + i / 60 * (float) Math.cos(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
             float hitLon = mWptSelLon + i / 60 * (float) Math.sin(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
 
-            dme = 6080 * UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
+            dme = UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
-            radius = (608.0f * pixM2) / dme;
+            radius = 0.1f * pixM2 /dme;
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = hitRelBrg * pixPerDegree;
-            //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
-            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
+            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree * altMult);
 
             // De-clutter the gates
             //
@@ -2465,7 +2466,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         AGLValue = agl;
         if ((AGLValue <= 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
             // Handle taxi as a special case
-            MSLValue = 1 + (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
+            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
         }
 

@@ -107,7 +107,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     // VSI
     private float VSIInView;        // Vertical speed to display above the centerline
-    private int VSIValue;           // Vertical speed in feet/minute
+    private int VSIValue;           // Vertical speed in Feet/minute
     private float VSINeedleAngle;   // The angle to set the VSI needle
 
     //DI
@@ -2242,29 +2242,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             _x1 = 0; _y1 = 0;
             String airspaceDesc = String.format("%s LL FL%d", currAirspace.ac, currAirspace.al);
 
-            /*// TODO: 2017-10-05 : Implement airspace filters here
-            if (!(false
-                      || currAirspace.ac.equals("A")
-                      || currAirspace.ac.equals("B")
-                      || currAirspace.ac.equals("C")
-                      //|| currAirspace.ac.equals("E")
-                      //|| currAirspace.ac.equals("G") // General
-                      //|| currAirspace.ac.equals("Q") // Danger (also GFA)
-                      || currAirspace.ac.equals("R")   // Restricted
-                      || currAirspace.ac.equals("P")   // Prohibited
-                      || currAirspace.ac.equals("CTR") // CTR
-            )) continue;
-            // For now, ignore Q (Danger) areas by default.
-            if (
-              currAirspace.ac.equals("Q") // Danger (also GFA)
-            ) continue;*/
-
-            // Set the individual airspace colors
-            /*if      (currAirspace.ac.equals("A")) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
-            else if (currAirspace.ac.equals("C")) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
-            else if (currAirspace.ac.equals("R")) color = new DemColor(0.45f, 0.20f, 0.20f);
-            else color = new DemColor(0.4f, 0.4f, 0.4f);*/
-
             // Set the individual airspace colors
             if      (currAirspace.ac.equals("A") && AirspaceClass.A) color = new DemColor(0.37f, 0.62f, 0.42f); // ?
             else if (currAirspace.ac.equals("B") && AirspaceClass.B) color = new DemColor(0.37f, 0.42f, 0.62f); // Dk mod Powder blue 0.6
@@ -2434,28 +2411,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     // Render the Digital Elevation Model (DEM).
     //
     // This is the meat and potatoes of the synthetic vision implementation
+    // The loops are very performance intensive, therefore all the hardcoded
+    // magic numbers
     //
     private void renderDEMTerrain(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1;//, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
-        //float a = 0;//Float.MAX_VALUE;
-        //float b = Float.MAX_VALUE;
-
-        //pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         float dme;             //in nm
         float step = 0.50f;    //in nm, normally this should be = gridy
-        float agl_ft;          //in feet
+        float agl_ft;          //in Feet
 
-        // oversize 20% a little to help with
-        // bleed through caused by itrig truncating
-        //float gridy = 0.5f; //0.60f;   //in nm
-        //float gridx = 1.0f;  //1.20f;   //in degree
-
-        float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution;
         final float cautionMin = 0.2f;
@@ -2468,8 +2436,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         for (dme = 0; dme <= 700f / mMapZoom; dme = dme + m*step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
             for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 2*m*step) { //1
-
-                //dme_ft = dme * 6080;
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
@@ -2479,9 +2445,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 if ((_x1 != 0) || (_y1 != 0)) {
                     //float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
                     float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
-
                     DemColor color = DemGTOPO30.getColor((short) z1);
-
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
                     if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);   // Enroute
@@ -2605,7 +2569,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         AGLValue = agl;
         if ((AGLValue <= 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
             // Handle taxi as a special case
-            MSLValue = 1 + (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
+            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));  // Add 1 extra ft to esure we "above the ground"
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
         }
 

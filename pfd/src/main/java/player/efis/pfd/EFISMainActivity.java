@@ -23,6 +23,7 @@ import player.ulib.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
+import player.ulib.Unit;
 import player.ulib.orientation_t;
 
 import android.app.Activity;
@@ -284,20 +285,29 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lon = _gps_lon;
 
         /*
+        //------------------------------------------------------------------------------------------
+        // todo: Hardcoded for debugging
         // Some debugging positions for testing
+        //
         //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
         //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
         //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
         //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
-        _gps_lat = +50f;  _gps_lon = -124f; // Vancouver
 
-        //_gps_lat =  40.7f;  float _gps_lon = -111.82f;  // Salt Lake City
-        //_gps_lat =  48.14f; float _gps_lon = 11.57f;   // Munich
-        //_gps_lat = 47.26f; float _gps_lon = 11.34f;   //Innsbruck
-        //_gps_lat = -33.98f; float _gps_lon =   18.82f; // Stellenbosh
-        //_gps_lat = 00.26f; float _gps_lon = 00.34f;   //close to null island
+        //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
+        //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
+        //_gps_lat =  48.14f;  _gps_lon = 11.57f;   // Munich
+        //_gps_lat = 47.26f;  _gps_lon = 11.34f;   //Innsbruck
+        //_gps_lat =  55.67f;  _gps_lon = 12.57f;   // Copenhagen
+        //_gps_lat =  46.93f;  _gps_lon =  7.45f;   // Bern
+
+        _gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+        //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
+        //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
+
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
+        //------------------------------------------------------------------------------------------
         // */
 
 
@@ -776,7 +786,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	//
     float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
 	float _gps_course = 0.96f; //1.74f;  //in radians
-    float _gps_altitude = 1000; // meters
+    float _gps_altitude = 3000; // meters
     float _gps_agl = 0; //meters
 
 	float _gps_speed = 0;       // m/s
@@ -831,7 +841,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(2);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = 270; //2048; //900; //3048; //meter
+        gps_altitude = 270; //2048; //900; //3048; //Meter
         rollValue = 0;// (float) rnd.nextGaussian() / 5;
         pitchValue = 0;//(float) rnd.nextGaussian() / 20;
 
@@ -855,10 +865,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
         }
         gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
-
     }
-
-
 
 	//for landscape mode
 	// private float azimuthValue;
@@ -958,8 +965,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
             // the Flight Path Vector (FPV)
             deltaA = UNavigation.compassRose180(gps_course - orientationAzimuth);
-            fpvX = (float) filterfpvX.runningAverage(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed) * 180.0f / UTrig.M_PI); // a point 100m ahead of nose
-            fpvY = (float) filterfpvY.runningAverage(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed) * 180.0f / UTrig.M_PI);    // simple RA of the two velocities
+            fpvX = (float) filterfpvX.runningAverage(Math.toDegrees(Math.atan2(-gyro_rateOfTurn * 100.0f, gps_speed))); // a point 100m ahead of nose
+            fpvY = (float) filterfpvY.runningAverage(Math.toDegrees(Math.atan2(gps_rateOfClimb * 1.0f, gps_speed)));    // simple RA of the two velocities
 
             // Pitch and birdie
             mGLView.setDisplayAirport(true);
@@ -1037,11 +1044,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setBatteryPct(batteryPct);                        // in percentage
 		mGLView.setGForce(loadfactor);                            // in gunits
 		mGLView.setSlip(SLIP_SENS * slipValue);
-		mGLView.setHeading((float) Math.toDegrees(gps_course));   // in degrees
-		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
-        mGLView.setAGL((int) (gps_agl * 3.2808f)); 	              // in feet
-		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
-		mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
+		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
+
+        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
+		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));	 // in knots
+		mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
 

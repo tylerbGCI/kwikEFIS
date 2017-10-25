@@ -26,6 +26,7 @@ import player.ulib.DigitalFilter;
 import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
+import player.ulib.Unit;
 import player.ulib.orientation_t;
 import android.app.Activity;
 import android.content.Context;
@@ -335,7 +336,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mAirspace = new OpenAir(this);
-        //mAirspace.loadDatabase(region); // automatic based on coor, not used anymore
 
         mDemGTOPO30 = new DemGTOPO30(this);
         //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
@@ -837,7 +837,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         Random rnd = new Random();
         gps_course = _gps_course = (float) Math.toRadians(150);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = UMath.toMeter(1500); //2048; //900; //3048; //meter
+        gps_altitude = UMath.toMeter(1500); //2048; //900; //3048; //Meter
         //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //deltaT = 0; // freeze time, ie force stationary
@@ -989,11 +989,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		mGLView.setBatteryPct(batteryPct);                        // in percentage
 		//mGLView.setGForce(loadfactor);                            // in gunits
 		//mGLView.setSlip(SLIP_SENS * slipValue);
-		mGLView.setHeading((float) Math.toDegrees(gps_course));   // in degrees
-		mGLView.setALT((int) (gps_altitude * 3.2808f)); 	      // in feet
-        mGLView.setAGL((int) (gps_agl * 3.2808f)); 	              // in feet
-		mGLView.setASI(gps_speed * 1.94384449f);            	  // in knots
-		//mGLView.setVSI((int) (gps_rateOfClimb * 196.8504f)); 	  // in fpm
+		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
+        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
+		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
+		//mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		//mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
         mGLView.setMapZoom(mMapZoom);
