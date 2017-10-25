@@ -32,18 +32,4 @@ public class UMath {
         return diff < tolerance;                                   //  50<200      = true
     }
 
-
-    // Unit conversions
-    public static float toFeet(float m)
-    {
-        return m*3.28084f;
-    }
-
-    public static float toMeter(float ft)
-    {
-        return ft/3.28084f;
-    }
-
-
-
 }
