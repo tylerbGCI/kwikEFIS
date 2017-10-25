@@ -1,7 +1,9 @@
 Changelog
 =========
 3.8 (Under Development)
-* DMAP: Auto zoom
+------------------
+* DMAP: Add speed, altitude and AGL displays
+* DMAP: Auto zoom (wip)
 
 3.7 (2017-10-16)
 ------------------
@@ -16,6 +18,7 @@ Changelog
 * Refactor EFIS/DMAP to common code
 * DMAP: Airspace class filtering
 * eur.txt.air (Denmark, Germany, Switzerland)
+* Release EFIS v3.6
 
 3.5 (2017-09-21)
 ------------------

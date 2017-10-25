@@ -13,8 +13,13 @@
             android:defaultValue="true"
             android:key="displayDEM"
             android:summary="Enable synthetic vision DEM terrain"
-            android:title="Synthetic vision" />
+            android:title="Synthetic terrain" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="displayTape"
+            android:summary="Display airspeed, altimeter and compass"
+            android:title="GPS" />
 
         <CheckBoxPreference
             android:defaultValue="true"

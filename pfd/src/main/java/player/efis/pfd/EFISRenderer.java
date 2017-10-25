@@ -1035,9 +1035,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float top = -0.7f * pixH2;  //-0.5f
-        float left = 0.80f * pixM2;
+        float top = -0.7f * pixH2;
         float right = 1.14f * pixM2;
+        float left = right - 0.35f * pixM2;
 
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
@@ -1112,11 +1112,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
         t = Integer.toString(aglAlt / 1000);
         float margin;
-        float colom = 0.83f;
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (aglAlt >= 1000) glText.draw(t, colom * pixM2, top - glText.getCharHeight() / 2);
+        if (aglAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, top - glText.getCharHeight() / 2);
         if (aglAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
@@ -1125,7 +1124,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) aglAlt % 1000);
         glText.setScale(2.5f); // was 2.5
-        glText.draw(t, colom * pixM2 + margin, top - glText.getCharHeight() / 2);
+        glText.draw(t, left + 0.03f*pixM2 + margin, top - glText.getCharHeight() / 2);
         glText.end();
 
         {
@@ -1155,9 +1154,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float left = 0.80f * pixM2;
         float right = 1.14f * pixM2;
-        float apex = 0.75f * pixM2;
+        float left = right - 0.35f * pixM2;
+        float apex = left - 0.05f * pixM2;
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
@@ -1190,20 +1189,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
         t = Integer.toString(mslAlt / 1000);
         float margin;
-        float colom = 0.83f;
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (mslAlt >= 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
+        if (mslAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, -glText.getCharHeight() / 2);
         if (mslAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
-            margin = 1.1f * glText.getCharWidthMax();                    // we have to deal with the margin ourselves
+            margin = 1.1f * glText.getCharWidthMax(); // we have to deal with the margin ourselves
 
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) mslAlt % 1000);
         glText.setScale(2.5f); // was 2.5
-        glText.draw(t, colom * pixM2 + margin, -glText.getCharHeight() / 2);
+        glText.draw(t, left + 0.03f*pixM2 + margin, -glText.getCharHeight() / 2);
         glText.end();
 
         mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
@@ -1496,7 +1494,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         t = Integer.toString(Math.round(IASValue));
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix);     // white
         glText.setScale(3.5f);                            // was 2.5
-        glText.drawC(t, -0.85f * pixM2, glText.getCharHeight() / 2);
+        glText.drawC(t, left + 0.25f*pixM2, glText.getCharHeight() / 2);
         glText.end();
     }
 
@@ -1872,9 +1870,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
     private void renderHDGValue(float[] matrix)
     {
-        //float z;
-        //z = zfloat;
-
         int rd = Math.round(DIValue);           // round to nearest integer
         String t = Integer.toString(rd);
         glText.begin(1, 1, 1, 1, matrix);    // white
@@ -2008,51 +2003,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         fpvX = x;
         fpvY = y;
     }
-
-
-    /*
-    //-------------------------------------------------------------------------
-    // Calculate the DME distance in nm
-    //
-    private float calcDme(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
-        return (float) (60 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat));  // in nm, 1 deg of lat
-    }
-
-    //-------------------------------------------------------------------------
-    // Calculate the Relative Bearing in degrees
-    //
-    private float calcRelBrg(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        //todo: float relBrg = (float) (Math.toDegrees(UTrig.fastArcTan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        if (relBrg > 180) relBrg = relBrg - 360;
-        if (relBrg < -180) relBrg = relBrg + 360;
-        return relBrg;
-    }
-
-
-    //-------------------------------------------------------------------------
-    // Calculate the Absolute Bearing in degrees
-    //
-    private float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        float absBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
-        while (absBrg < 0) absBrg += 360;
-        return absBrg;
-    }
-    */
-
 
     //-------------------------------------------------------------------------
     // Airports / Waypoints

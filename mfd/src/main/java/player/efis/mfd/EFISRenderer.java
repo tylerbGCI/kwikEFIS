@@ -232,7 +232,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         else
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
 
-        // /*
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
@@ -247,8 +246,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         Matrix.multiplyMM(scratch2, 0, mMVPMatrix, 0, mRotationMatrix, 0);
         */
 
-        
-        /*// Pitch
+        /*
+        // Pitch
         if (Layout == layout_t.LANDSCAPE) {
             // Slide pitch to current value
             Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
@@ -323,7 +322,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 xlx = 0; //-0.00f * pixW2;
                 xly = -1.80f * pixH2;  //0.45f
                 roseScale = 1.9f;
-                GLES20.glViewport(0, pixH2, pixW, pixH); // Portrait //
+                GLES20.glViewport(0, pixH2, pixW, pixH); 
             }
             else {
                 //Portrait
@@ -366,19 +365,22 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         if (displayFlightDirector) renderDctTrack(mMVPMatrix);
         renderMapScale(mMVPMatrix);  // do before the DI
 
-        /*if (displayTape) {
+        /*
+        if (displayTape) {
             renderALTMarkers(altMatrix);
             renderASIMarkers(iasMatrix);
-        }*/
+        }
+        */
 
         //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
-        //renderFixedALTMarkers(mMVPMatrix);    // this could be empty argument // todo: maybe later
-        //renderFixedRADALTMarkers(mMVPMatrix); // AGL
-        //renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument // todo: maybe later
-        //renderVSIMarkers(mMVPMatrix);
-
-        renderFixedDIMarkers(mMVPMatrix);
-        renderHDGValue(mMVPMatrix);
+        if (displayTape == true) {
+            renderFixedALTMarkers(mMVPMatrix);
+            renderFixedRADALTMarkers(mMVPMatrix); // AGL
+            renderFixedASIMarkers(mMVPMatrix);
+            //renderVSIMarkers(mMVPMatrix);
+            renderFixedDIMarkers(mMVPMatrix);
+            renderHDGValue(mMVPMatrix);
+        }
         //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         //-----------------------------
 
@@ -1076,9 +1078,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float top = -0.7f * pixH2;  //-0.5f
-        float left = 0.80f * pixM2;
-        float right = 1.14f * pixM2;
+        float top = -0.3f * pixM2;
+        float right = 0.99f * pixW2;
+        float left = right - 0.35f * pixM2;
 
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
@@ -1153,11 +1155,10 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
         t = Integer.toString(aglAlt / 1000);
         float margin;
-        float colom = 0.83f;
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (aglAlt >= 1000) glText.draw(t, colom * pixM2, top - glText.getCharHeight() / 2);
+        if (aglAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, top - glText.getCharHeight() / 2);
         if (aglAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
@@ -1166,7 +1167,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) aglAlt % 1000);
         glText.setScale(2.5f); // was 2.5
-        glText.draw(t, colom * pixM2 + margin, top - glText.getCharHeight() / 2);
+        glText.draw(t, left + 0.03f*pixM2 + margin, top - glText.getCharHeight() / 2);
         glText.end();
 
         {
@@ -1196,9 +1197,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float left = 0.80f * pixM2;
-        float right = 1.14f * pixM2;
-        float apex = 0.75f * pixM2;
+        float right = 0.99f * pixW2;
+        float left = right - 0.35f * pixM2;
+        float apex = left - 0.05f * pixM2;
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
@@ -1231,20 +1232,19 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // white
         t = Integer.toString(mslAlt / 1000);
         float margin;
-        float colom = 0.83f;
 
         // draw the thousands digits larger
         glText.setScale(3.5f);  //3  2.5
-        if (mslAlt >= 1000) glText.draw(t, colom * pixM2, -glText.getCharHeight() / 2);
+        if (mslAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, -glText.getCharHeight() / 2);
         if (mslAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
-            margin = 1.1f * glText.getCharWidthMax();                    // we have to deal with the margin ourselves
+            margin = 1.1f * glText.getCharWidthMax(); // we have to deal with the margin ourselves
 
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) mslAlt % 1000);
         glText.setScale(2.5f); // was 2.5
-        glText.draw(t, colom * pixM2 + margin, -glText.getCharHeight() / 2);
+        glText.draw(t, left + 0.03f*pixM2 + margin, -glText.getCharHeight() / 2);
         glText.end();
 
         mTriangle.SetColor(0.0f, 0.0f, 0.0f, 1);  //black
@@ -1487,9 +1487,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float left = -1.10f * pixM2;
-        float right = -0.80f * pixM2;
-        float apex = -0.75f * pixM2;
+        float left = -0.99f * pixW2;
+        float right = left + 0.3f * pixM2;
+        float apex = right + 0.05f * pixM2;
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
@@ -1543,7 +1543,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         t = Integer.toString(Math.round(IASValue));
         glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix);     // white
         glText.setScale(3.5f);                            // was 2.5
-        glText.drawC(t, -0.85f * pixM2, glText.getCharHeight() / 2);
+        glText.drawC(t, left + 0.25f*pixM2, glText.getCharHeight() / 2);
         glText.end();
     }
 
@@ -2063,50 +2063,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         fpvY = y;
     }
 
-    /*
-    //-------------------------------------------------------------------------
-    // Calculate the DME distance in nm
-    //
-    private float calcDme(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        //d =  364800 * Math.hypot(deltaLon, deltaLat);  // in ft, 1 deg of lat  6080 * 60 = 364,80 note hypot uses convergenge and is very slow.
-        return (float) (60 * Math.sqrt(deltaLon * deltaLon + deltaLat * deltaLat));  // in nm, 1 deg of lat
-    }
-
-    //-------------------------------------------------------------------------
-    // Calculate the Relative Bearing in degrees
-    //
-    private float calcRelBrg(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        float relBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        //todo: float relBrg = (float) (Math.toDegrees(UTrig.fastArcTan2(deltaLon, deltaLat)) - DIValue) % 360;  // the relative bearing to the apt
-        if (relBrg > 180) relBrg = relBrg - 360;
-        if (relBrg < -180) relBrg = relBrg + 360;
-        return relBrg;
-    }
-
-
-    //-------------------------------------------------------------------------
-    // Calculate the Absolute Bearing in degrees
-    //
-    private float calcAbsBrg(float lat1, float lon1, float lat2, float lon2)
-    {
-        float deltaLat = lat2 - lat1;
-        float deltaLon = lon2 - lon1;
-
-        float absBrg = (float) (Math.toDegrees(Math.atan2(deltaLon, deltaLat))) % 360;
-        while (absBrg < 0) absBrg += 360;
-        return absBrg;
-    }
-    */
-
-
     //-------------------------------------------------------------------------
     // Airports / Waypoints
     //
@@ -2114,11 +2070,11 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 20;// 10;
-    private int MX_RANGE = 200; //100;// 20;   //nm
+    private final int MX_NR_APT = 20;
+    private int MX_RANGE = 200;    //nm
     private int Aptscounter = 0;
     private int nrAptsFound;
-    private float mMapZoom = 20; //30;
+    private float mMapZoom = 20; 
 
     private int Airspacecounter = 0;
     private int nrAirspaceFound;
@@ -2133,8 +2089,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
-        float dme;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float _dme = 6080000;  // 1,000 nm in ft
+        float dme;         
+        float _dme = 1000;  
         float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
@@ -2191,7 +2147,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
 
                 setAutoWptValue(wptId);
-                setAutoWptDme(dme);  // 1nm = 6080ft
+                setAutoWptDme(dme);
                 setAutoWptBrg(absBrg);
                 setAutoWptRelBrg(relBrg);
                 _dme = dme;
@@ -2416,7 +2372,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     //
     private void renderDEMTerrain(float[] matrix)
     {
-        float z, pixPerDegree, x1, y1, z1;//, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
+        float z, pixPerDegree, x1, y1, z1;
         float lat, lon;
         z = zfloat;
 
@@ -2500,7 +2456,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     {
         float z, pixPerDegree, x1, y1;
         float radius; // = pixM2 / 2; //5;
-        float dme_ft;
+        float dme;
         float hitRelBrg;
         float obs;
         final float altMult = 10;
@@ -2517,14 +2473,13 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             float hitLat = mWptSelLat + i / 60 * (float) Math.cos(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
             float hitLon = mWptSelLon + i / 60 * (float) Math.sin(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
 
-            dme_ft = 6080 * UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
+            dme = UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
-            radius = (608.0f * pixM2) / dme_ft;
-            float skew = (float) Math.cos(Math.toRadians(hitRelBrg)); // to misquote William Shakespeare, this may be gilding the lily?
+            radius = 0.1f * pixM2 /dme;
+            float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = hitRelBrg * pixPerDegree;
-            //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - mAltSelValue, dme)) * pixPerDegree * altMult);
-            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, dme_ft)) * pixPerDegree * altMult);
+            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree * altMult);
 
             // De-clutter the gates
             //
@@ -2569,7 +2524,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         AGLValue = agl;
         if ((AGLValue <= 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
             // Handle taxi as a special case
-            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));  // Add 1 extra ft to esure we "above the ground"
+            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
         }
 
@@ -3254,8 +3209,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
 
             //glText.begin( tapeShade, tapeShade, tapeShade, 1.0f, matrix ); // white
             //glText.setScale(1.5f); // seems to have a weird effect here?
-            //glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, angleDeg); // angleDeg=90-i, Use 360-DIValue for vertical text
-            glText.drawC(t, 0.80f * roseRadius * cosI, 0.80f * roseRadius * sinI, -i); // angleDeg=90-i, Use 360-DIValue for vertical text
+            glText.drawC(t, 0.75f * roseRadius * cosI, 0.75f * roseRadius * sinI, -i); // angleDeg=90-i, Use 360-DIValue for vertical text
             glText.end();
             for (j = 10; j <= 20; j = j + 10) {
                 sinI = UTrig.isin((i + j));
