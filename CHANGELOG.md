@@ -2,12 +2,14 @@ Changelog
 =========
 3.8 (Under Development)
 ------------------
-* DMAP: Add speed, altitude and AGL displays
-* DMAP: Auto zoom (wip)
+* Add speed, altitude and AGL displays to map
+* Zoom with swipe up/down (use XCSoar convention) 
+* <wip: Auto zoom>
+* <wip: Release DMAP v1.2>
 
 3.7 (2017-10-16)
 ------------------
-* DMAP: Add terrain awareness
+* Add terrain awareness
 * Release DMAP v1.1
 
 3.6 (2017-10-04)

@@ -1473,9 +1473,24 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
+    //-------------------------------------------------------------------------
+    // Map Zooming
+    //
     void setMapZoom(float zoom)
     {
         mMapZoom = zoom;
+    }
+
+    public void zoomIn()
+    {
+        if (mMapZoom < 5) mMapZoom += 1;
+        else if (mMapZoom < 120) mMapZoom += 5;
+    }
+
+    public void zoomOut()
+    {
+        if (mMapZoom > 5) mMapZoom -= 5;
+        else if (mMapZoom > 2) mMapZoom -= 1;
     }
 
 
@@ -2074,7 +2089,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
     private int MX_RANGE = 200;    //nm
     private int Aptscounter = 0;
     private int nrAptsFound;
-    private float mMapZoom = 20; 
+    public float mMapZoom = 20; // Zoom multiplier for map. 1 (max out) to 200 (max in)
+
 
     private int Airspacecounter = 0;
     private int nrAirspaceFound;
@@ -2399,7 +2415,7 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
                 y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
                 if ((_x1 != 0) || (_y1 != 0)) {
-                    //float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
+                    // float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
                     float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
                     DemColor color = DemGTOPO30.getColor((short) z1);
                     caution = cautionMin + (color.red + color.green + color.blue);

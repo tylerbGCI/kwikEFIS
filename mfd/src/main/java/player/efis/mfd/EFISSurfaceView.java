@@ -51,6 +51,8 @@ public class EFISSurfaceView extends GLSurfaceView
     private float mPreviousX;
     private float mPreviousY;
 
+    private static final int MIN_DISTANCE = 150;
+
     @Override
     public boolean onTouchEvent(MotionEvent e)
     {
@@ -85,11 +87,38 @@ public class EFISSurfaceView extends GLSurfaceView
             case MotionEvent.ACTION_DOWN:
                 mRenderer.setActionDown(x, y);
                 requestRender();
+
+                mPreviousX = x;
+                mPreviousY = y;
+                break;
+
+            case MotionEvent.ACTION_UP:
+                float deltaX = x - mPreviousX;
+                float deltaY = y - mPreviousY;
+
+                if (Math.abs(deltaY) > MIN_DISTANCE) {
+                    if (deltaY < 0) {
+                        // swipe up
+                        zoomIn();
+                    }
+                    else {
+                        // swipe down
+                        zoomOut();
+                    }
+                }
+                else if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    if (deltaY > 0) {
+                        // swipe right
+                    }
+                    else {
+                        // swipe left
+                    }
+                }
+                else {
+                    // consider as something else - a screen tap for example
+                }
                 break;
         }
-        mPreviousX = x;
-        mPreviousY = y;
-
         requestRender();
         return true;
     }
@@ -328,9 +357,24 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    //
+    // Map Zooming
+    //
     public void setMapZoom(float zoom)
     {
         mRenderer.setMapZoom(zoom);
+        requestRender();
+    }
+
+    public void zoomIn()
+    {
+        mRenderer.zoomIn();
+        requestRender();
+    }
+
+    public void zoomOut()
+    {
+        mRenderer.zoomOut();
         requestRender();
     }
 

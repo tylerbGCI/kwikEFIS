@@ -88,7 +88,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
 	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 	int calibrationCount = 0;
-    private float mMapZoom = 20; // Zoom multiplier for map. 1 (max out) to 200 (max in)
 
 	// Location abstracts
 	protected float gps_lat;            // in decimal degrees
@@ -190,20 +189,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{ 
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            if (mMapZoom < 5) mMapZoom += 1;
-            else if (mMapZoom < 120) mMapZoom += 5;
-
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
+            mGLView.zoomIn();
             return true;
         }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
-            if (mMapZoom > 5) mMapZoom -= 5;
-            else if (mMapZoom > 2) mMapZoom -= 1;
-
-            /*if (mMapZoom > 5) mMapZoom -= 5;
-            else if (mMapZoom <= 5) mMapZoom -= 1;
-            else if (mMapZoom <= 1) mMapZoom = 1;*/
-
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+            mGLView.zoomOut();
             return true;
         }
 		return super.onKeyDown(keyCode, event);
@@ -288,7 +279,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        mMapZoom = settings.getFloat("mMapZoom", mMapZoom);
+        mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
         _gps_lat = settings.getFloat("GpsLat", gps_lat);
@@ -367,7 +358,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
         editor.putFloat("GpsLat", gps_lat);
         editor.putFloat("GpsLon", gps_lon);
-        editor.putFloat("mMapZoom", mMapZoom);
+        editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
 
 
         // need to add the aircraft --- todo
@@ -996,7 +987,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
 		//mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
-        mGLView.setMapZoom(mMapZoom);
+        //mGLView.setMapZoom(mMapZoom);
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
