@@ -19,13 +19,12 @@ package player.efis.pfd;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.Gpx;
-import player.ulib.SensorComplementaryFilter;
+import player.efis.common.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.Unit;
-import player.ulib.orientation_t;
-
+import player.efis.common.orientation_t;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +46,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.format.Time;
-
 import android.view.Menu;
 import android.view.MenuInflater; 
 import android.view.MenuItem;
@@ -180,37 +178,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		return true;
 	}
-
-	/*
-	// It causes problems with the new "improved" Samsung devices.
-	
-	// This code will catch the actual keypress.
-	// for now we will leave the menu bar in case it is needed later 
-	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	{ 
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			//do your work ...
-			// Launch settings activity
-			//Intent i = new Intent(this, AppPreferences.class);
-			//startActivity(i);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);  
-	} 
-	//*/
-
-	/* This does not seem to do anything 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-
-		SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		mGLView.setPrefs(prefs_t.TERRAIN, SP.getBoolean("displayTerrain", true));
-		mGLView.setPrefs(prefs_t.TAPE,    SP.getBoolean("displayTape", true));
-		mGLView.setPrefs(prefs_t.MIRROR,  SP.getBoolean("displayMirror", false));
-		bDemoMode = SP.getBoolean("demoMode", false);
-	}*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -950,6 +917,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		}
 		else {
             mGLView.setDemoMode(false, " ");
+            mGLView.setDisplayAirport(true);
         }
 
         //
@@ -1041,17 +1009,16 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
 		mGLView.setPitch(pitchValue);                             // in degrees
 		mGLView.setRoll(rollValue);                               // in degrees
-		mGLView.setBatteryPct(batteryPct);                        // in percentage
 		mGLView.setGForce(loadfactor);                            // in gunits
 		mGLView.setSlip(SLIP_SENS * slipValue);
+		mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
+		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
 		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
-
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
 		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));	 // in knots
-		mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
-		mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
+		mGLView.setBatteryPct(batteryPct);                        // in percentage
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);

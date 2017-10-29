@@ -21,13 +21,12 @@ import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
-import player.ulib.SensorComplementaryFilter;
+import player.efis.common.SensorComplementaryFilter;
 import player.ulib.DigitalFilter;
-import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.Unit;
-import player.ulib.orientation_t;
+import player.efis.common.orientation_t;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -183,7 +182,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		return true;
 	}
 
-	// It causes problems with the new "improved" Samsung devices.
 	// This code will catch the actual keypress.
 	// for now we will leave the menu bar in case it is needed later 
     @Override
@@ -584,8 +582,8 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
-        mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
+        mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
 
         AirspaceClass.A = settings.getBoolean("classA", true);
         AirspaceClass.B = settings.getBoolean("classB", true);
@@ -774,7 +772,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
     float _gps_altitude = 3000; // meters
     float _gps_agl = 0; //meters
 
-	float _gps_speed = 90;       // m/s
+	float _gps_speed = 0;       // m/s
 	long _sim_ms = 0, sim_ms;
     Random rand = new Random();
 
@@ -975,19 +973,12 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 		//
 		String s; // general purpose string
 
-		//mGLView.setPitch(pitchValue);                             // in degrees
-		//mGLView.setRoll(rollValue);                               // in degrees
-		mGLView.setBatteryPct(batteryPct);                        // in percentage
-		//mGLView.setGForce(loadfactor);                            // in gunits
-		//mGLView.setSlip(SLIP_SENS * slipValue);
 		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
 		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
-		//mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute (gps_rateOfClimb));  // in fpm
 		mGLView.setLatLon(gps_lat, gps_lon);
-		//mGLView.setTurn((sensorBias)*gyro_rateOfTurn + (1-sensorBias)*gps_rateOfTurn);
-        //mGLView.setMapZoom(mMapZoom);
+		mGLView.setBatteryPct(batteryPct);                        // in percentage
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);

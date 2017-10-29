@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package player.ulib;
+package player.efis.common;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import android.hardware.SensorManager;
+import player.ulib.DigitalFilter;
 
 public class SensorComplementaryFilter
 {
