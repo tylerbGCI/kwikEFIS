@@ -41,16 +41,6 @@
             android:key="displayRmi"
             android:summary="Engage Compass and Bearing Indicator"
             android:title="Compass Rose" />
-        <!--
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="displayHITS"
-            android:summary="Enable HITS display"
-            android:title="Highway In The Sky" />
-            -->
-
-
-
 
         </PreferenceCategory>
         

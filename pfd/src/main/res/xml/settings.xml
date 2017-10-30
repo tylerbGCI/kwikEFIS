@@ -46,9 +46,6 @@
             android:summary="Enable HITS display"
             android:title="Highway In The Sky" />
 
-
-
-
         </PreferenceCategory>
         
     <!--     <PreferenceCategory  android:title="SYSTEM" >     -->

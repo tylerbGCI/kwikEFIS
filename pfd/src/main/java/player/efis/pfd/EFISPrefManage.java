@@ -52,7 +52,6 @@ public class EFISPrefManage extends PreferenceActivity
         lp = (ListPreference) findPreference("sensorBias");
         lp.setSummary(lp.getEntry());
 
-
         // Get the version number of the app
         PackageInfo pInfo = null;
         try {

@@ -21,15 +21,6 @@
             android:summary="Select active aircraft model"
             android:title="Aircraft" />
 
-        <!--
-        <ListPreference
-            android:defaultValue="zar.aus"
-            android:entries="@array/region_names"
-            android:entryValues="@array/region_values"
-            android:key="AirportDatabase"
-            android:summary="Select the operational database"
-            android:title="Airport" />
-            -->
     </PreferenceCategory>
 
 
@@ -44,8 +35,8 @@
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="landscapeMode"
-                android:summary="Select Panorama view"
-                android:title="Panorama" />
+                android:summary="Select Landscape view"
+                android:title="Landscape" />
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="displayMirror"
@@ -62,8 +53,6 @@
                 android:summary="Lock the exit on back button"
                 android:title="Locked" />
         </PreferenceScreen>
-
-
 
         <ListPreference
             android:defaultValue="0.15f"

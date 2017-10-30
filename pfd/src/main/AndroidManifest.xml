@@ -29,8 +29,6 @@
     android:versionCode="16"
     android:versionName="3.7 rc-1" >
 
-
-
     <!-- We need to target 10 for the menu button -->
     <!-- it is overridden in the gradle files -->
     <uses-sdk

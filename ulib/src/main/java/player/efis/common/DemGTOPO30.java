@@ -67,7 +67,7 @@ public class DemGTOPO30
     static float demTopLeftLat = -10;
     static float demTopLeftLon = +100;
 
-    static private int x0;   // center of the BUFX tile ??
+    static private int x0;   // center of the BUFX tile
     static private int y0;   // center of the BUFX tile
 
     public float lat0;
@@ -101,8 +101,6 @@ public class DemGTOPO30
         // check if buff is valid ?
 
         // *60 -> min * 2 -> 30 arcsec = 1/2 a min
-        //int y = (int) (Math.abs(demTopLeftLat - lat) * 60 * 2) - y0;
-        //int x = (int) (Math.abs(lon - demTopLeftLon) * 60 * 2) - x0;
         int y = (int) ((demTopLeftLat - lat) * 120) - y0;
         int x = (int) ((lon - demTopLeftLon) * 120) - x0;
 
@@ -148,10 +146,6 @@ public class DemGTOPO30
                 blue = (c - 2 * r) / r;
                 if (blue > max) {
                     blue = max;
-                    //red = max - (c - 3*r) / r;
-                    //green = max - (c - 3*r) / r;  // shade high to purple
-                    //red = max - (c - 3*r) / r;  // shade high to ? in combo with above
-                    //blue = max - (c - 3*r) / r;  // shade high to ? in combo with above
                 }
             }
         }
@@ -183,15 +177,13 @@ public class DemGTOPO30
         int color = Color.HSVToColor(hsv);
 
         return new DemColor((float) Color.red(color) / 255, (float) Color.green(color) / 255, (float) Color.blue(color) / 255);
-
-        //return new DemColor(red, green, blue);
     }
 
 
     private DemColor calcHSVColor(short c)
     {
 
-        int r = 600;//1000;   //600;  //600m=2000ft
+        int r = 600;  // 600m=2000ft
         int MaxColor = 128;
         float hsv[] = {0, 0, 0};
         int colorBase;
@@ -229,6 +221,7 @@ public class DemGTOPO30
             colorBase = Color.rgb(v, v, v);
         }
         else {
+            // the ocean
             colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
         }
 
@@ -243,9 +236,6 @@ public class DemGTOPO30
             hsv[2] = 0.25f; // clamp the value, val 0..1
         }
         int color = Color.HSVToColor(hsv);
-        // or just use as is
-        //int color = colorBase;
-
         return new DemColor((float) Color.red(color) / 255, (float) Color.green(color) / 255, (float) Color.blue(color) / 255);
     }
     //-----------------------------

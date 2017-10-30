@@ -264,7 +264,6 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         }
         else if (displayTerrain) renderTerrain(scratch1);
 
-        //if (displayDEM) renderDEMBuffer(mMVPMatrix);  // dddd debug dddd
         renderPitchMarkers(scratch1);
 
         // FPV only means anything if we have speed and rate of climb, ie altitude
@@ -283,16 +282,12 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
             } 
             else {
-                //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
                 // Slide pitch to current value adj for portrait
                 float Adjust = pixH2 * portraitOffset;
                 // Slide FD to current value
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
             }
             renderFlightDirector(fdMatrix);
-            //renderSelWptValue(mMVPMatrix);
-            //renderSelWptDetails(mMVPMatrix);
-            //renderSelAltValue(mMVPMatrix);
         }
 
         // Remote Magnetic Inidicator - RMI

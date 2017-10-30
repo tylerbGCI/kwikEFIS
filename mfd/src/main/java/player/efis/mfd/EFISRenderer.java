@@ -235,81 +235,9 @@ public class EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        /*
-        // Create a rotation for the horizon
-        Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
-
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the mMVPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
-        Matrix.multiplyMM(scratch1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
-        Matrix.multiplyMM(scratch2, 0, mMVPMatrix, 0, mRotationMatrix, 0);
-        */
-
-        /*
-        // Pitch
-        if (Layout == layout_t.LANDSCAPE) {
-            // Slide pitch to current value
-            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
-        } else {
-            // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
-            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
-        }
-
-        // Slide ALT to current value
-        Matrix.translateM(altMatrix, 0, mMVPMatrix, 0, 0, -MSLTranslation, 0); // apply the altitude
-
-        // Slide IAS to current value
-        Matrix.translateM(iasMatrix, 0, mMVPMatrix, 0, 0, -IASTranslation, 0); // apply the altitude
-        */
-
         zfloat = 0;
 
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for perfromance
-
-        /*if (displayDEM) {
-            // Make the blue sky for the DEM.
-            // Note: it extends a little below the horizon when AGL is positive
-            renderDEMSky(scratch1);
-            if (AGLValue > 0) renderDEMTerrain(scratch1);  // underground is not valid
-        }
-        else if (displayTerrain) renderTerrain(scratch1);*/
-        //if (displayDEM) renderDEMBuffer(mMVPMatrix);  // dddd debug dddd
-
-
-        /*renderPitchMarkers(scratch1);
-
-        // FPV only means anything if we have speed and rate of climb, ie altitude
-        if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
-        if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
-
-
-        // Flight Director - FD
-        if (displayFlightDirector) {
-            // Create a rotation for the Flight director
-            Matrix.setRotateM(mFdRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // fd rotation
-            Matrix.multiplyMM(fdMatrix, 0, mMVPMatrix, 0, mFdRotationMatrix, 0);
-
-            if (Layout == layout_t.LANDSCAPE) {
-                // Slide FD to current value
-                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
-            } 
-            else {
-                //Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch
-                // Slide pitch to current value adj for portrait
-                float Adjust = pixH2 * portraitOffset;
-                // Slide FD to current value
-                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
-            }
-            renderFlightDirector(fdMatrix);
-            //renderSelWptValue(mMVPMatrix);
-            //renderSelWptDetails(mMVPMatrix);
-            //renderSelAltValue(mMVPMatrix);
-        }
-        */
-
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
@@ -335,44 +263,20 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             // Create a rotation for the RMI
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
             Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            //renderBearingTxt(mMVPMatrix);
             renderFixedCompassMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             renderCompassRose(rmiMatrix);
-            //renderBearing(rmiMatrix);
-            //renderAutoWptDetails(mMVPMatrix);
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
 
-        //if (Layout == layout_t.PORTRAIT) {
-        //    // Slide pitch to current value adj for portrait
-        //    float Adjust = pixH2 * portraitOffset;
-        //    GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
-        //}
-
-        //renderFixedHorizonMarkers();
-        //renderRollMarkers(scratch2);
         if (displayAirspace) renderAirspace(mMVPMatrix);
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
 
         //-----------------------------
-        //if (Layout == layout_t.LANDSCAPE)
-        //    GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
-        //else
-        //    GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
-
         if (displayFlightDirector) renderDctTrack(mMVPMatrix);
         renderMapScale(mMVPMatrix);  // do before the DI
 
-        /*
-        if (displayTape) {
-            renderALTMarkers(altMatrix);
-            renderASIMarkers(iasMatrix);
-        }
-        */
-
-        //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix);
         if (displayTape == true) {
             renderFixedALTMarkers(mMVPMatrix);
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
@@ -381,16 +285,8 @@ public class EFISRenderer implements GLSurfaceView.Renderer
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
         }
-        //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+
         //-----------------------------
-
-        //renderFixedDIMarkers(mMVPMatrix);
-        //renderHDGValue(mMVPMatrix);
-
-        //renderTurnMarkers(mMVPMatrix);
-        //renderSlipBall(mMVPMatrix);
-        //renderGForceValue(mMVPMatrix);
-
         if (displayInfoPage) {
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
@@ -407,32 +303,16 @@ public class EFISRenderer implements GLSurfaceView.Renderer
                 renderNorthQue(rmiMatrix);
             }
         }
-        //renderMapScale(mMVPMatrix); // b2 this works
-
-
-        /*if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
-        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
-        if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
-        if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
-        if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
-        if (Calibrating) renderCalibrate(mMVPMatrix);*/
         if (bDemoMode) renderDemoMode(mMVPMatrix);
 
         renderACSymbol(mMVPMatrix);
 
         // Do this last so that every else wil be dimmed for fatfinger entry
-        //dimScreen(mMVPMatrix, 0.250f);
-        //if (displayFlightDirector || displayRMI || displayHITS) {
         if (displayFlightDirector) {
             //renderDctTrack(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }
-
-        /*if (displayFlightDirector || displayHITS) {
-            renderSelAltValue(mMVPMatrix);
-        }*/
-
     }
 
     //-------------------------------------------------------------------------
