@@ -206,23 +206,26 @@ public class DemGTOPO30
             v %= MaxColor;
             colorBase = Color.rgb(v, MaxColor, 0);
         }
-        else if (v > 1) {
+        else if (v > 0) {
             // coastal plain
             if (v > min_v)
                 colorBase = Color.rgb(0, v, 0);
             else {
-                // beach, a special case
+                // close to the sea (lower than 25m),
+                // is a special case otherwise it gets too dark
                 colorBase = Color.rgb(min_v - v, min_v + (min_v - v), min_v - v);
             }
         }
-        else if (v > 0) {
+        /*else if (v > 0) {
             // the beach
             v = MaxColor / 4;
             colorBase = Color.rgb(v, v, v);
-        }
+        }*/
         else {
             // the ocean
-            colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
+            //colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
+            colorBase = Color.rgb(0, 0, MaxColor); //bright blue ocean
+            //colorBase = Color.rgb(MaxColor, MaxColor, MaxColor); //bright gray  ocean
         }
 
         // this allows us to adjust hue, sat and val
@@ -233,7 +236,7 @@ public class DemGTOPO30
 
         if (hsv[2] > 0.25) {
             hsv[0] = hsv[0] - ((hsv[2] - 0.25f) * 60);  // adjust the hue max 15%,  hue 0..360
-            hsv[2] = 0.25f; // clamp the value, val 0..1
+            hsv[2] = 0.30f; // clamp the value, val 0..1
         }
         int color = Color.HSVToColor(hsv);
         return new DemColor((float) Color.red(color) / 255, (float) Color.green(color) / 255, (float) Color.blue(color) / 255);
