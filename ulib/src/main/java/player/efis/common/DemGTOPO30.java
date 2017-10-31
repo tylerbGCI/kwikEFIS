@@ -76,6 +76,8 @@ public class DemGTOPO30
     public static boolean demDataValid = false;
     public static boolean buffEmpty = false;
 
+    public static float gamma = 1;
+
     //-------------------------------------------------------------------------
     // Construct a new default loader with no flags set
     //
@@ -86,6 +88,13 @@ public class DemGTOPO30
     public DemGTOPO30(Context context)
     {
         this.context = context;
+        setGamma(1);
+    }
+
+    public static void setGamma(float g)
+    {
+        gamma = g;
+
         //for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcColor(i);
         for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcHSVColor(i); //optimal so far!
     }
@@ -180,7 +189,7 @@ public class DemGTOPO30
     }
 
 
-    private DemColor calcHSVColor(short c)
+    private static DemColor calcHSVColor(short c)
     {
 
         int r = 600;  // 600m=2000ft
@@ -244,7 +253,6 @@ public class DemGTOPO30
         and V controls the brightness. So, if you enhance V and decrease S at same time, you gets
         more luminance
         */
-        float gamma = 1.0f; //1.8f;
         hsv[1] = hsv[1]/gamma;  // sat 0..1
         hsv[2] = hsv[2]*gamma;  // val 0..1
 

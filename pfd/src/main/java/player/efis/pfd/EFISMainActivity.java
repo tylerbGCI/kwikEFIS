@@ -251,7 +251,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
-        /*
+        ///*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         // Some debugging positions for testing
@@ -581,6 +581,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
 
+
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
@@ -616,7 +617,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
+
+        // If we changed to light scheme
+        //if (bDemoMode != settings.getBoolean("demoMode", false)) {
+
+        // If we changed display schemes, a color gamma rec-calc is required
+        if (bColorSchemeLight != settings.getBoolean("colorScheme", false)) mGLView.setSchemeLight(settings.getBoolean("colorScheme", false));
+        bColorSchemeLight = settings.getBoolean("colorScheme", false);
     }
+
+    boolean bColorSchemeLight;// = false;
+
 
 	//-------------------------------------------------------------------------
 	// Utility function to determine the direction of the turn and try to eliminate

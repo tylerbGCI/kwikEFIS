@@ -285,7 +285,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
-        /*
+        ///*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         // Some debugging positions for testing

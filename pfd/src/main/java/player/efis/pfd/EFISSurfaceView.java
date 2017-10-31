@@ -322,5 +322,18 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    public void setSchemeDark()
+    {
+        mRenderer.setSchemeDark();
+    }
+
+    public void setSchemeLight(boolean value)
+    {
+        if (value)  mRenderer.setSchemeLight();
+        else mRenderer.setSchemeDark();
+        requestRender();
+    }
+
+
 
 }
