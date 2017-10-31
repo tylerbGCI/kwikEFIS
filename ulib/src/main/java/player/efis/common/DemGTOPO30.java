@@ -115,7 +115,7 @@ public class DemGTOPO30
         if (c < MAX_ELEV)
             return colorTbl[c];
         else
-            return colorTbl[MAX_ELEV];
+            return colorTbl[MAX_ELEV-1];
     }
 
     //-----------------------------
@@ -238,6 +238,16 @@ public class DemGTOPO30
             hsv[0] = hsv[0] - ((hsv[2] - 0.25f) * 60);  // adjust the hue max 15%,  hue 0..360
             hsv[2] = 0.30f; // clamp the value, val 0..1
         }
+
+        /*
+        On HSV model, H (hue) define the base color, S (saturation) control the amount of gray
+        and V controls the brightness. So, if you enhance V and decrease S at same time, you gets
+        more luminance
+        */
+        float gamma = 1.0f; //1.8f;
+        hsv[1] = hsv[1]/gamma;  // sat 0..1
+        hsv[2] = hsv[2]*gamma;  // val 0..1
+
         int color = Color.HSVToColor(hsv);
         return new DemColor((float) Color.red(color) / 255, (float) Color.green(color) / 255, (float) Color.blue(color) / 255);
     }
