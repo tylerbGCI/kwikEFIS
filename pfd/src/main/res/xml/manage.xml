@@ -28,7 +28,7 @@
     <PreferenceCategory android:title="SYSTEM" >
         <PreferenceScreen
             android:key="modeSelection"
-            android:title="Panorama / Mirror / Demo / Locked"
+            android:title="Screen / Mirror / Demo / Locked"
             android:summary="Mode Selection"
             android:persistent="false">
 
@@ -46,7 +46,7 @@
                 android:defaultValue="false"
                 android:key="demoMode"
                 android:summary="Simulate GPS movement for demonstration"
-                android:title="Demo" />
+                android:title="Simulator" />
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="lockedMode"
