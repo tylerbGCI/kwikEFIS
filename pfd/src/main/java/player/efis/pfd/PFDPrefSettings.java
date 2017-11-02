@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package player.efis.mfd;
+package player.efis.pfd;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
-public class EFISPrefSettings extends PreferenceActivity 
+public class PFDPrefSettings extends PreferenceActivity
 {
 
 	@Override
@@ -28,8 +28,6 @@ public class EFISPrefSettings extends PreferenceActivity
 	{
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
-
-
 	}
 }
 

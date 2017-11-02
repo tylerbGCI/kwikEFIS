@@ -118,6 +118,18 @@ public class DemGTOPO30
         else return buff[x][y];
     }
 
+    //-------------------------------------------------------------------------
+    // Utility function to calculate above ground altitude
+    // in m using the DEM
+    public static float calculateAgl(float lat, float lon, float alt)
+    {
+        //float agl = 0;
+        //if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
+
+        if (demDataValid) return Math.max(0, alt - (int) (getElev(lat, lon)));
+        else return 0;
+    }
+
 
     public static DemColor getColor(short c)
     {
@@ -129,7 +141,7 @@ public class DemGTOPO30
 
     //-----------------------------
     //color stuff - moved from renderer and renamed
-
+    //
     private DemColor calcColor(short c)
     {
         float red = 0;

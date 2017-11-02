@@ -163,12 +163,12 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 		switch (item.getItemId()) {
             case R.id.settings:
                 // Launch settings activity
-                Intent i = new Intent(this, EFISPrefSettings.class);
+                Intent i = new Intent(this, MFDPrefSettings.class);
                 startActivity(i);
                 break;
             case R.id.manage:
                 // Launch manage activity
-                Intent j = new Intent(this, EFISPrefManage.class);
+                Intent j = new Intent(this, MFDPrefManage.class);
                 startActivity(j);
                 break;
             case R.id.quit:
@@ -286,7 +286,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         gps_lat = _gps_lat;
         gps_lon = _gps_lon;
 
-        ///*
+        /*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         // Some debugging positions for testing
@@ -359,10 +359,6 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
 
-        // need to add the aircraft --- todo
-        // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
-        //editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
-
         // Commit the edits
         editor.commit();
     }
@@ -391,7 +387,6 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
     @Override
 	protected void onPause()
 	{
-
 		super.onPause();
 		// The following call pauses the rendering thread.
 		// If your OpenGL application is memory intensive,
@@ -406,7 +401,6 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 	@Override
 	protected void onResume()
 	{
-
 		super.onResume();
 		// The following call resumes a paused rendering thread.
 		// If you de-allocated graphic objects for onPause()
@@ -479,7 +473,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 		if (!bDemoMode) {
 			gps_lat =  (float) location.getLatitude();
 			gps_lon = (float) location.getLongitude();
-            gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
+            gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
 
 			if (location.hasSpeed()) {
 				//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
@@ -671,20 +665,6 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 	}
 
 
-    //-------------------------------------------------------------------------
-    // Utility function to calculate above ground altitude
-    // in m using the DEM
-    private float calculateAgl(float lat, float lon, float alt)
-    {
-        //float agl = 0;
-        //if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
-
-        if (DemGTOPO30.demDataValid) return Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
-        else return 0;
-    }
-
-
-
 	//-------------------------------------------------------------------------
 	// Utility function to calculate rate of climb
 	// Rate of climb in m/s
@@ -834,13 +814,14 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         // YCMH 090 from Perth
 
         Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(150);// 50 // + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(2);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = 125;//100;  // m/s
         gps_altitude = UMath.toMeter(1500); //2048; //900; //3048; //Meter
         //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //deltaT = 0; // freeze time, ie force stationary
         //
+        // todo: Hardcoded for debugging
         //------------------------------------------------------------------------------------------
         // */
 
@@ -852,7 +833,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
             if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
             if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
         }
-        gps_agl = calculateAgl(gps_lat, gps_lon, gps_altitude);
+        gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
     }
 
 	//for landscape mode

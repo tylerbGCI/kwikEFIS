@@ -168,6 +168,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected float foreShade = 0.99f; // white
     protected float backShade = 0.01f; // black
     private float gamma = 1;
+    private float theta = 1;
 
     public enum layout_t
     {
@@ -359,7 +360,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // fwd triangles
         mTriangle.SetWidth(1);
-        mTriangle.SetColor(1f, 0.5f, 1f, 1);  //purple
+        mTriangle.SetColor(theta*1, theta*0.5f, theta*1, 1);  //purple
         mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                 10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z);
@@ -370,7 +371,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mTriangle.draw(matrix);
 
         // rear triangles
-        mTriangle.SetColor(0.6f, 0.3f, 0.6f, 1);  //purple'ish
+        mTriangle.SetColor(theta*0.6f, theta*0.3f, theta*0.6f, 1);  //purple'ish
         mTriangle.SetVerts(10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -3.0f * pixPerDegree, z);
@@ -1676,7 +1677,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
 
         // slip box
-        mLine.SetColor(1, 1, 0, 1);
+        mLine.SetColor(foreShade, foreShade, backShade, 1);
         mLine.SetWidth(4);
         mLine.SetVerts(
                 -0.07f * pixM2, y1 - 0.4f * glText.getCharHeight(), z,
@@ -1693,7 +1694,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // slip ball
         mPolygon.SetWidth(1);
-        mPolygon.SetColor(1, 1, 1, 1); //white - always
+        mPolygon.SetColor(foreShade, foreShade, foreShade, 1); //white - always?
         {
             float[] vertPoly = {
                     // some issue with draworder to figure out.
@@ -2121,8 +2122,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderAutoWptDetails(float[] matrix)
     {
         String s;
-        glText.begin(1.0f, 1.0f, 0.0f, 1, matrix); // light yellow
 
+        glText.begin(theta*foreShade, theta*foreShade, theta*backShade, 1, matrix); // light yellow
         glText.setScale(2.0f);
 
         s = String.format("%s", mAutoWpt);
@@ -2372,6 +2373,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         foreShade = 0.99f; // white
         backShade = 0.01f; // black
         gamma = 1;
+        theta = 1;
         DemGTOPO30.setGamma(gamma);
     }
 
@@ -2380,7 +2382,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         tapeShade = 0.10f; // grey
         foreShade = 0.01f; // black
         backShade = 0.99f; // white
-        gamma = 3; //2
+        gamma = 3.3f; //3
+        theta = 0.6f;
         DemGTOPO30.setGamma(gamma);
     }
 
@@ -2714,7 +2717,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // Bearing to Automatic Waypoint
         //
         mLine.SetWidth(5); //3);
-        mLine.SetColor(0.9f, 0.9f, 0.0f, 1);  // needle yellow
+        mLine.SetColor(theta*foreShade, theta*foreShade, theta*backShade, 1);  // needle yellow
 
         sinI = 0.9f * UTrig.isin(90 - (int) mAutoWptBrg);
         cosI = 0.9f * UTrig.icos(90 - (int) mAutoWptBrg);
@@ -2771,7 +2774,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         mLine.SetWidth(8); //6
         //mLine.SetColor(0, 0.7f, 0, 1);  // green
-        mLine.SetColor(0.99f, 0.5f, 0.99f, 1); // purple'ish
+        mLine.SetColor(theta*1, theta*0.5f, theta*1, 1); // purple'ish
 
         sinI = 0.9f * UTrig.isin(90 - (int) mSelWptBrg);
         cosI = 0.9f * UTrig.icos(90 - (int) mSelWptBrg);
@@ -2819,7 +2822,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Bearing to Selected Waypoint
         //
-        glText.begin(0.99f, 0.5f, 0.99f, 1.0f, matrix); // purple'ish
+        //glText.begin(0.99f*theta, 0.5f*theta, 0.99f*theta, 1.0f, matrix); // purple'ish
+        glText.begin(theta*foreShade, tapeShade*theta, theta*foreShade, 1.0f, matrix); // purple'ish
         glText.setScale(scale);
         glText.drawC(mWptSelName, 0, 0.12f * roseRadius, 0);
         glText.end();
@@ -2827,7 +2831,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Bearing to Automatic Waypoint
         //
-        glText.begin(0.7f, 0.7f, 0, 1.0f, matrix); // yellow
+        glText.begin(0.7f*theta, 0.7f*theta, 0, 1.0f, matrix); // yellow
         glText.setScale(scale);
         glText.drawC(mAutoWpt, 0, -0.12f * roseRadius, 0);
         glText.end();

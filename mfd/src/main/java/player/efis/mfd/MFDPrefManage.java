@@ -26,7 +26,7 @@ import android.preference.PreferenceScreen;
 import android.view.View;
 import android.widget.ListView;
 
-public class EFISPrefManage extends PreferenceActivity
+public class MFDPrefManage extends PreferenceActivity
 {
 
     @SuppressWarnings("deprecation")
