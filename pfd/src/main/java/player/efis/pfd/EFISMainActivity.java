@@ -20,6 +20,7 @@ import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.Gpx;
 import player.efis.common.SensorComplementaryFilter;
+import player.efis.common.prefs_t;
 import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
 import player.ulib.UTrig;
@@ -61,7 +62,7 @@ import java.util.Random;
 public class EFISMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
-	private EFISSurfaceView mGLView;
+	private PFDSurfaceView mGLView;
     private MediaPlayer mpCautionTerrian;
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
@@ -189,7 +190,7 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
 
         // Create a GLSurfaceView instance and set it
 		// as the ContentView for this Activity
-		mGLView = new EFISSurfaceView(this);
+		mGLView = new PFDSurfaceView(this);
 		setContentView(mGLView);
 
 		// Get the version number of the app
@@ -276,7 +277,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         gps_lon = _gps_lon;
         //------------------------------------------------------------------------------------------
         // */
-
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
@@ -610,11 +610,11 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
         if (bLandscapeMode) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            mGLView.mRenderer.Layout = EFISRenderer.layout_t.LANDSCAPE;
+            mGLView.mRenderer.Layout = PFDRenderer.layout_t.LANDSCAPE;
         }
         else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            mGLView.mRenderer.Layout = EFISRenderer.layout_t.PORTRAIT;
+            mGLView.mRenderer.Layout = PFDRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
 

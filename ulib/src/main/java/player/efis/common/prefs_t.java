@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package player.efis.mfd;
+
+package player.efis.common;
 
 public enum prefs_t
 {

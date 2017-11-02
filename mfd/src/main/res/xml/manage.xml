@@ -83,6 +83,11 @@
                 android:title="Landscape" />
             <CheckBoxPreference
                 android:defaultValue="false"
+                android:key="colorScheme"
+                android:summary="Select Light scheme"
+                android:title="Color scheme" />
+            <CheckBoxPreference
+                android:defaultValue="false"
                 android:key="displayMirror"
                 android:summary="Mirror image for HUD usage"
                 android:title="Mirror HUD" />

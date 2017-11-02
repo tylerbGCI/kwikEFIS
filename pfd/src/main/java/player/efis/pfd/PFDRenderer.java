@@ -1,0 +1,297 @@
+/*
+ * Copyright (C) 2016 Player One
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package player.efis.pfd;
+
+import java.util.Iterator;
+
+import player.efis.common.DemColor;
+import player.efis.common.DemGTOPO30;
+import player.efis.common.AircraftData;
+import player.efis.common.Apt;
+import player.efis.common.EFISRenderer;
+import player.efis.common.Gpx;
+import player.gles20.Line;
+import player.gles20.PolyLine;
+import player.gles20.Polygon;
+import player.gles20.Square;
+import player.gles20.Triangle;
+import player.ulib.*;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+import player.gles20.GLText;
+import android.content.Context;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
+import android.util.Log;
+
+
+
+
+public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
+{
+    private static final String TAG = "PFDRenderer";
+
+    public PFDRenderer(Context context)
+    {
+        super(context);
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 unused, EGLConfig config)
+    {
+        // Set the background frame color
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        mTriangle = new Triangle();
+        mSquare = new Square();
+        mLine = new Line();
+        mPolyLine = new PolyLine();
+        mPolygon = new Polygon();
+
+        // Create the GLText
+        glText = new GLText(context.getAssets());
+    }
+
+
+    @Override
+    public void onDrawFrame(GL10 gl)
+    {
+        // Draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        // Set the camera position (View matrix)
+        if (displayMirror)
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
+        else
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
+        // Create a rotation for the horizon
+        Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
+
+        // Combine the rotation matrix with the projection and camera view
+        // Note that the mMVPMatrix factor *must be first* in order
+        // for the matrix multiplication product to be correct.
+        Matrix.multiplyMM(scratch1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+        Matrix.multiplyMM(scratch2, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+
+        // Pitch
+        if (Layout == layout_t.LANDSCAPE) {
+            // Slide pitch to current value
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
+        } else {
+            // Slide pitch to current value adj for portrait
+            float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
+            Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
+        }
+
+        // Slide ALT to current value
+        Matrix.translateM(altMatrix, 0, mMVPMatrix, 0, 0, -MSLTranslation, 0); // apply the altitude
+
+        // Slide IAS to current value
+        Matrix.translateM(iasMatrix, 0, mMVPMatrix, 0, 0, -IASTranslation, 0); // apply the altitude
+
+        zfloat = 0;
+
+        if (displayDEM && !fatFingerActive) {
+            // Make the blue sky for the DEM.
+            // Note: it extends a little below the horizon when AGL is positive
+            renderDEMSky(scratch1);
+            if (AGLValue > 0) renderDEMTerrain(scratch1);  // underground is not valid
+        }
+        else if (displayTerrain) renderTerrain(scratch1);
+
+        renderPitchMarkers(scratch1);
+
+        // FPV only means anything if we have speed and rate of climb, ie altitude
+        if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
+        if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
+        if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
+
+        // Flight Director - FD
+        if (displayFlightDirector) {
+            // Create a rotation for the Flight director
+            Matrix.setRotateM(mFdRotationMatrix, 0, rollRotation + FDRotation, 0, 0, 1.0f);  // fd rotation
+            Matrix.multiplyMM(fdMatrix, 0, mMVPMatrix, 0, mFdRotationMatrix, 0);
+
+            if (Layout == layout_t.LANDSCAPE) {
+                // Slide FD to current value
+                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation, 0); // apply the altitude
+            }
+            else {
+                // Slide pitch to current value adj for portrait
+                float Adjust = pixH2 * portraitOffset;
+                // Slide FD to current value
+                Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
+            }
+            renderFlightDirector(fdMatrix);
+        }
+
+        // Remote Magnetic Inidicator - RMI
+        if (displayRMI) {
+            float xlx;
+            float xly;
+
+            // Add switch for orientation
+            if (Layout == layout_t.LANDSCAPE) {
+                // Landscape
+                xlx = -0.74f * pixW2; // top left -0.75
+                xly = 0.50f * pixH2; // top left  0.55
+                roseScale = 0.44f;
+                GLES20.glViewport(0, 0, pixW, pixH);
+            }
+            else {
+                //Portrait
+                xlx = 0; //-0.00f * pixW2;
+                xly = -0.44f * pixH2;  //0.45f
+                roseScale = 0.52f; //0.45f; //0.50f;
+            }
+
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            // Create a rotation for the RMI
+            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
+            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
+            renderBearingTxt(mMVPMatrix);
+            renderFixedCompassMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+            renderCompassRose(rmiMatrix);
+            renderBearing(rmiMatrix);
+            renderAutoWptDetails(mMVPMatrix);
+            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+        }
+
+
+        if (Layout == layout_t.PORTRAIT) {
+            // Slide pitch to current value adj for portrait
+            float Adjust = pixH2 * portraitOffset;
+            GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
+        }
+        renderFixedHorizonMarkers();
+        renderRollMarkers(scratch2);
+
+        //-----------------------------
+        if (Layout == layout_t.LANDSCAPE)
+            GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
+        else
+            GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
+
+        if (displayTape) {
+            renderALTMarkers(altMatrix);
+            renderASIMarkers(iasMatrix);
+        }
+
+        //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
+        renderFixedALTMarkers(mMVPMatrix);    // this could be empty argument
+        renderFixedRADALTMarkers(mMVPMatrix); // AGL
+        renderFixedASIMarkers(mMVPMatrix);    // this could be empty argument
+        renderVSIMarkers(mMVPMatrix);
+        renderFixedDIMarkers(mMVPMatrix);
+        renderHDGValue(mMVPMatrix);
+        GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+        //-----------------------------
+
+        //renderFixedDIMarkers(mMVPMatrix);
+        //renderHDGValue(mMVPMatrix);
+
+        renderTurnMarkers(mMVPMatrix);
+        renderSlipBall(mMVPMatrix);
+        renderGForceValue(mMVPMatrix);
+
+        if (displayInfoPage) {
+            renderAncillaryDetails(mMVPMatrix);
+            renderBatteryPct(mMVPMatrix);
+        }
+
+        if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
+        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
+        if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
+        if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
+        if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
+        if (Calibrating) renderCalibrate(mMVPMatrix);
+        if (bDemoMode) renderDemoMode(mMVPMatrix);
+
+
+        if (displayFlightDirector || displayRMI || displayHITS) {
+            renderSelWptDetails(mMVPMatrix);
+            renderSelWptValue(mMVPMatrix);
+        }
+
+        if (displayFlightDirector || displayHITS) {
+            renderSelAltValue(mMVPMatrix);
+        }
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height)
+    {
+        // Adjust the viewport based on geometry changes, such as screen rotation
+        GLES20.glViewport(0, 0, width, height);
+
+        // this projection matrix is applied to  object coordinates in the onDrawFrame() method
+        //b2 Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 2, 7); // - this apparently fixed for the Samsung S2?
+
+        //b2 start
+        // Capture the window scaling for use by the rendering functions
+        pixW = width;
+        pixH = height;
+        pixW2 = pixW / 2;
+        pixH2 = pixH / 2;
+
+        if (pixW < pixH) pixM = pixW;
+        else pixM = pixH;
+
+        // because the ascpect ratio is different in landscape and portrait (due to menu bar)
+        // we just fudge it as 85% throughout,  looks OK in landscape as well
+        pixM = pixM * 88 / 100;
+        pixM2 = pixM / 2;
+
+        setSpinnerParams(); // Set up the spinner locations and SelWpt display
+
+        // Set the window size specific scales, positions and sizes (nothing dynamic yet...)
+        pitchInView = 25.0f;      // degrees to display from horizon to top of viewport
+        IASInView = 40.0f;      // IAS units to display from center to top of viewport
+        MSLInView = 300.0f;      // IAS units to display from center to top of viewport
+
+        // this projection matrix is applied to  object coordinates in the onDrawFrame() method
+        float ratio = (float) width / height;
+        //Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio * pixH2, ratio * pixH2, -pixH2, pixH2, 2.99f, 75f); //hack for Samsung G2
+
+        // Create the GLText
+        // --debug glText = new GLText(context.getAssets()); - moved to onsurfacecreated
+
+        // Load the font from file (set size + padding), creates the texture
+        // NOTE: after a successful call to this the font is ready for rendering!
+        //glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+        glText.load("square721_cn_bt_roman.ttf", pixM * 14 / 734, 2, 2);  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+
+        // enable texture + alpha blending
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+
+
+}
+//-------------
+// END OF CLASS
+//-------------

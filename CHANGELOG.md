@@ -4,8 +4,10 @@ Changelog
 ------------------
 * Add speed, altitude and AGL displays to map
 * Zoom with swipe up/down (use XCSoar convention) 
+* <wip: Light/Dark scheme>
 * <wip: Auto zoom>
-* <wip: Release DMAP v1.2>
+* <wip: Release EFIS v3.7 rc-2>
+* <wip: Release DMAP v1.2 rc-3>
 
 3.7 (2017-10-16)
 ------------------

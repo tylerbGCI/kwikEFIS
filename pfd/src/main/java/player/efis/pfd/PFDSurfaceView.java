@@ -19,6 +19,7 @@ package player.efis.pfd;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import player.efis.common.prefs_t;
 
 
 //
@@ -26,13 +27,13 @@ import android.view.MotionEvent;
 // This view can also be used to capture touch events, such as a user
 // interacting with drawn objects.
 //
-public class EFISSurfaceView extends GLSurfaceView
+public class PFDSurfaceView extends GLSurfaceView
 {
 
-    //private final EFISRenderer mRenderer;
-    public final EFISRenderer mRenderer;  // normally this would be private but we want to access the sel wpt from main activity
+    //private final PFDRenderer mRenderer;
+    public final PFDRenderer mRenderer;  // normally this would be private but we want to access the sel wpt from main activity
 
-    public EFISSurfaceView(Context context)
+    public PFDSurfaceView(Context context)
     {
         super(context);
 
@@ -40,7 +41,7 @@ public class EFISSurfaceView extends GLSurfaceView
         setEGLContextClientVersion(2);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new EFISRenderer(context); // = new MyGLRenderer();  --b2
+        mRenderer = new PFDRenderer(context); // = new MyGLRenderer();  --b2
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data
@@ -123,7 +124,7 @@ public class EFISSurfaceView extends GLSurfaceView
     }
 
     // Radio Altimeter (agl)
-    void setAGL(int value)
+    public void setAGL(int value)
     {
         mRenderer.setAGL(value);
         requestRender();
@@ -133,7 +134,7 @@ public class EFISSurfaceView extends GLSurfaceView
     // Air Speed Indicator
     public void setASI(float value)
     {
-        mRenderer.setIAS(value);
+        mRenderer.setASI(value);
         requestRender();
     }
 
@@ -145,7 +146,7 @@ public class EFISSurfaceView extends GLSurfaceView
     }
 
     // FLight Path Vector
-    void setFPV(float fpvX, float fpvY)
+    public void setFPV(float fpvX, float fpvY)
     {
         mRenderer.setFPV(fpvX, fpvY);
         requestRender();
@@ -270,13 +271,13 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setLatLon(float lat, float lon)
+    public void setLatLon(float lat, float lon)
     {
         mRenderer.setLatLon(lat, lon);
         requestRender();
     }
 
-    void setGpsStatus(String gpsstatus)
+    public void setGpsStatus(String gpsstatus)
     {
         mRenderer.setGpsStatus(gpsstatus);
         requestRender();
@@ -288,9 +289,15 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setDisplayAirport(boolean display)
+    public void setDisplayAirport(boolean display)
     {
         mRenderer.setDisplayAirport(display);
+        requestRender();
+    }
+
+    void setDisplayAirspace(boolean display)
+    {
+        mRenderer.setDisplayAirspace(display);
         requestRender();
     }
 
@@ -308,8 +315,7 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-
-    void setDemoMode(boolean demo, String msg)
+    public void setDemoMode(boolean demo, String msg)
     {
         mRenderer.setDemoMode(demo, msg);
         requestRender();
@@ -322,10 +328,10 @@ public class EFISSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    public void setSchemeDark()
+    /*public void setSchemeDark()
     {
         mRenderer.setSchemeDark();
-    }
+    }*/
 
     public void setSchemeLight(boolean value)
     {
