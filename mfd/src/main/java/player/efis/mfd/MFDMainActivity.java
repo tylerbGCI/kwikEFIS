@@ -61,7 +61,7 @@ import android.preference.PreferenceManager;
 import java.util.Random;
 
 
-public class EFISMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
+public class MFDMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
 	private MFDSurfaceView mGLView;
@@ -359,7 +359,6 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
 
-
         // need to add the aircraft --- todo
         // editor.putString("AircraftModel", mGLView.mRenderer.mAcraftModel.toString());
         //editor.putString("AirportDatabase", mGpx.region);  // happens automatically via preferences ?
@@ -633,7 +632,17 @@ public class EFISMainActivity extends Activity implements Listener, SensorEventL
             mGLView.mRenderer.Layout = MFDRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
+
+        // If we changed to light scheme
+        //if (bDemoMode != settings.getBoolean("demoMode", false)) {
+
+        // If we changed display schemes, a color gamma rec-calc is required
+        if (bColorSchemeLight != settings.getBoolean("colorScheme", false)) mGLView.setSchemeLight(settings.getBoolean("colorScheme", false));
+        bColorSchemeLight = settings.getBoolean("colorScheme", false);
     }
+
+    boolean bColorSchemeLight;// = false;
+
 
 	//-------------------------------------------------------------------------
 	// Utility function to determine the direction of the turn and try to eliminate

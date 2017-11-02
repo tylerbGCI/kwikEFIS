@@ -136,9 +136,23 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         renderMapScale(mMVPMatrix);  // do before the DI
 
         if (displayTape == true) {
+            float xlx;
+            float xly;
+
+            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
+            xlx = 0.99f * pixW2;
+            xly = -0.3f * pixM2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
             renderFixedALTMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, 0, xly, 0);
             renderFixedRADALTMarkers(mMVPMatrix); // AGL
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+
+            xlx = -0.99f * pixW2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
             renderFixedASIMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
             //renderVSIMarkers(mMVPMatrix);
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
@@ -163,6 +177,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
         if (bDemoMode) renderDemoMode(mMVPMatrix);
 
+        //renderACSymbol(mMVPMatrix);
         renderACSymbol(mMVPMatrix);
 
         // Do this last so that every else wil be dimmed for fatfinger entry
@@ -291,355 +306,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 
-	// TODO: use slide to position and get rid of the top/right vars
-    //-------------------------------------------------------------------------
-    // RadAlt Indicator (AGL)
-    //
-    protected void renderFixedRADALTMarkers(float[] matrix)
-    {
-        float z = zfloat;
-        String t;
 
-        float top = -0.3f * pixM2;
-        float right = 0.99f * pixW2;
-        float left = right - 0.35f * pixM2;
-
-
-        // The tapes are positioned left & right of the roll circle, occupying the space based
-        // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
-        // square, leaving extra space outside the edges for terrain which can be clipped if required.
-
-        // Radio Altimeter (AGL) Display
-
-        // Do a dummy glText so that the Heights are correct for the masking box
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-        glText.setScale(2.5f);  //was 1.5
-        glText.end();
-
-        // Mask over the moving tape for the value display box
-        mSquare.SetColor(backShade, backShade, backShade, 1); //black
-        mSquare.SetWidth(2);
-        {
-            float[] squarePoly = {
-                    right, top - glText.getCharHeight(), z,
-                    right, top + glText.getCharHeight(), z,
-                    left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
-            };
-            mSquare.SetVerts(squarePoly);
-            mSquare.draw(matrix);
-        }
-
-        // if we are below the preset, show the warning chevrons
-        final float CevronAGL = 1000.0f;
-        if (AGLValue < CevronAGL) {
-            float slant = 0.06f * pixM2;
-            float step = 0.04f * pixM2;
-            float i;
-            // moving yellow chevrons
-            mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
-            mLine.SetWidth(8); //4
-            for (i = left; i < right - (float)AGLValue/CevronAGL*(right-left) - step; i = i + step) {
-                mLine.SetVerts(
-                        i, top + glText.getCharHeight(), z,
-                        slant + i, top - glText.getCharHeight(), z
-                );
-                mLine.draw(matrix);
-            }
-
-            // left filler
-            mLine.SetVerts(
-                    left, top, z,
-                    left + step/2, top - glText.getCharHeight(), z
-            );
-            mLine.draw(matrix);
-
-            // right filler
-            mLine.SetVerts(
-                    i, top + glText.getCharHeight(), z,
-                    slant/2 + i-2, top, z
-            );
-            mLine.draw(matrix);
-
-            /* this seems a little bit over the top
-            // bar
-            mLine.SetVerts(
-                    spinnerStep + i, top + glText.getCharHeight(), z,
-                    spinnerStep + i, top - glText.getCharHeight(), z
-            );
-            mLine.draw(matrix);
-            */
-        }
-
-        int aglAlt = Math.round((float) this.AGLValue / 10) * 10;  // round to 10
-        // draw the tape text in mixed sizes
-        // to clearly show the thousands
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-        t = Integer.toString(aglAlt / 1000);
-        float margin;
-
-        // draw the thousands digits larger
-        glText.setScale(3.5f);  //3  2.5
-        if (aglAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, top - glText.getCharHeight() / 2);
-        if (aglAlt < 10000)
-            margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
-        else
-            margin = 1.1f * glText.getCharWidthMax();                    // we have to deal with the margin ourselves
-
-        // draw the hundreds digits smaller
-        t = String.format("%03.0f", (float) aglAlt % 1000);
-        glText.setScale(2.5f); // was 2.5
-        glText.draw(t, left + 0.03f*pixM2 + margin, top - glText.getCharHeight() / 2);
-        glText.end();
-
-        {
-            mPolyLine.SetColor(foreShade, foreShade, foreShade, 1); //white
-            mPolyLine.SetWidth(2);
-            float[] vertPoly = {
-                    right, top - glText.getCharHeight(), z,
-                    right, top + glText.getCharHeight(), z,
-                    left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
-                    right, top - glText.getCharHeight(), z
-            };
-
-            mPolyLine.VertexCount = 5;
-            mPolyLine.SetVerts(vertPoly);
-            mPolyLine.draw(matrix);
-        }
-
-    }
-
-	// TODO: use slide to position and get rid of the top/right vars
-    //-------------------------------------------------------------------------
-    // Altimeter Indicator
-    //
-    protected void renderFixedALTMarkers(float[] matrix)
-    {
-        float z = zfloat;
-        String t;
-
-        float right = 0.99f * pixW2;
-        float left = right - 0.35f * pixM2;
-        float apex = left - 0.05f * pixM2;
-
-        // The tapes are positioned left & right of the roll circle, occupying the space based
-        // on the vertical dimension, from .6 to 1.0 pixM2.  This makes the basic display
-        // square, leaving extra space outside the edges for terrain which can be clipped if required.
-
-        // Altimeter Display
-
-        // Do a dummy glText so that the Heights are correct for the masking box
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-        glText.setScale(2.5f);  //was 1.5
-        glText.end();
-
-        // Mask over the moving tape for the value display box
-        mSquare.SetColor(backShade, backShade, backShade, 1); //black
-        mSquare.SetWidth(2);
-        {
-            float[] squarePoly = {
-                    right, -glText.getCharHeight(), z,//+0.1f,
-                    right,  glText.getCharHeight(), z,//+0.1f,
-                    left,   glText.getCharHeight(), z,//+0.1f,
-                    left,  -glText.getCharHeight(), z,//+0.1f
-            };
-            mSquare.SetVerts(squarePoly);
-            mSquare.draw(matrix);
-        }
-
-        int mslAlt = Math.round((float) this.MSLValue / 10) * 10;  // round to 10
-        // draw the tape text in mixed sizes
-        // to clearly show the thousands
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-        t = Integer.toString(mslAlt / 1000);
-        float margin;
-
-        // draw the thousands digits larger
-        glText.setScale(3.5f);  //3  2.5
-        if (mslAlt >= 1000) glText.draw(t, left + 0.03f*pixM2, -glText.getCharHeight() / 2);
-        if (mslAlt < 10000)
-            margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
-        else
-            margin = 1.1f * glText.getCharWidthMax(); // we have to deal with the margin ourselves
-
-        // draw the hundreds digits smaller
-        t = String.format("%03.0f", (float) mslAlt % 1000);
-        glText.setScale(2.5f); // was 2.5
-        glText.draw(t, left + 0.03f*pixM2 + margin, -glText.getCharHeight() / 2);
-        glText.end();
-
-        mTriangle.SetColor(backShade, backShade, backShade, 1);  //black
-        mTriangle.SetVerts(
-                left, glText.getCharHeight() / 2, z,
-                apex, 0.0f, z,
-                left, -glText.getCharHeight() / 2, z
-        );
-        mTriangle.draw(mMVPMatrix);
-
-        {
-            mPolyLine.SetColor(foreShade, foreShade, foreShade, 1); //white
-            mPolyLine.SetWidth(2);
-            float[] vertPoly = {
-                    right, -glText.getCharHeight(), z,
-                    right, glText.getCharHeight(), z,
-                    left, glText.getCharHeight(), z,
-                    left, glText.getCharHeight() / 2, z,
-                    apex, 0.0f, z,
-                    left, -glText.getCharHeight() / 2, z,
-                    left, -glText.getCharHeight(), z,
-                    right, -glText.getCharHeight(), z
-            };
-
-            mPolyLine.VertexCount = 8;
-            mPolyLine.SetVerts(vertPoly);
-            mPolyLine.draw(matrix);
-        }
-    }
-
-    protected void renderALTMarkers(float[] matrix)
-    {
-        int i, j;
-        float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
-
-        //pixPerUnit = pixM2 / MSLInView; //b2 landscape
-        pixPerUnit = pixH2 / MSLInView; //portrait
-        z = zfloat;
-
-        innerTic = 0.70f * pixM2;    // inner & outer are relative to the vertical scale line
-        midTic = 0.75f * pixM2;
-        outerTic = 0.80f * pixM2;
-
-        // The numbers & tics for the tape
-        for (i = MSLMaxDisp; i >= MSLMinDisp; i = i - 100) {
-            // Ugly hack but is does significantly improve performance.
-            if (i > MSLValue + 1.00 * MSLInView) continue;
-            if (i < MSLValue - 1.50 * MSLInView) continue;
-
-            iPix = (float) i * pixPerUnit;
-
-            mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
-            mLine.SetWidth(3);
-            mLine.SetVerts(
-                    innerTic, iPix, z,
-                    outerTic, iPix, z
-            );
-            mLine.draw(matrix);
-
-            // draw the tape text in mixed sizes
-            // to clearly show the thousands
-            glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
-            String t = Integer.toString(i / 1000);
-            float margin;
-
-            // draw the thousands digits larger
-            glText.setScale(3.0f);
-            //glText.setScale(4.0f, 2.5f);
-            if (i >= 1000) glText.draw(t, outerTic, iPix - glText.getCharHeight() / 2);
-
-            if (i < 10000)
-                margin = 0.6f * glText.getCharWidthMax();  // because of the differing sizes
-            else
-                margin = 1.1f * glText.getCharWidthMax();            // we have to deal with the margin ourselves
-
-            // draw the hundreds digits smaller
-            t = String.format("%03.0f", (float) i % 1000);
-            glText.setScale(2.0f); // was 1.5
-            glText.draw(t, outerTic + margin, iPix - glText.getCharHeight() / 2);
-            glText.end();
-
-            for (j = i + 20; j < i + 90; j = j + 20) {
-                iPix = (float) j * pixPerUnit;
-                mLine.SetWidth(2);
-                mLine.SetVerts(
-                        innerTic, iPix, z,
-                        midTic, iPix, z
-                );
-                mLine.draw(matrix);
-            }
-        }
-
-        // The vertical scale bar
-        mLine.SetVerts(
-                innerTic, MSLMinDisp, z,
-                innerTic, (MSLMaxDisp + 100) * pixPerUnit, z
-        );
-        mLine.draw(matrix);
-    }
-
-	// TODO: use slide to position and get rid of the top/right vars
-    //-------------------------------------------------------------------------
-    // Airspeed Indicator
-    //
-    protected void renderFixedASIMarkers(float[] matrix)
-    {
-        float z = zfloat;
-        String t;
-
-        float left = -0.99f * pixW2;
-        float right = left + 0.3f * pixM2;
-        float apex = right + 0.05f * pixM2;
-
-        // The tapes are positioned left & right of the roll circle, occupying the space based
-        // on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
-        // square, leaving extra space outside the edges for terrain which can be clipped if reqd.
-
-        // Do a dummy glText so that the Heights are correct for the masking box
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-        glText.setScale(2.5f); // was 1.5
-        glText.end();
-
-        // Mask over the moving tape for the value display box
-        mSquare.SetColor(backShade, backShade, backShade, 1); //black
-        mSquare.SetWidth(2);
-        {
-            float[] squarePoly = {
-                    left, -glText.getCharHeight(), z,
-                    left,  glText.getCharHeight(), z,
-                    right,  glText.getCharHeight(), z,
-                    right, -glText.getCharHeight(), z,
-            };
-            mSquare.SetVerts(squarePoly);
-            mSquare.draw(matrix);
-        }
-
-        mTriangle.SetColor(backShade, backShade, backShade, 1);  //black
-        mTriangle.SetVerts(
-                right, glText.getCharHeight() / 2, z,
-                apex, 0.0f, z,
-                right, -glText.getCharHeight() / 2, z
-        );
-        mTriangle.draw(mMVPMatrix);
-
-        {
-            mPolyLine.SetColor(foreShade, foreShade, foreShade, 1); //white
-            mPolyLine.SetWidth(2);
-            float[] vertPoly = {
-                    left, -glText.getCharHeight(), z,
-                    left,  glText.getCharHeight(), z,
-                    right, glText.getCharHeight(), z,
-                    right, glText.getCharHeight() / 2, z,
-                    apex, 0.0f, z,
-                    right, -glText.getCharHeight() / 2, z,
-                    right, -glText.getCharHeight(), z,
-                    left,  -glText.getCharHeight(), z
-            };
-
-            mPolyLine.VertexCount = 8;
-            mPolyLine.SetVerts(vertPoly);
-            mPolyLine.draw(matrix);
-        }
-        t = Integer.toString(Math.round(IASValue));
-        glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix);     // white
-        glText.setScale(3.5f);                            // was 2.5
-        glText.drawC(t, left + 0.25f*pixM2, glText.getCharHeight() / 2);
-        glText.end();
-    }
-
-
-
-
-    // This may be a differnt name?
+    // This may be a different name?
     //-------------------------------------------------------------------------
     // Airports / Waypoints
     //
@@ -651,18 +319,13 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private int MX_RANGE = 200;    //nm
     private int Aptscounter = 0;
     private int nrAptsFound;
-    public float mMapZoom = 20; // Zoom multiplier for map. 1 (max out) to 200 (max in)
-
-
     private int Airspacecounter = 0;
     private int nrAirspaceFound;
-
     protected void renderAPT(float[] matrix)
     {
-        float z, pixPerDegree, x1, y1;
+        float z, x1, y1;
         float radius = 5;
 
-        pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         // 0.16667 deg lat  = 10 nm
@@ -699,7 +362,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             y1 = mMapZoom * (dme * UTrig.isin(90-(int)aptRelBrg));
 
             mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
+            mPolyLine.SetColor(foreShade, tapeShade, foreShade, 1); //purple'ish
             {
                 float[] vertPoly = {
                         x1 + 2.0f * radius, y1, z,
@@ -713,7 +376,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 mPolyLine.draw(matrix);
             }
 
-            glText.begin(1.0f, 0.5f, 1.0f, 0, matrix);  // purple
+            glText.begin(foreShade, tapeShade, foreShade, 1, matrix);  // purple'ish
             glText.setScale(2.0f);
             glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();
@@ -950,177 +613,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //{
     //}
 
-
-
-    //-------------------------------------------------------------------------
-    // Render the Direct To bearing line
-    //
-    protected void renderDctTrack(float[] matrix)
-    {
-        float z, x1, y1; //sinI, cosI, _sinI, _cosI;
-        z = zfloat;
-
-        //
-        // Direct Track to Selected Waypoint
-        //
-        mLine.SetWidth(20); //8
-        //mLine.SetColor(0.5f, 0.250f, 0.5f, 0.125f); // purple'ish
-        mLine.SetColor(0.45f, 0.45f, 0.10f, 0.125f); // yellow'ish
-
-        x1 = mMapZoom * (mSelWptDme * UTrig.icos(90-(int)mSelWptRlb));
-        y1 = mMapZoom * (mSelWptDme * UTrig.isin(90-(int)mSelWptRlb));
-        mLine.SetVerts(
-                0, 0, z,
-                x1, y1, z
-        );
-        mLine.draw(matrix);
-        // Skunk stripe
-        mLine.SetWidth(4); //8
-        mLine.SetColor(0.0f, 0.0f, 0.0f, 1); // black
-        mLine.draw(matrix);
-
-        //
-        // Direct Track to Automatic Waypoint
-        //
-        /* Not sure I like this feature ...
-        mLine.SetWidth(2); //8
-        mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
-
-        x1 = mMapZoom * (mAutoWptDme * UTrig.icos(90-(int)mAutoWptRlb));
-        y1 = mMapZoom * (mAutoWptDme * UTrig.isin(90-(int)mAutoWptRlb));
-        mLine.SetVerts(
-                0, 0, z,
-                x1, y1, z
-        );
-        mLine.draw(matrix);
-        */
-
-    }
-
-    //-------------------------------------------------------------------------
-    // Render a little airplane symbol
-    //
-    protected void renderACSymbol(float[] matrix)
-    {
-        float z;
-        z = zfloat;
-
-        // Wings
-        mLine.SetWidth(8);
-        mLine.SetColor(1, 1, 1, 1); // white
-        mLine.SetVerts(
-                -0.10f*pixM2, 0, z,
-                 0.10f*pixM2, 0, z
-        );
-        mLine.draw(matrix);
-        // L
-        mLine.SetVerts(
-                -0.10f*pixM2, 0, z,
-                0,  0.025f*pixM2, z
-        );
-        mLine.draw(matrix);
-        // R
-        mLine.SetVerts(
-                0.10f*pixM2, 0, z,
-                0,  0.025f*pixM2, z
-        );
-        mLine.draw(matrix);
-
-        // Fuselage
-        mLine.SetVerts(
-                0, -0.10f*pixM2, z,
-                0,  0.075f*pixM2, z
-        );
-        mLine.draw(matrix);
-        // Tail
-        mLine.SetVerts(
-                -0.05f*pixM2, -0.10f*pixM2, z,
-                 0.05f*pixM2, -0.10f*pixM2, z
-        );
-        mLine.draw(matrix);
-    }
-
-    //-------------------------------------------------------------------------
-    // Render map scale ruler
-    //
-    protected void renderMapScale(float[] matrix)
-    {
-        float z;
-        z = zfloat;
-
-        //mMapZoom;
-        // 700/mMapZoom = 35nm
-        //x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-        //y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
-
-        float len = 20;//20;
-        float x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
-
-        while (x1 > pixW2/2) {
-            if (len > 5) len = len - 5;
-            else len = 1;
-
-            x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
-        }
-
-        // Scale line
-        mLine.SetWidth(1);
-        mLine.SetColor(1, 1, 1, 1); // white
-        mLine.SetVerts(
-                -0.95f*pixW2 + 0,  -0.95f*pixH2, z,
-                -0.95f*pixW2 + x1, -0.95f*pixH2, z
-        );
-        mLine.draw(matrix);
-        mLine.SetVerts(
-                -0.95f*pixW2 + 0, -0.95f*pixH2, z,
-                -0.95f*pixW2 + 0, -0.92f*pixH2, z
-        );
-        mLine.draw(matrix);
-        mLine.SetVerts(
-                -0.95f*pixW2 + x1, -0.95f*pixH2, z,
-                -0.95f*pixW2 + x1, -0.92f*pixH2, z
-        );
-        mLine.draw(matrix);
-
-        String t = String.format("%3.0f nm", len);
-        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, matrix); // White
-        glText.setScale(1.5f);
-        glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
-        glText.end();
-
-        // leader line
-        mLine.SetVerts(
-                0, 0, z,
-                0, x1, z
-        );
-        mLine.draw(matrix);
-        mLine.SetVerts(
-                -0.025f*pixM2, x1, z,
-                +0.025f*pixM2, x1, z
-        );
-        mLine.draw(matrix);
-
-    }
-
-    //-------------------------------------------------------------------------
-    // Map Zooming
-    //
-    void setMapZoom(float zoom)
-    {
-        mMapZoom = zoom;
-    }
-
-    public void zoomIn()
-    {
-        if (mMapZoom < 5) mMapZoom += 1;
-        else if (mMapZoom < 120) mMapZoom += 5;
-    }
-
-    public void zoomOut()
-    {
-        if (mMapZoom > 5) mMapZoom -= 5;
-        else if (mMapZoom > 2) mMapZoom -= 1;
-    }
 
 
 

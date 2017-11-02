@@ -804,8 +804,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float top = -0.7f * pixH2;
-        float right = 1.14f * pixM2;
+        float top = 0; //-0.7f * pixH2;
+        float right = 0; //1.14f * pixM2;
         float left = right - 0.35f * pixM2;
 
 
@@ -923,7 +923,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float right = 1.14f * pixM2;
+        float right = 0;//1.14f * pixM2;
         float left = right - 0.35f * pixM2;
         float apex = left - 0.05f * pixM2;
 
@@ -1206,9 +1206,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float left = -1.10f * pixM2;
-        float right = -0.80f * pixM2;
-        float apex = -0.75f * pixM2;
+        //float left = -1.10f * pixM2;
+        //float right = -0.80f * pixM2;
+        //float apex = -0.75f * pixM2;
+
+        float left = 0;//-1.10f * pixM2;
+        float right = left + 0.3f * pixM2;
+        float apex = right + 0.05f * pixM2;
+
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
@@ -1784,95 +1789,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 10;
-    private int MX_RANGE = 20;   //nm
-    private int Aptscounter = 0;
-    private int nrAptsFound;
-
-    protected void renderAPT(float[] matrix)
-    {
-        float z, pixPerDegree, x1, y1;
-        float radius = 5;
-
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        // 0.16667 deg lat  = 10 nm
-        // 0.1 approx 5nm
-        float dme;
-        float _dme = 1000;
-        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-
-        nrAptsFound = 0;
-        Iterator<Apt> it = Gpx.aptList.iterator();
-        while (it.hasNext()) {
-            Apt currApt; //  = it.next();
-            try {
-                currApt = it.next();
-            }
-            //catch (ConcurrentModificationException e) {
-            catch (Exception e) {
-                break;
-            }
-
-            String wptId = currApt.name;
-            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
-
-            // Apply selection criteria
-            if (dme < 5)
-                nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
-                nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
-            else
-                continue;  // we already have all the apts as we wish to display
-
-            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-            x1 = (float) (aptRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree);    // we do not take apt elevation into account
-
-            mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(0.99f, 0.50f, 0.99f, 1); //purple'ish
-            {
-                float[] vertPoly = {
-                        x1 + 2.0f * radius, y1, z,
-                        x1, y1 + 2.0f * radius, z,
-                        x1 - 2.0f * radius, y1, z,
-                        x1, y1 - 2.0f * radius, z,
-                        x1 + 2.0f * radius, y1, z
-                };
-                mPolyLine.VertexCount = 5;
-                mPolyLine.SetVerts(vertPoly);  //crash here
-                mPolyLine.draw(matrix);
-            }
-
-            glText.begin(1.0f, 0.5f, 1.0f, 0, matrix);  // purple
-            glText.setScale(2.0f);
-            glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
-            glText.end();
-
-
-            if (Math.abs(dme) < Math.abs(_dme)) {
-                // closest apt (dme)
-                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-
-                setAutoWptValue(wptId);
-                setAutoWptDme(dme);
-                setAutoWptBrg(absBrg);
-                setAutoWptRelBrg(relBrg);
-                _dme = dme;
-            }
-        }
-
-        //
-        // If we dont have the full compliment of apts expand the range incrementally
-        // If do we have a full compliment start reducing the range
-        // This also has the "useful" side effect of "flashing" new additions for a few cycles
-        //
-        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
-        else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
-        MX_RANGE = Math.min(MX_RANGE, 99);
-    }
+    //protected final int MX_NR_APT = 10;
+    protected int MX_RANGE = 20;   //nm
+    //protected int Aptscounter = 0;
+    protected int nrAptsFound;
+    //protected void renderAPT(float[] matrix)
+    //{
+    //}
 
     //-------------------------------------------------------------------------
     // Synthetic Vision
@@ -1944,151 +1867,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    protected void renderDEMTerrain(float[] matrix)
-    {
-        float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
-        float lat, lon;
-        //float a = 0;//Float.MAX_VALUE;
-        //float b = Float.MAX_VALUE;
-
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        float dme;             //in nm
-        float step = 0.50f;    //in nm, normally this should be = gridy
-        float agl_ft;          //in Feet
-
-        // oversize 20% a little to help with
-        // bleed through caused by itrig truncating
-        float gridy = 0.5f; //0.60f;   //in nm
-        float gridx = 1.0f;  //1.20f;   //in degree
-
-        float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        float caution;
-        final float cautionMin = 0.2f;
-        final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-
-        mSquare.SetWidth(1);
-
-        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) { //20 was 30
-            for (demRelBrg = -25; demRelBrg < 25; demRelBrg = demRelBrg + 1) {
-
-                dme_ft = dme * 6080;
-                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
-                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
-                z1 = DemGTOPO30.getElev(lat, lon);
-                x1 = demRelBrg * pixPerDegree;
-                //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
-                y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
-
-                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
-                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
-                z2 = DemGTOPO30.getElev(lat, lon);
-                x2 = (demRelBrg + gridx) * pixPerDegree;
-                //y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
-                y2 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
-
-                dme_ft = (dme + gridy) * 6080;
-                lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
-                lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
-                z3 = DemGTOPO30.getElev(lat, lon);
-                x3 = (demRelBrg + gridx) * pixPerDegree;
-                //y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
-                y3 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
-
-                lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg));
-                lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg));
-                z4 = DemGTOPO30.getElev(lat, lon);
-                x4 = (demRelBrg) * pixPerDegree;
-                //y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
-                y4 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
-
-                //
-                //  77%
-                //
-                //   Triangle #2   Triangle #1
-                //    +             +--+
-                //    |\             \ |
-                //    | \             \|
-                //    +--+             +
-                //
-
-                ///*
-                // Triangle #1 --------------
-                zav = z1;  // in m asml
-                DemColor color = DemGTOPO30.getColor((short) zav);
-                caution = cautionMin + (color.red + color.green + color.blue);
-                agl_ft = MSLValue - zav * 3.28084f;  // in ft
-
-                //-if (agl_ft > 500) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
-                //-else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
-                //-else if (agl_ft > 100) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
-                //-else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
-                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or approach
-                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification (yellow)
-                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning (red)
-
-                mTriangle.SetVerts(
-                        x1, y1, z,
-                        x2, y2, z,
-                        x4, y4, z);
-                mTriangle.draw(matrix);
-
-                // Triangle #2 --------------
-                zav = (z1 + z2) / 2; // take the simple average
-                color = DemGTOPO30.getColor((short) zav);
-                caution = cautionMin + (color.red + color.green + color.blue);
-                agl_ft = MSLValue - zav * 3.28084f;  // in ft
-
-                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
-                else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
-                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-
-                mTriangle.SetVerts(
-                        x2, y2, z,
-                        x3, y3, z,
-                        x4, y4, z);
-                mTriangle.draw(matrix);
-
-                //*/
-
-                /*
-                //
-                //  69%
-                //
-                //   Square
-                //   4    3
-                //    +--+
-                //    |  |
-                //    |  |
-                //    +--+
-                //   1    2
-
-                    zav = z1;  // use the
-                    getColor((short) zav);
-                    agl_ft = MSLValue - zav*3.28084f;  // in ft
-
-                    if (agl_ft > 100) mSquare.SetColor(red, green, blue, 1);                      // Enroute
-                    else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  apporach
-                    else mSquare.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-
-                    float[] squarePoly = {
-                            x1, y1, z,
-                            x2, y2, z,
-                            x3, y3, z,
-                            x4, y4, z
-                    };
-                    mSquare.SetVerts(squarePoly);
-                    mSquare.draw(matrix);
-                //*/
-
-            }
-        }
-    }
+    //protected void renderDEMTerrain(float[] matrix)
+    //{
+    //}
 
 
     // This is only good for debugging
@@ -2790,7 +2571,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         z = zfloat;
 
         mLine.SetWidth(2);  //3
-        mLine.SetColor(foreShade, foreShade, foreShade, 1); // white
+        mLine.SetColor(foreShade, foreShade, foreShade, 1);
         for (i = 0; i <= 315; i = i + 45) {
 
             if (i % 90 == 0) mLine.SetWidth(4);
@@ -2809,7 +2590,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //float pixPerDegree;
         //pixPerDegree = pixM2 / PPD_DIV;
 
-        mTriangle.SetColor(0.9f, 0.9f, 0.9f, 0);
+        mTriangle.SetColor(foreShade, foreShade, foreShade, 1);
         mTriangle.SetVerts(
                 0.035f * pixM2, 1.120f * roseRadius, z,
                 -0.035f * pixM2, 1.120f * roseRadius, z,
@@ -3051,6 +2832,201 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         glText.drawC(mAutoWpt, 0, -0.12f * roseRadius, 0);
         glText.end();
     }
+
+    //-------------------------------------------------------------------------
+    // MFD specific members
+    //
+
+    public float mMapZoom = 20; // Zoom multiplier for map. 1 (max out) to 200 (max in)
+
+    //-------------------------------------------------------------------------
+    // Render the Direct To bearing line
+    //
+    protected void renderDctTrack(float[] matrix)
+    {
+        float z, x1, y1; //sinI, cosI, _sinI, _cosI;
+        z = zfloat;
+
+        //
+        // Direct Track to Selected Waypoint
+        //
+        mLine.SetWidth(20); //8
+        //mLine.SetColor(0.5f, 0.250f, 0.5f, 0.125f); // purple'ish
+        mLine.SetColor(0.45f, 0.45f, 0.10f, 0.125f); // yellow'ish
+
+        x1 = mMapZoom * (mSelWptDme * UTrig.icos(90-(int)mSelWptRlb));
+        y1 = mMapZoom * (mSelWptDme * UTrig.isin(90-(int)mSelWptRlb));
+        mLine.SetVerts(
+                0, 0, z,
+                x1, y1, z
+        );
+        mLine.draw(matrix);
+        // Skunk stripe
+        mLine.SetWidth(4); //8
+        mLine.SetColor(0.0f, 0.0f, 0.0f, 1); // black
+        mLine.draw(matrix);
+
+        //
+        // Direct Track to Automatic Waypoint
+        //
+        /* Not sure I like this feature ...
+        mLine.SetWidth(2); //8
+        mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
+
+        x1 = mMapZoom * (mAutoWptDme * UTrig.icos(90-(int)mAutoWptRlb));
+        y1 = mMapZoom * (mAutoWptDme * UTrig.isin(90-(int)mAutoWptRlb));
+        mLine.SetVerts(
+                0, 0, z,
+                x1, y1, z
+        );
+        mLine.draw(matrix);
+        */
+
+    }
+
+    //-------------------------------------------------------------------------
+    // Render a little airplane symbol
+    //
+    protected void renderACSymbol(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        float wx = 0.10f*pixM2;
+        float wy = 0.00f*pixM2;
+        float wa = 0.025f*pixM2;
+        float fa = 0.075f*pixM2;
+        float ft = -0.10f*pixM2;
+        int wid = 12;
+        mLine.SetColor(foreShade, foreShade, foreShade, 1);
+
+        // Use a loop to draw a "halo" around the plane as well
+        for (int i = 0; i < 2; i++) {
+            // Wings
+            mLine.SetWidth(wid);
+
+            mLine.SetVerts(
+                    -wx, wy, z,
+                    wx, wy, z
+            );
+            mLine.draw(matrix);
+            // L
+            mLine.SetVerts(
+                    -wx, 0, z,
+                    0, wa, z
+            );
+            mLine.draw(matrix);
+            // R
+            mLine.SetVerts(
+                    wx, 0, z,
+                    0, wa, z
+            );
+            mLine.draw(matrix);
+
+            // Fuselage
+            mLine.SetVerts(
+                    0, fa, z,
+                    0, ft, z
+            );
+            mLine.draw(matrix);
+
+            // Tail
+            mLine.SetVerts(
+                    -wx / 2, ft, z,
+                    wx / 2, ft, z
+            );
+            mLine.draw(matrix);
+
+            wx = 0.09f*pixM2;
+            wy = 0.00f*pixM2;
+            wa = 0.020f*pixM2;
+            fa = 0.065f*pixM2;
+            ft = -0.10f*pixM2;
+            wid = 6;
+            mLine.SetColor(backShade, backShade, backShade, 1);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Render map scale ruler
+    //
+    protected void renderMapScale(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        float len = 20;//20;
+        float x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
+
+        while (x1 > pixW2/2) {
+            if (len > 5) len = len - 5;
+            else len = 1;
+
+            x1 = mMapZoom*len;// * (5 * UTrig.icos(90-(int)90));
+        }
+
+        // Scale line
+        mLine.SetWidth(1);
+        mLine.SetColor(foreShade, foreShade, foreShade, 1);
+        mLine.SetVerts(
+                -0.95f*pixW2 + 0,  -0.95f*pixH2, z,
+                -0.95f*pixW2 + x1, -0.95f*pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.95f*pixW2 + 0, -0.95f*pixH2, z,
+                -0.95f*pixW2 + 0, -0.92f*pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.95f*pixW2 + x1, -0.95f*pixH2, z,
+                -0.95f*pixW2 + x1, -0.92f*pixH2, z
+        );
+        mLine.draw(matrix);
+
+        String t = String.format("%3.0f nm", len);
+        glText.begin(foreShade, foreShade, foreShade, 1, matrix); // White
+        glText.setScale(1.5f);
+        glText.draw(t, -0.90f*pixW2, -0.95f*pixH2);            // Draw  String
+        glText.end();
+
+        // leader line
+        mLine.SetVerts(
+                0, 0, z,
+                0, x1, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.025f*pixM2, x1, z,
+                +0.025f*pixM2, x1, z
+        );
+        mLine.draw(matrix);
+
+    }
+
+    //-------------------------------------------------------------------------
+    // Map Zooming
+    //
+    public void setMapZoom(float zoom)
+    {
+        mMapZoom = zoom;
+    }
+
+    public void zoomIn()
+    {
+        if (mMapZoom < 5) mMapZoom += 1;
+        else if (mMapZoom < 120) mMapZoom += 5;
+    }
+
+    public void zoomOut()
+    {
+        if (mMapZoom > 5) mMapZoom -= 5;
+        else if (mMapZoom > 2) mMapZoom -= 1;
+    }
+
+
+
+
 }
 //-------------
 // END OF CLASS

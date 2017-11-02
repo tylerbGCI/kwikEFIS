@@ -167,38 +167,10 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    // Vertical Speed Indicator
-    public void setVSI(int value)
-    {
-        mRenderer.setVSI(value);
-        requestRender();
-    }
-
-    // FLight Path Vector
-    public void setFPV(float fpvX, float fpvY)
-    {
-        mRenderer.setFPV(fpvX, fpvY);
-        requestRender();
-    }
-
-    // G force
-    public void setGForce(float gunits)
-    {
-        mRenderer.setGForce(gunits);
-        requestRender();
-    }
-
     //Parentage battery remaining
     public void setBatteryPct(float value)
     {
         mRenderer.setBatteryPct(value);
-        requestRender();
-    }
-
-    // The amount of Slip
-    public void setSlip(float slip)
-    {
-        mRenderer.setSlip(slip);
         requestRender();
     }
 
@@ -223,13 +195,6 @@ public class MFDSurfaceView extends GLSurfaceView
         //requestRender();
     }
 
-
-    // Turn Rate
-    public void setTurn(float rot)
-    {
-        mRenderer.setTurn(rot);
-        requestRender();
-    }
 
     //
     // Red X's
@@ -312,11 +277,6 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setDisplayFPV(boolean display)
-    {
-        mRenderer.setDisplayFPV(display);
-        requestRender();
-    }
 
     public void setDisplayAirport(boolean display)
     {
@@ -337,12 +297,6 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
     */
-
-    public void setFlightDirector(boolean active, float pit, float rol)
-    {
-        mRenderer.setFlightDirector(active, pit, rol);
-        requestRender();
-    }
 
     public void setDemoMode(boolean demo, String msg)
     {
@@ -368,7 +322,6 @@ public class MFDSurfaceView extends GLSurfaceView
         else mRenderer.setSchemeDark();
         requestRender();
     }
-
 
     //
     // Map Zooming

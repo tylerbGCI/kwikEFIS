@@ -34,8 +34,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayFlightDirector"
-            android:summary="Engage Flight Director"
-            android:title="Flight Director" />
+            android:summary="Engage Navigation Director"
+            android:title="Navigation Director" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayRmi"

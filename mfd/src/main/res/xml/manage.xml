@@ -72,7 +72,7 @@
     <PreferenceCategory android:title="SYSTEM" >
         <PreferenceScreen
             android:key="modeSelection"
-            android:title="Screen / Mirror / Demo / Locked"
+            android:title="Color / Mirror / Simulator / Lock"
             android:summary="Mode Selection"
             android:persistent="false">
 
@@ -84,8 +84,8 @@
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="colorScheme"
-                android:summary="Select Light scheme"
-                android:title="Color scheme" />
+                android:summary="Use a light color scheme"
+                android:title="Color" />
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="displayMirror"
