@@ -55,7 +55,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(backShade, backShade, backShade, 1.0f);
 
         mTriangle = new Triangle();
         mSquare = new Square();

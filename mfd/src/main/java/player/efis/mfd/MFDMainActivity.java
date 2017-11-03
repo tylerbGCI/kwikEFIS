@@ -19,6 +19,7 @@ package player.efis.mfd;
 import player.efis.common.AirspaceClass;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
+import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.SensorComplementaryFilter;
@@ -61,7 +62,7 @@ import android.preference.PreferenceManager;
 import java.util.Random;
 
 
-public class MFDMainActivity extends Activity implements Listener, SensorEventListener, LocationListener
+public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
 	private MFDSurfaceView mGLView;
@@ -74,55 +75,9 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 	//private Sensor mRotationSensor;
 	//private static final int SENSOR_DELAY = 500 * 1000; // 500ms
 	//b2b2 private SensorFusion sensorFusion;
-	private SensorComplementaryFilter sensorComplementaryFilter;
-	// location members
-	private LocationManager locationManager;
-	private String provider;
-	private GpsStatus mGpsStatus = null;
-	private boolean bDemoMode = false;
-	private boolean bLockedMode = false;
-	private boolean bHudMode = false;
-    private boolean bLandscapeMode = false;
-	private static final int SLIP_SENS = 25; //50;	// Arbitrary choice
-	private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
-	private static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
-	private static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
-	int calibrationCount = 0;
 
-	// Location abstracts
-	protected float gps_lat;            // in decimal degrees
-	protected float gps_lon;            // in decimal degrees
-	protected float gps_altitude;       // in m
-    protected float gps_agl;            // in m
-	protected float gps_speed;          // in m/s
-	protected float gps_course;         // in radians
-	protected float gps_rateOfClimb;    // in m/s
-	protected float gps_rateOfTurn;     // in rad/s
-	protected boolean hasSpeed;
-	protected boolean hasGps;
-	protected float orientationAzimuth;
-	protected float orientationPitch;
-	protected float orientationRoll;
-	private int gps_insky;
-	private int gps_infix;
-	private float sensorBias;           // gyroscope / GPS bias
-	private Gpx mGpx;                   // wpt database
-    private DemGTOPO30 mDemGTOPO30;     // dem database
     private OpenAir mAirspace;
 
-	// Digital filters
-	DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16); //8
-	DigitalFilter filterSlip = new DigitalFilter(32);           //32
-	DigitalFilter filterRoll = new DigitalFilter(8);            //16
-	DigitalFilter filterPitch = new DigitalFilter(8);           //16
-	DigitalFilter filterRateOfClimb = new DigitalFilter(4);     //8
-	//not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
-	DigitalFilter filterfpvX = new DigitalFilter(256);          //128
-	DigitalFilter filterfpvY = new DigitalFilter(256);          //128
-	DigitalFilter filterG = new DigitalFilter(32);              //32
-	DigitalFilter filterGpsSpeed = new DigitalFilter(6);        //4
-	DigitalFilter filterGpsAltitude = new DigitalFilter(6);     //4
-	DigitalFilter filterGpsCourse = new DigitalFilter(6);       //4
 
 	//
 	//  Add the action bar buttons
@@ -325,17 +280,17 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 		//mGpx.loadDatabase(region);
         //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
-        mAirspace = new OpenAir(this);
-
         mDemGTOPO30 = new DemGTOPO30(this);
         //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
 
+        mAirspace = new OpenAir(this);
+        mGLView.setSchemeLight(bColorThemeLight);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
-    }
+	}
 
 
 	@Override
@@ -358,6 +313,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         editor.putFloat("GpsLat", gps_lat);
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
+        editor.putBoolean("colorScheme", bColorThemeLight);
 
         // Commit the edits
         editor.commit();
@@ -604,7 +560,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         bDemoMode = settings.getBoolean("demoMode", false);
 
         // If we changed to or from HUD mode, a calibration is required
-        if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
+        //if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
         bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
@@ -631,219 +587,26 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
         //if (bDemoMode != settings.getBoolean("demoMode", false)) {
 
         // If we changed display schemes, a color gamma rec-calc is required
-        if (bColorSchemeLight != settings.getBoolean("colorScheme", false)) mGLView.setSchemeLight(settings.getBoolean("colorScheme", false));
-        bColorSchemeLight = settings.getBoolean("colorScheme", false);
-    }
-
-    boolean bColorSchemeLight;// = false;
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to determine the direction of the turn and try to eliminate
-	// the jitter around zero a little bit
-	// Determine the direction of the turn based on the rotation and try to eliminate the jitter around zero a little bit
-	// -1 for left turn
-	// +1 for right turn
-	//  0 for no turn
-	static int rs = 0;  // variable to keep the running count
-	private int getTurnDirection(float rotValue)
-	{
-		if (Math.signum(rotValue) > 0)	rs++;
-		else rs--;
-
-		final int JITTER_COUNT = 10;
-		int turnDirection;
-		if (rs > JITTER_COUNT) {
-			rs = JITTER_COUNT;
-			return 1;
-		}
-		else if (rs < -JITTER_COUNT) {
-			rs = -JITTER_COUNT;
-			return -1;
-		}
-		else return 0;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to calculate rate of climb
-	// Rate of climb in m/s
-	private static Time  time = new Time(); 	// Time class
-	private static long   time_a, _time_a;
-	private static float _altitude;   	// previous altitude
-	private float calculateRateOfClimb(float altitude)
-	{
-		float rateOfClimb = 0;
-		long deltaT;
-		float deltaAlt = altitude - _altitude;
-
-		time.setToNow();
-		time_a = time.toMillis(true);
-		deltaT = time_a - _time_a;
-		if (deltaT > 0) {
-			rateOfClimb = 1000* filterRateOfClimb.runningAverage((float) deltaAlt /(float) deltaT); // m/s
-			_time_a = time_a;
-			_altitude = altitude; // save the previous altitude
-		}
-		return rateOfClimb;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to calculate rate of turn
-	// Rate of turn in rad/s
-	private static float _course;   	// previous course
-	private static long  time_c, _time_c;
-	private static float _rateOfTurn;
-	private float calculateRateOfTurn(float course)
-	{
-		float rateOfTurn = 0;
-		long deltaT;
-		float deltaCrs = course - _course;
-
- 		// Handle the case around 0
-		if (Math.abs(deltaCrs) > UTrig.M_PI_4) {
-			_course = course;   // save the previous course
-			return _rateOfTurn; // result would be rubbish, just return the previous rot
-		}
-
-		time.setToNow();
-		time_c = time.toMillis(true);
-		deltaT = time_c - _time_c;
-		if (deltaT > 0) {
-			rateOfTurn = 1000 * (float)(deltaCrs) / deltaT; // rad/s
-  		_time_c = time_c; // save the previous time
-		}
-		else {
-			rateOfTurn = _rateOfTurn;
-		}
-
-		_course = course;         // save the previous course
-		_rateOfTurn = rateOfTurn; // save the previous rate of turn
-		return rateOfTurn;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to calculate the remaining
-	// battery in percentage.
-	float getRemainingBattery()
-	{
-		// Get the battery percentage
-		IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		Intent batteryStatus = this.registerReceiver(null, ifilter);
-		int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-		int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-		float batteryPct = level / (float)scale;
-
-		return batteryPct;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to Check GPS status
-	//
-	// We assume no GPS is available if there has not been a valid
-	// altitude update in 10 seconds
-	//
-	boolean isGPSAvailable()
-	{
-		if (gps_infix > 3) return true;
-		else return false;
-	}
-
-
-	//-------------------------------------------------------------------------
-	// Utility function to do a simple simulation for demo mode
-	// It acts like a crude flight simulator
-	//
-    float _gps_lat = 00.00f; float _gps_lon = 00.00f;   //null island
-	float _gps_course = 0.96f; //1.74f;  //in radians
-    float _gps_altitude = 3000; // meters
-    float _gps_agl = 0; //meters
-
-	float _gps_speed = 0;       // m/s
-	long _sim_ms = 0, sim_ms;
-    Random rand = new Random();
-
-    private void Simulate()
-	{
-		pitchValue = -sensorComplementaryFilter.getPitch();
-		rollValue = -sensorComplementaryFilter.getRoll();
-
-		hasSpeed = true;
-		hasGps = true;
-
- 		final float setSpeed = 65; // m/s
-
-		if (Math.abs(pitchValue) > 10) {
-			_gps_speed -= 0.01f * pitchValue;
-			if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
-			if (_gps_speed < -setSpeed) _gps_speed = -setSpeed;
-		}
-		else {
-			_gps_speed *= 0.99998;  // decay to zero
-		}
-		gps_speed = setSpeed + _gps_speed;
-		gps_rateOfClimb = (pitchValue * gps_speed / 50 );
-
-		_gps_altitude += (gps_rateOfClimb / 10);
-		if (_gps_altitude < -100) _gps_altitude = -100;   //m
-		if (_gps_altitude > 10000) _gps_altitude = 10000; //m
-		gps_altitude = _gps_altitude;
-
-		if (gps_speed != 0) {
-			_gps_course += (rollValue * gps_speed / 1e6f );
-            while (_gps_course > (UTrig.M_2PI)) _gps_course %= (UTrig.M_2PI);
-            while (_gps_course < 0) _gps_course += (UTrig.M_2PI);
-		}
-		gps_course = _gps_course;
-
-		time.setToNow();
-		sim_ms = time.toMillis(true);
-		float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
-
-        /*
-        //------------------------------------------------------------------------------------------
-        // todo: Hardcoded for debugging
-        //
-        //deltaT = 0.0000124f; //  Ludicrous Speed
-        deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
-        //deltaT = 0.000000224f; // Super Speed2
-
-        // YCMH 090 from Perth
-
-        Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(2);// 50 // + (float) rnd.nextGaussian() / 200;
-        gps_speed = _gps_speed = 125;//100;  // m/s
-        gps_altitude = UMath.toMeter(1500); //2048; //900; //3048; //Meter
-        //rollValue = 0;// (float) rnd.nextGaussian() / 5;
-        //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
-        //deltaT = 0; // freeze time, ie force stationary
-        //
-        // todo: Hardcoded for debugging
-        //------------------------------------------------------------------------------------------
-        // */
-
-        _sim_ms = sim_ms;
-        if ((deltaT > 0) && (deltaT < 0.0000125)) {
-            gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
-            gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
-
-            if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
-            if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
+        if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
+            bColorThemeLight = settings.getBoolean("colorScheme", false);
+            mGLView = new MFDSurfaceView(this);
+            setContentView(mGLView);
+            mGLView.setSchemeLight(bColorThemeLight);
+            mGLView.invalidate();
         }
-        gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
     }
 
-	//for landscape mode
-	// private float azimuthValue;
-	private float rollValue;
-	private float pitchValue;
-	private float gyro_rateOfTurn;
-	private float loadfactor;
-	private float slipValue;
-    int ctr = 0;
+
+
+
+
+
+
+
+
+
+
+
 
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
@@ -904,7 +667,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 		//Demo mode handler
 		//
 		if (bDemoMode) {
-			mGLView.setDemoMode(true, "DEMO");
+			mGLView.setDemoMode(true, "SIMULATOR");
 			Simulate();
 			// Set the GPS flag to true and
 			// make all the instruments serviceable
@@ -918,7 +681,7 @@ public class MFDMainActivity extends Activity implements Listener, SensorEventLi
 			mGLView.setDisplayAirport(true);
 		}
 		else {
-            mGLView.setDemoMode(false, "");
+            mGLView.setDemoMode(false, " ");
             mGLView.setDisplayAirport(true);
         }
 

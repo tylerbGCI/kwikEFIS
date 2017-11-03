@@ -25,7 +25,9 @@
 
 
 
-    <PreferenceCategory android:title="SYSTEM" >
+
+
+    <PreferenceCategory android:title="CONTROL" >
         <PreferenceScreen
             android:key="modeSelection"
             android:title="System"

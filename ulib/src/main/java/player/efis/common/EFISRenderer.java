@@ -164,9 +164,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected Context context;    // Context (from Activity)
 
     // Colors
-    protected float tapeShade = 0.60f; // grey
-    protected float foreShade = 0.99f; // white
-    protected float backShade = 0.01f; // black
+    protected float tapeShade = 0.600f; // grey
+    protected float foreShade = 0.999f; // white
+    protected float backShade = 0.001f; // black
     private float gamma = 1;
     private float theta = 1;
 
@@ -742,7 +742,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
         // TODO: 2017-10-31 make parameterised
         //mSquare.SetColor(gamma*0.25f, gamma*0.20f, gamma*0.10f, 0); //brown
-        mSquare.SetColor(gamma*0.30f, gamma*0.20f, gamma*0.10f, 0); //brown
+        mSquare.SetColor(gamma*0.30f, gamma*0.20f, gamma*0.10f, 1); //brown
 
         mSquare.SetWidth(1);
         {
@@ -761,7 +761,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
         // TODO: 2017-10-31 make parameterised
         //mSquare.SetColor(gamma*0.40f, gamma*0.40f, gamma*0.99f, 1); //blue
-        mSquare.SetColor(gamma*0.10f, gamma*0.20f, gamma*0.30f, 0); //blue
+        mSquare.SetColor(gamma*0.10f, gamma*0.20f, gamma*0.30f, 1); //blue
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
@@ -1677,7 +1677,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
 
         // slip box
-        mLine.SetColor(foreShade, foreShade, backShade, 1);
+        mLine.SetColor(foreShade, foreShade, foreShade, 1);
         mLine.SetWidth(4);
         mLine.SetVerts(
                 -0.07f * pixM2, y1 - 0.4f * glText.getCharHeight(), z,
@@ -1736,7 +1736,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float y1 = fpvY * pixPerDegree;
 
         mPolyLine.SetWidth(3);
-        mPolyLine.SetColor(0.0f, 0.9f, 0.0f, 1); //green
+        mPolyLine.SetColor(backShade, foreShade, backShade, 1); //green
         {
             float[] vertPoly = {
                     // some issue with draworder to figger out.
@@ -1756,7 +1756,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
 
         mLine.SetWidth(3);
-        mLine.SetColor(0.0f, 0.9f, 0.0f, 0); //green
+        mLine.SetColor(backShade, foreShade, backShade, 1); //green
         mLine.SetVerts(
                 x1 + 2.0f * radius, y1 + 0.0f * radius, z,
                 x1 + 4.0f * radius, y1 + 0.0f * radius, z
@@ -1845,7 +1845,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         //mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
         // // TODO: 2017-10-31 make parameterised
-        mSquare.SetColor(gamma*0.10f, gamma*0.20f, gamma*0.50f, 0); //blue
+        mSquare.SetColor(gamma*0.10f, gamma*0.20f, gamma*0.30f, 1); //blue
 
         mSquare.SetWidth(1);
         {
@@ -2013,7 +2013,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         z = zfloat;
 
         // rate of turn box
-        mLine.SetColor(0.7f, 0.7f, 0.7f, 1);  // grey
+        mLine.SetColor(tapeShade, tapeShade, tapeShade, 1);  // grey
         mLine.SetWidth(4);
         mLine.SetVerts(
                 -STD_RATE * 4 * pixM2, -0.8f * pixH2 - 10, z,
@@ -2367,7 +2367,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //*/
 
 
-    public void setSchemeDark()
+    public void setThemeDark()
     {
         tapeShade = 0.60f; // grey
         foreShade = 0.99f; // white
@@ -2377,12 +2377,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         DemGTOPO30.setGamma(gamma);
     }
 
-    public void setSchemeLight()
+    public void setThemeLight()
     {
         tapeShade = 0.10f; // grey
         foreShade = 0.01f; // black
         backShade = 0.99f; // white
-        gamma = 3.3f; //3
+        gamma = 4.0f;//3.3f; //3
         theta = 0.6f;
         DemGTOPO30.setGamma(gamma);
     }
