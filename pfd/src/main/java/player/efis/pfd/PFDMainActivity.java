@@ -583,10 +583,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-	//for landscape mode
-	// private float azimuthValue;
-
-
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
 	// something changes, eg a sensor has new data or new gps fix becomes available.
@@ -807,13 +803,5 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         _gps_agl = gps_agl; // save the previous altitude
 	}
 }
-
-
-/*
-new AlertDialog.Builder(this)
-                    .setMessage("Hello world!")
-                    .setPositiveButton("OK", null)
-                    .show();
-*/
 
 

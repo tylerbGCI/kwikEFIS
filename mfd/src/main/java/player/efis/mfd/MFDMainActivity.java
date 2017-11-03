@@ -233,7 +233,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
+        bColorThemeLight = settings.getBoolean("colorScheme", false);
+	    mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
         _gps_lat = settings.getFloat("GpsLat", gps_lat);
@@ -597,17 +598,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
 	// something changes, eg a sensor has new data or new gps fix becomes available.
@@ -740,13 +730,5 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         _gps_agl = gps_agl; // save the previous altitude
 	}
 }
-
-
-/*
-new AlertDialog.Builder(this)
-                    .setMessage("Hello world!")
-                    .setPositiveButton("OK", null)
-                    .show();
-*/
 
 

@@ -66,7 +66,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(backShade, backShade, backShade, 1.0f);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -362,7 +362,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             y1 = mMapZoom * (dme * UTrig.isin(90-(int)aptRelBrg));
 
             mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(foreShade, tapeShade, foreShade, 1); //purple'ish
+            //mPolyLine.SetColor(foreShade, tapeShade, foreShade, 1); //purple'ish
+            mPolyLine.SetColor(theta*0.8f, theta*0.4f, theta*0.8f, 1);  //purple'ish
+
             {
                 float[] vertPoly = {
                         x1 + 2.0f * radius, y1, z,
@@ -376,7 +378,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 mPolyLine.draw(matrix);
             }
 
-            glText.begin(foreShade, tapeShade, foreShade, 1, matrix);  // purple'ish
+            glText.begin(theta*0.8f, theta*0.4f, theta*0.8f, 1, matrix);  // purple'ish
             glText.setScale(2.0f);
             glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();

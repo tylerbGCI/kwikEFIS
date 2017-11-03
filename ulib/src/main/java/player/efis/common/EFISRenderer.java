@@ -168,7 +168,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected float foreShade = 0.999f; // white
     protected float backShade = 0.001f; // black
     private float gamma = 1;
-    private float theta = 1;
+    protected float theta = 1;
 
     public enum layout_t
     {

@@ -67,7 +67,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         glText = new GLText(context.getAssets());
     }
 
-
     @Override
     public void onDrawFrame(GL10 gl)
     {
@@ -318,10 +317,10 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    protected final int MX_NR_APT = 10;
-    protected int MX_RANGE = 20;   //nm
-    protected int Aptscounter = 0;
-    protected int nrAptsFound;
+    private final int MX_NR_APT = 20;
+    private int MX_RANGE = 200;    //nm
+    private int Aptscounter = 0;
+    private int nrAptsFound;
     protected void renderAPT(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;
