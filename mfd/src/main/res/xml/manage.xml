@@ -107,7 +107,7 @@
             android:defaultValue="0.0"
             android:key="version"
             android:summary="0.0"
-            android:title="Kwik DMAP version" />
+            android:title="Version" />
 
     </PreferenceCategory>
 </PreferenceScreen>

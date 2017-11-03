@@ -1,14 +1,14 @@
 #!/bin/bash
 
 pskill java
-pskill adb
+#pskill adb
 
 # ./gradlew clean
-# rm h:/src/kwikEFIS/apk/kwik-efis.apk
-# rm h:/src/kwikEFIS/apk/kwik-efis-datapac-world.apk
-# rm h:/src/kwikEFIS/apk/kwik-efis-datapac-zar.aus.apk
-# rm h:/src/kwikEFIS/apk/kwik-efis-datapac-usa.can.apk
-# rm h:/src/kwikEFIS/apk/kwik-efis-datapac-eur.rus.apk
+rm h:/src/kwikEFIS/apk/kwik-efis.apk
+rm h:/src/kwikEFIS/apk/kwik-efis-datapac-zar.aus.apk
+rm h:/src/kwikEFIS/apk/kwik-efis-datapac-usa.can.apk
+rm h:/src/kwikEFIS/apk/kwik-efis-datapac-eur.rus.apk
+rm h:/src/kwikEFIS/apk/kwik-efis-datapac-sah.jap.apk
 
 ./gradlew build
 
@@ -44,4 +44,4 @@ adb -s 015d2ea4a467ec11 install -r ./kwik-dmap.apk
 fi
 
 pskill java
-pskill adb
+#pskill adb

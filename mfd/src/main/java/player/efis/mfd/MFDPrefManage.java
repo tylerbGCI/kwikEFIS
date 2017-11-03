@@ -57,8 +57,9 @@ public class MFDPrefManage extends PreferenceActivity
         catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        String version = pInfo.versionName;
 
+        assert pInfo != null;
+        String version = pInfo.packageName + "\t v" + pInfo.versionName;
 
         PreferenceScreen ps;
         ps = (PreferenceScreen) findPreference("version");
