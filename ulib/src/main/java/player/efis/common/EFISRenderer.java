@@ -164,9 +164,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected Context context;    // Context (from Activity)
 
     // Colors
-    protected float tapeShade = 0.60f; // grey
-    protected float foreShade = 0.99f; // white
-    protected float backShade = 0.01f; // black
+    protected float tapeShade = 0.600f; // grey
+    protected float foreShade = 0.999f; // white
+    protected float backShade = 0.001f; // black
     private float gamma = 1;
     private float theta = 1;
 
@@ -2367,7 +2367,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //*/
 
 
-    public void setSchemeDark()
+    public void setThemeDark()
     {
         tapeShade = 0.60f; // grey
         foreShade = 0.99f; // white
@@ -2377,7 +2377,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         DemGTOPO30.setGamma(gamma);
     }
 
-    public void setSchemeLight()
+    public void setThemeLight()
     {
         tapeShade = 0.10f; // grey
         foreShade = 0.01f; // black

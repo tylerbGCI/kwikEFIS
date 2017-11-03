@@ -318,8 +318,8 @@ public class MFDSurfaceView extends GLSurfaceView
 
     public void setSchemeLight(boolean value)
     {
-        if (value)  mRenderer.setSchemeLight();
-        else mRenderer.setSchemeDark();
+        if (value)  mRenderer.setThemeLight();
+        else mRenderer.setThemeDark();
         requestRender();
     }
 
