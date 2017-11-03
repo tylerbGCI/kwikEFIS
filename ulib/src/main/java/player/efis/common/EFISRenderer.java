@@ -1840,7 +1840,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // Sky - simple
         // max: -0.05 to 180 pitch
         float overlap;  //= 0.05f;  // 0 - 0.05
-        if (AGLValue > 0) overlap = 0.05f;
+        if (AGLValue > 0) overlap = 0.1f; //0.05f;
         else overlap = 0.0f;
 
         //mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
