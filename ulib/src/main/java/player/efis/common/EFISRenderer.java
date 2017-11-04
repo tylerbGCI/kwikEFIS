@@ -1795,13 +1795,15 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    //protected final int MX_NR_APT = 10;
+    protected final int MX_NR_APT = 10;
     protected int MX_RANGE = 20;   //nm
-    //protected int Aptscounter = 0;
+    protected int Aptscounter = 0;
     protected int nrAptsFound;
-    //protected void renderAPT(float[] matrix)
-    //{
-    //}
+    protected int Airspacecounter = 0;
+    protected int nrAirspaceFound;
+    protected void renderAPT(float[] matrix)
+    {
+    }
 
     //-------------------------------------------------------------------------
     // Synthetic Vision

@@ -317,10 +317,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 20;
-    private int MX_RANGE = 200;    //nm
-    private int Aptscounter = 0;
-    private int nrAptsFound;
+    private final int MX_NR_APT = 10;
+    private int MX_RANGE = 20;    //nm
     protected void renderAPT(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;

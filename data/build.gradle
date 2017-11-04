@@ -3,11 +3,6 @@ android {
     compileSdkVersion 19
     buildToolsVersion "25.0.0"
     defaultConfig {
-        // - set in parent // applicationId 'player.efis.data'
-        //minSdkVersion 9
-        //targetSdkVersion 10
-        //versionCode 1
-        //versionName "1.0"
     }
     buildTypes {
         release {

@@ -315,12 +315,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 20;
-    private int MX_RANGE = 200;    //nm
-    private int Aptscounter = 0;
-    private int nrAptsFound;
-    private int Airspacecounter = 0;
-    private int nrAirspaceFound;
+    private final int MX_NR_APT = 30;
+    private int MX_RANGE = 300;    //nm
     protected void renderAPT(float[] matrix)
     {
         float z, x1, y1;
