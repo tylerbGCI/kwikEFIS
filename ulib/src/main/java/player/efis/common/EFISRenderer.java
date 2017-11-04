@@ -18,11 +18,6 @@ package player.efis.common;
 
 import java.util.Iterator;
 
-import player.efis.common.DemColor;
-import player.efis.common.DemGTOPO30;
-import player.efis.common.AircraftData;
-import player.efis.common.Apt;
-import player.efis.common.Gpx;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -30,15 +25,10 @@ import player.gles20.Square;
 import player.gles20.Triangle;
 import player.ulib.*;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import player.gles20.GLText;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 
 
@@ -1795,11 +1785,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    protected final int MX_NR_APT = 10;
-    protected int MX_RANGE = 20;   //nm
+    protected final int MX_APT_SEEK_RNG = 99;
+    protected int MX_NR_APT = 10;
+    protected int AptSeekRange = 20; // start of with 20nm
     protected int Aptscounter = 0;
     protected int nrAptsFound;
-    protected int Airspacecounter = 0;
     protected int nrAirspaceFound;
     protected void renderAPT(float[] matrix)
     {
@@ -2159,7 +2149,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         s = mGpsStatus; //String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.3f) * pixM2 - glText.getCharHeight() / 2);
 
-        s = String.format("RNG %d   #AP %d", MX_RANGE, nrAptsFound);
+        s = String.format("RNG %d   #AP %d", AptSeekRange, nrAptsFound);
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.4f) * pixM2 - glText.getCharHeight() / 2);
 
         ///*

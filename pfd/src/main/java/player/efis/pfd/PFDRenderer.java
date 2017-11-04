@@ -37,9 +37,6 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
-
-
 
 
 public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
@@ -317,8 +314,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 10;
-    private int MX_RANGE = 20;    //nm
     protected void renderAPT(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;
@@ -351,8 +346,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Apply selection criteria
             if (dme < 5)
                 nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
-                nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
+            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange))
+                nrAptsFound++;  // show all others up to MX_NR_APT for AptSeekRange
             else
                 continue;  // we already have all the apts as we wish to display
 
@@ -399,9 +394,9 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // If do we have a full compliment start reducing the range
         // This also has the "useful" side effect of "flashing" new additions for a few cycles
         //
-        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
-        else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
-        MX_RANGE = Math.min(MX_RANGE, 99);
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
+        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
+        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
     }
 
     //-------------------------------------------------------------------------

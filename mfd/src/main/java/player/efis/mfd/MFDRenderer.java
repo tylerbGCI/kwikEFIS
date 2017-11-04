@@ -28,7 +28,6 @@ import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
-import player.efis.common.prefs_t;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -42,7 +41,6 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 
 
 /**
@@ -315,8 +313,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
-    private final int MX_NR_APT = 30;
-    private int MX_RANGE = 300;    //nm
     protected void renderAPT(float[] matrix)
     {
         float z, x1, y1;
@@ -343,13 +339,13 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
 
             String wptId = currApt.name;
-            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
+            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
 
             // Apply selection criteria
             if (dme < 5)
                 nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < MX_RANGE))
-                nrAptsFound++;  // show all others up to MX_NR_APT for MX_RANGE
+            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange))
+                nrAptsFound++;  // show all others up to MX_NR_APT for AptSeekRange
             else
                 continue;  // we already have all the apts as we wish to display
 
@@ -398,9 +394,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // If do we have a full compliment start reducing the range
         // This also has the "useful" side effect of "flashing" new additions for a few cycles
         //
-        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) MX_RANGE += 1;
-        else if ((nrAptsFound >= MX_NR_APT)) MX_RANGE -= 1;
-        MX_RANGE = Math.min(MX_RANGE, 99);
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
+        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
+        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
     }
 
     //-------------------------------------------------------------------------
@@ -460,7 +456,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 dme = UNavigation.calcDme(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon); // in ft
 
                 // Apply selection criteria
-                if (dme > MX_RANGE*2) //200
+                if (dme > AptSeekRange *2) //200
                     break;//continue;
 
                 airspacepntRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon, DIValue);
@@ -505,9 +501,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // If do we have a full compliment start reducing the range
         // This also has the "useful" side effect of "flashing" new additions for a few cycles
         //
-        /*if ((nrAirspaceFound < MX_NR_APT - 2) && (nrAirspaceFound++ % 10 == 0)) MX_RANGE += 1;
-        else if ((nrAirspaceFound >= MX_NR_APT)) MX_RANGE -= 1;
-        MX_RANGE = Math.min(MX_RANGE, 99);*/
+        /*if ((nrAirspaceFound < MX_NR_APT - 2) && (nrAirspaceFound++ % 10 == 0)) AptSeekRange += 1;
+        else if ((nrAirspaceFound >= MX_NR_APT)) AptSeekRange -= 1;
+        AptSeekRange = Math.min(AptSeekRange, 99);*/
 
     }
 
