@@ -1,14 +1,18 @@
 Changelog
 =========
-3.8 (Under Development)
+3.9 (Under Development)
+------------------
+* _wip: Auto zoom_ 
+* _wip: Release DMAP v1.3 rc-1_
+
+3.8 (2017-10-16)
 ------------------
 * Add speed, altitude and AGL displays to map
-* Zoom with swipe up/down (use XCSoar convention) 
-* Improved code commonality
+* Zoom with swipe up/down (use XCSoar convention)
+* Improved code commonality and fault tolerance
 * Add Light/Dark themes for better sunlight contrast
-* <wip: Auto zoom>
-* <wip: Release EFIS v3.7 rc-4>
-* <wip: Release DMAP v1.2 rc-4>
+* Release EFIS v3.7
+* Release DMAP v1.2
 
 3.7 (2017-10-16)
 ------------------

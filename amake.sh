@@ -38,7 +38,10 @@ cd h:/src/kwikEFIS/apk
 if [ $1 == '-l' ] 
 then
 #wifi nexus 7
+adb -s 015d2ea4a467ec11 uninstall  ./kwik-efis.apk
 adb -s 015d2ea4a467ec11 install -r ./kwik-efis.apk
+
+adb -s 015d2ea4a467ec11 uninstall  ./kwik-dmap.apk
 adb -s 015d2ea4a467ec11 install -r ./kwik-dmap.apk
 #adb -s 015d2ea4a467ec11 install -r ./kwik-efis-datapac-zar.aus.apk
 fi
