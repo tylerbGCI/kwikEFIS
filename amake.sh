@@ -22,28 +22,23 @@ cp h:/src/kwikEFIS/CHANGELOG.md h:/src/kwikEFIS/apk/CHANGELOG.md
 
 cd h:/src/kwikEFIS/apk
 
-#md5sum kwik-efis.apk > kwik-efis.apk.md5
-#md5sum kwik-efis-datapac-world.apk > kwik-efis-datapac-world.apk.md5
-#md5sum kwik-efis-datapac-zar.aus.apk > kwik-efis-datapac-zar.aus.apk.md5
-#md5sum kwik-efis-datapac-usa.can.apk > kwik-efis-datapac-usa.can.apk.md5
-#md5sum kwik-efis-datapac-eur.rus.apk > kwik-efis-datapac-eur.rus.apk.md5
 
-
-#gsm nexus 7
-#adb -s 015d3249295c160b install -r ./kwik-efis.apk
-#adb -s 015d3249295c160b install -r ./kwik-efis-datapac-zar.aus.apk
-#adb -s 015d3249295c160b install -r ./kwik-efis-datapac-usa.can.apk
-#adb -s 015d3249295c160b install -r ./kwik-efis-datapac-eur.rus.apk
 
 if [ $1 == '-l' ] 
 then
-#wifi nexus 7
-adb -s 015d2ea4a467ec11 uninstall  ./kwik-efis.apk
-adb -s 015d2ea4a467ec11 install -r ./kwik-efis.apk
+    #gsm nexus 7
+    #adb -s 015d3249295c160b install -r ./kwik-efis.apk
+    #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-zar.aus.apk
+    #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-usa.can.apk
+    #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-eur.rus.apk
+    
+    #wifi nexus 7
+    adb -s 015d2ea4a467ec11 uninstall player.efis.pfd
+    adb -s 015d2ea4a467ec11 install -r ./kwik-efis.apk
 
-adb -s 015d2ea4a467ec11 uninstall  ./kwik-dmap.apk
-adb -s 015d2ea4a467ec11 install -r ./kwik-dmap.apk
-#adb -s 015d2ea4a467ec11 install -r ./kwik-efis-datapac-zar.aus.apk
+    adb -s 015d2ea4a467ec11 uninstall player.efis.mfd
+    adb -s 015d2ea4a467ec11 install -r ./kwik-dmap.apk
+    #adb -s 015d2ea4a467ec11 install -r ./kwik-efis-datapac-zar.aus.apk
 fi
 
 pskill java
