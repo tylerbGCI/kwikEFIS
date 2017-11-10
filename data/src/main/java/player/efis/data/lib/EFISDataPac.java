@@ -261,19 +261,19 @@ public class EFISDataPac extends Activity
                     break;
 
                 // bottom row
-                case "W180N10.DEM":
+                case "W180S10.DEM":
                     x1 = twidth * 0;
                     y1 = theight * 2;
                     break;
-                case "W140N10.DEM":
+                case "W140S10.DEM":
                     x1 = twidth * 1;
                     y1 = theight * 2;
                     break;
-                case "W100N10.DEM":
+                case "W100S10.DEM":
                     x1 = twidth * 2;
                     y1 = theight * 2;
                     break;
-                case "W060N10.DEM":
+                case "W060S10.DEM":
                     x1 = twidth * 3;
                     y1 = theight * 2;
                     break;
