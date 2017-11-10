@@ -129,6 +129,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected boolean displayRMI;            // Display RMI
     protected boolean displayHITS;           // Display the Highway In The Sky
     protected boolean displayDEM;            // Display the DEM terrain
+    protected boolean autoZoomActive;
 
     //3D map display
     protected boolean displayAirport;
@@ -162,6 +163,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected float backShade = 0.001f; // black
     private float gamma = 1;
     protected float theta = 1;
+
 
     public enum layout_t
     {
@@ -2090,10 +2092,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mAutoWptBrg = brg;
     }
 
-    private float mSelWptBrg;           // Selected waypoint Bearing
+    private float mSelWptBrg;             // Selected waypoint Bearing
     protected float mSelWptRlb;           // Selected waypoint Relative bearing
     protected float mSelWptDme;           // Selected waypoint Dme distance (nm)
-
     private void setSelWptBrg(float brg)
     {
         mSelWptBrg = brg;
@@ -2602,12 +2603,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
-            glText.setScale(1.5f);
+            glText.setScale(1.5f*roseScale);
             switch (i) {
                 case 0:
                     t = "N";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(2.0f);
+                    glText.setScale(2.0f*roseScale);
                     break;
                 case 30:
                     t = "3";
@@ -2618,7 +2619,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 90:
                     t = "E";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f);
+                    glText.setScale(1.5f*roseScale);
                     break;
                 case 120:
                     t = "12";
@@ -2629,7 +2630,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 180:
                     t = "S";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f);
+                    glText.setScale(1.5f*roseScale);
                     break;
                 case 220:
                     t = "21";
@@ -2640,7 +2641,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 270:
                     t = "W";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f);
+                    glText.setScale(1.5f*roseScale);
                     break;
                 case 300:
                     t = "30";
@@ -2934,14 +2935,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z;
         z = zfloat;
 
-        float len = 20;//20;
-        float x1 = mMapZoom * len;// * (5 * UTrig.icos(90-(int)90));
+        float distance = 20;//20;
+        float x1 = mMapZoom * distance;// * (5 * UTrig.icos(90-(int)90));
 
-        while (x1 > pixW2 / 2) {
-            if (len > 5) len = len - 5;
-            else len = 1;
+        while (x1 > pixM2 / 2) {
+            if (distance > 5) distance = distance - 5;
+            else distance = 1;
 
-            x1 = mMapZoom * len;// * (5 * UTrig.icos(90-(int)90));
+            x1 = mMapZoom * distance;// * (5 * UTrig.icos(90-(int)90));
         }
 
         // Scale line
@@ -2963,10 +2964,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         );
         mLine.draw(matrix);
 
-        String t = String.format("%3.0f nm", len);
+        String t = String.format("%3.0f nm", distance);
         glText.begin(foreShade, foreShade, foreShade, 1, matrix); // White
         glText.setScale(1.5f);
-        glText.draw(t, -0.90f * pixW2, -0.95f * pixH2);            // Draw  String
+        glText.draw(t, -0.92f * pixW2, -0.95f * pixH2);            // Draw  String
         glText.end();
 
         // leader line
@@ -2986,6 +2987,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Map Zooming
     //
+    public final float MAX_ZOOM = 120;
+    public final float MIN_ZOOM = 2;
     public void setMapZoom(float zoom)
     {
         mMapZoom = zoom;
@@ -2994,13 +2997,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public void zoomIn()
     {
         if (mMapZoom < 5) mMapZoom += 1;
-        else if (mMapZoom < 120) mMapZoom += 5;
+        else if (mMapZoom < MAX_ZOOM) mMapZoom += 5;
     }
 
     public void zoomOut()
     {
         if (mMapZoom > 5) mMapZoom -= 5;
-        else if (mMapZoom > 2) mMapZoom -= 1;
+        else if (mMapZoom > MIN_ZOOM) mMapZoom -= 1;
     }
 
 
