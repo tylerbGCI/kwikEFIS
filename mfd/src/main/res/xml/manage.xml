@@ -76,32 +76,37 @@
             android:summary="Display and Operational settings"
             android:persistent="false">
 
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="landscapeMode"
-                android:summary="Select Landscape view"
-                android:title="Landscape" />
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="colorScheme"
-                android:summary="Use a high contrast color scheme"
-                android:title="Contrast" />
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="displayMirror"
-                android:summary="Mirror image for HUD usage"
-                android:title="Mirror HUD" />
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="demoMode"
-                android:summary="Simulate GPS movement for demonstration"
-                android:title="Simulator" />
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="lockedMode"
-                android:summary="Lock the exit on back button"
-                android:title="Locked" />
-        </PreferenceScreen>
+            <PreferenceCategory android:title="DISPLAY" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="landscapeMode"
+                    android:summary="Select Landscape view"
+                    android:title="Landscape" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="colorScheme"
+                    android:summary="Use a high contrast color scheme"
+                    android:title="Contrast" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="displayMirror"
+                    android:summary="Mirror image for HUD usage"
+                    android:title="Mirror HUD" />
+            </PreferenceCategory>
+                    
+            <PreferenceCategory android:title="ADMIN" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="demoMode"
+                    android:summary="Simulate GPS movement for demonstration"
+                    android:title="Simulator" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="lockedMode"
+                    android:summary="Lock the exit on back button"
+                    android:title="Locked" />
+            </PreferenceCategory>
+            </PreferenceScreen>
 
         <PreferenceScreen
             android:defaultValue="0.0"
