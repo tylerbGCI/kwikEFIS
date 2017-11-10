@@ -5,7 +5,7 @@ Changelog
 * _wip: Auto zoom_ 
 * _wip: Release DMAP v1.3 rc-1_
 
-3.8 (2017-10-16)
+3.8 (2017-11-04)
 ------------------
 * Add speed, altitude and AGL displays to map
 * Zoom with swipe up/down (use XCSoar convention)
