@@ -28,6 +28,7 @@ import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
+import player.efis.common.Point;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -58,6 +59,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public MFDRenderer(Context context)
     {
         super(context);
+        autoZoomActive = true; //// TODO: 2017-11-10 remove this
     }
 
     @Override
@@ -103,8 +105,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Add switch for orientation
             if (Layout == layout_t.LANDSCAPE) {
                 // Landscape
-                xlx = 0; //-0.00f * pixW2;
-                xly = -1.80f * pixH2;  //0.45f
+                xlx = 0;               // top left
+                xly = -1.80f * pixH2;  // top left
                 roseScale = 1.9f;
                 GLES20.glViewport(0, pixH2, pixW, pixH); 
             }
@@ -130,7 +132,10 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
 
         //-----------------------------
-        if (displayFlightDirector) renderDctTrack(mMVPMatrix);
+        if (displayFlightDirector) {
+            if (autoZoomActive) setAutoZoom();
+            renderDctTrack(mMVPMatrix);
+        }
         renderMapScale(mMVPMatrix);  // do before the DI
 
         if (displayTape == true) {
@@ -241,6 +246,23 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     //
     //
+    private void setAutoZoom()
+    {
+        float a = mSelWptDme * mMapZoom;
+        while ((a > pixM2) && (mMapZoom > MIN_ZOOM)) {
+            zoomOut();
+            a = mSelWptDme * mMapZoom;
+        }
+        while ((a < pixM2) && (mMapZoom < MAX_ZOOM)) {
+            zoomIn();
+            a = mSelWptDme * mMapZoom;
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    //
+    //
     public void setSpinnerParams()
     {
         // This code determines where the spinner control
@@ -313,23 +335,25 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     // Variables specific to render APT
     //
+    /*
     protected void renderAPT(float[] matrix)
     {
-        float z, x1, y1;
+        float z, pixPerDegree, x1, y1;
         float radius = 5;
 
+        pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
-        float dme;         
-        float _dme = 1000;  
+        float dme;
+        float _dme = 1000;
         float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
 
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
         while (it.hasNext()) {
-            Apt currApt;//  = it.next();
+            Apt currApt; //  = it.next();
             try {
                 currApt = it.next();
             }
@@ -342,39 +366,33 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
 
             // Apply selection criteria
-            if (dme < 5)
-                nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange))
-                nrAptsFound++;  // show all others up to MX_NR_APT for AptSeekRange
-            else
-                continue;  // we already have all the apts as we wish to display
+            if (dme < 5) nrAptsFound++;                                                // always show apts closer then 5nm
+            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange)) nrAptsFound++; // show all others up to MX_NR_APT for AptSeekRange
+            else continue;  // we already have all the apts as we wish to display
 
             aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-            x1 = mMapZoom * (dme * UTrig.icos(90-(int)aptRelBrg));
-            y1 = mMapZoom * (dme * UTrig.isin(90-(int)aptRelBrg));
+
+            x1 = project(aptRelBrg, dme).x;
+            y1 = project(aptRelBrg, dme).y;
 
             mPolyLine.SetWidth(3);
-            //mPolyLine.SetColor(foreShade, tapeShade, foreShade, 1); //purple'ish
             mPolyLine.SetColor(theta*0.8f, theta*0.4f, theta*0.8f, 1);  //purple'ish
 
-            {
-                float[] vertPoly = {
-                        x1 + 2.0f * radius, y1, z,
-                        x1, y1 + 2.0f * radius, z,
-                        x1 - 2.0f * radius, y1, z,
-                        x1, y1 - 2.0f * radius, z,
-                        x1 + 2.0f * radius, y1, z
-                };
-                mPolyLine.VertexCount = 5;
-                mPolyLine.SetVerts(vertPoly);  //crash here
-                mPolyLine.draw(matrix);
-            }
+            float[] vertPoly = {
+                    x1 + 2.0f * radius, y1, z,
+                    x1, y1 + 2.0f * radius, z,
+                    x1 - 2.0f * radius, y1, z,
+                    x1, y1 - 2.0f * radius, z,
+                    x1 + 2.0f * radius, y1, z
+            };
+            mPolyLine.VertexCount = 5;
+            mPolyLine.SetVerts(vertPoly);  //crash here
+            mPolyLine.draw(matrix);
 
             glText.begin(theta*0.8f, theta*0.4f, theta*0.8f, 1, matrix);  // purple'ish
             glText.setScale(2.0f);
             glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
             glText.end();
-
 
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)
@@ -398,9 +416,80 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
         AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
     }
+    */
+
+    @Override
+    protected Point project(float relbrg, float dme)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
+
+
 
     //-------------------------------------------------------------------------
-    // Synthetic Vision
+    // Render the Digital Elevation Model (DEM).
+    //
+    // This is the meat and potatoes of the synthetic vision implementation
+    // The loops are very performance intensive, therefore all the hardcoded
+    // magic numbers
+    //
+    protected void renderDEMTerrain(float[] matrix)
+    {
+        float z, x1, y1, z1;
+        float lat, lon;
+        z = zfloat;
+
+        float dme;             //in nm
+        float step = 0.50f;    //in nm, normally this should be = gridy
+        float agl_ft;          //in Feet
+
+        float demRelBrg;       // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float caution;
+        final float cautionMin = 0.2f;
+        final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
+
+        float m = 1;  // 1 = normal
+        if (mMapZoom < 10) m = 2;
+        if (mMapZoom < 5) m = 4;
+
+        for (dme = 0; dme <= 700f / mMapZoom; dme = dme + m*step) { // DEM_HORIZON=20, was 30
+            float _x1=0, _y1=0;
+            for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 2*m*step) { //1
+                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
+                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
+                z1 = DemGTOPO30.getElev(lat, lon);
+
+                x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
+                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+                if ((_x1 != 0) || (_y1 != 0)) {
+                    // float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
+                    float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
+                    DemColor color = DemGTOPO30.getColor((short) z1);
+                    caution = cautionMin + (color.red + color.green + color.blue);
+                    agl_ft = MSLValue - z1 * 3.28084f;  // in ft
+                    if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
+                    else if (IASValue < IASValueThreshold) mLine.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
+                    else if (agl_ft > 200) mLine.SetColor(caution, caution, 0, 1f);  // Proximity notification
+                    else mLine.SetColor(caution, 0, 0, 1f);                          // Proximity warning
+
+                    mLine.SetWidth(wid);
+                    mLine.SetVerts(
+                            _x1, _y1, z,
+                             x1,  y1, z
+                    );
+                    mLine.draw(matrix);
+                }
+                _x1 = x1;
+                _y1 = y1;
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Airspace
     //
     protected void renderAirspace(float[] matrix)
     {
@@ -408,14 +497,13 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float x1, y1;
         float _x1, _y1;
 
-        //pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
         // 0.16667 deg lat  = 10 nm
         // 0.1 approx 5nm
-        float dme = 0;         // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        float _dme = 6080000;  // 1,000 nm in ft
-        float airspacepntRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float dme = 0;           // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
+        float _dme = 6080000;    // 1,000 nm in ft
+        float airspacepntRelBrg; // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         DemColor color;
 
         nrAirspaceFound = 0;
@@ -456,8 +544,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 dme = UNavigation.calcDme(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon); // in ft
 
                 // Apply selection criteria
-                if (dme > AptSeekRange *2) //200
-                    break;//continue;
+                if (dme > AptSeekRange *2)
+                    break;
 
                 airspacepntRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon, DIValue);
                 x1 = mMapZoom * (dme * UTrig.icos(90 - (int) airspacepntRelBrg));
@@ -468,7 +556,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     mLine.SetColor(color.red, color.green, color.blue, 0.85f);
                     mLine.SetVerts(
                             _x1, _y1, z,
-                             x1, y1,  z
+                            x1, y1,  z
                     );
                     mLine.draw(matrix);
                 }
@@ -488,23 +576,13 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon, DIValue);
 
                     setAutoWptValue(airspaceDesc);
-                    setAutoWptDme(dme);  // 1nm = 6080ft
+                    setAutoWptDme(dme);
                     setAutoWptBrg(absBrg);
                     setAutoWptRelBrg(relBrg);
                     _dme = dme;
                 }
             }
         }
-
-        //
-        // If we dont have the full compliment of apts expand the range incrementally
-        // If do we have a full compliment start reducing the range
-        // This also has the "useful" side effect of "flashing" new additions for a few cycles
-        //
-        /*if ((nrAirspaceFound < MX_NR_APT - 2) && (nrAirspaceFound++ % 10 == 0)) AptSeekRange += 1;
-        else if ((nrAirspaceFound >= MX_NR_APT)) AptSeekRange -= 1;
-        AptSeekRange = Math.min(AptSeekRange, 99);*/
-
     }
 
     //-------------------------------------------------------------------------
@@ -518,15 +596,15 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Right triangle
         mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
         mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                           0,            0.10f*pixM2, z,
-                           0.03f*pixM2, -0.12f*pixM2,z);
+                0,            0.10f*pixM2, z,
+                0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
         mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
         mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                           0,            0.10f*pixM2, z,
-                          -0.03f*pixM2, -0.12f*pixM2,z);
+                0,            0.10f*pixM2, z,
+                -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
@@ -535,81 +613,11 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         glText.end();
     }
 
-
-    //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
-    //
-    // This is the meat and potatoes of the synthetic vision implementation
-    // The loops are very performance intensive, therefore all the hardcoded
-    // magic numbers
-    //
-    protected void renderDEMTerrain(float[] matrix)
-    {
-        float z, pixPerDegree, x1, y1, z1;
-        float lat, lon;
-        z = zfloat;
-
-        float dme;             //in nm
-        float step = 0.50f;    //in nm, normally this should be = gridy
-        float agl_ft;          //in Feet
-
-        float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-        float caution;
-        final float cautionMin = 0.2f;
-        final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-
-        float m = 1;  // 1 = normal
-        if (mMapZoom < 10) m = 2;
-        if (mMapZoom < 5) m = 4;
-
-        for (dme = 0; dme <= 700f / mMapZoom; dme = dme + m*step) { // DEM_HORIZON=20, was 30
-            float _x1=0, _y1=0;
-            for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 2*m*step) { //1
-                lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
-                lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
-                z1 = DemGTOPO30.getElev(lat, lon);
-
-                x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
-                if ((_x1 != 0) || (_y1 != 0)) {
-                    // float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
-                    float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
-                    DemColor color = DemGTOPO30.getColor((short) z1);
-                    caution = cautionMin + (color.red + color.green + color.blue);
-                    agl_ft = MSLValue - z1 * 3.28084f;  // in ft
-                    if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);   // Enroute
-                    else if (IASValue < IASValueThreshold) mLine.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                    else if (agl_ft > 200) mLine.SetColor(caution, caution, 0, 1f);             // Proximity notification
-                    else mLine.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-
-                    mLine.SetWidth(wid);
-                    mLine.SetVerts(
-                            _x1, _y1, z,
-                             x1,  y1, z
-                    );
-                    mLine.draw(matrix);
-                }
-                _x1 = x1;
-                _y1 = y1;
-            }
-        }
-    }
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
-    //
-    // Auto Waypoint handlers
-    //
-    //-------------------------------------------------------------------------
-
-
     private float roseTextScale = 1.9f;
+
     //protected void renderCompassRose(float[] matrix)
     //{
     //}
-
-
-
-
 }
 //-------------
 // END OF CLASS

@@ -144,10 +144,12 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{ 
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
+            mGLView.setAutoZoomActive(false);
             mGLView.zoomIn();
             return true;
         }
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+            mGLView.setAutoZoomActive(false);
             mGLView.zoomOut();
             return true;
         }

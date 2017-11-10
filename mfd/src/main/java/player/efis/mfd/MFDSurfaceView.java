@@ -21,7 +21,6 @@ import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import player.efis.common.prefs_t;
 
-
 //
 // A view container where OpenGL ES graphics can be drawn on screen.
 // This view can also be used to capture touch events, such as a user
@@ -98,6 +97,7 @@ public class MFDSurfaceView extends GLSurfaceView
                 float deltaY = y - mPreviousY;
 
                 if (Math.abs(deltaY) > MIN_DISTANCE) {
+                    setAutoZoomActive(false);
                     if (deltaY < 0) {
                         // swipe up
                         zoomIn();
@@ -108,6 +108,7 @@ public class MFDSurfaceView extends GLSurfaceView
                     }
                 }
                 else if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    setAutoZoomActive(true);
                     if (deltaY > 0) {
                         // swipe right
                     }
@@ -342,6 +343,11 @@ public class MFDSurfaceView extends GLSurfaceView
     {
         mRenderer.zoomOut();
         requestRender();
+    }
+
+    public void setAutoZoomActive(boolean active)
+    {
+        mRenderer.setAutoZoomActive(active);
     }
 
 }

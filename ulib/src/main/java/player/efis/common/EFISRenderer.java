@@ -1788,13 +1788,119 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     // Variables specific to render APT
     //
     protected final int MX_APT_SEEK_RNG = 99;
-    protected int MX_NR_APT = 10;
-    protected int AptSeekRange = 20; // start of with 20nm
+    protected final int MX_NR_APT = 12;
+    protected int AptSeekRange = 10; // start of with 10nm
     protected int Aptscounter = 0;
     protected int nrAptsFound;
     protected int nrAirspaceFound;
+    //-------------------------------------------------------------------------
+    // Airports / Waypoints
+    //
+
+    //
+    // Variables specific to render APT
+    //
     protected void renderAPT(float[] matrix)
     {
+        float z, x1, y1;
+
+        z = zfloat;
+
+        // 0.16667 deg lat  = 10 nm
+        // 0.1 approx 5nm
+        float dme;
+        float _dme = 1000;
+        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        String wptId = mWptSelName;
+
+        // Aways draw at least the selected waypoint
+        wptId = mWptSelName;
+        dme = UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in nm
+        aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
+        x1 = project(aptRelBrg, dme).x;
+        y1 = project(aptRelBrg, dme).y;
+        renderAPTSymbol(matrix, x1, y1, wptId);
+
+        // draw all the other waypoints that fit the criteria
+        nrAptsFound = 0;
+        Iterator<Apt> it = Gpx.aptList.iterator();
+        while (it.hasNext()) {
+            Apt currApt; //  = it.next();
+            try {
+                currApt = it.next();
+            }
+            //catch (ConcurrentModificationException e) {
+            catch (Exception e) {
+                break;
+            }
+
+            wptId = currApt.name;
+            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
+
+            // Apply selection criteria
+            if (dme < 5) nrAptsFound++;                                                // always show apts closer then 5nm
+            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange)) nrAptsFound++; // show all others up to MX_NR_APT for AptSeekRange
+            else continue;  // we already have all the apts as we wish to display
+
+            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
+
+            x1 = project(aptRelBrg, dme).x;
+            y1 = project(aptRelBrg, dme).y;
+            renderAPTSymbol(matrix, x1, y1, wptId);
+
+            if (Math.abs(dme) < Math.abs(_dme)) {
+                // closest apt (dme)
+                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
+
+                setAutoWptValue(wptId);
+                setAutoWptDme(dme);
+                setAutoWptBrg(absBrg);
+                setAutoWptRelBrg(relBrg);
+                _dme = dme;
+            }
+        }
+
+        //
+        // If we dont have the full compliment of apts expand the range incrementally
+        // If do we have a full compliment start reducing the range
+        // This also has the "useful" side effect of "flashing" new additions for a few cycles
+        //
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
+        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
+        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
+    }
+
+    private void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
+    {
+        float radius = 5;
+        float z = zfloat;
+
+        mPolyLine.SetWidth(3);
+        mPolyLine.SetColor(theta*0.8f, theta*0.4f, theta*0.8f, 1);  //purple'ish
+
+        float[] vertPoly = {
+                x1 + 2.0f * radius, y1, z,
+                x1, y1 + 2.0f * radius, z,
+                x1 - 2.0f * radius, y1, z,
+                x1, y1 - 2.0f * radius, z,
+                x1 + 2.0f * radius, y1, z
+        };
+        mPolyLine.VertexCount = 5;
+        mPolyLine.SetVerts(vertPoly);  //crash here
+        mPolyLine.draw(matrix);
+
+        glText.begin(theta*0.8f, theta*0.4f, theta*0.8f, 1, matrix);  // purple'ish
+        glText.setScale(2.0f);
+        glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
+        glText.end();
+    }
+
+
+    // this must be overridden in the child classes
+    protected Point project(float x, float y)
+    {
+        return null;
     }
 
     //-------------------------------------------------------------------------
@@ -3006,6 +3112,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         else if (mMapZoom > MIN_ZOOM) mMapZoom -= 1;
     }
 
+    public void setAutoZoomActive(boolean active)
+    {
+        autoZoomActive = active;
+    }
 
 }
 //-------------

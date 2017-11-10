@@ -24,6 +24,7 @@ import player.efis.common.AircraftData;
 import player.efis.common.Apt;
 import player.efis.common.EFISRenderer;
 import player.efis.common.Gpx;
+import player.efis.common.Point;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -148,8 +149,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Add switch for orientation
             if (Layout == layout_t.LANDSCAPE) {
                 // Landscape
-                xlx = -0.74f * pixW2; // top left -0.75
-                xly = 0.50f * pixH2; // top left  0.55
+                xlx = -0.74f * pixW2; // top left 
+                xly = 0.50f * pixH2;  // top left  
                 roseScale = 0.44f;
                 GLES20.glViewport(0, 0, pixW, pixH);
             }
@@ -283,8 +284,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         setSpinnerParams(); // Set up the spinner locations and SelWpt display
 
         // Set the window size specific scales, positions and sizes (nothing dynamic yet...)
-        pitchInView = 25.0f;      // degrees to display from horizon to top of viewport
-        IASInView = 40.0f;      // IAS units to display from center to top of viewport
+        pitchInView = 25.0f;     // degrees to display from horizon to top of viewport
+        IASInView = 40.0f;       // IAS units to display from center to top of viewport
         MSLInView = 300.0f;      // IAS units to display from center to top of viewport
 
         // this projection matrix is applied to  object coordinates in the onDrawFrame() method
@@ -306,98 +307,17 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    // This may be a differnt name?
-    //-------------------------------------------------------------------------
-    // Airports / Waypoints
-    //
-
-    //
-    // Variables specific to render APT
-    //
-    protected void renderAPT(float[] matrix)
+    @Override
+    protected Point project(float relbrg, float dme)
     {
-        float z, pixPerDegree, x1, y1;
-        float radius = 5;
+        float pixPerDegree = pixM / pitchInView;
+        // note: we do not take apt elevation into account
+        return new Point(
+            (float) (+pixPerDegree * relbrg),
+            (float) (-pixPerDegree * Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))))
+        );
+    } // end of project
 
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        // 0.16667 deg lat  = 10 nm
-        // 0.1 approx 5nm
-        float dme;
-        float _dme = 1000;
-        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-
-        nrAptsFound = 0;
-        Iterator<Apt> it = Gpx.aptList.iterator();
-        while (it.hasNext()) {
-            Apt currApt; //  = it.next();
-            try {
-                currApt = it.next();
-            }
-            //catch (ConcurrentModificationException e) {
-            catch (Exception e) {
-                break;
-            }
-
-            String wptId = currApt.name;
-            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in ft
-
-            // Apply selection criteria
-            if (dme < 5)
-                nrAptsFound++;                                              // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange))
-                nrAptsFound++;  // show all others up to MX_NR_APT for AptSeekRange
-            else
-                continue;  // we already have all the apts as we wish to display
-
-            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-            x1 = (float) (aptRelBrg * pixPerDegree);
-            y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree);    // we do not take apt elevation into account
-
-            mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(foreShade, tapeShade, foreShade, 1); //purple'ish
-            {
-                float[] vertPoly = {
-                        x1 + 2.0f * radius, y1, z,
-                        x1, y1 + 2.0f * radius, z,
-                        x1 - 2.0f * radius, y1, z,
-                        x1, y1 - 2.0f * radius, z,
-                        x1 + 2.0f * radius, y1, z
-                };
-                mPolyLine.VertexCount = 5;
-                mPolyLine.SetVerts(vertPoly);  //crash here
-                mPolyLine.draw(matrix);
-            }
-
-            glText.begin(foreShade, tapeShade, foreShade, 1, matrix);  // purple'ish
-            glText.setScale(2.0f);
-            glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
-            glText.end();
-
-
-            if (Math.abs(dme) < Math.abs(_dme)) {
-                // closest apt (dme)
-                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-
-                setAutoWptValue(wptId);
-                setAutoWptDme(dme);
-                setAutoWptBrg(absBrg);
-                setAutoWptRelBrg(relBrg);
-                _dme = dme;
-            }
-        }
-
-        //
-        // If we dont have the full compliment of apts expand the range incrementally
-        // If do we have a full compliment start reducing the range
-        // This also has the "useful" side effect of "flashing" new additions for a few cycles
-        //
-        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
-        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
-        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
-    }
 
     //-------------------------------------------------------------------------
     // Render the Digital Elevation Model (DEM).
@@ -410,9 +330,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;
-        //float a = 0;//Float.MAX_VALUE;
-        //float b = Float.MAX_VALUE;
-
         pixPerDegree = pixM / pitchInView;
         z = zfloat;
 
@@ -422,11 +339,10 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // oversize 20% a little to help with
         // bleed through caused by itrig truncating
-        float gridy = 0.5f; //0.60f;   //in nm
-        float gridx = 1.0f;  //1.20f;   //in degree
+        float gridy = 0.5f;    //in nm
+        float gridx = 1.0f;    //in degree
 
-        float dme_ft;          // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
-        //int demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float dme_ft;            // =  60 * 6080 * Math.hypot(deltaLon, deltaLat);  // ft
         float demRelBrg;         // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution;
         final float cautionMin = 0.2f;
@@ -434,7 +350,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         mSquare.SetWidth(1);
 
-        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) { //20 was 30
+        for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) {
             for (demRelBrg = -25; demRelBrg < 25; demRelBrg = demRelBrg + 1) {
 
                 dme_ft = dme * 6080;
@@ -442,14 +358,12 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
                 x1 = demRelBrg * pixPerDegree;
-                //y1 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
                 y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg + gridx));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z2 = DemGTOPO30.getElev(lat, lon);
                 x2 = (demRelBrg + gridx) * pixPerDegree;
-                //y2 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
                 y2 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z2 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 dme_ft = (dme + gridy) * 6080;
@@ -457,14 +371,12 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg + gridx));
                 z3 = DemGTOPO30.getElev(lat, lon);
                 x3 = (demRelBrg + gridx) * pixPerDegree;
-                //y3 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
                 y3 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z3 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 lat = LatValue + (dme + gridy) / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + (dme + gridy) / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z4 = DemGTOPO30.getElev(lat, lon);
                 x4 = (demRelBrg) * pixPerDegree;
-                //y4 = (float) (-Math.toDegrees(Math.atan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
                 y4 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z4 * 3.28084f, dme_ft)) * pixPerDegree);
 
                 //
@@ -477,21 +389,16 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 //    +--+             +
                 //
 
-                ///*
                 // Triangle #1 --------------
                 zav = z1;  // in m asml
                 DemColor color = DemGTOPO30.getColor((short) zav);
                 caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
-                //-if (agl_ft > 500) mTriangle.SetColor(red, green, blue, 1);                      // Enroute
-                //-else if (IASValue < IASValueThreshold) mTriangle.SetColor(red, green, blue, 1); // Taxi or  approach
-                //-else if (agl_ft > 100) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
-                //-else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
-                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                 else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or approach
-                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification (yellow)
-                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning (red)
+                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);                               // Proximity notification (yellow)
+                else mTriangle.SetColor(caution, 0, 0, 1f);                                                       // Proximity warning (red)
 
                 mTriangle.SetVerts(
                         x1, y1, z,
@@ -505,18 +412,16 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
-                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                      // Enroute
+                if (agl_ft > 1000) mTriangle.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                 else if (IASValue < IASValueThreshold) mTriangle.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);             // Proximity notification
-                else mTriangle.SetColor(caution, 0, 0, 1f);                                     // Proximity warning
+                else if (agl_ft > 200) mTriangle.SetColor(caution, caution, 0, 1f);  // Proximity notification
+                else mTriangle.SetColor(caution, 0, 0, 1f);                          // Proximity warning
 
                 mTriangle.SetVerts(
                         x2, y2, z,
                         x3, y3, z,
                         x4, y4, z);
                 mTriangle.draw(matrix);
-
-                //*/
 
                 /*
                 //
@@ -546,15 +451,19 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     };
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
-                //*/
+                */
 
             }
         }
     }
 
-
-
-
+    //-------------------------------------------------------------------------
+    // Airspace
+    //
+    protected void renderAirspace(float[] matrix)
+    {
+        // Maybe later
+    }
 }
 //-------------
 // END OF CLASS

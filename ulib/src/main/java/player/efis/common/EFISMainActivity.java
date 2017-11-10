@@ -333,7 +333,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     }
 
 
-
     //for landscape mode
     // private float azimuthValue;
     protected float rollValue;

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *		http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-
 package player.efis.common;
 
-public enum prefs_t
+public class Point
 {
-	DEM,
-	TERRAIN,
-	TAPE,
-	MIRROR,
-	INFO_PAGE,
-	FLIGHT_DIRECTOR,
-	REMOTE_INDICATOR,
-	AIRPORT,
-	AIRSPACE,
-	HITS,
-	DEMO_MODE
+    public float x;
+    public float y;
+
+    public Point(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }
