@@ -2644,7 +2644,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //
     //-----------------------------------------------------------------------------
 
-    protected float roseScale = 0.34f; //0.30f; //0.33f; //0.5f
+    protected float roseScale;
+    protected float roseTextScale;
 
     protected void renderFixedCompassMarkers(float[] matrix)
     {
@@ -2709,12 +2710,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShade, tapeShade, tapeShade, 1.0f, matrix); // grey
-            glText.setScale(1.5f*roseScale);
+            glText.setScale(1.5f*roseTextScale);
             switch (i) {
                 case 0:
                     t = "N";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(2.0f*roseScale);
+                    glText.setScale(2.0f*roseTextScale);
                     break;
                 case 30:
                     t = "3";
@@ -2725,7 +2726,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 90:
                     t = "E";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseScale);
+                    glText.setScale(1.5f*roseTextScale);
                     break;
                 case 120:
                     t = "12";
@@ -2736,7 +2737,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 180:
                     t = "S";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseScale);
+                    glText.setScale(1.5f*roseTextScale);
                     break;
                 case 220:
                     t = "21";
@@ -2747,7 +2748,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 case 270:
                     t = "W";
                     glText.begin(foreShade, foreShade, foreShade, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseScale);
+                    glText.setScale(1.5f*roseTextScale);
                     break;
                 case 300:
                     t = "30";

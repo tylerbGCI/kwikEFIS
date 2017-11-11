@@ -108,13 +108,15 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 xlx = 0;               // top left
                 xly = -1.80f * pixH2;  // top left
                 roseScale = 1.9f;
-                GLES20.glViewport(0, pixH2, pixW, pixH); 
+                roseTextScale = 2f;
+                GLES20.glViewport(0, pixH2, pixW, pixH);
             }
             else {
                 //Portrait
                 xlx = 0; //-0.00f * pixW2;
                 xly = -0.20f * pixH2;  //0.45f
                 roseScale = 1.9f; //0.45f; //0.50f;
+                roseTextScale = 2f;
             }
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -612,8 +614,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         glText.drawCX("N", 0, 0.12f*pixM2);
         glText.end();
     }
-
-    private float roseTextScale = 1.9f;
 
     //protected void renderCompassRose(float[] matrix)
     //{
