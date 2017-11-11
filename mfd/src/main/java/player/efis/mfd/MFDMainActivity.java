@@ -256,12 +256,15 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
         //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
-        //_gps_lat =  48.14f;  _gps_lon = 11.57f;   // Munich
-        //_gps_lat = 47.26f;  _gps_lon = 11.34f;   //Innsbruck
-        //_gps_lat =  55.67f;  _gps_lon = 12.57f;   // Copenhagen
-        //_gps_lat =  46.93f;  _gps_lon =  7.45f;   // Bern
+        //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
+        //_gps_lat = 47.26f;  _gps_lon = 11.34f;     //Innsbruck
+        //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
+        //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
+        _gps_lat = -33;  _gps_lon =  -71f;           // Chile, Santiago
+        //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
+        _gps_lat = -10.8f;  _gps_lon =  -65.35f;     // Emilio Beltrán
 
-        _gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+        //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
         //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
         //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
 

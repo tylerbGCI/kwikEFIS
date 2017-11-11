@@ -1788,8 +1788,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     // Variables specific to render APT
     //
     protected final int MX_APT_SEEK_RNG = 99;
-    protected final int MX_NR_APT = 12;
-    protected int AptSeekRange = 10; // start of with 10nm
+    protected final int MX_NR_APT = 20;//12;
+    protected int AptSeekRange = 10; // start with 10nm
     protected int Aptscounter = 0;
     protected int nrAptsFound;
     protected int nrAirspaceFound;

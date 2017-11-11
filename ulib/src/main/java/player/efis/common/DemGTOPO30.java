@@ -306,15 +306,26 @@ public class DemGTOPO30
     public String getRegionDatabaseName(float lat, float lon)
     {
         String sRegion = "null.null";
-        if (lat <= -10) {
+
+        if ((lat <= -10) && (lon > -20)) {
             sRegion = "zar.aus";
         }
-        else if ((lat > 20) && (lon >= -20)) {
+        else if ((lat > 20) && (lon > -20)) {
             sRegion = "eur.rus";
         }
-        else if ((lat > -10) && (lon < -60)) {
+        else if ((lat > -10) && (lon <= -60)) {
             sRegion = "usa.can";
         }
+        else if ((lat <= -10) && (lon <= -20)) {
+            sRegion = "pan.arg";
+        }
+        /* todo
+        else if ((lat <= 20) && (lon > -20)) {
+            sRegion = "sah.jap";
+        }
+        */
+
+
         return sRegion;
     }
 

@@ -47,6 +47,9 @@ public class Gpx
         else if ((lat > -10) && (lon < -60)) {
             sRegion = "gpx.north.west";
         }
+        else if ((lat < -10) && (lon < -20)) {
+            sRegion = "gpx.south.west";
+        }
         return sRegion;
     }
 	
