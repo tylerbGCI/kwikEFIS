@@ -170,8 +170,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
             // North Que
             {
-                float xlx = -0.82f * pixW2;
-                float xly = (lineAncillaryDetails +0.10f) * pixM2;
+                float xlx = -0.8f * pixW2;
+                float xly = +0.8f * pixH2;
 
                 Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
                 Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
@@ -272,7 +272,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // elements are displayed. Used by WPT and ALT
         if (Layout == layout_t.LANDSCAPE) {
             // Landscape --------------
-            lineAutoWptDetails = 0.00f;
+            lineAutoWptDetails =   +0.50f;
             lineAncillaryDetails = -0.30f;
 
             if (fatFingerActive) {
@@ -598,15 +598,15 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         mTriangle.SetWidth(1);
         // Right triangle
         mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
-        mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                0,            0.10f*pixM2, z,
-                0.03f*pixM2, -0.12f*pixM2,z);
+        mTriangle.SetVerts(0, -0.08f*pixM2, z,
+                0,            +0.10f*pixM2, z,
+                0.03f*pixM2,  -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
         mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
-        mTriangle.SetVerts(0,           -0.08f*pixM2, z,
-                0,            0.10f*pixM2, z,
+        mTriangle.SetVerts(0, -0.08f*pixM2, z,
+                +0,           +0.10f*pixM2, z,
                 -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
@@ -615,10 +615,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         glText.drawCX("N", 0, 0.12f*pixM2);
         glText.end();
     }
-
-    //protected void renderCompassRose(float[] matrix)
-    //{
-    //}
 }
 //-------------
 // END OF CLASS
