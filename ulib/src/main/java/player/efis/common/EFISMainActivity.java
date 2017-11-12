@@ -270,7 +270,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         hasSpeed = true;
         hasGps = true;
 
-        final float setSpeed = 65; // m/s
+        final float setSpeed = 100; //65; // m/s
 
         if (Math.abs(pitchValue) > 10) {
             _gps_speed -= 0.01f * pitchValue;
