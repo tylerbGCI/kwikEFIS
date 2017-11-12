@@ -156,20 +156,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		return super.onKeyDown(keyCode, event);
 	}
 
-
-	/* This does not seem to do anything 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-
-		SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		mGLView.setPrefs(prefs_t.TERRAIN, SP.getBoolean("displayTerrain", true));
-		mGLView.setPrefs(prefs_t.TAPE,    SP.getBoolean("displayTape", true));
-		mGLView.setPrefs(prefs_t.MIRROR,  SP.getBoolean("displayMirror", false));
-		bDemoMode = SP.getBoolean("demoMode", false);
-	}*/
-
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -227,22 +213,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     	getWindow().setAttributes(layout);
 
 		// Restore persistent preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-    	mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
-    	mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
-    	mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
-    	mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
-        mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
-        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
-        mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        bColorThemeLight = settings.getBoolean("colorScheme", false);
-	    mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
+        restorePersistentSettings();
 
-        // Restore last known location
-        _gps_lat = settings.getFloat("GpsLat", gps_lat);
-        _gps_lon = settings.getFloat("GpsLon", gps_lon);
-        gps_lat = _gps_lat;
-        gps_lon = _gps_lon;
 
         /*
         //------------------------------------------------------------------------------------------
@@ -277,10 +249,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-        // Use the last orientation to start
-        bLandscapeMode = settings.getBoolean("landscapeMode", false);
-        //String region = settings.getString("AirportDatabase", "zar.aus");
-
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
 		//mGpx.loadDatabase(region);
@@ -302,27 +270,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	@Override
     protected void onStop()
     {
+        savePersistentSettings();
         super.onStop();
-
-        // We need an Editor object to make preference changes.
-        // All objects are from android.context.Context
-        // Save persistent preferences
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
-        editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
-        editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
-        editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
-        editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
-        editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
-        editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
-        editor.putFloat("GpsLat", gps_lat);
-        editor.putFloat("GpsLon", gps_lon);
-        editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
-        editor.putBoolean("colorScheme", bColorThemeLight);
-
-        // Commit the edits
-        editor.commit();
     }
 
 
@@ -343,8 +292,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)); //SENSOR_DELAY_FASTEST);
 		//b2 mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION));
 	}
-
-
 
     @Override
 	protected void onPause()
@@ -491,7 +438,58 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	}
 
 
-	protected void setGpsStatus()
+    private void savePersistentSettings()
+    {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        // Save persistent preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
+        editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
+        editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
+        editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
+        editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
+        editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
+        editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
+        editor.putFloat("GpsLat", gps_lat);
+        editor.putFloat("GpsLon", gps_lon);
+        editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
+        editor.putBoolean("colorScheme", bColorThemeLight);
+
+        // Commit the edits
+        editor.commit();
+    }
+
+    private void restorePersistentSettings()
+    {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        // Restore persistent preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
+        mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
+        mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
+        mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
+        mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
+        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
+        mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
+        bColorThemeLight = settings.getBoolean("colorScheme", false);
+        mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
+
+        // Restore last known location
+        _gps_lat = settings.getFloat("GpsLat", gps_lat);
+        _gps_lon = settings.getFloat("GpsLon", gps_lon);
+        gps_lat = _gps_lat;
+        gps_lon = _gps_lon;
+
+        // Use the last orientation to start
+        bLandscapeMode = settings.getBoolean("landscapeMode", false);
+    }
+
+
+
+    protected void setGpsStatus()
 	{
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
@@ -595,10 +593,12 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // If we changed display schemes, a color gamma rec-calc is required
         if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
             bColorThemeLight = settings.getBoolean("colorScheme", false);
+            savePersistentSettings();
             mGLView = new MFDSurfaceView(this);
             setContentView(mGLView);
             mGLView.setSchemeLight(bColorThemeLight);
             mGLView.invalidate();
+            restorePersistentSettings();
         }
     }
 

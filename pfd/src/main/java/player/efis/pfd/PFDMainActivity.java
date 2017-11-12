@@ -188,21 +188,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     	getWindow().setAttributes(layout);
 
 		// Restore persistent preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-    	mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
-    	mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
-    	mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
-    	mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
-        mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
-        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
-        mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        bColorThemeLight = settings.getBoolean("colorScheme", false);
+        restorePersistentSettings();
 
-        // Restore last known location
-        _gps_lat = settings.getFloat("GpsLat", gps_lat);
-        _gps_lon = settings.getFloat("GpsLon", gps_lon);
-        gps_lat = _gps_lat;
-        gps_lon = _gps_lon;
 
         /*
         //------------------------------------------------------------------------------------------
@@ -216,12 +203,15 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
         //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
-        //_gps_lat =  48.14f;  _gps_lon = 11.57f;   // Munich
-        //_gps_lat = 47.26f;  _gps_lon = 11.34f;   //Innsbruck
-        //_gps_lat =  55.67f;  _gps_lon = 12.57f;   // Copenhagen
-        //_gps_lat =  46.93f;  _gps_lon =  7.45f;   // Bern
+        //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
+        //_gps_lat = 47.26f;  _gps_lon = 11.34f;     //Innsbruck
+        //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
+        //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
+        _gps_lat = -33;  _gps_lon =  -71f;           // Chile, Santiago
+        //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
+        _gps_lat = -10.8f;  _gps_lon =  -65.35f;     // Emilio Beltr�n
 
-        _gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+        //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
         //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
         //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
 
@@ -233,10 +223,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
-
-        // Use the last orientation to start
-        bLandscapeMode = settings.getBoolean("landscapeMode", false);
-        //String region = settings.getString("AirportDatabase", "zar.aus");
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -259,27 +245,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 	@Override
     protected void onStop()
     {
+        savePersistentSettings();
         super.onStop();
-
-        // We need an Editor object to make preference changes.
-        // All objects are from android.context.Context
-        // Save persistent preferences
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
-        editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
-        editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
-        editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
-        editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
-        editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
-        editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
-        editor.putFloat("GpsLat", gps_lat);
-        editor.putFloat("GpsLon", gps_lon);
-        editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
-        editor.putBoolean("colorScheme", bColorThemeLight);
-
-        // Commit the edits
-        editor.commit();
     }
 
 
@@ -483,7 +450,58 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 	}
 
 
-	protected void setGpsStatus()
+    private void savePersistentSettings()
+    {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        // Save persistent preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("WptSelName", mGLView.mRenderer.mWptSelName);
+        editor.putString("WptSelComment", mGLView.mRenderer.mWptSelComment);
+        editor.putFloat("WptSelLat", mGLView.mRenderer.mWptSelLat);
+        editor.putFloat("WptSelLon", mGLView.mRenderer.mWptSelLon);
+        editor.putFloat("mAltSelValue", mGLView.mRenderer.mAltSelValue);
+        editor.putString("mAltSelName", mGLView.mRenderer.mAltSelName);
+        editor.putFloat("mObsValue", mGLView.mRenderer.mObsValue);
+        editor.putFloat("GpsLat", gps_lat);
+        editor.putFloat("GpsLon", gps_lon);
+        editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
+        editor.putBoolean("colorScheme", bColorThemeLight);
+
+        // Commit the edits
+        editor.commit();
+    }
+
+    private void restorePersistentSettings()
+    {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        // Restore persistent preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
+        mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
+        mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
+        mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
+        mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
+        mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
+        mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
+        bColorThemeLight = settings.getBoolean("colorScheme", false);
+        mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
+
+        // Restore last known location
+        _gps_lat = settings.getFloat("GpsLat", gps_lat);
+        _gps_lon = settings.getFloat("GpsLon", gps_lon);
+        gps_lat = _gps_lat;
+        gps_lon = _gps_lon;
+
+        // Use the last orientation to start
+        bLandscapeMode = settings.getBoolean("landscapeMode", false);
+    }
+
+
+
+    protected void setGpsStatus()
 	{
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
@@ -575,10 +593,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // If we changed display schemes, a color gamma rec-calc is required
         if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
             bColorThemeLight = settings.getBoolean("colorScheme", false);
+            savePersistentSettings();
             mGLView = new PFDSurfaceView(this);
             setContentView(mGLView);
             mGLView.setSchemeLight(bColorThemeLight);
             mGLView.invalidate();
+            restorePersistentSettings();
         }
     }
 
@@ -756,7 +776,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
-		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));	 // in knots
+		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
 		mGLView.setLatLon(gps_lat, gps_lon);
 		mGLView.setBatteryPct(batteryPct);                        // in percentage
 
