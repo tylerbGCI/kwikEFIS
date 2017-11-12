@@ -180,6 +180,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 renderNorthQue(rmiMatrix);
             }
         }
+        if (bCalibrating) renderCalibrate(mMVPMatrix);
         if (bDemoMode) renderDemoMode(mMVPMatrix);
 
         //renderACSymbol(mMVPMatrix);

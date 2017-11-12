@@ -750,15 +750,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
         if (ctr++ > 100) {
-            if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
+            // See if we are close to the edge or
+            // see if we are stuck on null island or even on the tile
+            if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
+                    ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
+
                 mGLView.setCalibrate(true, "LOADING TERRAIN");
-                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-                mGpx.loadDatabase(gps_lat, gps_lon);
-                mGLView.setCalibrate(false, " ");
-            }
-            // See if we are stuck on null island or even on the tile
-            else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
-                mGLView.setCalibrate(true, "LOADING");
                 mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
                 mGLView.setCalibrate(false, " ");

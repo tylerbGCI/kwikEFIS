@@ -301,17 +301,9 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    /*
-    void setCalibratingMsg(boolean cal, String msg)
+    void setCalibrate(boolean cal, String msg)
     {
         mRenderer.setCalibrate(cal, msg);
-        requestRender();
-    }
-    */
-
-    public void setFlightDirector(boolean active, float pit, float rol)
-    {
-        mRenderer.setFlightDirector(active, pit, rol);
         requestRender();
     }
 
@@ -339,6 +331,13 @@ public class PFDSurfaceView extends GLSurfaceView
         else mRenderer.setThemeDark();
         requestRender();
     }
+
+    public void setFlightDirector(boolean active, float pit, float rol)
+    {
+        mRenderer.setFlightDirector(active, pit, rol);
+        requestRender();
+    }
+
 
 
 

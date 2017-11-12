@@ -144,8 +144,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected boolean ServiceableAlt;     // Flag to indicate Altimeter failure
     protected boolean ServiceableAsi;     // Flag to indicate Airspeed failure
     protected boolean ServiceableDi;      // Flag to indicate DI failure
-    protected boolean Calibrating;        // no longer used
-    private String CalibratingMsg;      // no longer used
+
+    protected boolean bCalibrating;        //
+    private String CalibratingMsg;        //
 
     private float mX, mY;                        // keypress location
     protected final float portraitOffset = 0.40f;  // the magic number for portrait offset
@@ -316,22 +317,27 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected void renderCalibrate(float[] matrix)
     {
-        String t = CalibratingMsg; //"Calibrating...";
+        String t = CalibratingMsg;
         glText.begin(1.0f, 0f, 0f, 1.0f, matrix); // Red
         glText.setScale(5.0f);
-        glText.drawCX(t, 0, 0);            // Draw  String
+        glText.drawCX(t, 0, pixM2/2);            // Draw  String
         glText.end();
+    }
+
+    public void setCalibrate(boolean cal, String msg)
+    {
+        bCalibrating = cal;
+        CalibratingMsg = msg;
     }
 
     protected void renderDemoMode(float[] matrix)
     {
         String s = sDemoMsg; //"demo mode";
-        glText.begin(1.0f, 0f, 0f, 1.0f, matrix); // Red
+        glText.begin(1.0f, 0f, 0f, 0.5f, matrix); // Red
         glText.setScale(9.0f);
         glText.drawCX(s, 0, 0);
         glText.end();
     }
-
 
     public void setDemoMode(boolean demo, String msg)
     {
