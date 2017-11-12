@@ -1,12 +1,16 @@
 Changelog
 =========
-3.9 (Under Development)
+3.10 (Under Development)
 ------------------
 * Implement Auto zoom
 * Scale compass rose font
 * Add DEM region: pan.arg - South America
 * _wip: Release EFIS v3.8 rc-1_
 * _Release DMAP v1.3 rc-1_
+
+3.9 (2017-11-12)
+------------------
+* Add DEM region: pan.arg - South America
 
 3.8 (2017-11-04)
 ------------------
