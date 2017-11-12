@@ -2649,7 +2649,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected void renderFixedCompassMarkers(float[] matrix)
     {
-        //float tapeShade = 0.6f;
         int i;
         float z, sinI, cosI;
         float roseRadius = roseScale * pixM2;
@@ -2956,9 +2955,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Direct Track to Automatic Waypoint
         //
-        /* Not sure I like this feature ...
+        // /* Not sure I like this feature ...
         mLine.SetWidth(2); //8
-        mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
+        //mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
+        mLine.SetColor(theta * foreShade, theta * foreShade, theta * backShade, 1); // yellow
 
         x1 = mMapZoom * (mAutoWptDme * UTrig.icos(90-(int)mAutoWptRlb));
         y1 = mMapZoom * (mAutoWptDme * UTrig.isin(90-(int)mAutoWptRlb));
@@ -2967,7 +2967,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 x1, y1, z
         );
         mLine.draw(matrix);
-        */
+        // */
 
     }
 
@@ -2997,13 +2997,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     wx, wy, z
             );
             mLine.draw(matrix);
-            // L
+            // Left
             mLine.SetVerts(
                     -wx, 0, z,
                     0, wa, z
             );
             mLine.draw(matrix);
-            // R
+            // Right
             mLine.SetVerts(
                     wx, 0, z,
                     0, wa, z
@@ -3088,7 +3088,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 +0.025f * pixM2, x1, z
         );
         mLine.draw(matrix);
-
     }
 
     //-------------------------------------------------------------------------
