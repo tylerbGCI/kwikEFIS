@@ -144,7 +144,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		mGLView = new PFDSurfaceView(this);
 		setContentView(mGLView);
 
-		// Get the version number of the app
+        // Get the version number of the app
 		PackageInfo pInfo = null;
 		try {
 			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -209,7 +209,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
         _gps_lat = -33;  _gps_lon =  -71f;           // Chile, Santiago
         //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
-        _gps_lat = -10.8f;  _gps_lon =  -65.35f;     // Emilio Beltr�n
+        _gps_lat = -10.8f;  _gps_lon =  -65.35f;     // Emilio Beltran
 
         //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
         //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
@@ -750,14 +750,18 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
         if (ctr++ > 100) {
-        if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+            if (dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) {
+                mGLView.setCalibrate(true, "LOADING TERRAIN");
+                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
-        }
-        // See if we are stuck on null island or even on the tile
-        else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
-            mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGLView.setCalibrate(false, " ");
+            }
+            // See if we are stuck on null island or even on the tile
+            else if ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false)) {
+                mGLView.setCalibrate(true, "LOADING");
+                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
+                mGLView.setCalibrate(false, " ");
             }
             ctr = 0;
         }
