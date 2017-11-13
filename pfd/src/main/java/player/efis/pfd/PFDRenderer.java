@@ -35,11 +35,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
-
 public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
     private static final String TAG = "PFDRenderer";
-
     public PFDRenderer(Context context)
     {
         super(context);
@@ -199,14 +197,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         xlx = 1.14f * pixM2;
         xly = -0.7f * pixH2;
-
-        /*Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
-        renderFixedALTMarkers(mMVPMatrix);
-        Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
-
-        Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-        renderFixedRADALTMarkers(mMVPMatrix); // AGL
-        Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);*/
 
         Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
         renderFixedALTMarkers(mMVPMatrix);

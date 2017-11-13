@@ -28,33 +28,6 @@ public class MFDPrefSettings extends PreferenceActivity
 	{
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
-
-
 	}
 }
 
-/*
-Sure, here is a short example:
-EditTextPreference etp = (EditTextPreference) findPreference("the_pref_key");
-etp.setSummary("New summary");
-
-This requires that you display your preferences either from a PreferenceActivity or from a PreferenceFragment, since findPreference() is a method of these classes. You most likely do that already. 
-
-To change the summary every time the user changes the actual preference, use a OnPreferenceChangeListener and check if the relevant key changed in the callback. After it has changed, just edit the summary like above.*/
-/*
-
-
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-
-public class UserSettingActivity extends PreferenceActivity {
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		addPreferencesFromResource(R.xml.settings);
-
-	}
-}
-*/

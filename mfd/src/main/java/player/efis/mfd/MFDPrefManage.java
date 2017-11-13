@@ -68,33 +68,3 @@ public class MFDPrefManage extends PreferenceActivity
 }
 
 
-/*
-import android.os.Bundle;
-import android.preference.PreferenceFragment;
-
-public class AppAirplane extends PreferenceFragment
-{
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{ 
-		super.onCreate(savedInstanceState); // Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.airplane);
-	}
-}
-*/
-
-/*
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-
-public class UserSettingActivity extends PreferenceActivity {
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		addPreferencesFromResource(R.xml.settings);
-
-	}
-}
-*/

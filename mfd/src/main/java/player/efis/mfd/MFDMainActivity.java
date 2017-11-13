@@ -38,6 +38,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+
 // sensor imports
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -561,7 +562,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             restorePersistentSettings();
         }
     }
-
 
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when

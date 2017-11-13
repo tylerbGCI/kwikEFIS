@@ -70,7 +70,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
 	// Location abstracts
 
-	// Digital filters
 
 	//
 	//  Add the action bar buttons

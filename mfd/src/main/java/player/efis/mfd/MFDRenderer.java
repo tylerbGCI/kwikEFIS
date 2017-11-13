@@ -17,7 +17,6 @@
 package player.efis.mfd;
 
 import java.util.Iterator;
-
 import player.efis.common.AirspaceClass;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
@@ -41,23 +40,13 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
-
-/**
- * Provides drawing instructions for a GLSurfaceView object. This class
- * must override the OpenGL ES drawing lifecycle methods:
- * <ul>
- * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceCreated}</li>
- * <li>{@link android.opengl.GLSurfaceView.Renderer#onDrawFrame}</li>
- * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceChanged}</li>
- * </ul>
- */
 public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
     private static final String TAG = "MFDRenderer";
     public MFDRenderer(Context context)
     {
         super(context);
-        autoZoomActive = true; //// TODO: 2017-11-10 remove this
+        autoZoomActive = true; // Start active by default
     }
 
     @Override
@@ -143,8 +132,10 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             float xly;
 
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
+			
             xlx = 0.99f * pixW2;
             xly = -0.3f * pixM2;
+			
             Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
             renderFixedALTMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, 0, xly, 0);
@@ -156,7 +147,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
-            //renderVSIMarkers(mMVPMatrix);
+			
+           //renderVSIMarkers(mMVPMatrix);
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
         }
@@ -220,8 +212,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         setSpinnerParams(); // Set up the spinner locations and SelWpt display
 
         // Set the window size specific scales, positions and sizes (nothing dynamic yet...)
-        pitchInView = 25.0f;      // degrees to display from horizon to top of viewport
-        IASInView = 40.0f;      // IAS units to display from center to top of viewport
+        pitchInView = 25.0f;     // degrees to display from horizon to top of viewport
+        IASInView = 40.0f;       // IAS units to display from center to top of viewport
         MSLInView = 300.0f;      // IAS units to display from center to top of viewport
 
         // this projection matrix is applied to  object coordinates in the onDrawFrame() method
@@ -328,7 +320,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    // This may be a different name?
     //-------------------------------------------------------------------------
     // Airports / Waypoints
     //
@@ -427,7 +418,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 mMapZoom * dme * UTrig.isin(90-(int)relbrg)
         );
     } // end of project
-
 
 
     //-------------------------------------------------------------------------
