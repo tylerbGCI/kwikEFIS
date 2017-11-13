@@ -2190,7 +2190,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         GForceValue = value;
     }
 
-    protected String mAutoWpt = "YSEN";
+    protected String mAutoWpt = "ZZZZ";
 
     public void setAutoWptValue(String wpt)
     {
@@ -2281,11 +2281,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mGpsStatus = gpsstatus;
     }
 
-
-    public String mWptSelName = "YSEN";
-    public String mWptSelComment = "Serpentine";
-    public float mWptSelLat = -32.395000f;
-    public float mWptSelLon = 115.871000f;
+    public String mWptSelName = "ZZZZ";
+    public String mWptSelComment = "Null Island";
+    public float mWptSelLat = 00f;
+    public float mWptSelLon = 00f;
     public float mAltSelValue = 0;
     public String mAltSelName = "00000";
     protected float leftC = 0.6f;   // Selected Wpt

@@ -190,8 +190,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         restorePersistentSettings();
 
     	// This should never happen but we catch and force it to something known it just in case
-    	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "YSEN";
-        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
+    	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
+        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "ZZZZZ";
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -448,10 +448,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // All objects are from android.context.Context
         // Restore persistent preferences
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "YSEN");
-        mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Serpentine");
-        mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", -32.395000f);
-        mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 115.871000f);
+        mGLView.mRenderer.mWptSelName = settings.getString("WptSelName", "ZZZZ");
+        mGLView.mRenderer.mWptSelComment = settings.getString("WptSelComment", "Null Island");
+        mGLView.mRenderer.mWptSelLat = settings.getFloat("WptSelLat", 00f);
+        mGLView.mRenderer.mWptSelLon = settings.getFloat("WptSelLon", 00f);
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
