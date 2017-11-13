@@ -16,14 +16,10 @@
 
 package player.efis.pfd;
 
-import java.util.Iterator;
-
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
-import player.efis.common.Apt;
 import player.efis.common.EFISRenderer;
-import player.efis.common.Gpx;
 import player.efis.common.Point;
 import player.gles20.Line;
 import player.gles20.PolyLine;
@@ -244,7 +240,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
         if (bCalibrating) renderCalibrate(mMVPMatrix);
-        if (bDemoMode) renderDemoMode(mMVPMatrix);
+        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
 
         if (displayFlightDirector || displayRMI || displayHITS) {

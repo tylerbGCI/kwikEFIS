@@ -22,9 +22,7 @@ import player.efis.common.AirspaceClass;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
-import player.efis.common.Apt;
 import player.efis.common.EFISRenderer;
-import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
@@ -181,7 +179,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
         }
         if (bCalibrating) renderCalibrate(mMVPMatrix);
-        if (bDemoMode) renderDemoMode(mMVPMatrix);
+        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
         //renderACSymbol(mMVPMatrix);
         renderACSymbol(mMVPMatrix);

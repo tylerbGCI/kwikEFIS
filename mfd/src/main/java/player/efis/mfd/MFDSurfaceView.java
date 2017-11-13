@@ -297,9 +297,9 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    public void setDemoMode(boolean demo, String msg)
+    public void setSimulatorActive(boolean demo, String msg)
     {
-        mRenderer.setDemoMode(demo, msg);
+        mRenderer.setSimulatorActive(demo, msg);
         requestRender();
     }
 

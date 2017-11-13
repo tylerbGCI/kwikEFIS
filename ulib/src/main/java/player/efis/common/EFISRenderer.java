@@ -152,7 +152,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected final float portraitOffset = 0.40f;  // the magic number for portrait offset
 
     //Demo Modes
-    protected boolean bDemoMode;
+    protected boolean bSimulatorActive;
     private String sDemoMsg;
 
     protected GLText glText;      // A GLText Instance
@@ -330,7 +330,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         CalibratingMsg = msg;
     }
 
-    protected void renderDemoMode(float[] matrix)
+    protected void renderSimulatorActive(float[] matrix)
     {
         String s = sDemoMsg; //"demo mode";
         glText.begin(1.0f, 0f, 0f, 0.5f, matrix); // Red
@@ -339,9 +339,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         glText.end();
     }
 
-    public void setDemoMode(boolean demo, String msg)
+    public void setSimulatorActive(boolean demo, String msg)
     {
-        bDemoMode = demo;
+        bSimulatorActive = demo;
         sDemoMsg = msg;
     }
 

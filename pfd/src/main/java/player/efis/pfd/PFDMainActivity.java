@@ -361,7 +361,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
 	public void onLocationChanged(Location location)
 	{
-		if (!bDemoMode) {
+		if (!bSimulatorActive) {
 			gps_lat =  (float) location.getLatitude();
 			gps_lon = (float) location.getLongitude();
             gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
@@ -525,13 +525,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
         // If we changed to Demo mode, use the current GPS as seed location
-        if (bDemoMode != settings.getBoolean("demoMode", false)) {
+        if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
             if (gps_lon != 0 && gps_lat != 0) {
                 _gps_lon = gps_lon;
                 _gps_lat = gps_lat;
             }
         }
-        bDemoMode = settings.getBoolean("demoMode", false);
+        bSimulatorActive = settings.getBoolean("simulatorActive", false);
 
         // If we changed to or from HUD mode, a calibration is required
         //if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
@@ -557,9 +557,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
 
-        // If we changed to light scheme
-        //if (bDemoMode != settings.getBoolean("demoMode", false)) {
-
         // If we changed display schemes, a color gamma rec-calc is required
         if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
             bColorThemeLight = settings.getBoolean("colorScheme", false);
@@ -571,7 +568,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             restorePersistentSettings();
         }
     }
-
 
 	//-------------------------------------------------------------------------
 	// Effectively the main execution loop. updateEFIS will get called when
@@ -631,8 +627,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		//Demo mode handler
 		//
-		if (bDemoMode) {
-			mGLView.setDemoMode(true, "SIMULATOR");
+		if (bSimulatorActive) {
+			mGLView.setSimulatorActive(true, "SIMULATOR");
 			Simulate();
 			// Set the GPS flag to true and
 			// make all the instruments serviceable
@@ -646,7 +642,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			mGLView.setDisplayAirport(true);
 		}
 		else {
-            mGLView.setDemoMode(false, " ");
+            mGLView.setSimulatorActive(false, " ");
             mGLView.setDisplayAirport(true);
         }
 

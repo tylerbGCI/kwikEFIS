@@ -66,7 +66,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected LocationManager locationManager;
     protected String provider;
     protected GpsStatus mGpsStatus = null;
-    protected boolean bDemoMode = false;
+    protected boolean bSimulatorActive = false;
     protected boolean bLockedMode = false;
     protected boolean bHudMode = false;
     protected boolean bLandscapeMode = false;

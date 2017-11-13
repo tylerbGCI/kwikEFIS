@@ -55,7 +55,7 @@
             <PreferenceCategory android:title="ADMIN" >
             <CheckBoxPreference
                 android:defaultValue="false"
-                android:key="demoMode"
+                android:key="simulatorActive"
                 android:summary="Simulate GPS movement for demonstration"
                 android:title="Simulator" />
             <CheckBoxPreference

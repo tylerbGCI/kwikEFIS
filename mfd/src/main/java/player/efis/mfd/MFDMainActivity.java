@@ -24,31 +24,25 @@ import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
-import player.ulib.DigitalFilter;
 import player.ulib.UNavigation;
-import player.ulib.UTrig;
 import player.ulib.Unit;
 import player.efis.common.orientation_t;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.location.GpsStatus.Listener;
 import android.location.GpsSatellite;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.os.BatteryManager;
-import android.os.Bundle; 
+import android.os.Bundle;
 // sensor imports
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.text.format.Time;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
@@ -59,7 +53,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-import java.util.Random;
 
 
 public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
@@ -349,7 +342,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
 	public void onLocationChanged(Location location)
 	{
-		if (!bDemoMode) {
+		if (!bSimulatorActive) {
 			gps_lat =  (float) location.getLatitude();
 			gps_lon = (float) location.getLongitude();
             gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
@@ -525,13 +518,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
         // If we changed to Demo mode, use the current GPS as seed location
-        if (bDemoMode != settings.getBoolean("demoMode", false)) {
+        if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
             if (gps_lon != 0 && gps_lat != 0) {
                 _gps_lon = gps_lon;
                 _gps_lat = gps_lat;
             }
         }
-        bDemoMode = settings.getBoolean("demoMode", false);
+        bSimulatorActive = settings.getBoolean("simulatorActive", false);
 
         // If we changed to or from HUD mode, a calibration is required
         //if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
@@ -556,9 +549,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.mRenderer.Layout = MFDRenderer.layout_t.PORTRAIT;
         }
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
-
-        // If we changed to light scheme
-        //if (bDemoMode != settings.getBoolean("demoMode", false)) {
 
         // If we changed display schemes, a color gamma rec-calc is required
         if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
@@ -631,8 +621,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		//Demo mode handler
 		//
-		if (bDemoMode) {
-			mGLView.setDemoMode(true, "SIMULATOR");
+		if (bSimulatorActive) {
+			mGLView.setSimulatorActive(true, "SIMULATOR");
 			Simulate();
 			// Set the GPS flag to true and
 			// make all the instruments serviceable
@@ -646,7 +636,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			mGLView.setDisplayAirport(true);
 		}
 		else {
-            mGLView.setDemoMode(false, " ");
+            mGLView.setSimulatorActive(false, " ");
             mGLView.setDisplayAirport(true);
         }
 
