@@ -170,8 +170,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
             // North Que
             {
-                float xlx = -0.8f * pixW2;
-                float xly = +0.8f * pixH2;
+                float xlx = -0.84f * pixW2;
+                float xly = +0.88f * pixH2;
 
                 Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
                 Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
@@ -599,20 +599,20 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Right triangle
         mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
-                0,            +0.10f*pixM2, z,
+                0,            +0.08f*pixM2, z,
                 0.03f*pixM2,  -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
         mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
-                +0,           +0.10f*pixM2, z,
+                +0,           +0.08f*pixM2, z,
                 -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
         glText.setScale(1.5f); // 2 seems full size
-        glText.drawCX("N", 0, 0.12f*pixM2);
+        glText.drawCX("N", 0, 0.09f*pixM2);
         glText.end();
     }
 }
