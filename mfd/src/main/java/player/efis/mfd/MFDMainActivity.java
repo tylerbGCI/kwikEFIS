@@ -418,7 +418,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         editor.putFloat("GpsLat", gps_lat);
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
-        editor.putBoolean("colorScheme", bColorThemeLight);
+        editor.putBoolean("colorTheme", bColorThemeLight);
 
         // Commit the edits
         editor.commit();
@@ -437,7 +437,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        bColorThemeLight = settings.getBoolean("colorScheme", false);
+        bColorThemeLight = settings.getBoolean("colorTheme", false);
         mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
@@ -551,8 +551,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
 
         // If we changed display schemes, a color gamma rec-calc is required
-        if (bColorThemeLight != settings.getBoolean("colorScheme", false)) {
-            bColorThemeLight = settings.getBoolean("colorScheme", false);
+        if (bColorThemeLight != settings.getBoolean("colorTheme", false)) {
+            bColorThemeLight = settings.getBoolean("colorTheme", false);
             savePersistentSettings();
             mGLView = new MFDSurfaceView(this);
             setContentView(mGLView);

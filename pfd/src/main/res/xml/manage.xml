@@ -23,10 +23,6 @@
 
     </PreferenceCategory>
 
-
-
-
-
     <PreferenceCategory android:title="CONTROL" >
         <PreferenceScreen
             android:key="modeSelection"
@@ -42,7 +38,7 @@
                 android:title="Landscape" />
             <CheckBoxPreference
                 android:defaultValue="false"
-                android:key="colorScheme"
+                android:key="colorTheme"
                 android:summary="Use a high contrast color scheme"
                 android:title="Contrast" />
             <CheckBoxPreference
