@@ -4,9 +4,10 @@ Changelog
 ------------------
 * Implement Auto zoom
 * Scale compass rose font
-* Add DEM region: pan.arg - South America
-* _wip: Release EFIS v3.8 rc-1_
-* _Release DMAP v1.3 rc-1_
+* Auto geographic selection expanded to cover all available
+* Waypoint database cycle 2017-11 (gpx.south.west)
+* _wip: Release EFIS v3.8_
+* _wip: Release DMAP v1.3_
 
 3.9 (2017-11-12)
 ------------------
@@ -41,14 +42,14 @@ Changelog
 * Activate main menu on Back key
 * Add Quit option to main menu
 * Add DEM region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
-* Waypoint database cycle 2017-10 (zar.aus)
+* Waypoint database cycle 2017-10 (gpx.south.east)
 
 3.4 (2017-08-28)
 ------------------
 * Add automatic DEM region determination
 * Audio alerts only with valid GPS fix
 * Minor change to startup behavior
-* Waypoint database cycle 2017-08 (eur.rus)
+* Waypoint database cycle 2017-08 (gpx.north.east)
 
 3.3 (2017-07-10)
 ------------------
