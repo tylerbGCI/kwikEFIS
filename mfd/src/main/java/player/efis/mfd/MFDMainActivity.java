@@ -211,7 +211,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
-        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "ZZZZZ";
+        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -442,10 +442,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
-        _gps_lat = settings.getFloat("GpsLat", gps_lat);
-        _gps_lon = settings.getFloat("GpsLon", gps_lon);
-        gps_lat = _gps_lat;
-        gps_lon = _gps_lon;
+        gps_lat = settings.getFloat("GpsLat", gps_lat);
+        gps_lon = settings.getFloat("GpsLon", gps_lon);
 
         // Use the last orientation to start
         bLandscapeMode = settings.getBoolean("landscapeMode", false);

@@ -4,7 +4,7 @@ Changelog
 ------------------
 * Implement Auto zoom
 * Scale compass rose font
-* Auto geographic selection expanded to cover all available
+* Auto geographic selection expanded to all available pacs
 * Waypoint database cycle 2017-11 (gpx.south.west)
 * _wip: Release EFIS v3.8_
 * _wip: Release DMAP v1.3_
@@ -18,7 +18,7 @@ Changelog
 * Add speed, altitude and AGL displays to map
 * Zoom with swipe up/down (use XCSoar convention)
 * Improved code commonality and fault tolerance
-* Add Light/Dark themes for better sunlight contrast
+* Implement Light/Dark themes for better sunlight contrast
 * Release EFIS v3.7
 * Release DMAP v1.2
 

@@ -406,7 +406,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			}
 		}
 		updateEFIS(/*event.values*/);
-}
+    }
 
 
 	@Override
@@ -459,10 +459,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
-        _gps_lat = settings.getFloat("GpsLat", gps_lat);
-        _gps_lon = settings.getFloat("GpsLon", gps_lon);
-        gps_lat = _gps_lat;
-        gps_lon = _gps_lon;
+        gps_lat = settings.getFloat("GpsLat", gps_lat);
+        gps_lon = settings.getFloat("GpsLon", gps_lon);
 
         // Use the last orientation to start
         bLandscapeMode = settings.getBoolean("landscapeMode", false);

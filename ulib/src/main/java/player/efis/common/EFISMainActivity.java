@@ -16,46 +16,18 @@
 
 package player.efis.common;
 
-import player.efis.common.DemGTOPO30;
-import player.efis.common.AircraftData;
-import player.efis.common.Gpx;
-import player.efis.common.SensorComplementaryFilter;
-import player.efis.common.prefs_t;
 import player.ulib.DigitalFilter;
-import player.ulib.UNavigation;
 import player.ulib.UTrig;
 import player.ulib.Unit;
-import player.efis.common.orientation_t;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.location.GpsStatus.Listener;
-import android.location.GpsSatellite;
 import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
 import android.os.BatteryManager;
-import android.os.Bundle; 
 
 // sensor imports
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.text.format.Time;
-import android.view.Menu;
-import android.view.MenuInflater; 
-import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.Toast;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.preference.PreferenceManager;
 import java.util.Random;
 
 
@@ -71,11 +43,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected boolean bHudMode = false;
     protected boolean bLandscapeMode = false;
     protected boolean bColorThemeLight;
-    protected static final int SLIP_SENS = 25; //50;	// Arbitrary choice
-    private static final float STD_RATE = 0.0524f;	// = rate 1 = 3deg/s
+    protected static final int SLIP_SENS = 25; //50;	 // Arbitrary choice
+    private static final float STD_RATE = 0.0524f;	     // = rate 1 = 3deg/s
     protected static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
     protected static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
-    protected int calibrationCount = 0;
 
     // Location abstracts
     protected float gps_lat;            // in decimal degrees
@@ -97,14 +68,12 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected Gpx mGpx;                   // wpt database
     protected DemGTOPO30 mDemGTOPO30;     // dem database
 
-
     // Digital filters
     protected DigitalFilter filterRateOfTurnGyro = new DigitalFilter(16); //8
     protected DigitalFilter filterSlip = new DigitalFilter(32);           //32
     protected DigitalFilter filterRoll = new DigitalFilter(8);            //16
     protected DigitalFilter filterPitch = new DigitalFilter(8);           //16
     protected DigitalFilter filterRateOfClimb = new DigitalFilter(4);     //8
-    //not used? DigitalFilter filterRateOfTurn = new DigitalFilter(4); //8
     protected DigitalFilter filterfpvX = new DigitalFilter(256);          //128
     protected DigitalFilter filterfpvY = new DigitalFilter(256);          //128
     protected DigitalFilter filterG = new DigitalFilter(32);              //32
@@ -116,8 +85,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;*/
-
-
 
     //-------------------------------------------------------------------------
     // Utility function to determine the direction of the turn and try to eliminate
@@ -145,7 +112,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         else return 0;
     }
 
-
     //-------------------------------------------------------------------------
     // Utility function to calculate rate of climb
     // Rate of climb in m/s
@@ -168,7 +134,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         }
         return rateOfClimb;
     }
-
 
     //-------------------------------------------------------------------------
     // Utility function to calculate rate of turn
@@ -204,7 +169,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         return rateOfTurn;
     }
 
-
     //-------------------------------------------------------------------------
     // Utility function to calculate the remaining
     // battery in percentage.
@@ -219,7 +183,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
 
         return batteryPct;
     }
-
 
     //-------------------------------------------------------------------------
     // Utility function to Check GPS status
@@ -247,38 +210,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         startActivity(i);
     }
 
-
-
-        /*
-        //------------------------------------------------------------------------------------------
-        // todo: Hardcoded for debugging
-        // Some debugging positions for testing
-        //
-        //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
-        //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
-        //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
-        //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
-
-        //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
-        //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
-        //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
-        //_gps_lat = 47.26f;  _gps_lon = 11.34f;     //Innsbruck
-        //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
-        //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
-        //_gps_lat = -33;  _gps_lon =  -71f;           // Chile, Santiago
-        //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
-        //_gps_lat = -10.8f;  _gps_lon =  -65.35f;     // Emilio Beltran
-
-        //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
-        //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
-        //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
-
-        gps_lat = _gps_lat;
-        gps_lon = _gps_lon;
-        //------------------------------------------------------------------------------------------
-        // */
-
-
     //-------------------------------------------------------------------------
     // Utility function to do a simple simulation for demo mode
     // It acts like a crude flight simulator
@@ -290,7 +221,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
 
     float _gps_speed = 0;       // m/s
     long _sim_ms = 0, sim_ms;
-    Random rand = new Random();
+    Random sim_rand = new Random();
+    boolean sim_primed = false;
 
     protected void Simulate()
     {
@@ -333,17 +265,39 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
-        deltaT = 0.0000124f; //  Ludicrous Speed
+        //deltaT = 0.0000124f; //  Ludicrous Speed
         deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
         //deltaT = 0.000000224f; // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
 
         // YCMH 090 from Perth
+        if (!sim_primed) {
+            //_gps_lat = -25.656874f; float _gps_lon =   28.221832f; // Wonderboom
+            //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
+            //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
+            //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
+
+            //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
+            //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
+            //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
+            //_gps_lat = 47.26f;  _gps_lon = 11.34f;     //Innsbruck
+            //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
+            //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
+            //_gps_lat = -33;  _gps_lon =  -71f;        // Chile, Santiago
+            //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
+            //_gps_lat = -10.8f;  _gps_lon =  -65.35f;   // Emilio Beltran
+
+            //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+            //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
+            //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
+            _gps_lat = -33.98f; _gps_lon = 18.82f; // Stellenbosh, South Africa
+            sim_primed = true;
+        }
 
         Random rnd = new Random();
-        //gps_course = _gps_course = (float) Math.toRadians(2);// 50 // + (float) rnd.nextGaussian() / 200;
+        gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
         gps_speed = _gps_speed = setSpeed;//100;  // m/s
-        gps_altitude = Unit.Feet.toMeter(2500); //2048; //900; //3048; //Meter
+        gps_altitude = Unit.Feet.toMeter(8000); //2048; //900; //3048; //Meter
         //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //
