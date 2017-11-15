@@ -19,6 +19,8 @@ package player.efis.mfd;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.widget.Toast;
+
 import player.efis.common.prefs_t;
 
 //
@@ -97,6 +99,7 @@ public class MFDSurfaceView extends GLSurfaceView
                 float deltaY = y - mPreviousY;
 
                 if (Math.abs(deltaY) > MIN_DISTANCE) {
+                    if (mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom OFF", Toast.LENGTH_SHORT).show();
                     setAutoZoomActive(false);
                     if (deltaY < 0) {
                         // swipe up
@@ -108,6 +111,7 @@ public class MFDSurfaceView extends GLSurfaceView
                     }
                 }
                 else if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    if (!mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom ON", Toast.LENGTH_SHORT).show();
                     setAutoZoomActive(true);
                     if (deltaY > 0) {
                         // swipe right
@@ -348,4 +352,8 @@ public class MFDSurfaceView extends GLSurfaceView
         mRenderer.setAutoZoomActive(active);
     }
 
+    public boolean isAutoZoomActive()
+    {
+        return mRenderer.isAutoZoomActive();
+    }
 }
