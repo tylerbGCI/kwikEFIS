@@ -235,26 +235,18 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-
-    //-------------------------------------------------------------------------
-    //
-    //
-    private void setAutoZoom()
+    @Override
+    protected Point project(float relbrg, float dme)
     {
-        float a = mSelWptDme * mMapZoom;
-        while ((a > pixM2) && (mMapZoom > MIN_ZOOM)) {
-            zoomOut();
-            a = mSelWptDme * mMapZoom;
-        }
-        while ((a < pixM2) && (mMapZoom < MAX_ZOOM)) {
-            zoomIn();
-            a = mSelWptDme * mMapZoom;
-        }
-    }
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
 
 
     //-------------------------------------------------------------------------
-    //
+    // Set the spinner control parameters
     //
     public void setSpinnerParams()
     {
@@ -318,107 +310,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
         }
     }
-
-
-    //-------------------------------------------------------------------------
-    // Airports / Waypoints
-    //
-
-    //
-    // Variables specific to render APT
-    //
-    /*
-    protected void renderAPT(float[] matrix)
-    {
-        float z, pixPerDegree, x1, y1;
-        float radius = 5;
-
-        pixPerDegree = pixM / pitchInView;
-        z = zfloat;
-
-        // 0.16667 deg lat  = 10 nm
-        // 0.1 approx 5nm
-        float dme;
-        float _dme = 1000;
-        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
-
-        nrAptsFound = 0;
-        Iterator<Apt> it = Gpx.aptList.iterator();
-        while (it.hasNext()) {
-            Apt currApt; //  = it.next();
-            try {
-                currApt = it.next();
-            }
-            //catch (ConcurrentModificationException e) {
-            catch (Exception e) {
-                break;
-            }
-
-            String wptId = currApt.name;
-            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
-
-            // Apply selection criteria
-            if (dme < 5) nrAptsFound++;                                                // always show apts closer then 5nm
-            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange)) nrAptsFound++; // show all others up to MX_NR_APT for AptSeekRange
-            else continue;  // we already have all the apts as we wish to display
-
-            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-
-            x1 = project(aptRelBrg, dme).x;
-            y1 = project(aptRelBrg, dme).y;
-
-            mPolyLine.SetWidth(3);
-            mPolyLine.SetColor(theta*0.8f, theta*0.4f, theta*0.8f, 1);  //purple'ish
-
-            float[] vertPoly = {
-                    x1 + 2.0f * radius, y1, z,
-                    x1, y1 + 2.0f * radius, z,
-                    x1 - 2.0f * radius, y1, z,
-                    x1, y1 - 2.0f * radius, z,
-                    x1 + 2.0f * radius, y1, z
-            };
-            mPolyLine.VertexCount = 5;
-            mPolyLine.SetVerts(vertPoly);  //crash here
-            mPolyLine.draw(matrix);
-
-            glText.begin(theta*0.8f, theta*0.4f, theta*0.8f, 1, matrix);  // purple'ish
-            glText.setScale(2.0f);
-            glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
-            glText.end();
-
-            if (Math.abs(dme) < Math.abs(_dme)) {
-                // closest apt (dme)
-                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
-                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
-
-                setAutoWptValue(wptId);
-                setAutoWptDme(dme);
-                setAutoWptBrg(absBrg);
-                setAutoWptRelBrg(relBrg);
-                _dme = dme;
-            }
-        }
-
-        //
-        // If we dont have the full compliment of apts expand the range incrementally
-        // If do we have a full compliment start reducing the range
-        // This also has the "useful" side effect of "flashing" new additions for a few cycles
-        //
-        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
-        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
-        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
-    }
-    */
-
-    @Override
-    protected Point project(float relbrg, float dme)
-    {
-        return new Point(
-                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
-                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
-        );
-    } // end of project
-
 
     //-------------------------------------------------------------------------
     // Render the Digital Elevation Model (DEM).
@@ -574,34 +465,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 }
             }
         }
-    }
-
-    //-------------------------------------------------------------------------
-    // North Que
-    //
-    protected void renderNorthQue(float[] matrix)
-    {
-        float  z = zfloat;
-
-        mTriangle.SetWidth(1);
-        // Right triangle
-        mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
-        mTriangle.SetVerts(0, -0.08f*pixM2, z,
-                0,            +0.08f*pixM2, z,
-                0.03f*pixM2,  -0.12f*pixM2,z);
-        mTriangle.draw(matrix);
-
-        // left triangle
-        mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
-        mTriangle.SetVerts(0, -0.08f*pixM2, z,
-                +0,           +0.08f*pixM2, z,
-                -0.03f*pixM2, -0.12f*pixM2,z);
-        mTriangle.draw(matrix);
-
-        glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
-        glText.setScale(1.5f); // 2 seems full size
-        glText.drawCX("N", 0, 0.09f*pixM2);
-        glText.end();
     }
 }
 //-------------

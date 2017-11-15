@@ -205,69 +205,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected float[] rmiMatrix = new float[16]; // moved to class scope
 
     //-------------------------------------------------------------------------
+    // setSpinnerParams must be implemented in the child classes
     //
-    //
-    public void setSpinnerParams()
+    protected void setSpinnerParams()
     {
-        // This code determines where the spinner control
-        // elements are displayed. Used by WPT and ALT
-        if (Layout == layout_t.LANDSCAPE) {
-            // Landscape --------------
-            lineAutoWptDetails = 0.00f;
-            lineAncillaryDetails = -0.30f;
-
-            if (fatFingerActive) {
-                selWptDec = 0.75f * pixH2;
-                selWptInc = 0.45f * pixH2;
-                selAltDec = -0.45f * pixH2;
-                selAltInc = -0.75f * pixH2;
-
-                lineC = 0.2f;
-                leftC = -0.55f;
-                spinnerStep = 0.25f;
-                spinnerTextScale = 2.0f;
-            }
-            else {
-                // Top
-                selWptDec = 0.90f * pixH2;
-                selWptInc = 0.74f * pixH2;
-                selAltDec = -0.74f * pixH2;
-                selAltInc = -0.90f * pixH2;
-
-                lineC = 0.50f;
-                leftC = 0.6f;
-                spinnerStep = 0.1f;
-                spinnerTextScale = 1f;
-            }
-        }
-        else {
-            // Portrait ---------------
-            lineAutoWptDetails = -0.60f;
-            lineAncillaryDetails = -0.85f;
-
-            if (fatFingerActive) {
-                selWptDec = 0.7f * pixH2;
-                selWptInc = 0.4f * pixH2;
-                selAltDec = -0.4f * pixH2;
-                selAltInc = -0.7f * pixH2;
-
-                lineC = 0.15f;
-                leftC = -0.75f;
-                spinnerStep = 0.5f;
-                spinnerTextScale = 2f;
-            }
-            else {
-                selWptDec = -0.30f * pixH2;
-                selWptInc = -0.41f * pixH2;
-                selAltDec = -0.80f * pixH2;
-                selAltInc = -0.91f * pixH2;
-
-                lineC = -0.55f; //lineC = -0.90f;
-                leftC = 0.6f;
-                spinnerStep = 0.1f;
-                spinnerTextScale = 1f;
-            }
-        }
     }
 
 
@@ -285,13 +226,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //
     public static void checkGlError(String glOperation)
     {
-        /*  bugbug
-        int error;
-		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-			Log.e(TAG, glOperation + ": glError " + error);
-			throw new RuntimeException(glOperation + ": glError " + error);
-		}
-		*/
         int error;
         if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(TAG, glOperation + ": glError " + error);
@@ -3121,6 +3055,57 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         autoZoomActive = active;
     }
+
+    public boolean isAutoZoomActive()
+    {
+        return autoZoomActive;
+    }
+
+    //-------------------------------------------------------------------------
+    //
+    //
+    protected void setAutoZoom()
+    {
+        float a = mSelWptDme * mMapZoom;
+        while ((a > pixM2) && (mMapZoom > MIN_ZOOM)) {
+            zoomOut();
+            a = mSelWptDme * mMapZoom;
+        }
+        while ((a < pixM2) && (mMapZoom < MAX_ZOOM)) {
+            zoomIn();
+            a = mSelWptDme * mMapZoom;
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    // North Que
+    //
+    protected void renderNorthQue(float[] matrix)
+    {
+        float  z = zfloat;
+
+        mTriangle.SetWidth(1);
+        // Right triangle
+        mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
+        mTriangle.SetVerts(0, -0.08f*pixM2, z,
+                0,            +0.08f*pixM2, z,
+                0.03f*pixM2,  -0.12f*pixM2,z);
+        mTriangle.draw(matrix);
+
+        // left triangle
+        mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
+        mTriangle.SetVerts(0, -0.08f*pixM2, z,
+                +0,           +0.08f*pixM2, z,
+                -0.03f*pixM2, -0.12f*pixM2,z);
+        mTriangle.draw(matrix);
+
+        glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
+        glText.setScale(1.5f); // 2 seems full size
+        glText.drawCX("N", 0, 0.09f*pixM2);
+        glText.end();
+    }
+
 
 }
 //-------------

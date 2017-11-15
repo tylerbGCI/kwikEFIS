@@ -233,12 +233,10 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
 
+        // Do this last so that every else wil be dimmed for fatfinger entry
         if (displayFlightDirector || displayRMI || displayHITS) {
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
-        }
-
-        if (displayFlightDirector || displayHITS) {
             renderSelAltValue(mMVPMatrix);
         }
     }
@@ -305,6 +303,73 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         );
     } // end of project
 
+
+
+    //-------------------------------------------------------------------------
+    // Set the spinner control parameters
+    //
+    public void setSpinnerParams()
+    {
+        // This code determines where the spinner control
+        // elements are displayed. Used by WPT and ALT
+        if (Layout == layout_t.LANDSCAPE) {
+            // Landscape --------------
+            lineAutoWptDetails = 0.00f;
+            lineAncillaryDetails = -0.30f;
+
+            if (fatFingerActive) {
+                selWptDec = 0.75f * pixH2;
+                selWptInc = 0.45f * pixH2;
+                selAltDec = -0.45f * pixH2;
+                selAltInc = -0.75f * pixH2;
+
+                lineC = 0.2f;
+                leftC = -0.55f;
+                spinnerStep = 0.25f;
+                spinnerTextScale = 2.0f;
+            }
+            else {
+                // Top
+                selWptDec = 0.90f * pixH2;
+                selWptInc = 0.74f * pixH2;
+                selAltDec = -0.74f * pixH2;
+                selAltInc = -0.90f * pixH2;
+
+                lineC = 0.50f;
+                leftC = 0.6f;
+                spinnerStep = 0.1f;
+                spinnerTextScale = 1f;
+            }
+        }
+        else {
+            // Portrait ---------------
+            lineAutoWptDetails = -0.60f;
+            lineAncillaryDetails = -0.85f;
+
+            if (fatFingerActive) {
+                selWptDec = 0.7f * pixH2;
+                selWptInc = 0.4f * pixH2;
+                selAltDec = -0.4f * pixH2;
+                selAltInc = -0.7f * pixH2;
+
+                lineC = 0.15f;
+                leftC = -0.75f;
+                spinnerStep = 0.5f;
+                spinnerTextScale = 2f;
+            }
+            else {
+                selWptDec = -0.30f * pixH2;
+                selWptInc = -0.41f * pixH2;
+                selAltDec = -0.80f * pixH2;
+                selAltInc = -0.91f * pixH2;
+
+                lineC = -0.55f; //lineC = -0.90f;
+                leftC = 0.6f;
+                spinnerStep = 0.1f;
+                spinnerTextScale = 1f;
+            }
+        }
+    }
 
     //-------------------------------------------------------------------------
     // Render the Digital Elevation Model (DEM).
