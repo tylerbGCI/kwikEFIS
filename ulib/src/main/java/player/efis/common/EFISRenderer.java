@@ -2982,13 +2982,20 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         z = zfloat;
 
         float distance = 20;//20;
-        float x1 = mMapZoom * distance;// * (5 * UTrig.icos(90-(int)90));
+        float x1 = mMapZoom * distance;
 
-        while (x1 > pixM2 / 2) {
-            if (distance > 5) distance = distance - 5;
-            else distance = 1;
-
-            x1 = mMapZoom * distance;// * (5 * UTrig.icos(90-(int)90));
+        while (x1 > pixM / 3) {
+            if (distance > 4) {
+                distance = distance - 4;
+                x1 = mMapZoom * distance;
+            }
+            else { 
+                // very close - and also catch the potential 
+                // endless loop
+                distance = 1;
+                x1 = mMapZoom;
+                break;
+            }
         }
 
         // Scale line
@@ -3033,7 +3040,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     // Map Zooming
     //
     public final float MAX_ZOOM = 120;
-    public final float MIN_ZOOM = 2;
+    public final float MIN_ZOOM = 5;
     public void setMapZoom(float zoom)
     {
         mMapZoom = zoom;
@@ -3041,14 +3048,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     public void zoomIn()
     {
-        if (mMapZoom < 5) mMapZoom += 1;
-        else if (mMapZoom < MAX_ZOOM) mMapZoom += 5;
+        mMapZoom += 5;
+        if (mMapZoom > MAX_ZOOM) mMapZoom = MAX_ZOOM;
     }
 
     public void zoomOut()
     {
-        if (mMapZoom > 5) mMapZoom -= 5;
-        else if (mMapZoom > MIN_ZOOM) mMapZoom -= 1;
+        mMapZoom -= 5;
+        if (mMapZoom < MIN_ZOOM) mMapZoom = MIN_ZOOM;
     }
 
     public void setAutoZoomActive(boolean active)
