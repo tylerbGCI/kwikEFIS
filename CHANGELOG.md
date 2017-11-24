@@ -1,13 +1,13 @@
 Changelog
 =========
-3.10 (Under Development)
+3.10 (2017-11-23)
 ------------------
 * Implement Auto zoom
 * Scale compass rose font
 * Auto geographic selection expanded to all available pacs
 * Waypoint database cycle 2017-11 (gpx.south.west)
-* _wip: Release EFIS v3.8_
-* _wip: Release DMAP v1.3_
+* Release EFIS v3.8
+* Release DMAP v1.3
 
 3.9 (2017-11-12)
 ------------------
