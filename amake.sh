@@ -9,6 +9,7 @@ rm h:/src/kwikEFIS/apk/kwik-efis-datapac-zar.aus.apk
 rm h:/src/kwikEFIS/apk/kwik-efis-datapac-usa.can.apk
 rm h:/src/kwikEFIS/apk/kwik-efis-datapac-eur.rus.apk
 rm h:/src/kwikEFIS/apk/kwik-efis-datapac-sah.jap.apk
+rm h:/src/kwikEFIS/apk/kwik-efis-datapac-pan.arg.apk
 
 ./gradlew build
 
@@ -18,13 +19,12 @@ cp h:/src/kwikEFIS/data.zar.aus/build/outputs/apk/data.zar.aus-debug.apk h:/src/
 cp h:/src/kwikEFIS/data.usa.can/build/outputs/apk/data.usa.can-debug.apk h:/src/kwikEFIS/apk/kwik-efis-datapac-usa.can.apk
 cp h:/src/kwikEFIS/data.eur.rus/build/outputs/apk/data.eur.rus-debug.apk h:/src/kwikEFIS/apk/kwik-efis-datapac-eur.rus.apk
 cp h:/src/kwikEFIS/data.sah.jap/build/outputs/apk/data.sah.jap-debug.apk h:/src/kwikEFIS/apk/kwik-efis-datapac-sah.jap.apk
+cp h:/src/kwikEFIS/data.pan.arg/build/outputs/apk/data.pan.arg-debug.apk h:/src/kwikEFIS/apk/kwik-efis-datapac-pan.arg.apk
 cp h:/src/kwikEFIS/CHANGELOG.md h:/src/kwikEFIS/apk/CHANGELOG.md
 
 cd h:/src/kwikEFIS/apk
 
-
-
-if [ $1 == '-l' ] 
+if [ ! -z $1 ] && [ $1 == '-l' ] 
 then
     #gsm nexus 7
     #adb -s 015d3249295c160b install -r ./kwik-efis.apk
