@@ -70,7 +70,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
         else
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -88,7 +88,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (Layout == layout_t.LANDSCAPE) {
             // Slide pitch to current value
             Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
-        } else {
+        }
+        else {
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
