@@ -177,6 +177,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected float backShadeG = 0.001f; // black
     protected float backShadeB = 0.001f; // black
 
+    protected int colorTheme;
 
     private float gamma = 1;
     protected float theta = 1;
@@ -299,6 +300,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     // Flight Director
     //
 
+    //        mTriangle.SetColor(foreShadeR, foreShadeG, 0/*backShadeB*/, 1); //light yellow
+
     protected float PPD_DIV = 30; // for landscape
 
     protected void renderFlightDirector(float[] matrix)
@@ -311,8 +314,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // fwd triangles
         mTriangle.SetWidth(1);
-        //mTriangle.SetColor(theta * 1, theta * 0.5f, theta * 1, 1);  //purple
-        mTriangle.SetColor(theta * foreShadeR, theta * 0.5f, theta * foreShadeB, 1);  //purple
+        if (colorTheme == 2) mTriangle.SetColor(0, foreShadeG, 0, 1);  // light green
+        else mTriangle.SetColor(theta * 1.0f, theta * 0.5f, theta * 1.0f, 1);  //purple
+        //mTriangle.SetColor(theta * foreShadeR, theta * 0.5f, theta * foreShadeB, 1);  //purple
+        //mTriangle.SetColor(foreShadeR, 0.5f*theta*foreShadeG, foreShadeB, 1);  //purple
         mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                 10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z);
@@ -323,8 +328,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mTriangle.draw(matrix);
 
         // rear triangles
-        //mTriangle.SetColor(theta * 0.6f, theta * 0.3f, theta * 0.6f, 1);  //purple'ish
-        mTriangle.SetColor(theta * tapeShadeR, theta * 0.3f, theta * tapeShadeB, 1);  //purple'ish
+        if (colorTheme == 2) mTriangle.SetColor(0, tapeShadeG, 0, 1);  // light green
+        else mTriangle.SetColor(theta * 0.6f, theta * 0.3f, theta * 0.6f, 1);  //purple'ish
+        //mTriangle.SetColor(tapeShadeR, 0.5f*theta*tapeShadeG, tapeShadeB, 1);  //purple
         mTriangle.SetVerts(10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -3.0f * pixPerDegree, z);
@@ -382,7 +388,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             // side lines
             int B2 = 3;
             mLine.SetWidth(2 * B2);
-            mLine.SetColor(foreShadeR, foreShadeG, backShadeB, 1);  // light yellow
+
+            if (colorTheme == 2) mLine.SetColor(0, foreShadeG, 0, 1);  // light green
+            else mLine.SetColor(1, 1, 0/*backShadeB*/, 1);  // hardcoded light yellow
+
             mLine.SetVerts(11.0f * pixPerDegree, B2, z,
                     15.0f * pixPerDegree, B2, z);
             mLine.draw(mMVPMatrix);
@@ -390,7 +399,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     -15.0f * pixPerDegree, B2, z);
             mLine.draw(mMVPMatrix);
 
-            mLine.SetColor(tapeShadeR, tapeShadeG, backShadeB, 1);  // dark yellow
+            if (colorTheme == 2) mLine.SetColor(0, tapeShadeG, 0, 1);  // dark green
+            else mLine.SetColor(tapeShadeR, tapeShadeG, 0, 1);  // dark yellow
             mLine.SetVerts(11.0f * pixPerDegree, -B2, z,
                     15.0f * pixPerDegree, -B2, z);
             mLine.draw(mMVPMatrix);
@@ -400,7 +410,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
             // outer triangles
             mTriangle.SetWidth(1);
-            mTriangle.SetColor(foreShadeR, foreShadeG, backShadeB, 1); //light yellow
+            if (colorTheme == 2) mTriangle.SetColor(0, foreShadeG, 0, 1);  // light green
+            else mTriangle.SetColor(1, 1, 0, 1); //hardcoded light yellow
+
             mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                     6.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                     10.0f * pixPerDegree, -3.0f * pixPerDegree, z);
@@ -411,7 +423,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mTriangle.draw(mMVPMatrix);
 
             // inner triangle
-            mTriangle.SetColor(tapeShadeR, tapeShadeG, backShadeB, 1); //dark yellow
+            if (colorTheme == 2) mTriangle.SetColor(0, tapeShadeG, 0, 1);  // light green
+            else mTriangle.SetColor(0.6f, 0.6f, 0, 1); //hardcoded dark yellow
             mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                     4.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                     6.0f * pixPerDegree, -3.0f * pixPerDegree, z);
@@ -585,6 +598,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             glText.end();
         }
 
+
         mLine.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);  // white
         mLine.SetWidth(wid);
         for (i = 9; i >= 6; i = i - 1) {
@@ -607,11 +621,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
 
         // horizon line - longer and thicker
-        mLine.SetWidth(wid*3); //4
+        if (colorTheme == 2) mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);  // bright white
+        mLine.SetWidth(wid*2.5f); //4
         mLine.SetVerts(-0.95f * pixW2, 0.0f, z,
                 0.95f * pixW2, 0.0f, z);
         mLine.draw(matrix);
 
+        mLine.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);  // white
         mLine.SetWidth(wid);
         for (i = -1; i >= -4; i = i - 1) {
             iPix = (float) i * pixPerDegree;
@@ -2422,6 +2438,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     public void setThemeDark()
     {
+        colorTheme = 0;
+
         tapeShadeR = 0.60f; // grey
         tapeShadeG = 0.60f; // grey
         tapeShadeB = 0.60f; // grey
@@ -2440,9 +2458,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     public void setThemeLight()
     {
-        tapeShadeR = 0.10f; // grey
-        tapeShadeG = 0.10f; // grey
-        tapeShadeB = 0.10f; // grey
+        colorTheme = 1;
+
+        tapeShadeR = 0.40f; // grey
+        tapeShadeG = 0.40f; // grey
+        tapeShadeB = 0.40f; // grey
 
         foreShadeR = 0.01f; // black
         foreShadeG = 0.01f; // black
@@ -2459,6 +2479,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     public void setThemeGreen()
     {
+        colorTheme = 2;
+
         tapeShadeR = 0.00f; // grey
         tapeShadeG = 0.60f; // grey
         tapeShadeB = 0.00f; // grey
@@ -2472,7 +2494,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         backShadeB = 0.01f; // black
 
         gamma = 1;
-        theta = 1;
+        theta = 2;  // this sorts out the purple in monochrome
         DemGTOPO30.setGamma(gamma);
     }
 
@@ -3155,20 +3177,23 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         mTriangle.SetWidth(1);
         // Right triangle
-        mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
+        //mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
+        mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
                 0,            +0.08f*pixM2, z,
                 0.03f*pixM2,  -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
-        mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
+        //mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
+        mTriangle.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
                 +0,           +0.08f*pixM2, z,
                 -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
-        glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
+        //glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
+        glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1, matrix);
         glText.setScale(1.5f); // 2 seems full size
         glText.drawCX("N", 0, 0.09f*pixM2);
         glText.end();

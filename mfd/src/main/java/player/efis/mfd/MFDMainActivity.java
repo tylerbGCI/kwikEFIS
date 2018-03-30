@@ -64,6 +64,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;
+
     // sensor members
 	private SensorManager mSensorManager;
 	//private Sensor mRotationSensor;
@@ -553,8 +554,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
 
         // If we changed display schemes, a color gamma rec-calc is required
-        if (colorTheme != settings.getInt("colorTheme", 0)) {
-            colorTheme = settings.getInt("colorTheme", 0);
+        int _colorTheme = Integer.valueOf(settings.getString("colorTheme", "0"));
+        if (colorTheme != _colorTheme) {
+            colorTheme = _colorTheme;
             savePersistentSettings();
             mGLView = new MFDSurfaceView(this);
             setContentView(mGLView);

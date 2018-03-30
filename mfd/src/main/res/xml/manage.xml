@@ -112,12 +112,12 @@
             </PreferenceScreen>
 
         <ListPreference
-            android:defaultValue="2"
+            android:defaultValue="0"
             android:entries="@array/color_theme_names"
-            android:entryValues="@array/color_theme_names"
+            android:entryValues="@array/color_theme_values"
             android:key="colorTheme"
             android:summary="Select color scheme"
-            android:title="Color scheme" />
+            android:title="Color" />
 
         <PreferenceScreen
             android:defaultValue="0.0"

@@ -191,7 +191,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
-        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "ZZZZZ";
+        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
