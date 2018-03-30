@@ -48,6 +48,8 @@ public class MFDPrefManage extends PreferenceActivity
 
         //lp = (ListPreference) findPreference("AirportDatabase");
         //lp.setSummary(lp.getEntry());
+        lp = (ListPreference) findPreference("colorTheme");
+        lp.setSummary(lp.getEntry());
 
         // Get the version number of the app
         PackageInfo pInfo = null;
