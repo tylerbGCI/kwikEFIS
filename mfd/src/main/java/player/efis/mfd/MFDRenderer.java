@@ -53,7 +53,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
         // Set the background frame color
-        GLES20.glClearColor(backShade, backShade, backShade, 1.0f);
+        GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -411,6 +411,12 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             else if (currAirspace.ac.equals("Q") && AirspaceClass.Q) color = new DemColor(0.25f, 0.10f, 0.10f);
             else if (currAirspace.ac.equals("CTR") && AirspaceClass.CTR) color = new DemColor(0.4f, 0.4f, 0.4f); // grey
             else continue; //color = new DemColor(0.4f, 0.4f, 0.4f);
+
+            // Handle Monochrome
+            if (colorTheme == 2) {
+                color.red = 0;
+                color.blue = 0;
+            }
 
             Iterator<OpenAirPoint> it2 = currAirspace.pointList.iterator();
             while (it2.hasNext()) {

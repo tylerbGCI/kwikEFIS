@@ -47,7 +47,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
         // Set the background frame color
-        GLES20.glClearColor(backShade, backShade, backShade, 1.0f);
+        GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -445,6 +445,13 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 // Triangle #1 --------------
                 zav = z1;  // in m asml
                 DemColor color = DemGTOPO30.getColor((short) zav);
+
+                // Handle Monochrome
+                if (colorTheme == 2) {
+                    color.red = 0;
+                    color.blue = 0;
+                }
+
                 caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 
@@ -462,6 +469,13 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 // Triangle #2 --------------
                 zav = (z1 + z2) / 2; // take the simple average
                 color = DemGTOPO30.getColor((short) zav);
+
+                // Handle Monochrome
+                if (colorTheme == 2) {
+                    color.red = 0;
+                    color.blue = 0;
+                }
+
                 caution = cautionMin + (color.red + color.green + color.blue);
                 agl_ft = MSLValue - zav * 3.28084f;  // in ft
 

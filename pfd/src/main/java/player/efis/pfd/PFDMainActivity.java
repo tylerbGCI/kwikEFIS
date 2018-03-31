@@ -191,7 +191,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     	// This should never happen but we catch and force it to something known it just in case
     	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
-        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "ZZZZZ";
+        if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
@@ -202,7 +202,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
 
         createMediaPlayer();
-        mGLView.setSchemeLight(bColorThemeLight);
+        mGLView.setSchemeLight(colorTheme);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -436,7 +436,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         editor.putFloat("GpsLat", gps_lat);
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
-        editor.putBoolean("colorTheme", bColorThemeLight);
+        editor.putInt("colorTheme", colorTheme);
 
         // Commit the edits
         editor.commit();
@@ -455,7 +455,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mAltSelValue = settings.getFloat("mAltSelValue", 0f);
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
-        bColorThemeLight = settings.getBoolean("colorTheme", false);
+        colorTheme = settings.getInt("colorTheme", 0);
         mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
@@ -542,7 +542,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //s = settings.getString("AirportDatabase", "zar.aus");
         //if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
 
-        // landscape / porait mode toggle
+        // landscape / portrait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
         if (bLandscapeMode) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -555,12 +555,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
 
         // If we changed display schemes, a color gamma rec-calc is required
-        if (bColorThemeLight != settings.getBoolean("colorTheme", false)) {
-            bColorThemeLight = settings.getBoolean("colorTheme", false);
+        int _colorTheme = Integer.valueOf(settings.getString("colorTheme", "0"));
+        if (colorTheme != _colorTheme) {
+            colorTheme = _colorTheme;
             savePersistentSettings();
             mGLView = new PFDSurfaceView(this);
             setContentView(mGLView);
-            mGLView.setSchemeLight(bColorThemeLight);
+            mGLView.setSchemeLight(colorTheme);
             mGLView.invalidate();
             restorePersistentSettings();
         }

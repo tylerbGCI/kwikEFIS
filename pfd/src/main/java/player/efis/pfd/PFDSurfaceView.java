@@ -325,11 +325,18 @@ public class PFDSurfaceView extends GLSurfaceView
         mRenderer.setSchemeDark();
     }*/
 
-    public void setSchemeLight(boolean value)
+    public void setSchemeLight(int value)
     {
+        if (value == 2) mRenderer.setThemeGreen();
+        else if (value == 1)  mRenderer.setThemeLight();
+        else mRenderer.setThemeDark(); // the default
+        requestRender();
+
+        /* TODO make general
         if (value)  mRenderer.setThemeLight();
         else mRenderer.setThemeDark();
         requestRender();
+        */
     }
 
     public void setFlightDirector(boolean active, float pit, float rol)
