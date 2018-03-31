@@ -8,8 +8,9 @@
         <item>Favour GPS</item>
         <item>All GPS</item>
         </string-array>
+
     <string-array name="sensor_bias_values">
-        <item>1.0f</item>
+        <item>1.00f</item>
         <item>0.85f</item>
         <item>0.50f</item>
         <item>0.15f</item>
@@ -57,23 +58,37 @@
     </string-array>
 
 
-<!--
-    <string-array name="screen_mode_names">
-        <item>Locked</item>
-        <item>Landscape</item>
-
-    </string-array>
-    <string-array name="screen_mode_values">
-        <item>0.0.0</item>
+    <string-array name="color_theme_names">
+        <item>Full Color</item>
+        <item>High Contrast</item>
+        <item>Monochrome</item>
     </string-array>
 
+    <string-array name="color_theme_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
-    <string-array name="version_names">
-        <item>0.0.0</item>
-    </string-array>
-    <string-array name="version_values">
-    </string-array>
--->
+
+
+    <!--
+        <string-array name="screen_mode_names">
+            <item>Locked</item>
+            <item>Landscape</item>
+
+        </string-array>
+        <string-array name="screen_mode_values">
+            <item>0.0.0</item>
+        </string-array>
+
+
+        <string-array name="version_names">
+            <item>0.0.0</item>
+        </string-array>
+        <string-array name="version_values">
+        </string-array>
+    -->
 
 
     <!--

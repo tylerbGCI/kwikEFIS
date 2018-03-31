@@ -1,5 +1,11 @@
 Changelog
 =========
+3.11 (2018-03-31)
+------------------
+* Implement Monochrome theme for HUD usage
+* Release EFIS v3.9
+* Release DMAP v1.4
+
 3.10 (2017-11-23)
 ------------------
 * Implement Auto zoom
