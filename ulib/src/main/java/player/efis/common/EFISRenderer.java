@@ -1928,7 +1928,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         //mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
         // // TODO: 2017-10-31 make parameterised
-        mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
+        // Handle Monochrome
+        if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
+        else mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
 
         mSquare.SetWidth(1);
         {
