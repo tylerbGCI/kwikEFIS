@@ -14,9 +14,15 @@ final int maxrow = 6000;
 The mean height of land above sea level is 840 m.
 
 To delete a TAG
+---------------
 git tag --delete YOUR_TAG_NAME
 git push --delete origin YOUR_TAG_NAME
 
  
- 
- 
+To clean a fork from upstream
+-----------------------------
+git remote add upstream /url/to/original/repo
+git fetch upstream
+git checkout master
+git reset --hard upstream/master  
+git push origin master --force 
