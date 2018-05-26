@@ -107,7 +107,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
-            if (AGLValue > 0) renderDEMTerrain(scratch1);  // underground is not valid
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrain(scratch1);  // underground is not valid
         }
         else if (displayTerrain) renderTerrain(scratch1);
 
