@@ -74,7 +74,6 @@ public class DemGTOPO30
     public float lon0;
 
     public static boolean demDataValid = false;
-    public static boolean buffEmpty = false;
 
     public static float gamma = 1;
 
@@ -335,14 +334,11 @@ public class DemGTOPO30
     //
     private void fillBuffer(short c)
     {
-        if (!buffEmpty) {
             for (int y = 0; y < BUFY; y++) {
                 for (int x = 0; x < BUFX; x++) {
                     buff[x][y] = c;  // fill in the buffer
                 }
             }
-        }
-        if (c <= 0) buffEmpty = true;
     }
 
     //-------------------------------------------------------------------------
@@ -464,13 +460,11 @@ public class DemGTOPO30
                 }
                 demFile.close();
                 demDataValid = true;
-                buffEmpty = false;
             }
             catch (PackageManager.NameNotFoundException e) {
                 // thrown by: context.createPackageContext
                 Toast.makeText(context, "Data pac file not found: " + region, Toast.LENGTH_LONG).show();
                 demDataValid = false;
-                buffEmpty = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
                 // Try to fix the problem
@@ -480,7 +474,6 @@ public class DemGTOPO30
                 // thrown by: otherContext.getAssets().open
                 Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
-                buffEmpty = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
             }
