@@ -2,6 +2,12 @@ Changelog
 =========
 3.11 (Work In Progress)
 ------------------
+* Add generic helicopter
+* beta Release EFIS v3.10
+* beta Release DMAP v1.5
+
+3.11 (2017-03-31)
+------------------
 * Implement Monochrome theme for HUD usage
 * Release EFIS v3.9
 * Release DMAP v1.4
