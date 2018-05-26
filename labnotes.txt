@@ -1,3 +1,6 @@
+iLevil
+GDL90 protocol 
+
 http://www.webgis.com/terr_world.html
 RGB weighted luminance
 R=0.299, G=0.587 and B=0.114

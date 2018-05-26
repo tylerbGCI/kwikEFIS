@@ -28,7 +28,7 @@ if [ ! -z $1 ] && [ $1 == '-l' ]
 then
     #gsm nexus 7
     #adb -s 015d3249295c160b install -r ./kwik-efis.apk
-    #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-zar.aus.apk
+    adb -s 015d3249295c160b install -r ./kwik-efis-datapac-zar.aus.apk
     #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-usa.can.apk
     #adb -s 015d3249295c160b install -r ./kwik-efis-datapac-eur.rus.apk
     

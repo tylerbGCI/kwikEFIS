@@ -18,7 +18,7 @@ package player.efis.common;
 
 enum AircraftModel
 {
-    GENERIC,
+    ULTRA,
     AZTEC,
     CRICRI,
     CRUZ,
@@ -29,7 +29,8 @@ enum AircraftModel
     RV6,
     RV7,
     RV8,
-    W10
+    W10,
+    HELI
 }
 
 public class AircraftData
@@ -66,14 +67,14 @@ public class AircraftData
         // Va   Maneuvering
         // Vno  Max structural cruise
         // Vne  Never exceed
-        //
+
         // White Arc  Vs0 - Vfe
         // Green Arc  Vs1 - Vno
         // Yellow Arc Vno - Vne
 
         switch (mAircraftModel) {
-            // V Speeds for various aircraft models
-            case GENERIC:
+            // V Speeds for various fixed wing aircraft models
+            case ULTRA:
                 // Ultralight
                 Vs0 = 20;  // Stall, flap extended
                 Vs1 = 30;  // Stall, flap retracted
@@ -183,7 +184,7 @@ public class AircraftData
                 break;
 
             case W10:
-                // Witttman Tailwind
+                // Wittman Tailwind
                 Vs0 = 48;  // Stall, flap extended
                 Vs1 = 55;  // Stall, flap retracted
                 Vx = 90;   // Best angle climb - tbd
@@ -194,16 +195,31 @@ public class AircraftData
                 Vne = 174; // Never exceed
                 break;
 
+            // V Speeds for various rotor wing aircraft models
+            // White Arc  Vs0 - Vfe
+            // Green Arc  Vs1 - Vno
+            // Yellow Arc Vno - Vne
+            case HELI:
+                // Generic Helicopter
+                Vs0 = -999;   // Stall, flap extended
+                Vs1 = 50;  // Stall, flap retracted - used for green arc
+                Vx = 55;   // Best angle climb - tbd
+                Vy = 55;   // Best rate climb
+                Vfe = -999;   // Flaps extension
+                Va = -999;  // Maneuvering
+                Vno = 100; // Max structural cruise - tbd
+                Vne = 100; // Never exceed
+                break;
+
             default:
-                // RV-8A
-                Vs0 = 51;    // Stall, flap extended
-                Vs1 = 56;    // Stall, flap retracted
-                Vx = 72;     // Best angle climb
-                Vy = 90;     // Best rate climb
-                Vfe = 85;    // Flaps extension
-                Va = 120;    // Maneuvering
-                Vno = 165;   // Max structural cruise
-                Vne = 200;   // Never exceed
+                Vs0 = 0;  // Stall, flap extended
+                Vs1 = 0;  // Stall, flap retracted
+                Vx = 40;   // Best angle climb
+                Vy = 50;   // Best rate climb
+                Vfe = 60;  // Flaps extension
+                Va = 70;   // Maneuvering
+                Vno = 80;  // Max structural cruise
+                Vne = 90;  // Never exceed
                 break;
         }
     }
