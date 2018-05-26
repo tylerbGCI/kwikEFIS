@@ -2057,7 +2057,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public void setAGL(int agl)
     {
         AGLValue = agl;
-        if ((AGLValue <= 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
+        if ((AGLValue <= 0) && (IASValue < AircraftData.Vx) && DemGTOPO30.demDataValid) {        // was Vs0
             // Handle taxi as a special case
             MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
             AGLValue = 1;                                 // Just good form, it will get changed on the next update
