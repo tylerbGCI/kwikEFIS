@@ -82,13 +82,7 @@
                     android:key="landscapeMode"
                     android:summary="Select Landscape view"
                     android:title="Landscape" />
-                <!--
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="colorTheme"
-                    android:summary="Use a high contrast color scheme"
-                    android:title="Contrast" />
-                    -->
+               
 
                 <CheckBoxPreference
                     android:defaultValue="false"
@@ -108,6 +102,12 @@
                     android:key="lockedMode"
                     android:summary="Lock the exit on back button"
                     android:title="Locked" />
+            <PreferenceScreen
+                android:defaultValue="0.0"
+                android:key="version"
+                android:summary="0.0"
+                android:title="Version" />
+
             </PreferenceCategory>
             </PreferenceScreen>
 
@@ -119,11 +119,6 @@
             android:summary="Select color scheme"
             android:title="Color" />
 
-        <PreferenceScreen
-            android:defaultValue="0.0"
-            android:key="version"
-            android:summary="0.0"
-            android:title="Version" />
 
     </PreferenceCategory>
 </PreferenceScreen>

@@ -563,6 +563,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setSchemeLight(colorTheme);
             mGLView.invalidate();
             restorePersistentSettings();
+            mGLView.setServiceableDevice();
         }
 
 
@@ -634,12 +635,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			// make all the instruments serviceable
 			hasGps = true;
 			hasSpeed = true;
-			mGLView.setServiceableDevice();
-			mGLView.setServiceableDi();
-			mGLView.setServiceableAsi();
-			mGLView.setServiceableAlt();
-			mGLView.setServiceableAh();
-			mGLView.setDisplayAirport(true);
 		}
 		else {
             mGLView.setSimulatorActive(false, " ");

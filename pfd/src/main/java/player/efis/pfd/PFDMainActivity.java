@@ -404,7 +404,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			else {
 				mGLView.setUnServiceableAh();
 			}
-		}
+        }
 		updateEFIS(/*event.values*/);
     }
 
@@ -564,6 +564,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setSchemeLight(colorTheme);
             mGLView.invalidate();
             restorePersistentSettings();
+            mGLView.setServiceableDevice();
         }
     }
 
@@ -632,12 +633,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			// make all the instruments serviceable
 			hasGps = true;
 			hasSpeed = true;
-			mGLView.setServiceableDevice();
-			mGLView.setServiceableDi();
-			mGLView.setServiceableAsi();
-			mGLView.setServiceableAlt();
-			mGLView.setServiceableAh();
-			mGLView.setDisplayAirport(true);
 		}
 		else {
             mGLView.setSimulatorActive(false, " ");
@@ -668,18 +663,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // taxi mode
             rollValue = 0;
             pitchValue = 0;
+
         }
         else {
             // No GPS no speed ... no idea what the AH is :-(
             fpvX = 0;
             fpvY = 0;
-
-            // The dreaded red crosses are required
-            mGLView.setDisplayAirport(false);
-            mGLView.setUnServiceableAsi();
-            mGLView.setUnServiceableAlt();
-            mGLView.setUnServiceableDi();
-            mGLView.setUnServiceableAh();
 
             // Force a blank screen and no birdie
             rollValue = 0;
