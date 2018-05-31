@@ -165,13 +165,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //protected float tapeShadeGreen = tapeShade * 1;
     //protected float foreShadeGreen = foreShade * 1;
 
-    protected float tapeShadeR = 0.600f * 1; // grey
-    protected float tapeShadeG = 0.600f * 1; // grey
-    protected float tapeShadeB = 0.600f * 1; // grey
+    protected float tapeShadeR = 0.600f; // grey
+    protected float tapeShadeG = 0.600f; // grey
+    protected float tapeShadeB = 0.600f; // grey
 
-    protected float foreShadeR = 0.999f * 1; // white
-    protected float foreShadeG = 0.999f * 1; // white
-    protected float foreShadeB = 0.999f * 1; // white
+    protected float foreShadeR = 0.999f; // white
+    protected float foreShadeG = 0.999f; // white
+    protected float foreShadeB = 0.999f; // white
 
     protected float backShadeR = 0.001f; // black
     protected float backShadeG = 0.001f; // black
@@ -1330,7 +1330,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
             }
-            mSquare.SetColor(0.5f, 0.5f, 0.5f, 1);  // white arc
+            //mSquare.SetColor(0.5f, 0.5f, 0.5f, 1);  // white arc
+            mSquare.SetColor(theta * tapeShadeR, theta * tapeShadeG, theta * tapeShadeB, 1);  // white arc
+
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
@@ -1343,7 +1345,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 mSquare.draw(matrix);
             }
 
-            mSquare.SetColor(0.9f, 0.9f, 0, 1);  // yellow arc
+            //mSquare.SetColor(0.9f, 0.9f, 0, 1);  // yellow arc
+            mSquare.SetColor(theta * foreShadeR, theta * foreShadeG, 0, 1);  // yellow arc
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
@@ -1357,7 +1360,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             }
 
             // Vne
-            mSquare.SetColor(0.9f, 0, 0, 1);  // red
+            //mSquare.SetColor(0.9f, 0, 0, 1);  // red
+            mSquare.SetColor(theta * foreShadeR, 0, 0, 1);  // red
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
