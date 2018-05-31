@@ -1,6 +1,6 @@
 Changelog
 =========
-3.11 (2018-03-31)
+3.12 (2018-03-31)
 ------------------
 * Add generic helicopter
 * beta Release EFIS v3.10
