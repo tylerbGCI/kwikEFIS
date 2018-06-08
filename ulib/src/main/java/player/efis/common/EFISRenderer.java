@@ -707,14 +707,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         z = zfloat;
 
 
-        //todo: make consistent with renderDEMSky
         // Earth
         // Level to -180 pitch
-        //mSquare.SetColor(64f / 255f, 50f / 255f, 25f / 255f, 0); //brown
-        // TODO: 2017-10-31 make parameterised
-        //mSquare.SetColor(gamma*0.25f, gamma*0.20f, gamma*0.10f, 0); //brown
-        mSquare.SetColor(gamma * 0.30f, gamma * 0.20f, gamma * 0.10f, 1); //brown
-
+        mSquare.SetColor(gamma * 0.30f * foreShadeR, gamma * 0.20f * foreShadeG, gamma * 0.10f * foreShadeB, 1); //brown
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
@@ -729,10 +724,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // Sky
         // Level to 180 pitch
-        //mSquare.SetColor(0f, 0f, 0.9f, 0); //blue
         // TODO: 2017-10-31 make parameterised
-        //mSquare.SetColor(gamma*0.40f, gamma*0.40f, gamma*0.99f, 1); //blue
-        mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
+        //mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
+        // Handle Monochrome
+        if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
+        else mSquare.SetColor(gamma * 0.10f * foreShadeR, gamma * 0.20f * foreShadeG, gamma * 0.30f * foreShadeB, 1); //blue
         mSquare.SetWidth(1);
         {
             float[] squarePoly = {
@@ -1930,8 +1926,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         if (AGLValue > 0) overlap = 0.1f; //0.05f;
         else overlap = 0.0f;
 
-        //mSquare.SetColor(0f, 0f, 0.9f, 1); //blue
-        // // TODO: 2017-10-31 make parameterised
         // Handle Monochrome
         if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
         else mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
