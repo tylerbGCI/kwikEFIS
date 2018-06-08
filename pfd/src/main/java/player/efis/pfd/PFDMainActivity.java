@@ -202,7 +202,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
 
         createMediaPlayer();
-        mGLView.setSchemeLight(colorTheme);
+        mGLView.setTheme(colorTheme);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
@@ -561,7 +561,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             savePersistentSettings();
             mGLView = new PFDSurfaceView(this);
             setContentView(mGLView);
-            mGLView.setSchemeLight(colorTheme);
+            mGLView.setTheme(colorTheme);
             mGLView.invalidate();
             restorePersistentSettings();
             mGLView.setServiceableDevice();
