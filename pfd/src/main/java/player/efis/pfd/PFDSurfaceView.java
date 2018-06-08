@@ -325,7 +325,7 @@ public class PFDSurfaceView extends GLSurfaceView
         mRenderer.setSchemeDark();
     }*/
 
-    public void setSchemeLight(int value)
+    public void setTheme(int value)
     {
         if (value == 2) mRenderer.setThemeGreen();
         else if (value == 1)  mRenderer.setThemeLight();
