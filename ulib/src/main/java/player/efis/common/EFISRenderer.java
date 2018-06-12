@@ -2977,7 +2977,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Direct Track to Automatic Waypoint
         //
-        // /* Not sure I like this feature ...
+        // /* I'm not sure I like this feature ...
         mLine.SetWidth(2); //8
         //mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
         mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * backShadeB, 1); // yellow

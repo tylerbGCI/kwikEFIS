@@ -116,8 +116,8 @@
             android:entries="@array/color_theme_names"
             android:entryValues="@array/color_theme_values"
             android:key="colorTheme"
-            android:summary="Select color scheme"
-            android:title="Color" />
+            android:summary="Select color theme"
+            android:title="Theme" />
 
 
     </PreferenceCategory>
