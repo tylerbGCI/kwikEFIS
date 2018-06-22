@@ -46,8 +46,6 @@ public class MFDPrefManage extends PreferenceActivity
         lp = (ListPreference) findPreference("AircraftModel");
         lp.setSummary(lp.getEntry());
 
-        //lp = (ListPreference) findPreference("AirportDatabase");
-        //lp.setSummary(lp.getEntry());
         lp = (ListPreference) findPreference("colorTheme");
         lp.setSummary(lp.getEntry());
 

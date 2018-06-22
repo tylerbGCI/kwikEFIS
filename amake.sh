@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pskill java
-#pskill adb
+pskill adb
 
 # ./gradlew clean
 rm h:/src/kwikEFIS/apk/kwik-efis.apk
@@ -42,4 +42,4 @@ then
 fi
 
 pskill java
-#pskill adb
+pskill adb

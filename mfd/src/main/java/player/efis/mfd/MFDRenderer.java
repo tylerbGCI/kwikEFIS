@@ -473,8 +473,3 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
     }
 }
-//-------------
-// END OF CLASS
-//-------------
-
-

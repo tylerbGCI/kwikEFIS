@@ -67,12 +67,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     // sensor members
 	private SensorManager mSensorManager;
-	//private Sensor mRotationSensor;
-	//private static final int SENSOR_DELAY = 500 * 1000; // 500ms
-	//b2b2 private SensorFusion sensorFusion;
-
     private OpenAir mAirspace;
-
 
 	//
 	//  Add the action bar buttons
@@ -96,13 +91,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.mRenderer.setSpinnerParams();
         }
         else openOptionsMenu();
-		/*else if (bLockedMode == false) {
-		  finish();
-		  super.onBackPressed();
-		}
-		else {
-			Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
-		}*/
 	}
 
 	// This method is called once the menu is selected
@@ -190,8 +178,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// Get the location manager
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Define the criteria how to select the location provider -> use default
-		//Criteria criteria = new Criteria();
-		//provider = locationManager.getBestProvider(criteria, false);
+		// Criteria criteria = new Criteria();
+		// provider = locationManager.getBestProvider(criteria, false);
 		provider = LocationManager.GPS_PROVIDER;  // Always use the GPS as the provide
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		locationManager.addGpsStatusListener(this);
@@ -216,21 +204,16 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
 		// Instantiate a new apts gpx/xml
 		mGpx = new Gpx(this);
-		//mGpx.loadDatabase(region);
-        //Toast.makeText(this, "AIR Database: " + region + "\nMenu/Manage/Airport",Toast.LENGTH_LONG).show();
 
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.loadDatabase(region); // automatic based on coor, not used anymore
-
         mAirspace = new OpenAir(this);
-        mGLView.setSchemeLight(colorTheme);
+        mGLView.setTheme(colorTheme);
 
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
 	}
-
 
 	@Override
     protected void onStop()
@@ -244,18 +227,12 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	{
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 		mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
-		//b2 mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
-		//mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), 		mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
-		//b2 mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), 	mSensorManager.SENSOR_DELAY_UI);
 	}
 
 	public void unregisterSensorManagerListeners()
 	{
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); //SENSOR_DELAY_FASTEST);
-		//b2 mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)); //SENSOR_DELAY_FASTEST);
-		//mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)); //SENSOR_DELAY_FASTEST);
-		//b2 mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION));
 	}
 
     @Override
@@ -312,13 +289,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	{
 		switch (event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER:
-			//b2b2 sensorFusion.setAccel(event.values);
-			//b2b2 sensorFusion.calculateAccMagOrientation();
 			sensorComplementaryFilter.setAccel(event.values);
 			break;
 
 		case Sensor.TYPE_GYROSCOPE:
-			//b2b2 sensorFusion.gyroFunction(event);
 			sensorComplementaryFilter.setGyro(event.values);
 			break;
 
@@ -350,7 +324,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
 
 			if (location.hasSpeed()) {
-				//gps_speed = filterGpsSpeed.runningAverage(location.getSpeed());
 				gps_speed = location.getSpeed();
 				if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
 				mGLView.setServiceableAsi();
@@ -362,7 +335,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			}
 
 			if (location.hasAltitude()) {
-				//gps_altitude = filterGpsAltitude.runningAverage(location.getAltitude());
 				gps_altitude = (float) location.getAltitude();
 				gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
 				mGLView.setServiceableAlt();
@@ -372,7 +344,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			}
 
 			if (location.hasBearing()) {
-				//gps_course = filterGpsCourse.runningAverage(Math.toRadians(location.getBearing()));
 				gps_course = (float) Math.toRadians(location.getBearing());
 				gps_rateOfTurn = calculateRateOfTurn(gps_course);
 				mGLView.setServiceableDi();
@@ -528,18 +499,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             }
         }
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
-
-        // If we changed to or from HUD mode, a calibration is required
-        //if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
         bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
         String s = settings.getString("AircraftModel", "RV8");
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
-
-        // If the database changed it needs to be re-loaded.
-        //s = settings.getString("AirportDatabase", "zar.aus");
-        //if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
 
         // landscape / porait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
@@ -560,14 +524,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             savePersistentSettings();
             mGLView = new MFDSurfaceView(this);
             setContentView(mGLView);
-            mGLView.setSchemeLight(colorTheme);
+            mGLView.setTheme(colorTheme);
             mGLView.invalidate();
             restorePersistentSettings();
             mGLView.setServiceableDevice();
         }
-
-
-
     }
 
 	//-------------------------------------------------------------------------
@@ -594,8 +555,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
-		//pitchValue = -sensorComplementaryFilter.getPitch();
-		//rollValue = -sensorComplementaryFilter.getRoll();
 		pitchValue = -sensorComplementaryFilter.getPitchAcc();
 		rollValue = -sensorComplementaryFilter.getRollAcc();
 
@@ -616,7 +575,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		hasGps = isGPSAvailable();
 
-		// for debug
+		// for debug - set to true
 		if (false) {
 			hasGps = true;          //debug
 			hasSpeed = true;        //debug
