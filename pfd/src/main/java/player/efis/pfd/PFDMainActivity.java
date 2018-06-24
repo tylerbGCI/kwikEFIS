@@ -190,6 +190,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
+        updateEFIS();
 	}
 
 
