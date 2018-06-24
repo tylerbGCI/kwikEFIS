@@ -56,7 +56,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
 
-public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
+public class MFDMainActivity extends EFISMainActivity implements Listener, /*SensorEventListener,*/ LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
 	private MFDSurfaceView mGLView;
@@ -163,13 +163,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		String version = pInfo.versionName;
 		Toast.makeText(this, "Kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
 
-		try {
+		/*try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
 			registerSensorManagerListeners();
 		}
 		catch (Exception e) {
 			Toast.makeText(this, "Hardware compatibility issue", Toast.LENGTH_LONG).show();
-		}
+		}*/
 
 		// testing for lightweight -- may or may not use
 		sensorComplementaryFilter = new SensorComplementaryFilter();
@@ -213,6 +213,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
+        updateEFIS();
 	}
 
 	@Override
@@ -222,7 +223,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         super.onStop();
     }
 
-
+    /*
 	public void registerSensorManagerListeners()
 	{
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
@@ -234,6 +235,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); //SENSOR_DELAY_FASTEST);
 	}
+	*/
 
     @Override
 	protected void onPause()
@@ -246,7 +248,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		mGLView.onPause();
 
 		locationManager.removeUpdates(this);
-		unregisterSensorManagerListeners();
+		/*unregisterSensorManagerListeners();*/
 	}
 
 	@Override
@@ -261,12 +263,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		//locationManager.addNmeaListener(this);
 
-		registerSensorManagerListeners();
+		/*registerSensorManagerListeners();*/
 	}
 
 	//
 	// Sensor methods
 	//
+    /*
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy)
 	{
@@ -282,8 +285,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			break;
 		}
 	}
+	*/
 
-
+    /*
 	@Override
 	public void onSensorChanged(SensorEvent event)
 	{
@@ -310,9 +314,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			// altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
 			break;
 		}
-		updateEFIS(/*event.values*/);
+		updateEFIS();
 	}
-
+*/
 
 
     @Override
@@ -537,8 +541,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	//
 	private void updateEFIS()
 	{
+        /*
 		float[] gyro =  new float[3]; // gyroscope vector
-		float[] accel = new float[3]; // accelerometer vector
+        float[] accel = new float[3]; // accelerometer vector
 
 		//
 		// Read the Sensors
@@ -569,6 +574,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
+		*/
 
 		//
 		// Check if we have a valid GPS
