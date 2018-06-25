@@ -363,7 +363,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 selAltDec = -0.80f * pixH2;
                 selAltInc = -0.91f * pixH2;
 
-                lineC = -0.55f; //lineC = -0.90f;
+                lineC = -0.55f; 
                 leftC = 0.6f;
                 spinnerStep = 0.1f;
                 spinnerTextScale = 1f;

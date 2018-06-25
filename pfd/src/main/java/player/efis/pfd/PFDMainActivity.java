@@ -500,18 +500,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             }
         }
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
-
-        // If we changed to or from HUD mode, a calibration is required
-        //if (bHudMode != settings.getBoolean("displayMirror", false)) calibrationCount = 0;
         bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
         String s = settings.getString("AircraftModel", "RV8");
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
-
-        // If the database changed it needs to be re-loaded.
-        //s = settings.getString("AirportDatabase", "zar.aus");
-        //if (!mGpx.region.equals(s)) mGpx.loadDatabase(s);               // load the waypoints
 
         // landscape / portrait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);

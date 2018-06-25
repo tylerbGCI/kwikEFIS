@@ -159,7 +159,7 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    //Parentage battery remaining
+    // Percentage battery remaining
     public void setBatteryPct(float value)
     {
         mRenderer.setBatteryPct(value);
