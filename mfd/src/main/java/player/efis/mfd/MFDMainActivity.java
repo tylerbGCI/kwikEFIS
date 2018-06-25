@@ -79,7 +79,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		// Inflate the menu; this adds items to the action bar if it is present.
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-		//this.menu = menu;
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -97,7 +96,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		//updateMenuTitles();
 		switch (item.getItemId()) {
             case R.id.settings:
                 // Launch settings activity
@@ -509,7 +507,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         String s = settings.getString("AircraftModel", "RV8");
         AircraftData.setAircraftData(s); //mGLView.mRenderer.setAircraftData(s);  // refactored  to static model
 
-        // landscape / porait mode toggle
+        // landscape / portrait mode toggle
         bLandscapeMode = settings.getBoolean("landscapeMode", false);
         if (bLandscapeMode) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

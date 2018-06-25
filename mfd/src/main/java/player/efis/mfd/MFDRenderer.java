@@ -148,7 +148,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
 			
-           //renderVSIMarkers(mMVPMatrix);
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
         }
@@ -173,12 +172,10 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (bCalibrating) renderCalibrate(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
-        //renderACSymbol(mMVPMatrix);
         renderACSymbol(mMVPMatrix);
 
         // Do this last so that every else wil be dimmed for fatfinger entry
         if (displayFlightDirector) {
-            //renderDctTrack(mMVPMatrix);
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }
@@ -298,12 +295,12 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 spinnerTextScale = 2f;
             }
             else {
-                selWptDec = -0.60f * pixH2; //-0.30f * pixH2;
-                selWptInc = -0.71f * pixH2; //-0.41f * pixH2;
+                selWptDec = -0.60f * pixH2; 
+                selWptInc = -0.71f * pixH2; 
                 selAltDec = -0.80f * pixH2;
                 selAltInc = -0.91f * pixH2;
 
-                lineC = -0.82f; // lineC = -0.55f;
+                lineC = -0.82f; 
                 leftC = 0.6f;
                 spinnerStep = 0.1f;
                 spinnerTextScale = 1f;
