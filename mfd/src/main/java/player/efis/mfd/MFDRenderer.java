@@ -46,7 +46,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public MFDRenderer(Context context)
     {
         super(context);
-        autoZoomActive = true; // Start active by default
     }
 
     @Override
