@@ -215,12 +215,12 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     // Utility function to do a simple simulation for demo mode
     // It acts like a crude flight simulator
     //
-    protected float _gps_lat = 00.00f; protected float _gps_lon = 00.00f;   //null island
-    float _gps_course = 0.96f; //1.74f;  //in radians
-    float _gps_altitude = 3000; // meters
-    protected float _gps_agl = 0; //meters
+    protected float _gps_lat = 00.00f; protected float _gps_lon = 00.00f;   // null island
+    float _gps_course = 0.96f;    // in radians
+    float _gps_altitude = 3000;   // meters
+    protected float _gps_agl = 0; // meters
 
-    float _gps_speed = 0;       // m/s
+    float _gps_speed = 0;         // m/s
     long _sim_ms = 0, sim_ms;
     Random sim_rand = new Random();
     boolean sim_primed = false;
@@ -233,7 +233,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         hasSpeed = true;
         hasGps = true;
 
-        final float setSpeed = 100; //65; // m/s
+        final float setSpeed = 100; // m/s
 
         if (Math.abs(pitchValue) > 10) {
             _gps_speed -= 0.01f * pitchValue;
@@ -247,8 +247,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         gps_rateOfClimb = (pitchValue * gps_speed / 50 );
 
         _gps_altitude += (gps_rateOfClimb / 10);
-        if (_gps_altitude < -100) _gps_altitude = -100;   //m
-        if (_gps_altitude > 10000) _gps_altitude = 10000; //m
+        if (_gps_altitude < -100) _gps_altitude = -100;   // meters
+        if (_gps_altitude > 10000) _gps_altitude = 10000; // meters
         gps_altitude = _gps_altitude;
 
         if (gps_speed != 0) {
@@ -326,42 +326,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float loadfactor;
     protected float slipValue;
     protected int ctr = 0;
-
- /*
-
-    // Release the media player
-    private void releaseMediaPlayer()
-    {
-        mpCautionTerrian.stop();
-        mpCautionTerrian.release();
-
-        mpFiveHundred.stop();
-        mpFiveHundred.release();
-
-        mpSinkRate.stop();
-        mpSinkRate.release();
-
-        mpStall.stop();
-        mpStall.release();
-    }
-
-    // Create the media player
-    private void createMediaPlayer()
-    {
-        mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
-        mpCautionTerrian.setLooping(false);
-
-        mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
-        mpFiveHundred.setLooping(false);
-
-        mpSinkRate = MediaPlayer.create(this, R.raw.sink_rate);
-        mpSinkRate.setLooping(false);
-
-        mpStall = MediaPlayer.create(this, R.raw.stall);
-        mpStall.setLooping(false);
-    }
-
-*/
+	
 
 }
 

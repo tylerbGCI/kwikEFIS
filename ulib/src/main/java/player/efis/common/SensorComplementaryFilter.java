@@ -23,16 +23,16 @@ import player.ulib.DigitalFilter;
 
 public class SensorComplementaryFilter
 {
-	private final float ALPHA = 0.998f; //0.9998f; //0.98f is the default 
+	private final float ALPHA = 0.998f;  //0.98f is the default 
 	orientation_t orientation = orientation_t.VERTICAL_LANDSCAPE;
 
-	private final float ACCELEROMETER_SENSITIVITY = 1.0f; //8192.0f; 
-	private final float GYROSCOPE_SENSITIVITY = 1.0f;  //65.536f;
+	private final float ACCELEROMETER_SENSITIVITY = 1.0f; 
+	private final float GYROSCOPE_SENSITIVITY = 1.0f;   
 	 
 	private float M_PI = 3.14159265359f;	    
 	 
-	private final static float dt = 0.01f;	// 10 ms sample rate!    
-	public static final int TIME_CONSTANT = (int) (dt*1000); //30;
+	private final static float dt = 0.01f;	// 10 ms sample rate    
+	public static final int TIME_CONSTANT = (int) (dt*1000); 
 	
 	private float pitch; 
 	private float roll;
@@ -45,7 +45,6 @@ public class SensorComplementaryFilter
 	
 	private Timer complTimer = new Timer(); 
 	
-	//public SensorComplementaryFilter(float[] accData, float[] gyrData )
 	public SensorComplementaryFilter()
 	{
 		// wait for two second until gyroscope and magnetometer/accelerometer
@@ -99,7 +98,7 @@ public class SensorComplementaryFilter
         }
     }
 
-	
+
 	public float getRoll()
 	{
 		return roll;
@@ -169,7 +168,6 @@ public class SensorComplementaryFilter
         return pitch;
     }
 
-
     // Free running task implementing  the actual
     // complimentary filter
     class calculateFilterTask extends TimerTask
@@ -179,7 +177,7 @@ public class SensorComplementaryFilter
 			switch (orientation) {
 			case HORIZONTAL_LANDSCAPE:  
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
-				 roll += (gyrData[0] * 180 / M_PI) * dt; // Angle around the X-axis
+				 roll += (gyrData[0] * 180 / M_PI) * dt;   // Angle around the X-axis
 				 pitch -= (gyrData[1] * 180 / M_PI) * dt;  // Angle around the Y-axis 
 
 				// Turning around the X axis results in a vector on the Y-axis
@@ -194,9 +192,7 @@ public class SensorComplementaryFilter
 			case VERTICAL_LANDSCAPE: 
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
 				roll  += (gyrData[2] * 180 / M_PI) * dt;  // Angle around the Z-axis
-				pitch += (gyrData[1] * 180 / M_PI) * dt; // Angle around the Y-axis
-				//String s = String.format("pitch:%3.4f g[0]:%3.4f", pitch, gyrData[0]);
-				//System.out.println(s); 
+				pitch += (gyrData[1] * 180 / M_PI) * dt;  // Angle around the Y-axis
 
 				// Turning around the Z axis results in a vector on the X-axis
 				rollAcc = (float) - (Math.atan2((float)accData[1], (float)accData[0]) * 180 / M_PI);
@@ -209,7 +205,7 @@ public class SensorComplementaryFilter
 			case VERTICAL_PORTRAIT:
 				// Integrate the gyroscope data -> int(angularSpeed) = angle
 				roll  += (gyrData[2] * 180 / M_PI) * dt;  // Angle around the Z-axis
-				pitch -= (gyrData[0] * 180 / M_PI) * dt; // Angle around the X-axis
+				pitch -= (gyrData[0] * 180 / M_PI) * dt;  // Angle around the X-axis
 
 				// Turning around the Z axis results in a vector on the X-axis
 				rollAcc = (float) + (Math.atan2((float)accData[0], (float)accData[1]) * 180 / M_PI);

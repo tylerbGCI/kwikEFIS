@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,7 @@ import android.util.Log;
  * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceChanged}</li>
  * </ul>
  */
-public class EFISRenderer //implements GLSurfaceView.Renderer
+public class EFISRenderer 
 {
     private static final String TAG = "EFISRenderer";
 
@@ -63,61 +63,61 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     // OpenGL
     protected int pixW;
-    protected int pixH;         // Width & Height of window in pixels
+    protected int pixH;               // Width & Height of window in pixels
     protected int pixW2;
-    protected int pixH2;       // Half Width & Height of window in pixels
+    protected int pixH2;              // Half Width & Height of window in pixels
     protected int pixM;               // The smallest dimension of pixH or pixM
     protected int pixM2;              // The smallest dimension of pixH2 or pixM2
     protected float zfloat;           // A Z to use for layering of ortho projected markings*/
 
     // Artificial Horizon
     protected float pitchInView;      // The degrees pitch to display above and below the lubber line
-    private float pitch, roll;      // Pitch and roll in degrees
+    private float pitch, roll;        // Pitch and roll in degrees
     public float pitchTranslation;    // Pitch amplified by 1/2 window pixels for use by glTranslate
     protected float rollRotation;     // Roll converted for glRotate
     // Airspeed Indicator
     protected float IASInView;        // The indicated units to display above the center line
 
-    //private int   IASValue;       // Indicated Airspeed
+    //private int   IASValue;         // Indicated Airspeed
     protected float IASValue;         // Indicated Airspeed
     protected float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
-    private int IASMaxDisp;         // The highest speed to show on tape
+    private int IASMaxDisp;           // The highest speed to show on tape
 
     // Altimeter
     protected float MSLInView;        // The indicated units to display above the center line
     protected int MSLValue;           // Altitude above mean sea level, MSL
     protected float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
-    private float baroPressure;     // Barometric pressure in in-Hg
-    public int AGLValue;           // Altitude above ground, AGL
+    private float baroPressure;       // Barometric pressure in in-Hg
+    public int AGLValue;              // Altitude above ground, AGL
 
     // The following should be read from a calibration file by an init routine
     protected int MSLMinDisp;         // The lowest altitude to show on tape
     protected int MSLMaxDisp;         // The highest altitude to show on tape
 
     // VSI
-    private float VSIInView;        // Vertical speed to display above the centerline
-    private int VSIValue;           // Vertical speed in Feet/minute
-    private float VSINeedleAngle;   // The angle to set the VSI needle
+    private float VSIInView;          // Vertical speed to display above the centerline
+    private int VSIValue;             // Vertical speed in Feet/minute
+    private float VSINeedleAngle;     // The angle to set the VSI needle
 
     //DI
-    private float DIInView;         // The indicated units to display above the center line
+    private float DIInView;           // The indicated units to display above the center line
     protected float DIValue;          // Altitude MSL
-    private float SlipValue;        // was int
-    private float BatteryPct;       // Battery usage
-    private float GForceValue;      // G force
+    private float SlipValue;          // was int
+    private float BatteryPct;         // Battery usage
+    private float GForceValue;        // G force
     private float GSValue;
-    private float ROTValue;         // Rate Of Turn
-    private float DITranslation;    // Value amplified by 1/2 window pixels for use by glTranslate
+    private float ROTValue;           // Rate Of Turn
+    private float DITranslation;      // Value amplified by 1/2 window pixels for use by glTranslate
 
     // Geographic Coordinates
     protected float LatValue;        // Latitude
     protected float LonValue;        // Longitude
 
     //FPV - Flight Path Vector
-    private float fpvX;            // Flight Path Vector X
-    private float fpvY;            // Flight Path Vector Y
+    private float fpvX;              // Flight Path Vector X
+    private float fpvY;              // Flight Path Vector Y
 
     //Flight Director
     protected float FDTranslation;           // = -6 / pitchInView  * pixM2;  // command 6 deg pitch up
@@ -131,7 +131,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected boolean displayDEM;            // Display the DEM terrain
     protected boolean autoZoomActive;
 
-    //3D map display
+    // 3D map display
     protected boolean displayAirport;
     protected boolean displayAirspace;
     protected boolean displayTerrain;
@@ -145,10 +145,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected boolean ServiceableAsi;     // Flag to indicate Airspeed failure
     protected boolean ServiceableDi;      // Flag to indicate DI failure
 
-    protected boolean bCalibrating;        //
+    protected boolean bCalibrating;       //
     private String CalibratingMsg;        //
 
-    private float mX, mY;                        // keypress location
+    private float mX, mY;                          // keypress location
     protected final float portraitOffset = 0.40f;  // the magic number for portrait offset
 
     //Demo Modes
@@ -159,12 +159,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected Context context;    // Context (from Activity)
 
     // Colors
-    //protected float tapeShade = 0.600f; // grey
-    //protected float foreShade = 0.999f; // white
-    //protected float backShade = 0.001f; // black
-    //protected float tapeShadeGreen = tapeShade * 1;
-    //protected float foreShadeGreen = foreShade * 1;
-
     protected float tapeShadeR = 0.600f; // grey
     protected float tapeShadeG = 0.600f; // grey
     protected float tapeShadeB = 0.600f; // grey
@@ -179,8 +173,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected int colorTheme;
 
-    private float gamma = 1;
-    protected float theta = 1;
+    private float gamma = 1;     // Describe gamma
+    protected float theta = 1;   // Describe theta
 
 
     public enum layout_t
@@ -232,11 +226,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Utility method for debugging OpenGL calls. Provide the name of the call
     // just after making it:
-    // <p>
-    // <pre>
+    // 
     // mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-    // MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
-    // <p>
+    // MyGLRenderer.checkGlError("glGetUniformLocation");
+    // 
     // If the operation is not successful, the check throws an error.
     //
     // @param glOperation - Name of the OpenGL call to check.
@@ -271,7 +264,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         String t = CalibratingMsg;
         glText.begin(1.0f, 0f, 0f, 1.0f, matrix); // Red
         glText.setScale(5.0f);
-        glText.drawCX(t, 0, pixM2/2);            // Draw  String
+        glText.drawCX(t, 0, pixM2/2);             // Draw  String
         glText.end();
     }
 
@@ -283,7 +276,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected void renderSimulatorActive(float[] matrix)
     {
-        String s = sDemoMsg; //"demo mode";
+        String s = sDemoMsg; 
         glText.begin(1.0f, 0f, 0f, 0.5f, matrix); // Red
         glText.setScale(9.0f);
         glText.drawCX(s, 0, 0);
@@ -309,15 +302,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z, pixPerDegree;
 
         z = zfloat;
-        //pixPerDegree = pixM2 / pitchInView;
         pixPerDegree = pixM2 / PPD_DIV;
 
         // fwd triangles
         mTriangle.SetWidth(1);
         if (colorTheme == 2) mTriangle.SetColor(0, foreShadeG, 0, 1);  // light green
         else mTriangle.SetColor(theta * 1.0f, theta * 0.5f, theta * 1.0f, 1);  //purple
-        //mTriangle.SetColor(theta * foreShadeR, theta * 0.5f, theta * foreShadeB, 1);  //purple
-        //mTriangle.SetColor(foreShadeR, 0.5f*theta*foreShadeG, foreShadeB, 1);  //purple
         mTriangle.SetVerts(0.0f * pixPerDegree, 0.0f * pixPerDegree, z,
                 10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z);
@@ -330,7 +320,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // rear triangles
         if (colorTheme == 2) mTriangle.SetColor(0, tapeShadeG, 0, 1);  // light green
         else mTriangle.SetColor(theta * 0.6f, theta * 0.3f, theta * 0.6f, 1);  //purple'ish
-        //mTriangle.SetColor(tapeShadeR, 0.5f*theta*tapeShadeG, tapeShadeB, 1);  //purple
         mTriangle.SetVerts(10.0f * pixPerDegree, -3.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -2.0f * pixPerDegree, z,
                 12.0f * pixPerDegree, -3.0f * pixPerDegree, z);
@@ -344,8 +333,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public void setFlightDirector(boolean active, float pit, float rol)
     {
         displayFlightDirector = active;
-        FDTranslation = -pit / pitchInView * pixM2;  // command 6 deg pitch up
-        FDRotation = -rol;// = 20;  // command 20 deg roll
+        FDTranslation = -pit / pitchInView * pixM2;  // pit = 6, command 6 deg pitch up
+        FDRotation = -rol; // rol = 20, command 20 deg roll
     }
 
 
@@ -359,7 +348,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float _sinI, _cosI;
 
         z = zfloat;
-        //pixPerDegree = pixM2 / pitchInView;
         pixPerDegree = pixM2 / PPD_DIV;
 
         // We might make this configurable in future
@@ -370,7 +358,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mPolyLine.SetWidth(6);
 
             float[] vertPoly = {
-                    // in counterclockwise order:
+                    // in counter clockwise order:
                     -6.0f * pixPerDegree, 0.0f, z,
                     -4.0f * pixPerDegree, 0.0f, z,
                     -2.0f * pixPerDegree, -2.0f * pixPerDegree, z,
@@ -434,7 +422,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     -4.0f * pixPerDegree, -3.0f * pixPerDegree, z);
             mTriangle.draw(mMVPMatrix);
 
-            // center triangle - optional
+            // Center Triangle - Optional
             //mTriangle.SetVerts(0.0f * pixPerDegree,  0.0f * pixPerDegree, z,
             //		-4.0f * pixPerDegree, -2.0f * pixPerDegree, z,
             //		 4.0f * pixPerDegree, -2.0f * pixPerDegree, z);
@@ -448,9 +436,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 0.0f, 15f * pixPerDegree, z);
         mTriangle.draw(mMVPMatrix);
 
-        //mLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // grey
         mLine.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);  // grey
-
         mLine.SetWidth(2);
         // The lines
         for (i = 10; i <= 30; i = i + 10) {
@@ -522,14 +508,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             _cosI = cosI;
         }
 
-    } //renderFixedHorizonMarkers
+    } // renderFixedHorizonMarkers
 
     protected void renderRollMarkers(float[] matrix)
     {
         float z, pixPerDegree;
         z = zfloat;
-        //pixPerDegree = pixM2 / pitchInView;					// Put the markers in open space at zero pitch
-        pixPerDegree = pixM2 / PPD_DIV;                            // Put the markers in open space at zero pitch
+        pixPerDegree = pixM2 / PPD_DIV;   // Put the markers in open space at zero pitch
 
         mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
         mTriangle.SetVerts(
@@ -543,12 +528,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         int i;
         float innerTic, outerTic, z, pixPerDegree, iPix;
-        float wid = 4; //2;
+        float wid = 4; 
         z = zfloat;
 
-        //pixPerDegree = pixM / pitchInView;
         if (Layout == layout_t.LANDSCAPE) {
-            pixPerDegree = pixM / pitchInView; //pixH
+            pixPerDegree = pixM / pitchInView; 
         }
         else {
             pixPerDegree = pixM / pitchInView * 100 / 60;
@@ -562,7 +546,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             iPix = (float) i * pixPerDegree;
             String t = Integer.toString(i);
             {
-                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white
+                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
 
                 mPolyLine.SetWidth(wid);
                 float[] vertPoly = {
@@ -622,7 +606,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // horizon line - longer and thicker
         if (colorTheme == 2) mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);  // bright white
-        mLine.SetWidth(wid*2.5f); //4
+        mLine.SetWidth(wid*2.5f); 
         mLine.SetVerts(-0.95f * pixW2, 0.0f, z,
                 0.95f * pixW2, 0.0f, z);
         mLine.draw(matrix);
@@ -648,13 +632,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
 
         // bottom
-        //for (i = -10; i>=-270; i=i-10) {
         for (i = -10; i >= -90; i = i - 10) {
             iPix = (float) i * pixPerDegree;
             String t = Integer.toString(i);
 
             {
-                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white
+                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
                 mPolyLine.SetWidth(wid);
                 float[] vertPoly = {
                         // in counterclockwise order:
@@ -672,7 +655,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             glText.end();
 
             {
-                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white
+                mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
                 mPolyLine.SetWidth(wid);
                 float[] vertPoly = {
                         0.10f * pixW2, iPix, z,
@@ -703,7 +686,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 		 */
 
         pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
-        pixOverWidth = pixW2 * 1.80f; //1.42f;
+        pixOverWidth = pixW2 * 1.80f; 
         z = zfloat;
 
 
@@ -725,7 +708,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // Sky
         // Level to 180 pitch
         // TODO: 2017-10-31 make parameterised
-        //mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue
+
         // Handle Monochrome
         if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
         else mSquare.SetColor(gamma * 0.10f * foreShadeR, gamma * 0.20f * foreShadeG, gamma * 0.30f * foreShadeB, 1); //blue
@@ -772,8 +755,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float top = 0; //-0.7f * pixH2;
-        float right = 0; //1.14f * pixM2;
+        float top = 0; 
+        float right = 0; 
         float left = right - 0.35f * pixM2;
 
 
@@ -789,14 +772,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         glText.end();
 
         // Mask over the moving tape for the value display box
-        mSquare.SetColor(backShadeR, backShadeG, backShadeB, 1); //black
+        mSquare.SetColor(backShadeR, backShadeG, backShadeB, 1); // black
         mSquare.SetWidth(2);
         {
             float[] squarePoly = {
                     right, top - glText.getCharHeight(), z,
                     right, top + glText.getCharHeight(), z,
                     left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -809,10 +792,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             float step = 0.04f * pixM2;
             float i;
             // moving yellow chevrons
-            //mLine.SetColor(0.4f, 0.4f, 0.0f, 0.5f); //yellow
-            mLine.SetColor(tapeShadeR, tapeShadeG, 0.0f, 0.5f); //yellow
+            mLine.SetColor(tapeShadeR, tapeShadeG, 0.0f, 0.5f); // yellow
 
-            mLine.SetWidth(8); //4
+            mLine.SetWidth(8); 
             for (i = left; i < right - (float) AGLValue / CevronAGL * (right - left) - step; i = i + step) {
                 mLine.SetVerts(
                         i, top + glText.getCharHeight(), z,
@@ -853,16 +835,16 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float margin;
 
         // draw the thousands digits larger
-        glText.setScale(3.5f);  //3  2.5
+        glText.setScale(3.5f);  
         if (aglAlt >= 1000) glText.draw(t, left + 0.03f * pixM2, top - glText.getCharHeight() / 2);
         if (aglAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
         else
-            margin = 1.1f * glText.getCharWidthMax();                    // we have to deal with the margin ourselves
+            margin = 1.1f * glText.getCharWidthMax(); // we have to deal with the margin ourselves
 
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) aglAlt % 1000);
-        glText.setScale(2.5f); // was 2.5
+        glText.setScale(2.5f); 
         glText.draw(t, left + 0.03f * pixM2 + margin, top - glText.getCharHeight() / 2);
         glText.end();
 
@@ -893,7 +875,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        float right = 0;//1.14f * pixM2;
+        float right = 0; 
         float left = right - 0.35f * pixM2;
         float apex = left - 0.05f * pixM2;
 
@@ -905,18 +887,18 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // Do a dummy glText so that the Heights are correct for the masking box
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-        glText.setScale(2.5f);  //was 1.5
+        glText.setScale(2.5f);  
         glText.end();
 
         // Mask over the moving tape for the value display box
-        mSquare.SetColor(backShadeR, backShadeG, backShadeB, 1); //black
+        mSquare.SetColor(backShadeR, backShadeG, backShadeB, 1); // black
         mSquare.SetWidth(2);
         {
             float[] squarePoly = {
-                    right, -glText.getCharHeight(), z,//+0.1f,
-                    right, glText.getCharHeight(), z,//+0.1f,
-                    left, glText.getCharHeight(), z,//+0.1f,
-                    left, -glText.getCharHeight(), z,//+0.1f
+                    right, -glText.getCharHeight(), z, 
+                    right, glText.getCharHeight(), z,  
+                    left, glText.getCharHeight(), z,   
+                    left, -glText.getCharHeight(), z  
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -930,7 +912,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float margin;
 
         // draw the thousands digits larger
-        glText.setScale(3.5f);  //3  2.5
+        glText.setScale(3.5f);  
         if (mslAlt >= 1000) glText.draw(t, left + 0.03f * pixM2, -glText.getCharHeight() / 2);
         if (mslAlt < 10000)
             margin = 0.6f * glText.getCharWidthMax(); // because of the differing sizes
@@ -939,11 +921,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // draw the hundreds digits smaller
         t = String.format("%03.0f", (float) mslAlt % 1000);
-        glText.setScale(2.5f); // was 2.5
+        glText.setScale(2.5f); 
         glText.draw(t, left + 0.03f * pixM2 + margin, -glText.getCharHeight() / 2);
         glText.end();
 
-        mTriangle.SetColor(backShadeR, backShadeG, backShadeB, 1);  //black
+        mTriangle.SetColor(backShadeR, backShadeG, backShadeB, 1);  // black
         mTriangle.SetVerts(
                 left, glText.getCharHeight() / 2, z,
                 apex, 0.0f, z,
@@ -952,7 +934,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mTriangle.draw(mMVPMatrix);
 
         {
-            mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white
+            mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
             mPolyLine.SetWidth(2);
             float[] vertPoly = {
                     right, -glText.getCharHeight(), z,
@@ -977,7 +959,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float innerTic, midTic, outerTic, z, pixPerUnit, iPix;
 
         //pixPerUnit = pixM2 / MSLInView; //b2 landscape
-        pixPerUnit = pixH2 / MSLInView; //portrait
+        pixPerUnit = pixH2 / MSLInView; // portrait
         z = zfloat;
 
         innerTic = 0.70f * pixM2;    // inner & outer are relative to the vertical scale line
@@ -1008,17 +990,16 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
             // draw the thousands digits larger
             glText.setScale(3.0f);
-            //glText.setScale(4.0f, 2.5f);
             if (i >= 1000) glText.draw(t, outerTic, iPix - glText.getCharHeight() / 2);
 
             if (i < 10000)
                 margin = 0.6f * glText.getCharWidthMax();  // because of the differing sizes
             else
-                margin = 1.1f * glText.getCharWidthMax();            // we have to deal with the margin ourselves
+                margin = 1.1f * glText.getCharWidthMax();  // we have to deal with the margin ourselves
 
             // draw the hundreds digits smaller
             t = String.format("%03.0f", (float) i % 1000);
-            glText.setScale(2.0f); // was 1.5
+            glText.setScale(2.0f); 
             glText.draw(t, outerTic + margin, iPix - glText.getCharHeight() / 2);
             glText.end();
 
@@ -1086,7 +1067,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1, matrix); // white
-            glText.setScale(1.5f); // was 1.2
+            glText.setScale(1.5f); 
             glText.draw(t, outerTic + glText.getCharWidthMax() / 2, iPix - glText.getCharHeight() / 2);
             glText.end();
 
@@ -1119,15 +1100,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderVSIMarkers(float[] matrix)
     {
         int i;
-        float z, pixPerUnit, innerTic; //, midTic, outerTic;
+        float z, pixPerUnit, innerTic; 
 
         pixPerUnit = 1.0f * pixM2 / VSIInView;
         z = zfloat;
-
         innerTic = 0.64f * pixM2;    // inner & outer are relative to the vertical scale line
-        //outerTic = 0.70f * pixM2;
-        //midTic = 0.67f * pixM2;
-
 
         // VSI box
         for (i = -2; i <= 2; i += 1) {
@@ -1142,7 +1119,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             if (i != 0) {
                 String s = Integer.toString(Math.abs(i));
                 glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1.0f, matrix); // light grey
-                glText.setScale(3.0f);   //1.75f
+                glText.setScale(3.0f);  
                 glText.draw(s, innerTic - 1.5f * glText.getLength(s), i * 1000 * pixPerUnit - glText.getCharHeight() / 2);
                 glText.end();
             }
@@ -1176,11 +1153,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
         String t;
 
-        //float left = -1.10f * pixM2;
-        //float right = -0.80f * pixM2;
-        //float apex = -0.75f * pixM2;
-
-        float left = 0;//-1.10f * pixM2;
+        float left = 0;
         float right = left + 0.3f * pixM2;
         float apex = right + 0.05f * pixM2;
 
@@ -1202,7 +1175,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     left, -glText.getCharHeight(), z,
                     left, glText.getCharHeight(), z,
                     right, glText.getCharHeight(), z,
-                    right, -glText.getCharHeight(), z,
+                    right, -glText.getCharHeight(), z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -1236,7 +1209,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
         t = Integer.toString(Math.round(IASValue));
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix);     // white
-        glText.setScale(3.5f);                            // was 2.5
+        glText.setScale(3.5f);                       
         glText.drawC(t, left + 0.25f * pixM2, glText.getCharHeight() / 2);
         glText.end();
     }
@@ -1245,7 +1218,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderASIMarkers(float[] matrix)
     {
         int i, j;
-        float innerTic, midTic, outerTic; //, topTic, botTic;
+        float innerTic, midTic, outerTic; 
         float z, pixPerUnit, iPix;
 
         z = zfloat;
@@ -1269,8 +1242,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             mLine.draw(matrix);
 
             glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1.0f, matrix); // grey
-            glText.setScale(2.5f); // was 2
-            //glText.setScale(3.2f, 2f);  // screen ratio is 1.6 on Nexus 2 x 1.6 = 3.2
+            glText.setScale(2.5f); 
             glText.draw(t, outerTic - 1.5f * glText.getLength(t), iPix - glText.getCharHeight() / 2);
             glText.end();
 
@@ -1298,10 +1270,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             //
 
             // Simplified V Speeds
-
-            //glText.begin( 0.0f, 0.6f, 0.0f, 1.0f, matrix); // Green
-            //glText.begin( 0.9f, 0.9f, 0.0f, 1.0f, matrix); // yellow
-            //glText.begin( 0.0f, 0.9f, 0.9f, 1.0f, matrix); // cyan
             glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // grey
             glText.setScale(2.0f);    // was 1.5
             glText.draw(" Vx", innerTic, (float) AircraftData.Vx * pixPerUnit); // Vx
@@ -1312,8 +1280,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
             // Tape markings for V speeds
             // Re use midTic ... maybe not such a good idea ...
-            midTic = -0.75f * pixM2;                    // Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
-            //midTic = -1.17f * pixM2;	// Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
+            midTic = -0.75f * pixM2;          // Put tape under the tics, w/ VsO-Vfe bar narrower than minor tics
             mSquare.SetColor(0, 0.5f, 0, 1);  // dark green arc
             mSquare.SetWidth(1);
             {
@@ -1326,9 +1293,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 mSquare.SetVerts(squarePoly);
                 mSquare.draw(matrix);
             }
-            //mSquare.SetColor(0.5f, 0.5f, 0.5f, 1);  // white arc
-            mSquare.SetColor(theta * tapeShadeR, theta * tapeShadeG, theta * tapeShadeB, 1);  // white arc
 
+            mSquare.SetColor(theta * tapeShadeR, theta * tapeShadeG, theta * tapeShadeB, 1);  // white arc
             mSquare.SetWidth(1);
             {
                 float[] squarePoly = {
@@ -1341,7 +1307,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 mSquare.draw(matrix);
             }
 
-            //mSquare.SetColor(0.9f, 0.9f, 0, 1);  // yellow arc
             mSquare.SetColor(theta * foreShadeR, theta * foreShadeG, 0, 1);  // yellow arc
             mSquare.SetWidth(1);
             {
@@ -1356,7 +1321,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             }
 
             // Vne
-            //mSquare.SetColor(0.9f, 0, 0, 1);  // red
             mSquare.SetColor(theta * foreShadeR, 0, 0, 1);  // red
             mSquare.SetWidth(1);
             {
@@ -1397,13 +1361,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderFixedDIMarkers(float[] matrix)
     {
         float z = zfloat;
-        //String t;
-
         float top = 0.9f * pixH2;
-
         float left = -0.15f * pixM2;
         float right = 0.15f * pixM2;
-        //float apex =   0.00f * pixM2;
 
         // The tapes are positioned left & right of the roll circle, occupying the space based
         // on the vertical dimension, from .6 to 1.0 pixH2.  This makes the basic display
@@ -1411,7 +1371,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // Do a dummy glText so that the Heights are correct for the masking box
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-        glText.setScale(2.5f); // was 1.5
+        glText.setScale(2.5f); 
         glText.end();
 
         // Mask over the moving tape for the value display box
@@ -1422,14 +1382,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     right, top - glText.getCharHeight(), z,
                     right, top + glText.getCharHeight(), z,
                     left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
+                    left, top - glText.getCharHeight(), z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
         }
 
         {
-            mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white
+            mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
             mPolyLine.SetWidth(2);
             float[] vertPoly = {
                     right, top + glText.getCharHeight(), z,
@@ -1439,11 +1399,10 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     right, top + glText.getCharHeight(), z,
 
                     // for some reason this causes a crash on restart if there are not 8 vertexes
-                    // most probably a a bug in PolyLine
+                    // most probably a a bug in PolyLine - b2 maye be fixed comma after last z
                     left, top + glText.getCharHeight(), z,
                     left, top - glText.getCharHeight(), z,
-                    right, top - glText.getCharHeight(), z,
-
+                    right, top - glText.getCharHeight(), z
             };
             mPolyLine.VertexCount = 8;
             mPolyLine.SetVerts(vertPoly);
@@ -1623,9 +1582,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         int rd = Math.round(DIValue);           // round to nearest integer
         String t = Integer.toString(rd);
-        glText.begin(foreShadeR, foreShadeG, foreShadeB, 1, matrix);    // white
-        glText.setScale(3.5f);  //was 2.5f
-        glText.drawCX(t, 0, 0.9f * pixH2 - glText.getCharHeight() / 2);   // Draw String
+        glText.begin(foreShadeR, foreShadeG, foreShadeB, 1, matrix);     // white
+        glText.setScale(3.5f);  
+        glText.drawCX(t, 0, 0.9f * pixH2 - glText.getCharHeight() / 2);  // Draw String
         glText.end();
     }
 
@@ -1667,7 +1626,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // slip ball
         mPolygon.SetWidth(1);
-        mPolygon.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); //white - always?
+        mPolygon.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white - always?
         {
             float[] vertPoly = {
                     // some issue with draworder to figure out.
@@ -1699,17 +1658,16 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         float z, pixPerDegree;
 
-        //pixPerDegree = pixM2 / pitchInView;
         pixPerDegree = pixM2 / PPD_DIV;
         z = zfloat;
 
-        float radius = 10 * pixM / 736;  //12
+        float radius = 10 * pixM / 736; 
 
         float x1 = fpvX * pixPerDegree;
         float y1 = fpvY * pixPerDegree;
 
         mPolyLine.SetWidth(3);
-        mPolyLine.SetColor(0, foreShadeG, 0, 1); //green
+        mPolyLine.SetColor(0, foreShadeG, 0, 1); // green
         {
             float[] vertPoly = {
                     // some issue with draworder to figger out.
@@ -1724,12 +1682,12 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                     x1 + 2.0f * radius, y1 + 0.8f * radius, z
             };
             mPolyLine.VertexCount = 9;
-            mPolyLine.SetVerts(vertPoly);  //crash here
+            mPolyLine.SetVerts(vertPoly);  // crash here
             mPolyLine.draw(matrix);
         }
 
         mLine.SetWidth(3);
-        mLine.SetColor(0, foreShadeG, 0, 1); //green
+        mLine.SetColor(0, foreShadeG, 0, 1); // green
         mLine.SetVerts(
                 x1 + 2.0f * radius, y1 + 0.0f * radius, z,
                 x1 + 4.0f * radius, y1 + 0.0f * radius, z
@@ -1769,6 +1727,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected int Aptscounter = 0;
     protected int nrAptsFound;
     protected int nrAirspaceFound;
+	
     //-------------------------------------------------------------------------
     // Airports / Waypoints
     //
@@ -1786,7 +1745,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // 0.1 approx 5nm
         float dme;
         float _dme = 1000;
-        float aptRelBrg;   // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
+        float aptRelBrg;   
         String wptId = mWptSelName;
 
         // Aways draw at least the selected waypoint
@@ -1801,7 +1760,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         nrAptsFound = 0;
         Iterator<Apt> it = Gpx.aptList.iterator();
         while (it.hasNext()) {
-            Apt currApt; //  = it.next();
+            Apt currApt; 
             try {
                 currApt = it.next();
             }
@@ -1853,7 +1812,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z = zfloat;
 
         mPolyLine.SetWidth(3);
-        //mPolyLine.SetColor(theta*0.8f, theta*0.4f, theta*0.8f, 1);  //purple'ish
         mPolyLine.SetColor(theta*foreShadeR, theta*tapeShadeG, theta*foreShadeB, 1);  //purple'ish
 
         float[] vertPoly = {
@@ -1867,7 +1825,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mPolyLine.SetVerts(vertPoly);  //crash here
         mPolyLine.draw(matrix);
 
-        //glText.begin(theta*0.8f, theta*0.4f, theta*0.8f, 1, matrix);  // purple'ish
         glText.begin(theta*foreShadeR, theta*tapeShadeG, theta*foreShadeB, 1, matrix);  // purple'ish
         glText.setScale(2.0f);
         glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
@@ -1890,7 +1847,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float blue;
         float green;
 
-        float r = 600;   //600;
+        float r = 600;  
         float r2 = r * 2;
 
         red = 0.0f;
@@ -1917,13 +1874,13 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float pixPitchViewMultiplier, pixOverWidth, z;
 
         pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
-        pixOverWidth = pixW2 * 1.80f; //1.42f;
+        pixOverWidth = pixW2 * 1.80f;
         z = zfloat;
 
         // Sky - simple
         // max: -0.05 to 180 pitch
-        float overlap;  //= 0.05f;  // 0 - 0.05
-        if (AGLValue > 0) overlap = 0.1f; //0.05f;
+        float overlap;  
+        if (AGLValue > 0) overlap = 0.1f;
         else overlap = 0.0f;
 
         // Handle Monochrome
@@ -1961,8 +1918,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public void renderDEMBuffer(float[] matrix)
     {
         float z = zfloat;
-        int x; // = 0;
-        int y; // = 0;
+        int x; 
+        int y; 
 
         int maxx = DemGTOPO30.BUFX;
         int maxy = DemGTOPO30.BUFY;
@@ -1988,7 +1945,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderHITS(float[] matrix)
     {
         float z, pixPerDegree, x1, y1;
-        float radius; // = pixM2 / 2; //5;
+        float radius; 
         float dme;
         float hitRelBrg;
         float obs;
@@ -2009,7 +1966,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             dme = UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
             radius = 0.1f * pixM2 / dme;
-            float skew = (float) Math.cos(Math.toRadians(hitRelBrg));    // to misquote William Shakespeare, this may be gilding the lily?
+            float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = hitRelBrg * pixPerDegree;
             y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree * altMult);
@@ -2025,9 +1982,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
                 if (i < mSelWptDme - 6) continue;  // only show 6 gates
             }
 
-
             mPolyLine.SetWidth(3);
-            //mPolyLine.SetColor(0.0f, 0.8f, 0.8f, 1);   // darker cyan
             mPolyLine.SetColor(0.0f, tapeShadeG, tapeShadeB, 1);   // darker cyan
 
             {
@@ -2055,24 +2010,11 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public void setAGL(int agl)
     {
         AGLValue = agl;
-        if ((AGLValue <= 0) && (IASValue < AircraftData.Vx) && DemGTOPO30.demDataValid) {        // was Vs0
+        if ((AGLValue <= 0) && (IASValue < AircraftData.Vx) && DemGTOPO30.demDataValid) {  // was Vs0
             // Handle taxi as a special case
-            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));        // Add 1 extra ft to esure we "above the ground"
-            AGLValue = 1;                                 // Just good form, it will get changed on the next update
+            MSLValue = 1 + (int) Unit.Meter.toFeet(DemGTOPO30.getElev(LatValue, LonValue));  // Add 1 extra ft to esure we "above the ground"
+            AGLValue = 1;  // Just good form, it will get changed on the next update
         }
-
-        /*
-        if (DemGTOPO30.demDataValid) AGLValue = MSLValue - (int) (3.28084f * DemGTOPO30.getElev(LatValue, LonValue));
-        else AGLValue = 0;
-
-        if ((AGLValue < 0) && (IASValue < AircraftData.Vx)) {        // was Vs0
-            // Handle taxi as a special case
-            MSLValue = MSLValue + (-AGLValue) + 1;        // Add 1 extra ft to esure we "above the ground"
-            AGLValue = 1;                                 // Just good form, it will get changed on the next update
-        }
-
-        if (AGLValue < 0) AGLValue = 0;                   // Clamp negative AGL
-        */
     }
 
     //-------------------------------------------------------------------------
@@ -2135,7 +2077,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         if (BatteryPct > 0.1) glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
         else glText.begin(0, foreShadeG, foreShadeB, 1.0f, matrix); // cyan
 
-        glText.setScale(2.0f);                            //
+        glText.setScale(2.0f);                            
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.2f) * pixM2 - glText.getCharHeight() / 2); // as part of the ancillaray group
         glText.end();
     }
@@ -2147,13 +2089,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected void renderGForceValue(float[] matrix)
     {
-        //float z, pixPerUnit;
-        //pixPerUnit = pixH2 / DIInView;
-        //z = zfloat;
-
         String t = String.format("G %03.1f", GForceValue);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-        glText.setScale(3.0f);                            //
+        glText.setScale(3.0f);                        
         glText.draw(t, -0.97f * pixW2, -0.9f * pixH2 - glText.getCharHeight() / 2);
         glText.end();
     }
@@ -2232,7 +2170,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
         glText.setScale(2.0f);
 
-        s = mGpsStatus; //String.format("%c%03.2f %c%03.2f",  (gps_lat < 0)?  'S':'N' , Math.abs(gps_lat), (gps_lon < 0)? 'W':'E' , Math.abs(gps_lon));
+        s = mGpsStatus; 
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.3f) * pixM2 - glText.getCharHeight() / 2);
 
         s = String.format("RNG %d   #AP %d", AptSeekRange, nrAptsFound);
@@ -2262,8 +2200,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     public String mAltSelName = "00000";
     protected float leftC = 0.6f;   // Selected Wpt
     protected float lineC;          // Selected Wpt - Set in onSurfaceChanged
-    protected float selWptDec;      // = 0.90f * pixH2;
-    protected float selWptInc;      // = 0.74f * pixH2;
+    protected float selWptDec;      
+    protected float selWptInc;      
     public float mObsValue;
 
     protected float spinnerStep = 0.10f;    // spacing between the spinner buttons
@@ -2273,29 +2211,27 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     protected void renderSelWptValue(float[] matrix)
     {
         float z = zfloat;
-        float size = spinnerStep * 0.2f; // 0.02f;
+        float size = spinnerStep * 0.2f; 
 
         // Draw the selecting triangle spinner buttons
         mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);  // gray
         for (int i = 0; i < 4; i++) {
-            //float xPos = (leftC + (float) i / 10f);
-            //float xPos = (leftC + i*spinnerStep);
             float xPos = (leftC + i * spinnerStep);
 
-            mTriangle.SetVerts((xPos - size) * pixW2, selWptDec, z,  //0.02
+            mTriangle.SetVerts((xPos - size) * pixW2, selWptDec, z,  
                     (xPos + size) * pixW2, selWptDec, z,
                     (xPos + 0) * pixW2, selWptDec + 2 * size * pixM2, z);
             mTriangle.draw(matrix);
 
-            mTriangle.SetVerts((xPos - size) * pixW2, selWptInc, z,  //0.02
+            mTriangle.SetVerts((xPos - size) * pixW2, selWptInc, z, 
                     (xPos + size) * pixW2, selWptInc, z,
                     (xPos + 0) * pixW2, selWptInc - 2 * size * pixM2, z);
             mTriangle.draw(matrix);
 
             // Draw the individual select characters
             if (mWptSelName != null) {
-                glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1.0f, matrix); //
-                glText.setScale(3 * spinnerTextScale); //3f
+                glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1.0f, matrix); 
+                glText.setScale(3 * spinnerTextScale); 
                 String s = String.format("%c", mWptSelName.charAt(i));
                 glText.drawCX(s, xPos * pixW2, ((selWptInc + selWptDec) / 2) - (glText.getCharHeight() / 2));
                 glText.end();
@@ -2337,14 +2273,14 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         float z = zfloat;
         // Mask over the PFD for the input area
-        mSquare.SetColor(backShadeR, backShadeG, backShadeB, alpha); //black xper .. 0.75f
+        mSquare.SetColor(backShadeR, backShadeG, backShadeB, alpha); // black xper .. 0.75f
         mSquare.SetWidth(2);
         {
             float[] squarePoly = {
                     -pixW2 + 5, +pixH2 - 5, z,
                     -pixW2 + 5, -pixH2 + 5, z,
                     +pixW2 - 5, -pixH2 + 5, z,
-                    +pixW2 - 5, +pixH2 - 5, z,
+                    +pixW2 - 5, +pixH2 - 5, z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -2361,8 +2297,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
             dimScreen(matrix, 0.75f);
         }
 
-        //glText.begin(0.99f, 0.5f, 0.99f, 1, matrix); // purple -same as needle
-        glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); //white
+        glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
         // Name
         glText.setScale(2.1f * spinnerTextScale);
         s = mWptSelComment;
@@ -2379,48 +2314,47 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         glText.draw(s, leftC * pixW2, lineC * pixH2 - 2.5f * glText.getCharHeight());
         glText.end();
 
-
-        /* // Guide lines for fatfinger ... ?
+        /* 
+		// Guide lines for fatfinger ... ?
         mLine.SetColor(0.9f, 0.9f, 0.9f, 0); //white
         mLine.SetVerts(leftC * pixW2 - 5, lineC * pixH2 + 0.75f*glText.getCharHeight(), z,
                                pixW2 - 5, lineC * pixH2 + 0.75f*glText.getCharHeight(), z);
         mLine.draw(matrix);
         mLine.SetVerts(leftC * pixW2 - 5, lineC * pixH2 - 2.70f*glText.getCharHeight(), z,
                                pixW2 - 5, lineC * pixH2 - 2.70f*glText.getCharHeight(), z);
-        mLine.draw(matrix); */
+        mLine.draw(matrix); 
+		*/
     }
 
 
-    protected float selAltInc; // = -0.90f * pixH2;
-    protected float selAltDec; // = -0.74f * pixH2;
+    protected float selAltInc; 
+    protected float selAltDec; 
 
     protected void renderSelAltValue(float[] matrix)
     {
         float z;
         z = zfloat;
-        float size = spinnerStep * 0.2f; // 0.02f;
+        float size = spinnerStep * 0.2f; 
 
         // Draw the selecting triangle spinner buttons
         mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);  // gray
         for (int i = 0; i < 3; i++) {
-            //float xPos = (leftC + (float) i / 10f);
             float xPos = (leftC + i * spinnerStep);
 
-
-            mTriangle.SetVerts((xPos - size) * pixW2, selAltDec, z,  //0.02
+            mTriangle.SetVerts((xPos - size) * pixW2, selAltDec, z,  
                     (xPos + size) * pixW2, selAltDec, z,
                     (xPos + 0.00f) * pixW2, selAltDec + 2 * size * pixM2, z);
             mTriangle.draw(matrix);
 
-            mTriangle.SetVerts((xPos - size) * pixW2, selAltInc, z,  //0.02
+            mTriangle.SetVerts((xPos - size) * pixW2, selAltInc, z,  
                     (xPos + size) * pixW2, selAltInc, z,
                     (xPos + 0.00f) * pixW2, selAltInc - 2 * size * pixM2, z);
             mTriangle.draw(matrix);
 
             // Draw the individual select characters
             if (mAltSelName != null) {
-                glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1, matrix); //
-                glText.setScale(3 * spinnerTextScale); //3f
+                glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1, matrix); 
+                glText.setScale(3f * spinnerTextScale); 
                 String s = String.format("%c", mAltSelName.charAt(i));
                 glText.drawCX(s, xPos * pixW2, ((selAltInc + selAltDec) / 2) - glText.getCharHeight() / 2);
                 glText.end();
@@ -2428,10 +2362,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
 
         float xPos = (leftC + 2.6f / 10f);
-        glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1, matrix); //
+        glText.begin(foreShadeR, tapeShadeG, foreShadeB, 1, matrix); 
         glText.setScale(2.2f);
-        //String s = "X100 ft";
-        String s = "F L";
+        String s = "F L";  // "X100 ft";
         glText.draw(s, xPos * pixW2, -0.83f * pixH2 - glText.getCharHeight() / 2);
         glText.end();
     }
@@ -2472,7 +2405,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         backShadeG = 0.99f; // white
         backShadeB = 0.99f; // white
 
-        gamma = 4.0f;//3.3f; //3
+        gamma = 4.0f;
         theta = 0.6f;
         DemGTOPO30.setGamma(gamma);
     }
@@ -2509,8 +2442,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         mY = -(y / pixH - 0.5f) * 2;
 
         int pos = -1; // set to invalid / no selection
-        int inc = 0;  //initialise to 0, also acts as a flag
-        int ina = 0;  //initialise to 0, also acts as a flag
+        int inc = 0;  // initialise to 0, also acts as a flag
+        int ina = 0;  // initialise to 0, also acts as a flag
         char[] wpt = mWptSelName.toCharArray();
         char[] alt = mAltSelName.toCharArray();
 
@@ -2531,10 +2464,9 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         // Determine which digit is changing
         for (int i = 0; i < 4; i++) {
-            //float xPos = (leftC + (float) i / 10f);
             float xPos = (leftC + i * spinnerStep);
 
-            if (Math.abs(mX - xPos) < spinnerStep / 2) {       //0.6, 0.7, 0.8, 0.9
+            if (Math.abs(mX - xPos) < spinnerStep / 2) {       
                 pos = i;
                 break;
             }
@@ -2614,8 +2546,8 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
     {
         String t = String.format("RLB  %03.0f", mAutoWptRlb);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1, matrix); // white
-        glText.setScale(2.0f);                            //
-        glText.draw(t, -0.97f * pixW2, -0.7f * pixM2 - glText.getCharHeight() / 2);            // Draw  String
+        glText.setScale(2.0f);                            
+        glText.draw(t, -0.97f * pixW2, -0.7f * pixM2 - glText.getCharHeight() / 2);  // Draw  String
         glText.end();
     }
 
@@ -2677,7 +2609,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         z = zfloat;
 
-        mLine.SetWidth(2);  //3
+        mLine.SetWidth(2);  
         mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
         for (i = 0; i <= 315; i = i + 45) {
 
@@ -2694,9 +2626,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         }
 
         // Apex marker
-        //float pixPerDegree;
-        //pixPerDegree = pixM2 / PPD_DIV;
-
         mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
         mTriangle.SetVerts(
                 0.035f * pixM2, 1.120f * roseRadius, z,
@@ -2709,7 +2638,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
     protected void renderCompassRose(float[] matrix)
     {
-        //float tapeShade = 0.6f;
         int i, j;
         float z, sinI, cosI;
         String t;
@@ -2717,7 +2645,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         z = zfloat;
 
-        mLine.SetWidth(2);  //3
+        mLine.SetWidth(2);  
         mLine.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);  // grey
 
         // The rose degree tics
@@ -2820,7 +2748,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Bearing to Automatic Waypoint
         //
-        mLine.SetWidth(5); //3);
+        mLine.SetWidth(5); 
         mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * backShadeB, 1);  // needle yellow
 
         sinI = 0.9f * UTrig.isin(90 - (int) mAutoWptBrg);
@@ -2876,38 +2804,37 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Bearing to Selected Waypoint
         //
-        mLine.SetWidth(8); //6
-        //mLine.SetColor(0, 0.7f, 0, 1);  // green
-        mLine.SetColor(theta * foreShadeR, theta * 0.5f, theta * foreShadeB, 1); // purple'ish
+        mLine.SetWidth(8); 
+        mLine.SetColor(theta * foreShadeR, theta * 0.5f, theta * foreShadeB, 1); // green
 
         sinI = 0.9f * UTrig.isin(90 - (int) mSelWptBrg);
         cosI = 0.9f * UTrig.icos(90 - (int) mSelWptBrg);
         _sinI = 0.5f * UTrig.isin(90 - (int) mSelWptBrg);
         _cosI = 0.5f * UTrig.icos(90 - (int) mSelWptBrg);
 
-        //tail
+        // tail
         mLine.SetVerts(
                 -roseRadius * _cosI, -roseRadius * _sinI, z,
                 -roseRadius * cosI, -roseRadius * sinI, z
         );
         mLine.draw(matrix);
-        //head
+        // head
         mLine.SetVerts(
                 roseRadius * _cosI, roseRadius * _sinI, z,
                 roseRadius * cosI, roseRadius * sinI, z
         );
         mLine.draw(matrix);
 
-        mLine.SetWidth(6); //3
+        mLine.SetWidth(6); 
         // point
-        _sinI = 0.80f * UTrig.isin(90 - (int) mSelWptBrg + 9); //6
+        _sinI = 0.80f * UTrig.isin(90 - (int) mSelWptBrg + 9); 
         _cosI = 0.80f * UTrig.icos(90 - (int) mSelWptBrg + 9);
         mLine.SetVerts(
                 roseRadius * _cosI, roseRadius * _sinI, z,
                 roseRadius * cosI, roseRadius * sinI, z
         );
         mLine.draw(matrix);
-        _sinI = 0.80f * UTrig.isin(90 - (int) mSelWptBrg - 8);  //5
+        _sinI = 0.80f * UTrig.isin(90 - (int) mSelWptBrg - 8); 
         _cosI = 0.80f * UTrig.icos(90 - (int) mSelWptBrg - 8);
         mLine.SetVerts(
                 roseRadius * _cosI, roseRadius * _sinI, z,
@@ -2926,7 +2853,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Bearing to Selected Waypoint
         //
-        //glText.begin(0.99f*theta, 0.5f*theta, 0.99f*theta, 1.0f, matrix); // purple'ish
         glText.begin(foreShadeR * theta, theta * tapeShadeG, theta * foreShadeB, 1.0f, matrix); // purple'ish
         glText.setScale(scale);
         glText.drawC(mWptSelName, 0, 0.12f * roseRadius, 0);
@@ -2958,8 +2884,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         //
         // Direct Track to Selected Waypoint
         //
-        mLine.SetWidth(20); //8
-        //mLine.SetColor(0.5f, 0.250f, 0.5f, 0.125f); // purple'ish
+        mLine.SetWidth(20); 
         mLine.SetColor(0.45f, 0.45f, 0.10f, 0.125f); // yellow'ish --- B2 todo
 
         x1 = mMapZoom * (mSelWptDme * UTrig.icos(90 - (int) mSelWptRlb));
@@ -2970,7 +2895,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         );
         mLine.draw(matrix);
         // Skunk stripe
-        mLine.SetWidth(4); //8
+        mLine.SetWidth(4); 
         mLine.SetColor(0.0f, 0.0f, 0.0f, 1); // black
         mLine.draw(matrix);
 
@@ -2978,8 +2903,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         // Direct Track to Automatic Waypoint
         //
         // /* I'm not sure I like this feature ...
-        mLine.SetWidth(2); //8
-        //mLine.SetColor(0.7f, 0.7f, 0, 1.0f); // yellow
+        mLine.SetWidth(2); 
         mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * backShadeB, 1); // yellow
 
         x1 = mMapZoom * (mAutoWptDme * UTrig.icos(90-(int)mAutoWptRlb));
@@ -3064,7 +2988,7 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
         float z;
         z = zfloat;
 
-        float distance = 20;//20;
+        float distance = 20;
         float x1 = mMapZoom * distance;
 
         while (x1 > pixM / 3) {
@@ -3177,23 +3101,20 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
         mTriangle.SetWidth(1);
         // Right triangle
-        //mTriangle.SetColor(0.7f, 0.7f, 0.7f, 1);
-        mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
+        mTriangle.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // lightest gray (0.7)
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
                 0,            +0.08f*pixM2, z,
                 0.03f*pixM2,  -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
         // left triangle
-        //mTriangle.SetColor(0.5f, 0.5f, 0.5f, 1);
-        mTriangle.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);
+        mTriangle.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1); // darker gray (0.5)
         mTriangle.SetVerts(0, -0.08f*pixM2, z,
                 +0,           +0.08f*pixM2, z,
                 -0.03f*pixM2, -0.12f*pixM2,z);
         mTriangle.draw(matrix);
 
-        //glText.begin(0.6f, 0.6f, 0.6f, 1, matrix);
-        glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1, matrix);
+        glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1, matrix); // lighter gray (0.6)
         glText.setScale(1.5f); // 2 seems full size
         glText.drawCX("N", 0, 0.09f*pixM2);
         glText.end();
@@ -3201,9 +3122,6 @@ public class EFISRenderer //implements GLSurfaceView.Renderer
 
 
 }
-//-------------
-// END OF CLASS
-//-------------
 
 
 //-----------------------------------------------------------------------------
