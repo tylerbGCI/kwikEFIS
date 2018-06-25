@@ -24,8 +24,7 @@ import android.content.Intent;
 //-----------------------------------------------------------------------------
 // This is the mechanism to austo start the kwik EFIS application when the
 // device boots up.
-
-
+//
 public class BootUpReceiver extends BroadcastReceiver
 {
 
@@ -54,7 +53,7 @@ This section must be added to he AndroidManifest file
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 [..]
 
-public class BootUpReceiver extends BroadcastReceiver{
+public class BootUpReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

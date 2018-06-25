@@ -541,7 +541,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 	//
 	private void updateEFIS()
 	{
-        /*
+        /* b2 - Not used for DMAP
 		float[] gyro =  new float[3]; // gyroscope vector
         float[] accel = new float[3]; // accelerometer vector
 
@@ -628,7 +628,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         //
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
-        if (ctr++ > 100) {
+        /* b2 - since we only respond to location messsage, check all of them
+		if (ctr++ > 100) {
+		*/
+        {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
@@ -655,7 +658,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
 		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
 		mGLView.setLatLon(gps_lat, gps_lon);
-		mGLView.setBatteryPct(batteryPct);                        // in percentage
+		mGLView.setBatteryPct(batteryPct);                       // in percentage
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
