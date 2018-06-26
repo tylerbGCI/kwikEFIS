@@ -346,6 +346,11 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     // float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
                     float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
                     DemColor color = DemGTOPO30.getColor((short) z1);
+                    // Handle Monochrome
+                    if (colorTheme == 2) {
+                        color.red = 0;
+                        color.blue = 0;
+                    }
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
                     if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
