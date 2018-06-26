@@ -56,13 +56,13 @@ public class DemGTOPO30
     final int TILE_WIDTH = 40;     // width in degrees, must be integer
     final int TILE_HEIGHT = 50;    // height in degrees, must be integer
 
-    public static final int BUFX = 600;  //600;  //800 = 400nm square ie at least  200nm in each direction
-    public static final int BUFY = BUFX; // 400;
+    public static final int BUFX = 600;   //800 = 400nm square ie at least  200nm in each direction
+    public static final int BUFY = BUFX;
 
-    static final int MAX_ELEV = 6000; // 7200; // in meters
+    static final int MAX_ELEV = 6000;  // in meters
 
     public static short buff[][] = new short[BUFX][BUFY];
-    static DemColor colorTbl[] = new DemColor[MAX_ELEV]; //7200 //600*3 = r*3
+    static DemColor colorTbl[] = new DemColor[MAX_ELEV];  // 600*3 = r*3
 
     static float demTopLeftLat = -10;
     static float demTopLeftLon = +100;
@@ -98,7 +98,6 @@ public class DemGTOPO30
         for (short i = 0; i < colorTbl.length; i++) colorTbl[i] = calcHSVColor(i); //optimal so far!
     }
 
-
     public static short getElev(float lat, float lon)
     {
         // Do we return bad data and let the program continue
@@ -113,7 +112,7 @@ public class DemGTOPO30
         int x = (int) ((lon - demTopLeftLon) * 120) - x0;
 
         if ((x < 0) || (y < 0) || (x >= BUFX) || (y >= BUFY))
-            return 0; //-9999;
+            return 0;
         else return buff[x][y];
     }
 
@@ -122,9 +121,6 @@ public class DemGTOPO30
     // in m using the DEM
     public static float calculateAgl(float lat, float lon, float alt)
     {
-        //float agl = 0;
-        //if (DemGTOPO30.demDataValid) agl =  Math.max(0, alt - (int) (DemGTOPO30.getElev(lat, lon)));
-
         if (demDataValid) return Math.max(0, alt - (int) (getElev(lat, lon)));
         else return 0;
     }
@@ -149,9 +145,9 @@ public class DemGTOPO30
 
         final float r = 600; // Earth mean terrain elevation is 840m
         final float max = 0.5f;
-        final float max_red = max;   //*0.299f;
+        final float max_red = max;
         final float max_green = max * 0.587f;
-        final float max_blue = max;  //*0.114f;
+        final float max_blue = max;
         final float min_green = 0.2f;
 
         // elevated terrain
@@ -236,16 +232,9 @@ public class DemGTOPO30
                 colorBase = Color.rgb(min_v - v, min_v + (min_v - v), min_v - v);
             }
         }
-        /*else if (v > 0) {
-            // the beach
-            v = MaxColor / 4;
-            colorBase = Color.rgb(v, v, v);
-        }*/
         else {
             // the ocean
-            //colorBase = Color.rgb(0, 0, MaxColor / 3); //blue ocean = 0xFF00002A
             colorBase = Color.rgb(0, 0, MaxColor); //bright blue ocean
-            //colorBase = Color.rgb(MaxColor, MaxColor, MaxColor); //bright gray  ocean
         }
 
         // this allows us to adjust hue, sat and val
@@ -287,8 +276,6 @@ public class DemGTOPO30
     //
     public String setDEMRegionTile(float lat, float lon)
     {
-        //setBufferCenter(lat, lon);  // set the buffer tile as well
-
         demTopLeftLat = 90 - (int) (90 - lat) / TILE_HEIGHT * TILE_HEIGHT;
         demTopLeftLon = -180 + (int) (lon + 180) / TILE_WIDTH * TILE_WIDTH;
 
@@ -318,12 +305,10 @@ public class DemGTOPO30
         else if ((lat <= -10) && (lon <= -20)) {
             sRegion = "pan.arg";
         }
-        /* todo
-        else if ((lat <= 20) && (lon > -20)) {
+        else if ((lat <= 20) && (lon > -20)
+              && (lat > -10)) {
             sRegion = "sah.jap";
         }
-        */
-
 
         return sRegion;
     }
