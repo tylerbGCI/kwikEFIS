@@ -472,11 +472,4 @@ public class DemGTOPO30
             y0 = -9999;
         }
     }
-
-
-    /*public void loadDatabase(String database)
-    {
-        region = database;
-    }*/
-
 }

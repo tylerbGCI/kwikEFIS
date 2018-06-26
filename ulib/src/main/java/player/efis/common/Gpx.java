@@ -141,7 +141,6 @@ public class Gpx
 	
 	public static ArrayList<Apt> getAptSelect(float lat, float lon, int range, int nr) 
 	{
-		//ArrayList<Apt> nearestAptList = null;
 		ArrayList<Apt> nearestAptList = new ArrayList();
 
 		Iterator <Apt> it = aptList.iterator(); 
@@ -152,7 +151,7 @@ public class Gpx
 			// add code to determine  the <nr> apts in range 
 			double deltaLat = lat - currProduct.lat;
 			double deltaLon = lon - currProduct.lon;
-			//double d =  Math.hypot(deltaLon, deltaLat);  // in degree, 1 deg = 60 nm 
+			// double d =  Math.hypot(deltaLon, deltaLat);  // in degree, 1 deg = 60 nm 
 			double d =  Math.sqrt(deltaLon*deltaLon + deltaLat*deltaLat);  // faster then hypot, see www 
 			
 			if (d < range) {
@@ -171,7 +170,6 @@ public class Gpx
 			Apt currProduct  = it.next();
 			content = content + "\nName :" +  currProduct.name + "\n";
 			content = content + "Cmt :" +  currProduct.cmt + "\n";
-			//content = content + "Color :" +  currProduct.wpt + "n";
 			System.out.println(content); 
 		}
 		//Log.v("b2", "b2 - " + content);

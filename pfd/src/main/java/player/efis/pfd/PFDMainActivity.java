@@ -678,10 +678,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
                     ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
 
-                mGLView.setCalibrate(true, "LOADING TERRAIN");
+                mGLView.setBannerMsg(true, "LOADING TERRAIN");
                 mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
-                mGLView.setCalibrate(false, " ");
+                mGLView.setBannerMsg(false, " ");
             }
             ctr = 0;
         }

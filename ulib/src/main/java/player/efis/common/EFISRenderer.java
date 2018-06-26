@@ -268,7 +268,7 @@ public class EFISRenderer
         glText.end();
     }
 
-    public void setCalibrate(boolean cal, String msg)
+    public void setBannerMsg(boolean cal, String msg)
     {
         bCalibrating = cal;
         CalibratingMsg = msg;

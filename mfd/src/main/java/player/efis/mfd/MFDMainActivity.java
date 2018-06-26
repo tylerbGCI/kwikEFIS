@@ -26,8 +26,7 @@ import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UNavigation;
 import player.ulib.Unit;
-import player.efis.common.orientation_t;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -40,9 +39,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 
 // sensor imports
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -626,7 +622,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         //
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
-        /* b2 - since we only respond to location messsage, check all of them
+        /* b2 - since we only respond to location messsage, check all of them for DMAP
 		if (ctr++ > 100) {
 		*/
         {
@@ -635,13 +631,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
                     ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
 
-                mGLView.setCalibrate(true, "LOADING TERRAIN");
+                mGLView.setBannerMsg(true, "LOADING TERRAIN");
                 mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
 
-                mGLView.setCalibrate(true, "LOADING AIRSPACE");
+                mGLView.setBannerMsg(true, "LOADING AIRSPACE");
                 mAirspace.loadDatabase(gps_lat, gps_lon);
-                mGLView.setCalibrate(false, " ");
+                mGLView.setBannerMsg(false, " ");
             }
             ctr = 0;
         }

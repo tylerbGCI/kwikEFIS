@@ -301,9 +301,9 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setCalibrate(boolean cal, String msg)
+    void setBannerMsg(boolean cal, String msg)
     {
-        mRenderer.setCalibrate(cal, msg);
+        mRenderer.setBannerMsg(cal, msg);
         requestRender();
     }
 
@@ -312,7 +312,6 @@ public class PFDSurfaceView extends GLSurfaceView
         mRenderer.setSimulatorActive(demo, msg);
         requestRender();
     }
-
 
     public void setPrefs(prefs_t pref, boolean value)
     {

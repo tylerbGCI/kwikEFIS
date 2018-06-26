@@ -295,9 +295,9 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setCalibrate(boolean cal, String msg)
+    void setBannerMsg(boolean cal, String msg)
     {
-        mRenderer.setCalibrate(cal, msg);
+        mRenderer.setBannerMsg(cal, msg);
         requestRender();
     }
 

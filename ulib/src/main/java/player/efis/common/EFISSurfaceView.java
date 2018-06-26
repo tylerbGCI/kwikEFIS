@@ -309,7 +309,7 @@ public class EFISSurfaceView extends GLSurfaceView
     /*
     void setCalibratingMsg(boolean cal, String msg)
     {
-        mRenderer.setCalibrate(cal, msg);
+        mRenderer.setBannerMsg(cal, msg);
         requestRender();
     }
     */
