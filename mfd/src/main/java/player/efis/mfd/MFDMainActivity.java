@@ -26,7 +26,8 @@ import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UNavigation;
 import player.ulib.Unit;
-
+import player.efis.common.orientation_t;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -39,6 +40,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 
 // sensor imports
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,7 +56,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
 
-public class MFDMainActivity extends EFISMainActivity implements Listener, /*SensorEventListener,*/ LocationListener
+public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
 	public static final String PREFS_NAME = R.string.app_name + ".prefs";
 	private MFDSurfaceView mGLView;
@@ -157,13 +161,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		String version = pInfo.versionName;
 		Toast.makeText(this, "Kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
 
-		/*try {
+		try {
 			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
 			registerSensorManagerListeners();
 		}
 		catch (Exception e) {
 			Toast.makeText(this, "Hardware compatibility issue", Toast.LENGTH_LONG).show();
-		}*/
+		}
 
 		// testing for lightweight -- may or may not use
 		sensorComplementaryFilter = new SensorComplementaryFilter();
@@ -217,8 +221,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         super.onStop();
     }
 
-    /*
-	public void registerSensorManagerListeners()
+    	public void registerSensorManagerListeners()
 	{
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 		mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
@@ -229,7 +232,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); //SENSOR_DELAY_FASTEST);
 	}
-	*/
 
     @Override
 	protected void onPause()
@@ -242,7 +244,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		mGLView.onPause();
 
 		locationManager.removeUpdates(this);
-		/*unregisterSensorManagerListeners();*/
+		unregisterSensorManagerListeners();
 	}
 
 	@Override
@@ -257,14 +259,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		//locationManager.addNmeaListener(this);
 
-		/*registerSensorManagerListeners();*/
+		registerSensorManagerListeners();
 	}
 
 	//
 	// Sensor methods
 	//
-    /*
-	@Override
+    	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy)
 	{
 		switch(sensor.getType()) {
@@ -279,10 +280,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 			break;
 		}
 	}
-	*/
 
-    /*
-	@Override
+    @Override
 	public void onSensorChanged(SensorEvent event)
 	{
 		switch (event.sensor.getType()) {
@@ -290,9 +289,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 			sensorComplementaryFilter.setAccel(event.values);
 			break;
 
-		case Sensor.TYPE_GYROSCOPE:
+		/*case Sensor.TYPE_GYROSCOPE:
 			sensorComplementaryFilter.setGyro(event.values);
-			break;
+			break;*/
 
 		case Sensor.TYPE_MAGNETIC_FIELD:
 			//b2b2 sensorFusion.setMagnet(event.values);
@@ -310,7 +309,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 		}
 		updateEFIS();
 	}
-*/
 
 
     @Override
@@ -358,8 +356,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 				mGLView.setUnServiceableAh();
 			}
 		}
-		updateEFIS(/*event.values*/);
-}
+		updateEFIS();
+    }
 
 
 	@Override
@@ -535,8 +533,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 	//
 	private void updateEFIS()
 	{
-        /* b2 - Not used for DMAP
-		float[] gyro =  new float[3]; // gyroscope vector
+        // /* b2 - Not used for DMAP
+		/*float[] gyro =  new float[3]; // gyroscope vector*/
         float[] accel = new float[3]; // accelerometer vector
 
 		//
@@ -551,12 +549,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
             else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
         }
 
-		sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude
+		/*sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude*/
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
 		pitchValue = -sensorComplementaryFilter.getPitchAcc();
 		rollValue = -sensorComplementaryFilter.getRollAcc();
 
+        /* b2 - Not used for DMAP
         if (bLandscapeMode) {
             gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);
             slipValue  = filterSlip.runningAverage(accel[1]);
@@ -568,7 +567,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
 
 		loadfactor = sensorComplementaryFilter.getLoadFactor();
 		loadfactor = filterG.runningAverage(loadfactor);
-		*/
+        */
 
 		//
 		// Check if we have a valid GPS
@@ -622,10 +621,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, /*Sen
         //
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
-        /* b2 - since we only respond to location messsage, check all of them for DMAP
 		if (ctr++ > 100) {
-		*/
-        {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
