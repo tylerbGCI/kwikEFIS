@@ -57,6 +57,15 @@
                 android:key="lockedMode"
                 android:summary="Lock the exit on back button"
                 android:title="Locked" />
+
+            <ListPreference
+                android:defaultValue="0.15f"
+                android:entries="@array/sensor_bias_names"
+                android:entryValues="@array/sensor_bias_values"
+                android:key="sensorBias"
+                android:summary="Select the bank sensor/GPS bias"
+                android:title="Bank Sensor" />
+
             <PreferenceScreen
                 android:defaultValue="0.0"
                 android:key="version"
@@ -73,15 +82,6 @@
             android:key="colorTheme"
             android:summary="Select color theme"
             android:title="Theme" />
-
-        <ListPreference
-            android:defaultValue="0.15f"
-            android:entries="@array/sensor_bias_names"
-            android:entryValues="@array/sensor_bias_values"
-            android:key="sensorBias"
-            android:summary="Select the bank sensor/GPS bias"
-            android:title="Bank Sensor" />
-
 
     </PreferenceCategory>
 </PreferenceScreen>

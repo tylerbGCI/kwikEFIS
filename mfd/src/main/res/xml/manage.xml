@@ -119,7 +119,6 @@
             android:summary="Select color theme"
             android:title="Theme" />
 
-
     </PreferenceCategory>
 </PreferenceScreen>
 
