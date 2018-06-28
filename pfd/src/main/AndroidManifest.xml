@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
     Copyright (C) 2011 The Android Open Source Project.
 
@@ -14,6 +15,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
+
 <!--
  Versioning scheme
    android:versionCode is incremented on every new viable build
@@ -26,8 +28,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.pfd"
     android:installLocation="preferExternal"
-    android:versionCode="19"
-    android:versionName="3.10" >
+    android:versionCode="20"
+    android:versionName="3.11" >
 
     <!-- We need to target 10 for the menu button -->
     <!-- it is overridden in the gradle files -->
