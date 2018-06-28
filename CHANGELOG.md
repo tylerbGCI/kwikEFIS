@@ -2,6 +2,7 @@ Changelog
 =========
 REL_20 (2018-03-31)
 ------------------
+* Change airspace draw sequencing
 * Improve monochrome handling
 * Long overdue code maintenance
 * Beta Release EFIS v3.11
