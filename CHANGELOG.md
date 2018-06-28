@@ -1,18 +1,25 @@
 Changelog
 =========
-3.12 (2018-03-31)
+REL_20 (2018-03-31)
+------------------
+* Improve monochrome handling
+* Long overdue code maintenance
+* Beta Release EFIS v3.11
+* Beta Release DMAP v1.6
+
+REL_20 (2018-03-31)
 ------------------
 * Add generic helicopter
-* beta Release EFIS v3.10
-* beta Release DMAP v1.5
+* Release EFIS v3.10
+* Release DMAP v1.5
 
-3.11 (2017-03-31)
+REL_3.11 (2017-03-31)
 ------------------
 * Implement Monochrome theme for HUD usage
 * Release EFIS v3.9
 * Release DMAP v1.4
 
-3.10 (2017-11-23)
+REL_3.10 (2017-11-23)
 ------------------
 * Implement Auto zoom
 * Scale compass rose font
@@ -21,11 +28,11 @@ Changelog
 * Release EFIS v3.8
 * Release DMAP v1.3
 
-3.9 (2017-11-12)
+REL_3.9 (2017-11-12)
 ------------------
 * Add DEM region: pan.arg - South America
 
-3.8 (2017-11-04)
+REL_3.8 (2017-11-04)
 ------------------
 * Add speed, altitude and AGL displays to map
 * Zoom with swipe up/down (use XCSoar convention)
@@ -34,12 +41,12 @@ Changelog
 * Release EFIS v3.7
 * Release DMAP v1.2
 
-3.7 (2017-10-16)
+VER_3.7 (2017-10-16)
 ------------------
 * Add terrain awareness
 * Release DMAP v1.1
 
-3.6 (2017-10-04)
+VER_3.6 (2017-10-04)
 ------------------
 * Add app: Kwik Digital Map (DMAP v1.0)
 * Minor bugfix in compass rose
@@ -49,27 +56,27 @@ Changelog
 * eur.txt.air (Denmark, Germany, Switzerland)
 * Release EFIS v3.6
 
-3.5 (2017-09-21)
+VER_3.5 (2017-09-21)
 ------------------
 * Activate main menu on Back key
 * Add Quit option to main menu
 * Add DEM region: sah.jap - Sahara / North Africa, India, Indonesia, Japan
 * Waypoint database cycle 2017-10 (gpx.south.east)
 
-3.4 (2017-08-28)
+VER_3.4 (2017-08-28)
 ------------------
 * Add automatic DEM region determination
 * Audio alerts only with valid GPS fix
 * Minor change to startup behavior
 * Waypoint database cycle 2017-08 (gpx.north.east)
 
-3.3 (2017-07-10)
+VER_3.3 (2017-07-10)
 ------------------
 * Add fatfinger support
 * Minor performance tweaks
 * Waypoint database cycle 2017-07 (zar.aus)
 
-3.2 (2017-06-30)
+VER_3.2 (2017-06-30)
 ------------------
 * Add audio annouciations (stall, sink, terrain, 500)
 * DataPac enhanced to allow multiple regions
@@ -77,26 +84,26 @@ Changelog
 * Add DEM region: usa.can - United States, Canada
 * Add DEM region: eur.rus - Europe, Russia
 
-3.1 (2017-05-18)
+VER_3.1 (2017-05-18)
 ------------------
 * Synthetic vision performance optimization
 * Improvements to radio altimeter
 * Update to DataPac front end
 * Waypoint database cycle 2017-06 (zar.aus)
 
-3.0 (2017-05-10)
+VER_3.0 (2017-05-10)
 ------------------
 * Synthetic vision (DEM) implementation
 * Add digital elevation model (DEM) data packs (zar.aus)
 * Waypoint database cycle 2017-05 (zar.aus)
 
-2.4 (2014-03-17)
+VER_2.4 (2014-03-17)
 ------------------
 * Waypoint database cycle 2017-03 (usa.can)
 * Change bank/skid correction filter constant
 * Add automatic de-clutter to HITS
 
-2.3 (2014-03-15)
+VER_2.3 (2014-03-15)
 ------------------
 * Add REFLOG.md 
 
@@ -105,7 +112,7 @@ Changelog
 * Adopt different versioning scheme
 * Rolled up bugfix release 
 
-2.2.0 (2017-03-02)
+VER_2.2 (2017-03-02)
 ------------------
 * Waypoint database cycle 2017-03 (zar.aus)
 * First Release version on F-Droid
