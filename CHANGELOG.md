@@ -2,13 +2,13 @@ Changelog
 =========
 REL_20 (2018-03-31)
 ------------------
-* Change airspace draw sequencing
+* Change airspace sequencing
 * Improve monochrome handling
 * Long overdue code maintenance
 * Beta Release EFIS v3.11
 * Beta Release DMAP v1.6
 
-REL_20 (2018-03-31)
+REL_19 (2018-03-31)
 ------------------
 * Add generic helicopter
 * Release EFIS v3.10
