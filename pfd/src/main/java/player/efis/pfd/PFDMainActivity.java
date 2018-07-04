@@ -712,7 +712,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
 		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
 		mGLView.setLatLon(gps_lat, gps_lon);
-		mGLView.setBatteryPct(batteryPct);                        // in percentage
+		mGLView.setBatteryPct(batteryPct);                       // in percentage
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);

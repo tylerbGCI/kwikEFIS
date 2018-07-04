@@ -152,9 +152,9 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
             else {
                 //Portrait
-                xlx = 0; //-0.00f * pixW2;
-                xly = -0.44f * pixH2;  //0.45f
-                roseScale = 0.52f; //0.45f; //0.50f;
+                xlx = 0;
+                xly = -0.44f * pixH2; 
+                roseScale = 0.52f; 
             }
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -215,6 +215,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         renderFixedDIMarkers(mMVPMatrix);
         renderHDGValue(mMVPMatrix);
         GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+
         //-----------------------------
         renderTurnMarkers(mMVPMatrix);
         renderSlipBall(mMVPMatrix);
@@ -284,7 +285,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Load the font from file (set size + padding), creates the texture
         // NOTE: after a successful call to this the font is ready for rendering!
-        //glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+        // glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
         glText.load("square721_cn_bt_roman.ttf", pixM * 14 / 734, 2, 2);  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
 
         // enable texture + alpha blending
