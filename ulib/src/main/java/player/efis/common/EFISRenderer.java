@@ -673,7 +673,7 @@ public class EFISRenderer
         }
     }
 
-    protected void renderTerrain(float[] matrix)
+    protected void renderAH(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 

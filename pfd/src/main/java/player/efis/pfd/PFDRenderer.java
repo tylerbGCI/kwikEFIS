@@ -109,7 +109,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderDEMSky(scratch1);
             if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrain(scratch1);  // underground is not valid
         }
-        else if (displayTerrain) renderTerrain(scratch1);
+        else if (displayTerrain) renderAH(scratch1);
 
         renderPitchMarkers(scratch1);
 
