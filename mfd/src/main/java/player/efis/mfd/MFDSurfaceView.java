@@ -307,7 +307,6 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-
     public void setPrefs(prefs_t pref, boolean value)
     {
         mRenderer.setPrefs(pref, value);

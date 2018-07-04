@@ -82,7 +82,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for perfromance
+        if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for performance
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
@@ -99,9 +99,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
             else {
                 //Portrait
-                xlx = 0; //-0.00f * pixW2;
-                xly = -0.20f * pixH2;  //0.45f
-                roseScale = 1.9f; //0.45f; //0.50f;
+                xlx = 0;
+                xly = -0.20f * pixH2;  
+                roseScale = 1.9f;
             }
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -222,7 +222,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Load the font from file (set size + padding), creates the texture
         // NOTE: after a successful call to this the font is ready for rendering!
-        //glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+        // glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
         glText.load("square721_cn_bt_roman.ttf", pixM * 14 / 734, 2, 2);  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
 
         // enable texture + alpha blending
