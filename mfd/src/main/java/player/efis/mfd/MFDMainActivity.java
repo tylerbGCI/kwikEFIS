@@ -69,6 +69,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	private SensorManager mSensorManager;
     private OpenAir mAirspace;
 
+	// Location abstracts
+    
 	//
 	//  Add the action bar buttons
 	//
@@ -221,7 +223,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         super.onStop();
     }
 
-    	public void registerSensorManagerListeners()
+	public void registerSensorManagerListeners()
 	{
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 		mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
@@ -289,9 +291,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 			sensorComplementaryFilter.setAccel(event.values);
 			break;
 
-		/*case Sensor.TYPE_GYROSCOPE:
-			sensorComplementaryFilter.setGyro(event.values);
-			break;*/
 
 		case Sensor.TYPE_MAGNETIC_FIELD:
 			//b2b2 sensorFusion.setMagnet(event.values);
@@ -407,9 +406,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.mRenderer.mAltSelName = settings.getString("mAltSelName", "00000");
         mGLView.mRenderer.mObsValue = settings.getFloat("mObsValue", 0f);
         colorTheme = settings.getInt("colorTheme", 0);
-
-        mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
-
         mGLView.mRenderer.mMapZoom = settings.getFloat("mMapZoom", 20);
 
         // Restore last known location
@@ -462,16 +458,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     private void setUserPrefs()
     {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
         mGLView.setPrefs(prefs_t.DEM, settings.getBoolean("displayDEM", false));
         mGLView.setPrefs(prefs_t.TAPE, settings.getBoolean("displayTape", true));
         mGLView.setPrefs(prefs_t.MIRROR, settings.getBoolean("displayMirror", false));
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
-        mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
-        mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
+        // Only used in PFD
+		// mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
+        // mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
+        // mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
+		// Only used in MFD
         mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
-
         AirspaceClass.A = settings.getBoolean("classA", true);
         AirspaceClass.B = settings.getBoolean("classB", true);
         AirspaceClass.C = settings.getBoolean("classC", true);
@@ -533,8 +530,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 	//
 	private void updateEFIS()
 	{
-        // /* b2 - Not used for DMAP
-		/*float[] gyro =  new float[3]; // gyroscope vector*/
         float[] accel = new float[3]; // accelerometer vector
 
 		//
@@ -549,25 +544,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
         }
 
-		/*sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude*/
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
 		pitchValue = -sensorComplementaryFilter.getPitchAcc();
 		rollValue = -sensorComplementaryFilter.getRollAcc();
 
-        /* b2 - Not used for DMAP
-        if (bLandscapeMode) {
-            gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);
-            slipValue  = filterSlip.runningAverage(accel[1]);
-        }
-        else {
-            gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[1]);
-            slipValue = filterSlip.runningAverage(-accel[0]);
-        }
-
-		loadfactor = sensorComplementaryFilter.getLoadFactor();
-		loadfactor = filterG.runningAverage(loadfactor);
-        */
 
 		//
 		// Check if we have a valid GPS

@@ -193,14 +193,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         updateEFIS();
 	}
 
-
 	@Override
     protected void onStop()
     {
         savePersistentSettings();
         super.onStop();
     }
-
 
 	public void registerSensorManagerListeners()
 	{
@@ -211,7 +209,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 	public void unregisterSensorManagerListeners()
 	{
 		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
-		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); //SENSOR_DELAY_FASTEST);
+		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));     //SENSOR_DELAY_FASTEST);
 	}
 
     // Release the media player
@@ -299,7 +297,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		}
 	}
 
-
 	@Override
 	public void onSensorChanged(SensorEvent event)
 	{
@@ -326,9 +323,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			// altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
 			break;
 		}
-		updateEFIS(/*event.values*/);
+		updateEFIS();
 	}
-
 
 
     @Override
@@ -375,8 +371,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			else {
 				mGLView.setUnServiceableAh();
 			}
-        }
-		updateEFIS(/*event.values*/);
+		}
+		updateEFIS();
     }
 
 
@@ -479,15 +475,28 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     private void setUserPrefs()
     {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
         mGLView.setPrefs(prefs_t.DEM, settings.getBoolean("displayDEM", false));
         mGLView.setPrefs(prefs_t.TAPE, settings.getBoolean("displayTape", true));
         mGLView.setPrefs(prefs_t.MIRROR, settings.getBoolean("displayMirror", false));
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
-        mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
+        // Only used in PFD
+		mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
+        mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
-
+		// Only used in MFD
+        // mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
+        // AirspaceClass.A = settings.getBoolean("classA", true);
+        // AirspaceClass.B = settings.getBoolean("classB", true);
+        // AirspaceClass.C = settings.getBoolean("classC", true);
+        // AirspaceClass.D = settings.getBoolean("classD", true);
+        // AirspaceClass.E = settings.getBoolean("classE", true);
+        // AirspaceClass.F = settings.getBoolean("classF", true);
+        // AirspaceClass.G = settings.getBoolean("classG", true);
+        // AirspaceClass.P = settings.getBoolean("classP", true);
+        // AirspaceClass.R= settings.getBoolean("classR", true);
+        // AirspaceClass.Q = settings.getBoolean("classQ", true);
+        // AirspaceClass.CTR = settings.getBoolean("classCTR", true);
 
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
@@ -556,8 +565,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		sensorComplementaryFilter.getGyro(gyro); 	// Use the gyroscopes for the attitude
 		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
 
-		//pitchValue = -sensorComplementaryFilter.getPitch();
-		//rollValue = -sensorComplementaryFilter.getRoll();
 		pitchValue = -sensorComplementaryFilter.getPitchAcc();
 		rollValue = -sensorComplementaryFilter.getRollAcc();
 
@@ -578,7 +585,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		hasGps = isGPSAvailable();
 
-		// for debug
+		// for debug - set to true
 		if (false) {
 			hasGps = true;          //debug
 			hasSpeed = true;        //debug
