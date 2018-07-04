@@ -245,8 +245,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// consume significant memory here.
 		mGLView.onPause();
 
+        /*
 		locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
+		*/
 	}
 
 	@Override
@@ -258,10 +260,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// this is a good place to re-allocate them.
 		mGLView.onResume();
 
+        /*
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		//locationManager.addNmeaListener(this);
-
 		registerSensorManagerListeners();
+		*/
 	}
 
 	//
