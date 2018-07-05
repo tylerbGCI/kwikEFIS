@@ -20,7 +20,7 @@ package player.efis.common;
 public enum prefs_t
 {
 	DEM,
-	TERRAIN,
+	AH_COLOR,
 	TAPE,
 	MIRROR,
 	INFO_PAGE,

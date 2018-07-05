@@ -134,7 +134,7 @@ public class EFISRenderer
     // 3D map display
     protected boolean displayAirport;
     protected boolean displayAirspace;
-    protected boolean displayTerrain;
+    protected boolean displayAHColors;
     protected boolean displayTape;
     public boolean displayMirror;
     protected boolean displayFPV;
@@ -673,7 +673,7 @@ public class EFISRenderer
         }
     }
 
-    protected void renderAH(float[] matrix)
+    protected void renderAHColors(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 
@@ -1268,7 +1268,7 @@ public class EFISRenderer
         mLine.draw(matrix);
 
         // For monochrome display (displayTerrain false) do not use any color
-        if (displayTerrain) {
+        if (displayAHColors) {
             //
             // Special Vspeed markers
             //
@@ -2566,8 +2566,8 @@ public class EFISRenderer
             case DEM:
                 displayDEM = value;
                 break;
-            case TERRAIN:
-                displayTerrain = value;
+            case AH_COLOR:
+                displayAHColors = value;
                 break;
             case TAPE:
                 displayTape = value;

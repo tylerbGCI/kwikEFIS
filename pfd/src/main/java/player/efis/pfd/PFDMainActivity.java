@@ -482,9 +482,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setPrefs(prefs_t.TAPE, settings.getBoolean("displayTape", true));
         mGLView.setPrefs(prefs_t.MIRROR, settings.getBoolean("displayMirror", false));
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
-        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRmi", false));
+        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRMI", false));
         // Only used in PFD
-		mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayTerrain", true));
+		mGLView.setPrefs(prefs_t.AH_COLOR, settings.getBoolean("displayAHColor", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
 		// Only used in MFD
@@ -670,7 +670,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		float batteryPct = getRemainingBattery();
 
-        //-----------------------------
+        //
         // Handle the DEM buffer.
         // Load new data to the buffer when the horizon gets close to the edge or
         // if we have gone off the current tile.
