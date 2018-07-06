@@ -35,7 +35,7 @@
             android:title="Flight Director" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="displayRmi"
+            android:key="displayRMI"
             android:summary="Engage Compass and Bearing Indicator"
             android:title="Compass Rose" />
         <CheckBoxPreference

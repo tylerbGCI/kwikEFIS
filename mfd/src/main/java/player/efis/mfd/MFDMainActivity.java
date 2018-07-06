@@ -464,7 +464,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setPrefs(prefs_t.TAPE, settings.getBoolean("displayTape", true));
         mGLView.setPrefs(prefs_t.MIRROR, settings.getBoolean("displayMirror", false));
         mGLView.setPrefs(prefs_t.INFO_PAGE, settings.getBoolean("infoPage", true));
-        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRMI", false));
+        mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRMI", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         // Only used in PFD
 		// mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayAHColor", true));
