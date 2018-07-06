@@ -1950,7 +1950,7 @@ public class EFISRenderer
     {
         float z, pixPerDegree, x1, y1;
         float radius; 
-        float dme;
+        float gateDme;
         float hitRelBrg;
         float obs;
         final float altMult = 10;
@@ -1967,13 +1967,13 @@ public class EFISRenderer
             float hitLat = mWptSelLat + i / 60 * (float) Math.cos(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
             float hitLon = mWptSelLon + i / 60 * (float) Math.sin(Math.toRadians(obs - 180));  // this is not right, it must be the OBS setting
 
-            dme = UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
+            gateDme = UNavigation.calcDme(LatValue, LonValue, hitLat, hitLon);
             hitRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, hitLat, hitLon, DIValue);  // the relative bearing to the hitpoint
-            radius = 0.1f * pixM2 / dme;
+            radius = 0.1f * pixM2 / gateDme;
             float skew = (float) Math.cos(Math.toRadians(hitRelBrg));  // to misquote William Shakespeare, this may be gilding the lily?
 
             x1 = hitRelBrg * pixPerDegree;
-            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, Unit.NauticalMile.toFeet(dme))) * pixPerDegree * altMult);
+            y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - mAltSelValue, Unit.NauticalMile.toFeet(gateDme))) * pixPerDegree * altMult);
 
             // De-clutter the gates
             //
@@ -1989,17 +1989,26 @@ public class EFISRenderer
             mPolyLine.SetWidth(3);
             mPolyLine.SetColor(0.0f, tapeShadeG, tapeShadeB, 1);   // darker cyan
 
+            float rx = 3.0f * radius * skew;
+            float ry = 2.0f * radius;
             {
                 float[] vertPoly = {
-                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z,
-                        x1 + 3.0f * radius * skew, y1 - 2.0f * radius, z,
-                        x1 + 3.0f * radius * skew, y1 + 2.0f * radius, z,
-                        x1 - 3.0f * radius * skew, y1 + 2.0f * radius, z,
-                        x1 - 3.0f * radius * skew, y1 - 2.0f * radius, z
+                        x1 - rx, y1 - ry, z,
+                        x1 + rx, y1 - ry, z,
+                        x1 + rx, y1 + ry, z,
+                        x1 - rx, y1 + ry, z,
+                        x1 - rx, y1 - ry, z
                 };
                 mPolyLine.VertexCount = 5;
                 mPolyLine.SetVerts(vertPoly);
                 mPolyLine.draw(matrix);
+
+                mPolygon.SetColor(tapeShadeR/6, tapeShadeG/6, tapeShadeB/6, 0f);
+                mPolygon.VertexCount = 5;
+                mPolygon.SetVerts(vertPoly);
+                mPolygon.draw(matrix);
+
+
             }
         }
     }
