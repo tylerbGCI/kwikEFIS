@@ -31,5 +31,10 @@ public class UMath {
         float tolerance = tolerancePercentage/100 * desiredValue;  //  20/100*1000 = 200
         return diff < tolerance;                                   //  50<200      = true
     }
+    
+    public static float clamp(float val, float min, float max) 
+    {
+        return Math.max(min, Math.min(max, val));
+    }    
 
 }

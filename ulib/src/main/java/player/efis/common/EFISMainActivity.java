@@ -227,8 +227,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
 
     protected void Simulate()
     {
-        pitchValue = -sensorComplementaryFilter.getPitch();
-        rollValue = -sensorComplementaryFilter.getRoll();
+        //pitchValue = -sensorComplementaryFilter.getPitch();
+        //rollValue = -sensorComplementaryFilter.getRoll();
 
         hasSpeed = true;
         hasGps = true;

@@ -1989,9 +1989,10 @@ public class EFISRenderer
             mPolyLine.SetWidth(3);
             mPolyLine.SetColor(0.0f, tapeShadeG, tapeShadeB, 1);   // darker cyan
 
-            float rx = 3.0f * radius * skew;
-            float ry = 2.0f * radius;
             {
+                float rx = 3.0f * radius * skew;
+                float ry = 2.0f * radius;
+
                 float[] vertPoly = {
                         x1 - rx, y1 - ry, z,
                         x1 + rx, y1 - ry, z,
@@ -1999,16 +2000,17 @@ public class EFISRenderer
                         x1 - rx, y1 + ry, z,
                         x1 - rx, y1 - ry, z
                 };
+
+                // window frame
                 mPolyLine.VertexCount = 5;
                 mPolyLine.SetVerts(vertPoly);
                 mPolyLine.draw(matrix);
 
-                mPolygon.SetColor(tapeShadeR/6, tapeShadeG/6, tapeShadeB/6, 0f);
+                // faded window
+                mPolygon.SetColor(tapeShadeR/10, tapeShadeG/10, tapeShadeB/10, 0f);
                 mPolygon.VertexCount = 5;
                 mPolygon.SetVerts(vertPoly);
                 mPolygon.draw(matrix);
-
-
             }
         }
     }
@@ -2221,6 +2223,10 @@ public class EFISRenderer
     protected float spinnerTextScale = 1;
     public boolean fatFingerActive = false;
 
+    public float commandPitch;
+    public float commandRoll;
+
+
     protected void renderSelWptValue(float[] matrix)
     {
         float z = zfloat;
@@ -2258,7 +2264,7 @@ public class EFISRenderer
         // Calculate how many degrees of pitch to command
         final float MAX_COMMAND = 15; // Garmin spec 15 deg pitch and 30 deg roll
         float deltaAlt = mAltSelValue - MSLValue;
-        float commandPitch;
+        //float commandPitch;
         if (deltaAlt > 0) commandPitch = (IASValue - AircraftData.Vy) / 5 * (deltaAlt / 1000);
         else commandPitch = (IASValue) / 5 * (deltaAlt / 1000);
 
@@ -2267,7 +2273,7 @@ public class EFISRenderer
         // if (IASValue < Vs0) commandPitch = -MAX_COMMAND; // Maybe handle a stall?
 
         // update the flight director data
-        float commandRoll = relBrg;
+        /*float*/ commandRoll = relBrg;
         if (commandRoll > 30) commandRoll = 30;   //
         if (commandRoll < -30) commandRoll = -30;  //
         setFlightDirector(displayFlightDirector, commandPitch, commandRoll);

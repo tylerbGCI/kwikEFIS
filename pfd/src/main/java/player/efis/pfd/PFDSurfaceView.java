@@ -283,11 +283,11 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setDisplayFPV(boolean display)
+    /*void setDisplayFPV(boolean display)
     {
         mRenderer.setDisplayFPV(display);
         requestRender();
-    }
+    }*/
 
     public void setDisplayAirport(boolean display)
     {
@@ -295,11 +295,11 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    void setDisplayAirspace(boolean display)
+    /*void setDisplayAirspace(boolean display)
     {
         mRenderer.setDisplayAirspace(display);
         requestRender();
-    }
+    }*/
 
     void setBannerMsg(boolean cal, String msg)
     {
@@ -327,11 +327,11 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    public void setFlightDirector(boolean active, float pit, float rol)
+    /*public void setFlightDirector(boolean active, float pit, float rol)
     {
         mRenderer.setFlightDirector(active, pit, rol);
         requestRender();
-    }
+    }*/
 
 
 
