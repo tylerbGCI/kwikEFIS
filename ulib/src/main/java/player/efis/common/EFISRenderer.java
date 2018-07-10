@@ -1112,7 +1112,7 @@ public class EFISRenderer
 
         // VSI box
         for (i = -2; i <= 2; i += 1) {
-            mLine.SetColor(0.5f, 0.5f, 0.5f, 1);  // grey
+            mLine.SetColor(tapeShadeR, tapeShadeG, tapeShadeB, 1);  // grey
             mLine.SetWidth(4);
             mLine.SetVerts(
                     0.64f * pixM2, i * 1000 * pixPerUnit, z,
