@@ -767,11 +767,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         rollValue = -sensorComplementaryFilter.getRoll();
 
         pitchValue =  0.25f * (float) Math.random() +  0.85f * UMath.clamp(mGLView.mRenderer.commandPitch, -5, 5);
-        rollValue = 1.25f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+        rollValue = 1.25f * (float) Math.random() + 0.85f * mGLView.mRenderer.commandRoll;
+
         super.Simulate();
     }
-
-
 }
 
 

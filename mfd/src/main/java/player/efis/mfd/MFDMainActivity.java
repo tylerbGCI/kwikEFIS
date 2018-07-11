@@ -56,6 +56,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
+import java.util.Random;
+
 
 public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
@@ -640,14 +642,22 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         _gps_agl = gps_agl; // save the previous altitude
 	}
 
+    int target_agl = 1500;
     protected void Simulate()
     {
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
 
-        //pitchValue =  0.25f * (float) Math.random() +  0.85f * UMath.clamp(mGLView.mRenderer.commandPitch, -5, 5);
-        pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(1500), -3, 3);
+        if (sim_ms % (2 * 6000) == 0) {  //every 2 minutes
+            target_agl += 1000;
+            if (target_agl > 5000) target_agl = 200;
+        }
+        pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
         rollValue = 1.25f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+
+        //pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(1500), -3, 3);
+        //rollValue = 1.25f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+
         super.Simulate();
     }
 
