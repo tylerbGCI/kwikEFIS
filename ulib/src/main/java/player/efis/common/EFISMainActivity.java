@@ -221,7 +221,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float _gps_agl = 0; // meters
 
     float _gps_speed = 0;         // m/s
-    long _sim_ms = 0, sim_ms;
+    protected long sim_ms;
+    long _sim_ms = 0;
     Random sim_rand = new Random();
     boolean sim_primed = false;
 
@@ -266,9 +267,9 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
-        //deltaT = 0.0000124f; //  Ludicrous Speed
-        deltaT = 0.00000124f; //  Warp Speed ~ 490m/s - mach 1.5
-        //deltaT = 0.000000224f; // Super Speed2
+        //deltaT = 0.0000124f;  // Ludicrous Speed
+        //deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
+        deltaT = 0.000000224f;  // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
 
         // YCMH 090 from Perth
@@ -277,28 +278,27 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
             //_gps_lat = -34.259918f; float _gps_lon = 115.45f; // South of Valsbaai -34.359918f
             //_gps_lat = -31.9f;  _gps_lon = 115.45f;  // Australia north of Rottnest
             //_gps_lat = -33.0f;   _gps_lon = 28; //-28;// = -33; // South Africa - East London
+            _gps_lat = -33.98f; _gps_lon = 18.82f; // Stellenbosh, South Africa
 
             //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
             //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
             //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
-            //_gps_lat = 47.26f;  _gps_lon = 11.34f;     //Innsbruck
+            //_gps_lat =  47.26f;  _gps_lon = 11.34f;    //Innsbruck
             //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
             //_gps_lat =  46.93f;  _gps_lon =  7.45f;    // Bern
-            //_gps_lat = -33;  _gps_lon =  -71f;        // Chile, Santiago
+            //_gps_lat = -33.00;  _gps_lon =  -71.00f;   // Chile, Santiago
             //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
             //_gps_lat = -10.8f;  _gps_lon =  -65.35f;   // Emilio Beltran
+            //_gps_lat = 00.26f;  _gps_lon = 00.34f;   // close to null island
+            //_gps_lat = 55.86f; _gps_lon = 37.6f;   // Moscow
 
-            //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
-            //_gps_lat = 00.26f;  _gps_lon = 00.34f;   //close to null island
-            //_gps_lat = 55.86f; _gps_lon = 37.6f;   //Moscow
-            _gps_lat = -33.98f; _gps_lon = 18.82f; // Stellenbosh, South Africa
             sim_primed = true;
         }
 
-        Random rnd = new Random();
-        gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
-        gps_speed = _gps_speed = setSpeed;//100;  // m/s
-        gps_altitude = Unit.Feet.toMeter(8000); //2048; //900; //3048; //Meter
+        //Random rnd = new Random();
+        //gps_course = _gps_course = (float) Math.toRadians(50);// 50 // + (float) rnd.nextGaussian() / 200;
+        //gps_speed = _gps_speed = setSpeed;//100;  // m/s
+        //gps_altitude = Unit.Feet.toMeter(8000); //2048; //900; //3048; //Meter
         //rollValue = 0;// (float) rnd.nextGaussian() / 5;
         //pitchValue = 0;//(float) rnd.nextGaussian() / 20;
         //
@@ -326,8 +326,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float loadfactor;
     protected float slipValue;
     protected int ctr = 0;
-	
-
 }
 
 

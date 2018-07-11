@@ -28,7 +28,7 @@ import android.content.Context;
 public class Gpx
 {
 	private Context context;
-	public String _region, region = "gpx.null.null";
+	public String _region, region; // = "gpx.null.null";
 	public static ArrayList<Apt> aptList = null;
 
     //-------------------------------------------------------------------------
@@ -50,6 +50,8 @@ public class Gpx
         else if ((lat < -10) && (lon < -20)) {
             sRegion = "gpx.south.west";
         }
+        else sRegion = "gpx.null.null";
+
         return sRegion;
     }
 	
@@ -63,8 +65,7 @@ public class Gpx
     public void loadDatabase(float lat, float lon)
     {
         region = getRegionDatabaseName(lat, lon);
-        if (!region.equals(_region))
-            loadDatabase(region);
+        if (!region.equals(_region)) loadDatabase(region);
 
         _region = region;
     }

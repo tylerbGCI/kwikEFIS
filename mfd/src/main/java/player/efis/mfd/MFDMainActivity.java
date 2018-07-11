@@ -642,15 +642,16 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     protected void Simulate()
     {
+        int target_agl = 2000;
+
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
 
-        //pitchValue =  0.25f * (float) Math.random() +  0.85f * UMath.clamp(mGLView.mRenderer.commandPitch, -5, 5);
-        pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(1500), -3, 3);
+        pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
         rollValue = 1.25f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+
         super.Simulate();
     }
-
 }
 
 
