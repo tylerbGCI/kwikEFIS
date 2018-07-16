@@ -1,6 +1,14 @@
 Changelog
 =========
-REL_20 (2018-03-31)
+REL_21 (tbd)
+------------------
+* Drive simulator using the flight director
+* 
+* 
+* Beta Release EFIS v3.12
+* Beta Release DMAP v1.7
+
+REL_20 (2018-06-28)
 ------------------
 * Change airspace sequencing
 * Improve monochrome handling
@@ -8,7 +16,7 @@ REL_20 (2018-03-31)
 * Beta Release EFIS v3.11
 * Beta Release DMAP v1.6
 
-REL_19 (2018-03-31)
+REL_19 (2018-06-08)
 ------------------
 * Add generic helicopter
 * Release EFIS v3.10
