@@ -50,8 +50,9 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
     // Location abstracts
-    protected float gps_lat;            // in decimal degrees
-    protected float gps_lon;            // in decimal degrees
+   //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+    protected float gps_lat;// = -34f;            // in decimal degrees
+    protected float gps_lon;// = +19f;            // in decimal degrees
     protected float gps_altitude;       // in m
     protected float gps_agl;            // in m
     protected float gps_speed;          // in m/s
