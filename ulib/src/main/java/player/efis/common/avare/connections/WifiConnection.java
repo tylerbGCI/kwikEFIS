@@ -26,100 +26,92 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 
  * @author zkhan
- *
  */
-public class WifiConnection extends Connection {
+public class WifiConnection extends Connection
+{
 
-    
     private static WifiConnection mConnection;
-
     DatagramSocket mSocket;
-    
     private int mPort;
-    
 
-    /**
-     * 
-     */
-    private WifiConnection() {
+
+
+    //private WifiConnection()
+    public WifiConnection()
+    {
         super("WIFI Input");
-        setCallback(new GenericCallback() {
-            @Override
-            public Object callback(Object o, Object o1) {
-                BufferProcessor bp = new BufferProcessor();
-
-                byte[] buffer = new byte[8192];
-
-                /*
-                 * This state machine will keep trying to connect to
-                 * ADBS/GPS receiver
-                 */
-                while(isRunning()) {
-
-                    int red = 0;
-
-                    /*
-                     * Read.
-                     */
-                    red = read(buffer);
-                    if(red <= 0) {
-                        if(isStopped()) {
-                            break;
-                        }
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-
-                        }
-
-                        /*
-                         * Try to reconnect
-                         */
-                        Logger.Logit("Listener error, re-starting listener");
-
-                        disconnect();
-                        connect(Integer.toString(mPort), false);
-                        continue;
-                    }
-
-                    /*
-                     * Put both in Decode and ADBS buffers
-                     */
-                    bp.put(buffer, red);
-                    LinkedList<String> objs = bp.decode((Preferences)o);
-                    for(String s : objs) {
-                        sendDataToHelper(s);
-                    }
-                }
-                return null;
-            }
-        });
     }
 
 
-    /**
-     * 
-     * @return
-     * @param ctx
-     */
-    public static WifiConnection getInstance(Context ctx) {
+    public void callback()
+    {
+        BufferProcessor bp = new BufferProcessor();
 
-        if(null == mConnection) {
+        byte[] buffer = new byte[8192];
+
+        // This state machine will keep trying to connect to
+        // ADBS/GPS receiver
+        while (isRunning()) {
+
+            int red = 0;
+
+            // Read.
+            red = read(buffer);
+            if (red <= 0) {
+                if (isStopped()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (Exception e) {
+
+                }
+
+                // Try to reconnect
+                Logger.Logit("Listener error, re-starting listener");
+
+                disconnect();
+                connect(Integer.toString(mPort), false);
+                continue;
+            }
+
+            // Put both in Decode and ADBS buffers
+            bp.put(buffer, red);
+            LinkedList<String> objs = bp.decode();
+            for (String s : objs) {
+                sendDataToHelper(s);
+            }
+        }
+    }
+
+
+
+
+
+    /**
+     * @param ctx
+     * @return
+     */
+    public static WifiConnection getInstance(Context ctx)
+    {
+
+        if (null == mConnection) {
             mConnection = new WifiConnection();
         }
         return mConnection;
     }
 
     /**
-     * 
      * A device name devNameMatch, will connect to first device whose
      * name matched this string.
+     *
      * @return
      */
     @Override
-    public boolean connect(String to, boolean secure) {
+    public boolean connect(String to, boolean secure)
+    {
 
         try {
             mPort = Integer.parseInt(to);
@@ -137,7 +129,7 @@ public class WifiConnection extends Connection {
             mSocket = new DatagramSocket(mPort);
             mSocket.setBroadcast(true);
         }
-        catch(Exception e) {
+        catch (Exception e) {
             Logger.Logit("Failed! Connecting socket " + e.getMessage());
             return false;
         }
@@ -147,18 +139,19 @@ public class WifiConnection extends Connection {
     }
 
     /**
-     * 
+     *
      */
     @Override
-    public void disconnect() {
+    public void disconnect()
+    {
         
         /*
          * Exit
          */
         try {
             mSocket.close();
-        } 
-        catch(Exception e2) {
+        }
+        catch (Exception e2) {
             Logger.Logit("Error stream close");
         }
 
@@ -166,30 +159,32 @@ public class WifiConnection extends Connection {
     }
 
     @Override
-    public List<String> getDevices() {
+    public List<String> getDevices()
+    {
         return new ArrayList<String>();
     }
 
     @Override
-    public String getConnDevice() {
+    public String getConnDevice()
+    {
         return "";
     }
 
     /**
-     * 
      * @return
      */
-    private int read(byte[] buffer) {
-        DatagramPacket pkt = new DatagramPacket(buffer, buffer.length); 
+    private int read(byte[] buffer)
+    {
+        DatagramPacket pkt = new DatagramPacket(buffer, buffer.length);
         try {
             mSocket.receive(pkt);
-        } 
-        catch(Exception e) {
+        }
+        catch (Exception e) {
             return -1;
         }
 
         saveToFile(pkt.getLength(), buffer);
-        
+
         return pkt.getLength();
     }
 

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2012, Apps4Av Inc. (apps4av.com) 
+Copyright (c) 2016, Apps4Av Inc. (apps4av.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -9,34 +9,32 @@ Redistribution and use in source and binary forms, with or without modification,
     *
     *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 package player.efis.common.avare;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Application;
+/*
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
-/**
- * 
- * @author zkhan
- * 
- */
-public class PreferencesFragment extends Fragment {
-
-
+//
+// Created by zkhan on 1/25/16.
+//
+@ReportsCrashes(mailTo = "apps4av@gmail.com",
+        customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE},
+        mode = ReportingInteractionMode.DIALOG,
+        resDialogIcon = android.R.drawable.stat_notify_error,
+        resDialogTitle = R.string.CrashLabel,
+        resDialogText = R.string.CrashText)
+public class AvareIOApplication extends Application {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public void onCreate() {
+        super.onCreate();
 
-        View view = inflater.inflate(R.layout.layout_preferences, container, false);
-
-        return view;
-    }
-    
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
     }
 }
+*/

@@ -13,9 +13,10 @@ package player.efis.common.avare;
 
 
 
+import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,8 +32,9 @@ import player.efis.common.avare.storage.SavedEditText;
  * @author zkhan
  * 
  */
-public class FileFragment extends Fragment {
-
+@TargetApi(14)
+public class FileFragment extends Fragment
+{
     private FileConnectionIn mFile;
     private Context mContext;
     private Button mConnectButton;
@@ -45,10 +47,10 @@ public class FileFragment extends Fragment {
 
         mContext = container.getContext();
 
-        View view = inflater.inflate(R.layout.layout_play, container, false);
+        /*View view = inflater.inflate(R.layout.layout_play, container, false);
 
         mTextFile = (SavedEditText)view.findViewById(R.id.main_file_name);
-        mConnectButton = (Button)view.findViewById(R.id.main_button_connect_file);
+        mConnectButton = (Button)view.findViewById(R.id.main_button_connect_file);*/
         mConnectButton.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -68,7 +70,7 @@ public class FileFragment extends Fragment {
                  */
                 String val = mTextFile.getText().toString();
                 if(null != val && (!mFile.isConnected())) {                    
-                    mConnectButton.setText(mContext.getString(R.string.Start));
+                    //mConnectButton.setText(mContext.getString(R.string.Start));
                     mFile.connect(val, false);
                     if(mFile.isConnected()) {
                         mFile.start(new Preferences(getActivity()));
@@ -84,7 +86,7 @@ public class FileFragment extends Fragment {
         mFile = FileConnectionIn.getInstance(mContext);
 
         setStates();
-        return view;
+        return null; // view;
 
     }
     
@@ -93,10 +95,10 @@ public class FileFragment extends Fragment {
      */
     private void setStates() {
         if(mFile.isConnected()) {
-            mConnectButton.setText(mContext.getString(R.string.Stop));
+            //mConnectButton.setText(mContext.getString(R.string.Stop));
         }
         else {
-            mConnectButton.setText(mContext.getString(R.string.Start));                        
+            //mConnectButton.setText(mContext.getString(R.string.Start));
         }
     }
 

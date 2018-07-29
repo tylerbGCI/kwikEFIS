@@ -11,6 +11,8 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 package player.efis.common.avare;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +22,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.app.FragmentTransaction;
+//import android.support.v7.app.ActionBar;
+//import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,9 +37,10 @@ import player.efis.common.avare.storage.Preferences;
 import player.efis.common.avare.utils.GenericCallback;
 import player.efis.common.avare.utils.Logger;
 
-public class MainActivity extends ActionBarActivity implements
-    ActionBar.OnNavigationListener {
-    
+//public class MainActivity extends ActionBarActivity implements
+//    ActionBar.OnNavigationListener {
+public class MainActivity extends Activity {
+
     private TextView mTextLog;
     private TextView mTextStatus;
     
@@ -45,7 +48,8 @@ public class MainActivity extends ActionBarActivity implements
 
     private Preferences mPref;
 
-    private Fragment[] mFragments = new Fragment[10];
+    //private Fragment[] mFragments = new Fragment[10];
+    private Fragment mFragment;
 
     private WifiManager.MulticastLock mMulticastLock;
 
@@ -61,27 +65,27 @@ public class MainActivity extends ActionBarActivity implements
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.activity_main, null);
+        /*View view = layoutInflater.inflate(R.layout.activity_main, null);
         mTextLog = (TextView)view.findViewById(R.id.main_text_log);
-        mTextStatus = (TextView)view.findViewById(R.id.main_text_status);
+        mTextStatus = (TextView)view.findViewById(R.id.main_text_status);*/
         Logger.setTextView(mTextLog);
         Logger.setContext(this);
-        setContentView(view);
+        //setContentView(view);
 
         mPref = new Preferences(getApplicationContext());
-        /*
-         * Start service now, bind later. This will be no-op if service is already running
-         */
+        //
+        //  Start service now, bind later. This will be no-op if service is already running
+        //
         Intent intent = new Intent(this, BackgroundService.class);
         startService(intent);
 
         // Set up the action bar to show a dropdown list.
-        final ActionBar actionBar = getSupportActionBar();
+        /*final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);*/
         Bundle args = new Bundle();
         int pos = 0;
-        mFragments[pos++] = new BlueToothInFragment();
+        /*mFragments[pos++] = new BlueToothInFragment();
         mFragments[pos++] = new WiFiInFragment();
         mFragments[pos++] = new XplaneFragment();
         mFragments[pos++] = new MsfsFragment();
@@ -90,12 +94,14 @@ public class MainActivity extends ActionBarActivity implements
         mFragments[pos++] = new GPSSimulatorFragment();
         mFragments[pos++] = new USBInFragment();
         mFragments[pos++] = new HelpFragment();
-        mFragments[pos++] = new PreferencesFragment();
+        mFragments[pos++] = new PreferencesFragment();*/
+        mFragment = new WiFiInFragment();
 
         for(int i = 0; i < pos; i++) {
-            mFragments[i].setArguments(args);
+            //mFragments[i].setArguments(args);
         }
 
+        /*
         // Set up the dropdown list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
         // Specify a SpinnerAdapter to populate the dropdown list.
@@ -113,10 +119,13 @@ public class MainActivity extends ActionBarActivity implements
                 getString(R.string.Help),
                 getString(R.string.Preferences)
                 }), this);
+                */
 
 
         // Acquire Multicast Lock to receive multicast packets over Wifi.
-        WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        //WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
         mMulticastLock = wm.createMulticastLock("avarehelper");
         mMulticastLock.acquire();
     }
@@ -125,23 +134,17 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*
-         * Clean up stuff on exit
-         */
+        //
+        // Clean up stuff on exit
+        //
         getApplicationContext().unbindService(mConnection);        
 
         // Release multicast lock.
         mMulticastLock.release();
     }
    
-    /**
-     * 
-     */
     private ServiceConnection mConnection = new ServiceConnection() {
 
-        /* (non-Javadoc)
-         * @see android.content.ServiceConnection#onServiceConnected(android.content.ComponentName, android.os.IBinder)
-         */
         @Override
         public void onServiceConnected(ComponentName className,
                 IBinder service) {
@@ -161,9 +164,6 @@ public class MainActivity extends ActionBarActivity implements
             });
         }
 
-        /* (non-Javadoc)
-         * @see android.content.ServiceConnection#onServiceDisconnected(android.content.ComponentName)
-         */
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
         }
@@ -172,22 +172,23 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        /*
-         * Start the helper service in Avare.
-         */
+        ///*
+        // * Start the helper service in Avare.
+        // */
         Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
         getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         // Start from last location
         int id = mPref.getFragmentIndex();
         if(id >= 0) {
-            getSupportActionBar().setSelectedNavigationItem(id);
+            //getSupportActionBar().setSelectedNavigationItem(id);
         }
         else {
-            getSupportActionBar().setSelectedNavigationItem(0);
+            //getSupportActionBar().setSelectedNavigationItem(0);
         }
     }
 
+        /*
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 
@@ -246,19 +247,20 @@ public class MainActivity extends ActionBarActivity implements
         fragmentTransaction.commit();
         return true;
     }
+        */
 
 
-    /**
-     * This leak warning is not an issue if we do not post delayed messages, which is true here.
-     */
+    ///**
+    // * This leak warning is not an issue if we do not post delayed messages, which is true here.
+    // */
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if((Boolean)msg.obj) {
-            	mTextStatus.setText(getString(R.string.Connected) + " " + ConnectionFactory.getActiveConnections(getApplicationContext()));
+            	//mTextStatus.setText(getString(R.string.Connected) + " " + ConnectionFactory.getActiveConnections(getApplicationContext()));
             }
             else {
-            	mTextStatus.setText(getString(R.string.NotConnected));
+            	//mTextStatus.setText(getString(R.string.NotConnected));
             }
         }
     };

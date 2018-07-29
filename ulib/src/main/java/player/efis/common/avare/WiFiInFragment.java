@@ -82,6 +82,11 @@ public class WiFiInFragment extends Fragment
         });
         */
 
+        mWifi.connect(mTextWifiPort.getText().toString(), false);
+        mWifi.connect("4000", false);
+        mWifi.start(new Preferences(getActivity()));
+
+
         /*
         mConnectFileSaveButton = (Button)view.findViewById(R.id.main_button_connect_file_save);
         mConnectFileSaveButton.setOnClickListener(new OnClickListener() {

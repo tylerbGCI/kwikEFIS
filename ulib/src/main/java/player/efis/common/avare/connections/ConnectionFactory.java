@@ -14,36 +14,37 @@ package player.efis.common.avare.connections;
 
 import android.content.Context;
 
-import player.efis.common.avare.R;
 
 /**
  * Created by zkhan on 9/22/16.
  */
-public class ConnectionFactory {
+public class ConnectionFactory
+{
 
-    public static Connection getConnection(String type, Context ctx) {
-        if(type.equals("BlueToothConnectionIn")) {
+    public static Connection getConnection(String type, Context ctx)
+    {
+        if (type.equals("BlueToothConnectionIn")) {
             return BlueToothConnectionIn.getInstance(ctx);
         }
-        if(type.equals("BlueToothConnectionOut")) {
+        if (type.equals("BlueToothConnectionOut")) {
             return BlueToothConnectionOut.getInstance(ctx);
         }
-        if(type.equals("FileConnectionIn")) {
+        if (type.equals("FileConnectionIn")) {
             return FileConnectionIn.getInstance(ctx);
         }
-        if(type.equals("GPSSimulatorConnection")) {
+        if (type.equals("GPSSimulatorConnection")) {
             return GPSSimulatorConnection.getInstance(ctx);
         }
-        if(type.equals("MsfsConnection")) {
+        if (type.equals("MsfsConnection")) {
             return MsfsConnection.getInstance(ctx);
         }
-        if(type.equals("USBConnectionIn")) {
+        /*if (type.equals("USBConnectionIn")) {
             return USBConnectionIn.getInstance(ctx);
-        }
-        if(type.equals("WifiConnection")) {
+        }*/
+        if (type.equals("WifiConnection")) {
             return WifiConnection.getInstance(ctx);
         }
-        if(type.equals("XplaneConnection")) {
+        if (type.equals("XplaneConnection")) {
             return XplaneConnection.getInstance(ctx);
         }
         return null;
@@ -53,17 +54,19 @@ public class ConnectionFactory {
     /*
  * Find names of all running connections.
  */
-    public static String getActiveConnections(Context ctx) {
+    public static String getActiveConnections(Context ctx)
+    {
         String s = "";
+        /*
         s += getConnection("BlueToothConnectionIn", ctx).isConnected() ? "," + ctx.getString(R.string.Bluetooth) : "";
-        s += getConnection("WifiConnection", ctx).isConnected() ?  "," + ctx.getString(R.string.WIFI) : "";
+        s += getConnection("WifiConnection", ctx).isConnected() ? "," + ctx.getString(R.string.WIFI) : "";
         s += getConnection("XplaneConnection", ctx).isConnected() ? "," + ctx.getString(R.string.XPlane) : "";
         s += getConnection("MsfsConnection", ctx).isConnected() ? "," + ctx.getString(R.string.MSFS) : "";
         s += getConnection("BlueToothConnectionOut", ctx).isConnected() ? "," + ctx.getString(R.string.AP) : "";
         s += getConnection("FileConnectionIn", ctx).isConnected() ? "," + ctx.getString(R.string.Play) : "";
         s += getConnection("GPSSimulatorConnection", ctx).isConnected() ? "," + ctx.getString(R.string.GPSSIM) : "";
-        s += getConnection("USBConnectionIn", ctx).isConnected() ? "," + ctx.getString(R.string.USBIN) : "";
-        if(s.startsWith(",")) {
+        s += getConnection("USBConnectionIn", ctx).isConnected() ? "," + ctx.getString(R.string.USBIN) : "";*/
+        if (s.startsWith(",")) {
             s = s.substring(1);
         }
         return "(" + s + ")";

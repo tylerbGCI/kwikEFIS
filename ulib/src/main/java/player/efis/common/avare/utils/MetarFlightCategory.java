@@ -1,8 +1,9 @@
 package player.efis.common.avare.utils;
-
+/*
 import net.sf.jweather.metar.Metar;
 import net.sf.jweather.metar.MetarParser;
 import net.sf.jweather.metar.SkyCondition;
+*/
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class MetarFlightCategory {
         String flightCategory = "Unknown";
 
         // parse it to find flight category
+        /*
         try {
             Metar metar = MetarParser.parse(stationId + " " + rawText);
             float vis = metar.getVisibility().floatValue();
@@ -34,7 +36,7 @@ public class MetarFlightCategory {
             flightCategory = getFlightCategory(isCeiling, ovc, vis, visLessThan);
         }
         catch (Exception e) {
-        }
+        }*/
         return flightCategory;
     }
 

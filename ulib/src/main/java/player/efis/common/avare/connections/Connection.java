@@ -20,11 +20,10 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 /**
- * 
  * @author zkhan
- *
  */
-public abstract class Connection {
+public abstract class Connection
+{
 
     protected static final int CONNECTED = 1;
     protected static final int CONNECTING = 2;
@@ -36,7 +35,8 @@ public abstract class Connection {
 
     private boolean mRunning;
 
-    private IHelper mHelper;
+    //private IHelper mHelper;
+    private KHelper mHelper;
 
     private Thread mThread;
 
@@ -45,45 +45,50 @@ public abstract class Connection {
     private GenericCallback mCb;
 
     /**
-     * 
+     *
      */
-    public Connection(String name) {
+    public Connection(String name)
+    {
         mState = DISCONNECTED;
         mRunning = false;
         mName = name;
     }
 
-    protected void setCallback(GenericCallback cb) {
+    protected void setCallback(GenericCallback cb)
+    {
         mCb = cb;
     }
 
     /**
-     *
      * @param file
      */
-    public void setFileSave(String file) {
-        synchronized(this) {
+    public void setFileSave(String file)
+    {
+        synchronized (this) {
             mFileSave = file;
         }
     }
 
     /**
      * Save data from connection to file
+     *
      * @param red
      * @param buffer
      */
-    protected void saveToFile(int red, byte[] buffer) {
-        if(red > 0) {
+    protected void saveToFile(int red, byte[] buffer)
+    {
+        if (red > 0) {
             String file = null;
-            synchronized(this) {
+            synchronized (this) {
                 file = mFileSave;
             }
-            if(file != null) {
+            if (file != null) {
                 try {
                     FileOutputStream output = new FileOutputStream(file, true);
                     output.write(buffer, 0, red);
                     output.close();
-                } catch(Exception e) {
+                }
+                catch (Exception e) {
                 }
             }
         }
@@ -91,26 +96,26 @@ public abstract class Connection {
 
 
     /**
-     * 
      * @return
      */
-    protected int getState() {
+    protected int getState()
+    {
         return mState;
     }
-    
+
     /**
-     * 
      * @param state
      */
-    protected void setState(int state) {
+    protected void setState(int state)
+    {
         mState = state;
     }
-    
+
     /**
-     *
      * @return
      */
-    public boolean isConnected() {
+    public boolean isConnected()
+    {
         return getState() == Connection.CONNECTED;
     }
 
@@ -119,7 +124,7 @@ public abstract class Connection {
      *
      * @param helper
      */
-    public void setHelper(IHelper helper) {
+    public void setHelper(KHelper helper) {
         mHelper = helper;
     }
 
@@ -127,14 +132,15 @@ public abstract class Connection {
     /**
      *
      */
-    public void stop() {
+    public void stop()
+    {
         Logger.Logit("Stopping " + mName);
-        if(getState() != Connection.CONNECTED) {
+        if (getState() != Connection.CONNECTED) {
             Logger.Logit(mName + ": Stop failed because already stopped");
             return;
         }
         mRunning = false;
-        if(null != mThread) {
+        if (null != mThread) {
             mThread.interrupt();
         }
         Logger.Logit("Stopped!");
@@ -144,7 +150,8 @@ public abstract class Connection {
     /**
      *
      */
-    public void start(final Preferences pref) {
+    public void start(final Preferences pref)
+    {
         Logger.Logit("Starting " + mName);
         if (getState() != Connection.CONNECTED) {
             Logger.Logit(mName + ": Starting failed because already started");
@@ -154,30 +161,34 @@ public abstract class Connection {
         /*
          * Thread that reads BT
          */
-        mThread = new Thread() {
+        mThread = new Thread()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 mRunning = true;
-                mCb.callback((Object)pref, null);
+                mCb.callback((Object) pref, null);
             }
         };
         mThread.start();
         Logger.Logit("Started!");
     }
 
-    protected boolean isRunning() {
+    protected boolean isRunning()
+    {
         return mRunning;
     }
 
-    protected boolean isStopped() {
+    protected boolean isStopped()
+    {
         return !mRunning;
     }
 
     /**
-     *
      * @param s
      */
-    protected void sendDataToHelper(String s) {
+    protected void sendDataToHelper(String s)
+    {
         if (mHelper != null) {
             try {
                 mHelper.sendDataText(s);
@@ -186,13 +197,13 @@ public abstract class Connection {
             catch (Exception e) {
             }
         }
-
     }
 
     /**
      *
      */
-    protected String getDataFromHelper() {
+    protected String getDataFromHelper()
+    {
         String data = null;
         if (mHelper != null) {
             try {
@@ -211,13 +222,15 @@ public abstract class Connection {
         return data;
     }
 
-    public void disconnectConnection() {
+    public void disconnectConnection()
+    {
         setState(Connection.DISCONNECTED);
         Logger.Logit(mName + " :Disconnected");
     }
 
 
-    public boolean connectConnection() {
+    public boolean connectConnection()
+    {
         setState(Connection.CONNECTED);
         Logger.Logit(mName + " :Connected");
         return true;
@@ -225,7 +238,10 @@ public abstract class Connection {
 
 
     public abstract List<String> getDevices();
+
     public abstract String getConnDevice();
+
     public abstract void disconnect();
+
     public abstract boolean connect(String param, boolean securely);
 }

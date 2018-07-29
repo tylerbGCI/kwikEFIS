@@ -21,12 +21,20 @@ import player.efis.common.AircraftData;
 import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
 import player.efis.common.SensorComplementaryFilter;
+import player.efis.common.avare.BackgroundService;
+import player.efis.common.avare.WiFiInFragment;
+import player.efis.common.avare.connections.Connection;
+import player.efis.common.avare.connections.ConnectionFactory;
+import player.efis.common.avare.connections.KHelper;
+import player.efis.common.avare.connections.WifiConnection;
+import player.efis.common.avare.storage.Preferences;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.Unit;
 import player.efis.common.orientation_t;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -36,6 +44,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 // sensor imports
@@ -67,6 +76,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     // sensor members
 	private SensorManager mSensorManager;
+
+    // WiFi
+    private WifiManager.MulticastLock mMulticastLock;
+    //private Connection mWifiCon;
+    private WifiConnection mWifiCon;
+    private Fragment mFragment;
+
 
 	// Location abstracts
     
@@ -194,7 +210,61 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// based on availability
 		mGLView.setServiceableDevice();
         updateEFIS();
+
+        // WiFi stuff
+
+
+        //
+        //  Start service now, bind later. This will be no-op if service is already running
+        //
+        Intent intent = new Intent(this, BackgroundService.class);
+        startService(intent);
+
+        //mWifiCon = ConnectionFactory.getConnection("WifiConnection", this);
+        mWifiCon = new WifiConnection();
+        KHelper helper = new KHelper();
+        mWifiCon.setHelper(helper);
+        mWifiCon.connect("4000", false);
+        //mWifiCon.start(new Preferences(getActivity()));
+        mWifiCon.start(new Preferences(this));
+        mWifiCon.callback();
+
+
+        mFragment = new WiFiInFragment();
+        WiFiInFragment wfin = (WiFiInFragment) mFragment;
+
+
+        // Acquire Multicast Lock to receive multicast packets over Wifi.
+        WifiManager wm = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        mMulticastLock = wm.createMulticastLock("avarehelper");
+        mMulticastLock.acquire();
+
 	}
+
+    @Override
+    protected void onDestroy()
+    {
+        // Release multicast lock.
+        mMulticastLock.release();
+        try {
+            //unbindService(mConnection);
+            //mTimer.cancel();
+            //mBtInCon.stop();
+            //mBtOutCon.stop();
+            //mFileInCon.stop();
+            //mGpsSimCon.stop();
+            //mUsbInCon.stop();
+            mWifiCon.stop();
+            //mXplaneCon.stop();
+            //mMsfsCon.stop();
+        }
+        catch(Exception e) {
+        }
+
+        super.onDestroy();
+    }
+
 
 	@Override
     protected void onStop()
@@ -330,6 +400,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			break;
 		}
 		updateEFIS();
+        mWifiCon.callback();
 	}
 
 
@@ -379,6 +450,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			}
 		}
 		updateEFIS();
+
     }
 
 
@@ -553,6 +625,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 	//
 	private void updateEFIS()
 	{
+        //mWifiCon.callback();
+
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
 

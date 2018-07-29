@@ -71,6 +71,12 @@ public class BufferProcessor {
      * 
      * @return
      */
+    public LinkedList<String> decode()
+    {
+       return decode(null);
+    }
+
+
     public LinkedList<String> decode(Preferences pref) {
 
         LinkedList<String> objs = new LinkedList<String>();

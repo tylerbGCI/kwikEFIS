@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
-import player.efis.common.avare.R;
 import player.efis.common.avare.storage.Preferences;
 
 /**
@@ -52,20 +51,20 @@ public class Logger {
     private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            /*
             String filter = mPref.getEditTextValue(R.id.preferences_edittext);
             String val = (String) msg.obj;
             if(null != msg && null != mTv) {
                 String txt = mTv.getText().toString();
                 if((filter == null) || filter.equals("") || val.contains(filter)) {
-                    /*
-                     * Limit buffer size
-                     */
+                     // Limit buffer size
                     if (txt.length() > 1023) {
                         txt = txt.substring(0, 1023);
                     }
                     mTv.setText(val + "\n" + txt);
                 }
             }
+            */
         }
     };
     
