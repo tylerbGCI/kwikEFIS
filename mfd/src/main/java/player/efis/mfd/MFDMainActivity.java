@@ -22,7 +22,7 @@ import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
-import player.efis.common.RetrieveWiFiTask;
+import player.efis.common.StratuxWiFiTask;
 import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
@@ -46,7 +46,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
@@ -57,12 +56,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
-import java.util.LinkedList;
 
 
 public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
@@ -79,7 +72,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     private OpenAir mAirspace;
 	
 	// Stratux Wifi
-	private RetrieveWiFiTask mStratux;
+	private StratuxWiFiTask mStratux;
 
 	// Location abstracts
     
@@ -220,16 +213,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mAirspace = new OpenAir(this);
         mGLView.setTheme(colorTheme);
 
+        // Wifi
+        //new RetrieveWiFiTask().execute();
+        mStratux = new StratuxWiFiTask();
+        mStratux.execute();
+
 		// Overall the device is now ready.
 		// The individual elements will be enabled or disabled by the location provided
 		// based on availability
 		mGLView.setServiceableDevice();
         updateEFIS();
 
-        // Wifi
-        //new RetrieveWiFiTask().execute();
-        mStratux = new RetrieveWiFiTask();
-        mStratux.execute();
 	}
 
 	@Override
@@ -616,6 +610,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             mGLView.setAct(mStratux);
 
+            gps_course = (float)Math.toRadians(30); // debug // TODO: 2018-08-04
             /*
             Iterator<String> i = objs.iterator();
             while (i.hasNext()) {

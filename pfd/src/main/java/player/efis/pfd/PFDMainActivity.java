@@ -20,7 +20,7 @@ import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
-import player.efis.common.RetrieveWiFiTask;
+import player.efis.common.StratuxWiFiTask;
 import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
@@ -54,8 +54,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
-import java.util.Random;
-
 
 public class PFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
@@ -69,7 +67,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     // sensor members
 	private SensorManager mSensorManager;
 	// Stratux Wifi
-	private RetrieveWiFiTask mStratux;
+	private StratuxWiFiTask mStratux;
 
 	// Location abstracts
     
@@ -200,7 +198,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         // Wifi
         //new RetrieveWiFiTask().execute();
-        mStratux = new RetrieveWiFiTask();
+        mStratux = new StratuxWiFiTask();
         mStratux.execute();
 	}
 

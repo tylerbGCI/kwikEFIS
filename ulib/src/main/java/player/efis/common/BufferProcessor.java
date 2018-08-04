@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * @author zkhan
@@ -85,12 +86,8 @@ public class BufferProcessor
 
         while (null != (buf = nbuffer.get())) {
             com.stratux.stratuvare.nmea.Message m = ndecode.decode(buf);
-
             if (m instanceof RTMMessage) {
-
-                /*
-                 * Make a GPS locaiton message from ADSB ownship message.
-                 */
+                 // Make a GPS location message from ADSB ownship message.
                 JSONObject object = new JSONObject();
                 RTMMessage tm = (RTMMessage) m;
                 try {
@@ -107,7 +104,6 @@ public class BufferProcessor
                 catch (JSONException e1) {
                     continue;
                 }
-
                 objs.add(object.toString());
 
             }
@@ -131,26 +127,17 @@ public class BufferProcessor
                 catch (JSONException e1) {
                     continue;
                 }
-
                 objs.add(object.toString());
             }
         }
 
         while (null != (buf = dbuffer.get())) {
-
-            /*
-             * Get packets, decode
-             */
+             // * Get packets, decode
             com.stratux.stratuvare.gdl90.Message m = decode.decode(buf);
-            /*
-             * Post on UI thread.
-             */
-
+            // * Post on UI thread.
             if (m instanceof TrafficReportMessage) {
 
-                /*
-                 * Make a GPS locaiton message from ADSB ownship message.
-                 */
+                 // * Make a GPS locaiton message from ADSB ownship message.
                 JSONObject object = new JSONObject();
                 TrafficReportMessage tm = (TrafficReportMessage) m;
                 try {
@@ -167,16 +154,12 @@ public class BufferProcessor
                 catch (JSONException e1) {
                     continue;
                 }
-
                 objs.add(object.toString());
-
             }
 
             else if (m instanceof BasicReportMessage) {
 
-                /*
-                 * Make a GPS locaiton message from ADSB ownship message.
-                 */
+                // * Make a GPS locaiton message from ADSB ownship message.
                 JSONObject object = new JSONObject();
                 BasicReportMessage tm = (BasicReportMessage) m;
                 try {
@@ -198,10 +181,7 @@ public class BufferProcessor
             }
 
             else if (m instanceof LongReportMessage) {
-
-                /*
-                 * Make a GPS locaiton message from ADSB ownship message.
-                 */
+                // Make a GPS locaiton message from ADSB ownship message. xxxx
                 JSONObject object = new JSONObject();
                 LongReportMessage tm = (LongReportMessage) m;
                 try {
@@ -218,7 +198,6 @@ public class BufferProcessor
                 catch (JSONException e1) {
                     continue;
                 }
-
                 objs.add(object.toString());
             }
 
@@ -310,21 +289,19 @@ public class BufferProcessor
                          */
 
                         try {
-
+                            /*
                             //if(type.equals("METAR") || type.equals("SPECI")) {
                             //    object.put("flight_category", MetarFlightCategory.getFlightCategory(pn.getLocation(), pn.getData()));
                             //}
-
+                            */
                             if (type.equals("WINDS")) {
 
                                 String tokens[] = data.split("\n");
                                 if (tokens.length < 2) {
-                                    /*
-                                     * Must have line like
-                                     * MSY 230000Z  FT 3000 6000    F9000   C12000  G18000  C24000  C30000  D34000  39000   Y
-                                     * and second line like
-                                     * 1410 2508+10 2521+07 2620+01 3037-12 3041-26 304843 295251 29765
-                                     */
+                                    // * Must have line like
+                                    // * MSY 230000Z  FT 3000 6000    F9000   C12000  G18000  C24000  C30000  D34000  39000   Y
+                                    // * and second line like
+                                    // * 1410 2508+10 2521+07 2620+01 3037-12 3041-26 304843 295251 29765
                                     continue;
                                 }
 
@@ -445,7 +422,6 @@ public class BufferProcessor
                         catch (JSONException e1) {
                             continue;
                         }
-
                         objs.add(object.toString());
                     }
                 }
@@ -469,11 +445,39 @@ public class BufferProcessor
                 catch (JSONException e1) {
                     continue;
                 }
-
                 objs.add(object.toString());
             }
-        }
 
+            /*  b2 debug message
+            else {
+                Random rnd = new Random();
+
+                double a = 10 * rnd.nextGaussian();
+
+                long unixTime = System.currentTimeMillis() / 1000L;
+
+                JSONObject object = new JSONObject();
+                //LongReportMessage tm = (LongReportMessage) m;
+                try {
+                    object.put("type", "traffic");
+                    object.put("longitude", (double) 115.9 - a / 5);
+                    object.put("latitude", (double) -32.2 + a);
+                    object.put("speed", (double) 123.0);
+                    object.put("bearing", (double) 348.7);
+                    object.put("altitude", (double) 4321);
+                    object.put("callsign", (String) "GHOST-1");
+                    object.put("address", (int) 555);
+                    object.put("time", (long) unixTime);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+            // b2 debug message */
+
+
+        }
         return objs;
     }
 }

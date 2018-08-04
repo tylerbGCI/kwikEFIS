@@ -209,6 +209,9 @@ public class EFISRenderer
 
         VSIInView = 2000;
         displayFPV = true;
+
+        //LinkedList<String> objs = new LinkedList<String>();
+
     }
 
     int FrameCounter = 0;
@@ -1842,12 +1845,14 @@ public class EFISRenderer
 
 
 
-    private RetrieveWiFiTask mStratux;
+    private StratuxWiFiTask mStratux;
 
-    public void setAct(RetrieveWiFiTask Stratux)
+    public void setAct(StratuxWiFiTask Stratux)
     {
         this.mStratux = Stratux;
     }
+
+    //LinkedList<String> objs = new LinkedList<String>();
 
     protected void renderACT(float[] matrix)
     {
@@ -1855,16 +1860,44 @@ public class EFISRenderer
 
         z = zfloat;
 
-        LinkedList<String> objs = mStratux.bp.decode();
+        LinkedList<String> objs = mStratux.getAcList();
+        //if (_objs != null) objs = _objs;
 
         for (String s : objs) {
             // sendDataToHelper(s);
-            Log.d("debug", s);
             try {
                 JSONObject jObject = new JSONObject(s);
-                if (jObject.getString("type") == "traffic") {
+                if (jObject.getString("type").contains("traffic")) {
                     String callsign = jObject.getString("callsign");
-                    Log.d("callsign=", callsign);
+                    //Log.d("callsign=", callsign);
+                    //if (!s.contains("ZS-TEST"))
+                    Log.d("traffic", s);
+
+                    float lon = (float)jObject.getDouble("longitude");
+                    float lat = (float)jObject.getDouble("latitude");
+                    float spd = (float)jObject.getDouble("speed");
+                    float brg = (float)jObject.getDouble("bearing");
+                    float alt = (float)jObject.getDouble("altitude");
+                    String call = (String) jObject.getString("callsign");
+
+                    //renderACTSymbol(matrix, lon, lat, call);
+                    // 0.16667 deg lat  = 10 nm
+                    // 0.1 approx 5nm
+                    float dme;
+                    float _dme = 1000;
+                    float actRelBrg;
+                    String acId = call;
+                    String acAlt = Integer.toString(Math.round(alt/100f)) + "FL";
+                    int acBrg = (int)brg;
+                    int acSpd = (int)spd;
+
+                    dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
+                    actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
+
+                    x1 = project(actRelBrg, dme).x;
+                    y1 = project(actRelBrg, dme).y;
+                    renderACTSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd);
+
                 }
             }
             catch (JSONException e) {
@@ -1874,7 +1907,7 @@ public class EFISRenderer
     }
 
 
-    private void renderACTSymbol(float[] matrix, float x1, float y1, String wptId)
+    private void renderACTSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd)
     {
         float radius = 5 * 2.5f;
         float z = zfloat;
@@ -1893,10 +1926,36 @@ public class EFISRenderer
         mPolyLine.SetVerts(vertPoly);  //crash here
         mPolyLine.draw(matrix);
 
+        // Text at target
         glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
         glText.setScale(2.0f);
-        glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
+        glText.drawCY(callsign, x1, y1 - glText.getCharHeight());
+        glText.drawCY(alt, x1, y1 - 1.8f*glText.getCharHeight());
         glText.end();
+
+        //
+        // Track/speed line
+        //
+        mLine.SetWidth(1);
+        mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * foreShadeB, 1); // white
+
+        float x2 = x1 + mMapZoom * (spd/50 * UTrig.icos(90-(int)(brg - DIValue)));
+        float y2 = y1 + mMapZoom * (spd/50 * UTrig.isin(90-(int)(brg - DIValue)));
+        mLine.SetVerts(
+                x1, y1, z,
+                x2, y2, z
+        );
+        mLine.draw(matrix);
+
+        // Text at stem
+        /*glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
+        glText.setScale(2.0f);
+        glText.drawCY(callsign, x2, y2 - 0*glText.getCharHeight());
+        glText.drawCY(alt, x2, y2 - 0.8f*glText.getCharHeight());
+        glText.end();*/
+
+
+
     }
 
 

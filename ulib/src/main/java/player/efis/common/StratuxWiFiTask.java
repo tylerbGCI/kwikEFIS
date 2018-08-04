@@ -1,7 +1,11 @@
 package player.efis.common;
 
 import android.os.AsyncTask;
+import android.text.format.Time;
 import android.util.Log;
+
+import com.stratux.stratuvare.gdl90.LongReportMessage;
+import com.stratux.stratuvare.utils.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,9 +22,8 @@ import java.util.LinkedList;
 
 //class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
 
-public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
+public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 {
-
     private Exception exception;
     private boolean mRunning;
     private Thread mThread;
@@ -51,6 +54,7 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
     //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
+        run();
         try {
             doRead();
         }
@@ -67,26 +71,39 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
         // TODO: do something with the feed
     }
 
+    public void run()
+    {
+        mRunning = true;
+    }
 
-    public BufferProcessor bp;// = new BufferProcessor();
+    public void pause()
+    {
+        mRunning = false;
+    }
 
+    LinkedList<String> getAcList()
+    {
+        if (trafficList != null) return new LinkedList<String> (trafficList);
+        else return null;
+    }
+
+    private LinkedList<String> trafficList = new LinkedList<String>();
+
+    //private LinkedList<String> objs;// = bp.decode();
+    float a,b;
+    long pt= 0, pt2 = 0;
     private void doRead()
     {
-        //BufferProcessor bp = new BufferProcessor();
-        bp = new BufferProcessor();
-
         byte[] buffer = new byte[8192];
+        BufferProcessor bp = new BufferProcessor();
 
-        mRunning = true;
         //
         // This state machine will keep trying to connect to
         // ADBS/GPS receiver
         //
         //while (isRunning()) {
         while (mRunning) {
-
             int red = 0;
-
             //  Read.
             red = read(buffer);
             if (red <= 0) {
@@ -103,33 +120,84 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
                 //
                 //  Try to reconnect
                 //
-                //Logger.Logit("Listener error, re-starting listener");
-
+                Logger.Logit("Listener error, re-starting listener");
                 disconnect();
                 connect(Integer.toString(mPort), false);
                 continue;
             }
-
-            //String traffic = readURL("ws://192.168.10.1/traffic");
-            //Log.d("++trf: ", traffic);
-
-            //Log.d("B2", "doRead: " + red);
-
 
             //
             //  Put both in Decode and ADSB buffers
             //
             bp.put(buffer, red);
             LinkedList<String> objs = bp.decode();
-            for (String s : objs) {
-                // sendDataToHelper(s);
-                //Log.d("s", s);
 
+             // /* < debug - add ghost AC traffic
+            long unixTime = System.currentTimeMillis() / 1000L;
+            long aaa = unixTime - pt;
+            if (unixTime - pt > 4) {
+                pt = unixTime;
+                b = b + 0.01f;
+
+                JSONObject object = new JSONObject();
+                //LongReportMessage tm = (LongReportMessage) m;
                 try {
-                    JSONObject jObject = new JSONObject(s);
-                    if (jObject.getString("type") == "traffic") {
-                        String callsign = jObject.getString("callsign");
-                        Log.d("callsign=", callsign);
+                    object.put("type", "traffic");
+                    object.put("longitude", (double) 115.9 - b/5);
+                    object.put("latitude", (double) -32.2 + b);
+                    object.put("speed", (double) 123.0);
+                    object.put("bearing", (double) 348.7);
+                    object.put("altitude", (double) 4321);
+                    object.put("callsign", (String) "GHOST-1");
+                    object.put("address", (int) 555);
+                    object.put("time", (long) unixTime);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+
+            if (unixTime - pt2 > 1) {
+                pt2 = unixTime;
+                a = a + 0.01f;
+
+                JSONObject object = new JSONObject();
+                //LongReportMessage tm = (LongReportMessage) m;
+                try {
+                    object.put("type", "traffic");
+                    object.put("longitude", (double) 115.7 + a/5);
+                    object.put("latitude", (double) -32.2 + a);
+                    object.put("speed", (double) 246.0);
+                    object.put("bearing", (double) 11.3);
+                    object.put("altitude", (double) 7654);
+                    object.put("callsign", (String) "GHOST-2");
+                    object.put("address", (int) 666);
+                    object.put("time", (long) unixTime);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+            // debug > */
+
+
+            // Extract traffic
+            for (String s : objs) {
+                try {
+                    JSONObject js = new JSONObject(s);
+                    if (js.getString("type").contains("traffic")) {
+                        for (int i = 0; i < trafficList.size(); i++) {
+                            String t = trafficList.get(i);
+                            JSONObject jt = new JSONObject(t);
+                            if (jt.getInt("address") ==  js.getInt("address")) {
+                                trafficList.remove(i);
+                            }
+                        }
+                        trafficList.add(s);
+                        int cnt = trafficList.size();
+                        Log.d("cnt", Integer.toString(cnt) );
                     }
                 }
                 catch (JSONException e) {
@@ -137,7 +205,26 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
                 }
             }
 
-            //----------------------------------------
+
+
+
+            /*for (String s : objs) {
+                // sendDataToHelper(s);
+                //Log.d("s", s);
+
+                // debugging
+                try {
+                    JSONObject jObject = new JSONObject(s);
+                    if (jObject.getString("type").contains("traffic")) {
+                        String callsign = jObject.getString("callsign");
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }*/
+
+            //----------------------------------------------
             String situation = getSituation(/*"http://192.168.10.1/getSituation"*/);
             //Log.d("++sit: ", situation);
 
@@ -163,8 +250,6 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
                 GPSTurnRate = jObject.getDouble("GPSTurnRate");
                 GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
 
-
-
                 //Log.d("pitch: ", String.valueOf(pitch));
                 //Log.d("roll: ", String.valueOf(roll));
                 //Log.d("debug ", String.valueOf(AHRSSlipSkid));
@@ -175,7 +260,6 @@ public class RetrieveWiFiTask extends AsyncTask<String, Void, Void>
         }
         // return null;
     }
-
 
     private int read(byte[] buffer)
     {
