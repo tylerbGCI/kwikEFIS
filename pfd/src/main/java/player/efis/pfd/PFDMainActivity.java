@@ -20,21 +20,14 @@ import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
+import player.efis.common.RetrieveWiFiTask;
 import player.efis.common.SensorComplementaryFilter;
-import player.efis.common.avare.BackgroundService;
-import player.efis.common.avare.WiFiInFragment;
-import player.efis.common.avare.connections.Connection;
-import player.efis.common.avare.connections.ConnectionFactory;
-import player.efis.common.avare.connections.KHelper;
-import player.efis.common.avare.connections.WifiConnection;
-import player.efis.common.avare.storage.Preferences;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.Unit;
 import player.efis.common.orientation_t;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -44,7 +37,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 // sensor imports
@@ -76,13 +68,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     // sensor members
 	private SensorManager mSensorManager;
-
-    // WiFi
-    private WifiManager.MulticastLock mMulticastLock;
-    //private Connection mWifiCon;
-    private WifiConnection mWifiCon;
-    private Fragment mFragment;
-
+	// Stratux Wifi
+	private RetrieveWiFiTask mStratux;
 
 	// Location abstracts
     
@@ -211,59 +198,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		mGLView.setServiceableDevice();
         updateEFIS();
 
-        // WiFi stuff
-
-
-        //
-        //  Start service now, bind later. This will be no-op if service is already running
-        //
-        Intent intent = new Intent(this, BackgroundService.class);
-        startService(intent);
-
-        //mWifiCon = ConnectionFactory.getConnection("WifiConnection", this);
-        mWifiCon = new WifiConnection();
-        KHelper helper = new KHelper();
-        mWifiCon.setHelper(helper);
-        mWifiCon.connect("4000", false);
-        //mWifiCon.start(new Preferences(getActivity()));
-        mWifiCon.start(new Preferences(this));
-        mWifiCon.callback();
-
-
-        mFragment = new WiFiInFragment();
-        WiFiInFragment wfin = (WiFiInFragment) mFragment;
-
-
-        // Acquire Multicast Lock to receive multicast packets over Wifi.
-        WifiManager wm = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        mMulticastLock = wm.createMulticastLock("avarehelper");
-        mMulticastLock.acquire();
-
+        // Wifi
+        //new RetrieveWiFiTask().execute();
+        mStratux = new RetrieveWiFiTask();
+        mStratux.execute();
 	}
 
-    @Override
-    protected void onDestroy()
-    {
-        // Release multicast lock.
-        mMulticastLock.release();
-        try {
-            //unbindService(mConnection);
-            //mTimer.cancel();
-            //mBtInCon.stop();
-            //mBtOutCon.stop();
-            //mFileInCon.stop();
-            //mGpsSimCon.stop();
-            //mUsbInCon.stop();
-            mWifiCon.stop();
-            //mXplaneCon.stop();
-            //mMsfsCon.stop();
-        }
-        catch(Exception e) {
-        }
-
-        super.onDestroy();
-    }
 
 
 	@Override
@@ -400,7 +340,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			break;
 		}
 		updateEFIS();
-        mWifiCon.callback();
 	}
 
 
@@ -450,7 +389,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 			}
 		}
 		updateEFIS();
-
     }
 
 
@@ -625,8 +563,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 	//
 	private void updateEFIS()
 	{
-        //mWifiCon.callback();
-
 		float[] gyro =  new float[3]; // gyroscope vector
 		float[] accel = new float[3]; // accelerometer vector
 
@@ -711,6 +647,42 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setFPV(180, 180);
         }
 
+        // Apply a little filtering to the pitch and bank
+        pitchValue = filterPitch.runningAverage(pitchValue);
+        rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
+
+        // From Stratux
+        if (mStratux != null) {
+            // totdo - check startux status
+            hasGps = true;
+            hasSpeed = true;
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableDi();
+            mGLView.setServiceableAsi();
+            mGLView.setServiceableAlt();
+            mGLView.setServiceableAh();
+            mGLView.setDisplayAirport(true);
+
+            pitchValue = (float) mStratux.AHRSPitch;
+            rollValue = (float) mStratux.AHRSRoll;
+            slipValue = (float) mStratux.AHRSSlipSkid;
+            loadfactor = (float) mStratux.AHRSGLoad;
+
+            slipValue = (float) -mStratux.AHRSSlipSkid;
+            SLIP_SENS = 10;
+
+            gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
+            gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
+            gps_altitude = Unit.Feet.toMeter((float)mStratux.GPSAltitudeMSL);
+
+            gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
+            sensorBias = 0;
+
+            gps_infix = mStratux.GPSSatellites;
+            gps_insky = mStratux.GPSSatellitesSeen; /*GPSSatellitesTracked;*/
+        }
+
+
         //
         //Demo mode handler
         //
@@ -740,9 +712,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 		//
 		setUserPrefs();
 
-		// Apply a little filtering to the pitch and bank
-		pitchValue = filterPitch.runningAverage(pitchValue);
-		rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
 
 		//
 		// Get the battery percentage

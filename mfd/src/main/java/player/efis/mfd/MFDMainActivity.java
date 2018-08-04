@@ -17,11 +17,12 @@
 package player.efis.mfd; 
 
 import player.efis.common.AirspaceClass;
+import player.efis.common.OpenAir;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.EFISMainActivity;
 import player.efis.common.Gpx;
-import player.efis.common.OpenAir;
+import player.efis.common.RetrieveWiFiTask;
 import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
@@ -45,6 +46,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater; 
@@ -55,6 +57,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
+import java.util.LinkedList;
 
 
 public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
@@ -69,6 +77,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     // sensor members
 	private SensorManager mSensorManager;
     private OpenAir mAirspace;
+	
+	// Stratux Wifi
+	private RetrieveWiFiTask mStratux;
 
 	// Location abstracts
     
@@ -214,6 +225,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// based on availability
 		mGLView.setServiceableDevice();
         updateEFIS();
+
+        // Wifi
+        //new RetrieveWiFiTask().execute();
+        mStratux = new RetrieveWiFiTask();
+        mStratux.execute();
 	}
 
 	@Override
@@ -568,6 +584,62 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 		// end debug
 
 		//
+        // From Stratux
+        if (mStratux != null) {
+            // totdo - check startux status
+            hasGps = true;
+            hasSpeed = true;
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableDi();
+            mGLView.setServiceableAsi();
+            mGLView.setServiceableAlt();
+            mGLView.setServiceableAh();
+            mGLView.setDisplayAirport(true);
+
+            pitchValue = (float) mStratux.AHRSPitch;
+            rollValue =  (float) mStratux.AHRSRoll;
+            slipValue =  (float) mStratux.AHRSSlipSkid;
+            loadfactor = (float) mStratux.AHRSGLoad;
+
+            slipValue = (float) -mStratux.AHRSSlipSkid;
+            SLIP_SENS = 10;
+
+            gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
+            gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
+            gps_altitude = Unit.Feet.toMeter((float)mStratux.GPSAltitudeMSL);
+
+            gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
+            sensorBias = 0;
+
+            gps_infix = mStratux.GPSSatellites;
+            gps_insky = mStratux.GPSSatellitesSeen; /*GPSSatellitesTracked;*/
+
+            mGLView.setAct(mStratux);
+
+            /*
+            Iterator<String> i = objs.iterator();
+            while (i.hasNext()) {
+                // sendDataToHelper(s);
+                String s = i.next();
+                Log.d("s", s);
+
+                try {
+                    JSONObject jObject = new JSONObject(s);
+                    if (jObject.getString("type") == "traffic") {
+                        String callsign = jObject.getString("callsign");
+                        Log.d("callsign=", callsign);
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            */
+
+
+
+        }
 		//Demo mode handler
 		//
 		if (bSimulatorActive) {

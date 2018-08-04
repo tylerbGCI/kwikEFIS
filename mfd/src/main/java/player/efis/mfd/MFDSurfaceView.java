@@ -21,6 +21,9 @@ import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import java.util.LinkedList;
+
+import player.efis.common.RetrieveWiFiTask;
 import player.efis.common.prefs_t;
 
 //
@@ -347,8 +350,11 @@ public class MFDSurfaceView extends GLSurfaceView
         mRenderer.setAutoZoomActive(active);
     }
 
-    public boolean isAutoZoomActive()
+    public void setAct(RetrieveWiFiTask Stratux)
     {
-        return mRenderer.isAutoZoomActive();
+        mRenderer.setAct(Stratux);
     }
+
+
+
 }

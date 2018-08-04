@@ -44,7 +44,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected boolean bLandscapeMode = false;
     protected int colorTheme; // 0=Normal, 1=High Contrast, 2=Monochrome
 
-    protected static final int SLIP_SENS = 25; //50;	 // Arbitrary choice
+    protected /*static final*/ int SLIP_SENS = 25; //50;	 // Arbitrary choice
     private static final float STD_RATE = 0.0524f;	     // = rate 1 = 3deg/s
     protected static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
     protected static final long GPS_UPDATE_DISTANCE = 0; //ms // 1

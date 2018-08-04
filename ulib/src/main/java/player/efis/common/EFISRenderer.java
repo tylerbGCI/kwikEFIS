@@ -17,6 +17,7 @@
 package player.efis.common;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import player.gles20.Line;
 import player.gles20.PolyLine;
@@ -30,6 +31,9 @@ import player.gles20.GLText;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -1812,24 +1816,84 @@ public class EFISRenderer
 
     private void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
     {
-        float radius = 5;
+        float radius = 5 * 2.0f;
         float z = zfloat;
 
         mPolyLine.SetWidth(3);
         mPolyLine.SetColor(theta*foreShadeR, theta*tapeShadeG, theta*foreShadeB, 1);  //purple'ish
 
         float[] vertPoly = {
-                x1 + 2.0f * radius, y1, z,
-                x1, y1 + 2.0f * radius, z,
-                x1 - 2.0f * radius, y1, z,
-                x1, y1 - 2.0f * radius, z,
-                x1 + 2.0f * radius, y1, z
+                x1 + radius, y1, z,
+                x1, y1 + radius, z,
+                x1 - radius, y1, z,
+                x1, y1 - radius, z,
+                x1 + radius, y1, z
         };
         mPolyLine.VertexCount = 5;
         mPolyLine.SetVerts(vertPoly);  //crash here
         mPolyLine.draw(matrix);
 
         glText.begin(theta*foreShadeR, theta*tapeShadeG, theta*foreShadeB, 1, matrix);  // purple'ish
+        glText.setScale(2.0f);
+        glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
+        glText.end();
+    }
+
+
+
+
+    private RetrieveWiFiTask mStratux;
+
+    public void setAct(RetrieveWiFiTask Stratux)
+    {
+        this.mStratux = Stratux;
+    }
+
+    protected void renderACT(float[] matrix)
+    {
+        float z, x1, y1;
+
+        z = zfloat;
+
+        LinkedList<String> objs = mStratux.bp.decode();
+
+        for (String s : objs) {
+            // sendDataToHelper(s);
+            Log.d("debug", s);
+            try {
+                JSONObject jObject = new JSONObject(s);
+                if (jObject.getString("type") == "traffic") {
+                    String callsign = jObject.getString("callsign");
+                    Log.d("callsign=", callsign);
+                }
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void renderACTSymbol(float[] matrix, float x1, float y1, String wptId)
+    {
+        float radius = 5 * 2.5f;
+        float z = zfloat;
+
+        mPolyLine.SetWidth(3);
+        mPolyLine.SetColor(theta*foreShadeR, theta*foreShadeR, theta*foreShadeB, 1);  //white'ish
+
+        float[] vertPoly = {
+                x1 + radius, y1 + radius, z,
+                x1 - radius, y1 + radius, z,
+                x1 - radius, y1 - radius, z,
+                x1 + radius, y1 - radius, z,
+                x1 + radius, y1 + radius, z
+        };
+        mPolyLine.VertexCount = 5;
+        mPolyLine.SetVerts(vertPoly);  //crash here
+        mPolyLine.draw(matrix);
+
+        glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
         glText.setScale(2.0f);
         glText.drawCY(wptId, x1, y1 + glText.getCharHeight() / 2);
         glText.end();
