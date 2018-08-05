@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.stratux.stratuvare.gdl90.LongReportMessage;
 import com.stratux.stratuvare.utils.Logger;
 
 import org.json.JSONException;
@@ -20,10 +19,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 
+import player.ulib.UTime;
+
 //class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
 
 public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 {
+
     private Exception exception;
     private boolean mRunning;
     private Thread mThread;
@@ -54,8 +56,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
-        run();
         try {
+            mRunning = true;
             doRead();
         }
         catch (Exception e) {
@@ -71,16 +73,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // TODO: do something with the feed
     }
 
-    public void run()
-    {
-        mRunning = true;
-    }
-
-    public void pause()
-    {
-        mRunning = false;
-    }
-
     LinkedList<String> getAcList()
     {
         if (trafficList != null) return new LinkedList<String> (trafficList);
@@ -92,6 +84,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //private LinkedList<String> objs;// = bp.decode();
     float a,b;
     long pt= 0, pt2 = 0;
+
     private void doRead()
     {
         byte[] buffer = new byte[8192];
@@ -107,7 +100,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             //  Read.
             red = read(buffer);
             if (red <= 0) {
-                //if (isStopped()) {
                 if (!mRunning) {
                     break;
                 }
@@ -117,22 +109,18 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 catch (Exception e) {
                 }
 
-                //
                 //  Try to reconnect
-                //
                 Logger.Logit("Listener error, re-starting listener");
                 disconnect();
                 connect(Integer.toString(mPort), false);
                 continue;
             }
 
-            //
             //  Put both in Decode and ADSB buffers
-            //
             bp.put(buffer, red);
             LinkedList<String> objs = bp.decode();
 
-             // /* < debug - add ghost AC traffic
+            /* < debug - add ghost AC traffic
             long unixTime = System.currentTimeMillis() / 1000L;
             long aaa = unixTime - pt;
             if (unixTime - pt > 4) {
@@ -182,8 +170,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             }
             // debug > */
 
-
             // Extract traffic
+            long unixTime = UTime.getUtcTimeMillis();
             for (String s : objs) {
                 try {
                     JSONObject js = new JSONObject(s);
@@ -194,35 +182,43 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                             if (jt.getInt("address") ==  js.getInt("address")) {
                                 trafficList.remove(i);
                             }
+
+                            long deltaT = unixTime - jt.getLong("time");
+                            if (deltaT > 20*1000) { //10 seconds
+                                trafficList.remove(i);
+                            }
+
+
                         }
                         trafficList.add(s);
-                        int cnt = trafficList.size();
-                        Log.d("cnt", Integer.toString(cnt) );
+                        //int cnt = trafficList.size();
+                        //Log.d("cnt", Integer.toString(cnt) );
+                    }
+                }
+                catch (JSONException e) {
+                    //e.printStackTrace();
+                }
+
+
+                // prune stale targets - do it with the other loop
+                // will leave one until next update.
+                /*try {
+                    long unixTime = UTime.getUtcTimeMillis();
+
+                    for (int i = 0; i < trafficList.size(); i++) {
+                        String t = trafficList.get(i);
+                        JSONObject jt = new JSONObject(t);
+                        long deltaT = unixTime - jt.getLong("time");
+                        if (deltaT > 20*1000) { //10 seconds
+                            trafficList.remove(i);
+                        }
                     }
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
+
             }
-
-
-
-
-            /*for (String s : objs) {
-                // sendDataToHelper(s);
-                //Log.d("s", s);
-
-                // debugging
-                try {
-                    JSONObject jObject = new JSONObject(s);
-                    if (jObject.getString("type").contains("traffic")) {
-                        String callsign = jObject.getString("callsign");
-                    }
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }*/
 
             //----------------------------------------------
             String situation = getSituation(/*"http://192.168.10.1/getSituation"*/);
@@ -257,8 +253,10 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            //String status = getDeviceStatus();
+            //Log.d("bugbug", status);
         }
-        // return null;
     }
 
     private int read(byte[] buffer)
@@ -318,13 +316,26 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             "AHRSStatus": 7
     }*/
 
+    // Stratux getSituation post
     private String getSituation()
+    {
+        return getHttp("http://192.168.10.1/getSituation");
+    }
+
+    // Stratux getSituation post
+    private String getDeviceStatus()
+    {
+        return getHttp("http://192.168.10.1/getStatus");
+    }
+
+
+    private String getHttp(String addr)
     {
         URL url;
         StringBuffer response = new StringBuffer();
         try {
-            url = new URL("http://192.168.10.1/getSituation");
-            //url = new URL(address);
+            //url = new URL("http://192.168.10.1/getSituation");
+            url = new URL(addr);
         }
         catch (MalformedURLException e) {
             throw new IllegalArgumentException("invalid url");
@@ -360,7 +371,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             if (conn != null) {
                 conn.disconnect();
             }
-
             //Here is your json in string format
             String responseJSON = response.toString();
             return responseJSON;
@@ -373,7 +383,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public boolean connect(String to, boolean secure)
     {
-
         try {
             mPort = Integer.parseInt(to);
         }
@@ -391,9 +400,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             //Logger.Logit("Failed! Connecting socket " + e.getMessage());
             return false;
         }
-
         return true; //connectConnection();
-
     }
 
     public String getParam()
