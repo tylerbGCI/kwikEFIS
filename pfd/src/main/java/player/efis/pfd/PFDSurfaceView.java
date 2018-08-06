@@ -19,6 +19,8 @@ package player.efis.pfd;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+
+import player.efis.common.StratuxWiFiTask;
 import player.efis.common.prefs_t;
 
 
@@ -324,6 +326,12 @@ public class PFDSurfaceView extends GLSurfaceView
         if (value == 2) mRenderer.setThemeGreen();
         else if (value == 1)  mRenderer.setThemeLight();
         else mRenderer.setThemeDark(); // the default
+        requestRender();
+    }
+
+    public void setAct(StratuxWiFiTask Stratux)
+    {
+        mRenderer.setAct(Stratux);
         requestRender();
     }
 

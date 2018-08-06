@@ -1,8 +1,6 @@
 package player.efis.common;
 
 import android.os.AsyncTask;
-import android.text.format.Time;
-import android.util.Log;
 
 import com.stratux.stratuvare.utils.Logger;
 
@@ -25,13 +23,17 @@ import player.ulib.UTime;
 
 public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 {
+    protected static final int CONNECTED = 1;
+    protected static final int CONNECTING = 2;
+    protected static final int DISCONNECTED = 0;
 
     private Exception exception;
     private boolean mRunning;
-    private Thread mThread;
+    //private Thread mThread;
 
     DatagramSocket mSocket;
     private int mPort = 4000;
+    private int mState;
 
     // Public Stratux vars
     public int GPSSatellites;
@@ -48,17 +50,28 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     public double AHRSGLoadMin;
     public double AHRSGLoadMax;
 
-    public double GPSTrueCourse;
+    public double GPSLongitude;
+    public double GPSLatitude;
     public double GPSAltitudeMSL;
+    public double GPSTrueCourse;
     public double GPSTurnRate;
     public double GPSGroundSpeed;
+    private String id;
+
+    public StratuxWiFiTask(String id)
+    {
+        this.id = id;
+        mState = DISCONNECTED;
+        mRunning = false;
+    }
+
 
     //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
         try {
             mRunning = true;
-            doRead();
+            mainExecutionLoop();
         }
         catch (Exception e) {
         }
@@ -75,17 +88,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     LinkedList<String> getAcList()
     {
-        if (trafficList != null) return new LinkedList<String> (trafficList);
+        if (trafficList != null) return new LinkedList<String>(trafficList);
         else return null;
     }
 
     private LinkedList<String> trafficList = new LinkedList<String>();
 
     //private LinkedList<String> objs;// = bp.decode();
-    float a,b;
-    long pt= 0, pt2 = 0;
+    float a, b;
+    long pt = 0, pt2 = 0;
 
-    private void doRead()
+    private void mainExecutionLoop()
     {
         byte[] buffer = new byte[8192];
         BufferProcessor bp = new BufferProcessor();
@@ -94,81 +107,28 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // This state machine will keep trying to connect to
         // ADBS/GPS receiver
         //
-        //while (isRunning()) {
-        while (mRunning) {
-            int red = 0;
+        //while (mRunning == true) {
+        while (true) {
             //  Read.
-            red = read(buffer);
-            if (red <= 0) {
-                if (!mRunning) {
-                    break;
-                }
+            int nrBytesRead = read(buffer);
+            if (nrBytesRead <= 0) {
                 try {
                     Thread.sleep(1000);
                 }
                 catch (Exception e) {
                 }
-
-                //  Try to reconnect
-                Logger.Logit("Listener error, re-starting listener");
-                disconnect();
-                connect(Integer.toString(mPort), false);
+                if (mRunning) {
+                    //  Try to reconnect
+                    Logger.Logit(id + "Listener error, re-starting listener");
+                    disconnect();
+                    connect(Integer.toString(mPort), false);
+                }
                 continue;
             }
 
             //  Put both in Decode and ADSB buffers
-            bp.put(buffer, red);
+            bp.put(buffer, nrBytesRead);
             LinkedList<String> objs = bp.decode();
-
-            /* < debug - add ghost AC traffic
-            long unixTime = System.currentTimeMillis() / 1000L;
-            long aaa = unixTime - pt;
-            if (unixTime - pt > 4) {
-                pt = unixTime;
-                b = b + 0.01f;
-
-                JSONObject object = new JSONObject();
-                //LongReportMessage tm = (LongReportMessage) m;
-                try {
-                    object.put("type", "traffic");
-                    object.put("longitude", (double) 115.9 - b/5);
-                    object.put("latitude", (double) -32.2 + b);
-                    object.put("speed", (double) 123.0);
-                    object.put("bearing", (double) 348.7);
-                    object.put("altitude", (double) 4321);
-                    object.put("callsign", (String) "GHOST-1");
-                    object.put("address", (int) 555);
-                    object.put("time", (long) unixTime);
-                }
-                catch (JSONException e1) {
-                    continue;
-                }
-                objs.add(object.toString());
-            }
-
-            if (unixTime - pt2 > 1) {
-                pt2 = unixTime;
-                a = a + 0.01f;
-
-                JSONObject object = new JSONObject();
-                //LongReportMessage tm = (LongReportMessage) m;
-                try {
-                    object.put("type", "traffic");
-                    object.put("longitude", (double) 115.7 + a/5);
-                    object.put("latitude", (double) -32.2 + a);
-                    object.put("speed", (double) 246.0);
-                    object.put("bearing", (double) 11.3);
-                    object.put("altitude", (double) 7654);
-                    object.put("callsign", (String) "GHOST-2");
-                    object.put("address", (int) 666);
-                    object.put("time", (long) unixTime);
-                }
-                catch (JSONException e1) {
-                    continue;
-                }
-                objs.add(object.toString());
-            }
-            // debug > */
 
             // Extract traffic
             long unixTime = UTime.getUtcTimeMillis();
@@ -179,53 +139,28 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         for (int i = 0; i < trafficList.size(); i++) {
                             String t = trafficList.get(i);
                             JSONObject jt = new JSONObject(t);
-                            if (jt.getInt("address") ==  js.getInt("address")) {
+                            if (jt.getInt("address") == js.getInt("address")) {
                                 trafficList.remove(i);
                             }
-
+                            // If a target is older then 20 seconds remove it from the list
                             long deltaT = unixTime - jt.getLong("time");
-                            if (deltaT > 20*1000) { //10 seconds
+                            if (deltaT > 20 * 1000) {
                                 trafficList.remove(i);
                             }
-
-
                         }
                         trafficList.add(s);
-                        //int cnt = trafficList.size();
-                        //Log.d("cnt", Integer.toString(cnt) );
                     }
                 }
                 catch (JSONException e) {
-                    //e.printStackTrace();
                 }
-
-
-                // prune stale targets - do it with the other loop
-                // will leave one until next update.
-                /*try {
-                    long unixTime = UTime.getUtcTimeMillis();
-
-                    for (int i = 0; i < trafficList.size(); i++) {
-                        String t = trafficList.get(i);
-                        JSONObject jt = new JSONObject(t);
-                        long deltaT = unixTime - jt.getLong("time");
-                        if (deltaT > 20*1000) { //10 seconds
-                            trafficList.remove(i);
-                        }
-                    }
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-
             }
 
             //----------------------------------------------
-            String situation = getSituation(/*"http://192.168.10.1/getSituation"*/);
-            //Log.d("++sit: ", situation);
-
             try {
-                JSONObject jObject = new JSONObject(situation);
+                String situation = getSituation();
+
+                JSONObject jObject;
+                jObject = new JSONObject(situation);
 
                 GPSSatellites = jObject.getInt("GPSSatellites");
                 GPSSatellitesTracked = jObject.getInt("GPSSatellitesTracked");
@@ -241,21 +176,20 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 AHRSGLoadMin = jObject.getDouble("AHRSGLoadMin");
                 AHRSGLoadMax = jObject.getDouble("AHRSGLoadMax");
 
-                GPSTrueCourse = jObject.getDouble("GPSTrueCourse");
+                GPSLatitude = jObject.getDouble("GPSLatitude");
+                GPSLongitude = jObject.getDouble("GPSLongitude");
                 GPSAltitudeMSL = jObject.getDouble("GPSAltitudeMSL");
+                GPSTrueCourse = jObject.getDouble("GPSTrueCourse");
                 GPSTurnRate = jObject.getDouble("GPSTurnRate");
                 GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
 
-                //Log.d("pitch: ", String.valueOf(pitch));
-                //Log.d("roll: ", String.valueOf(roll));
-                //Log.d("debug ", String.valueOf(AHRSSlipSkid));
+                String status = getDeviceStatus();
+                jObject = new JSONObject(status);
+
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            //String status = getDeviceStatus();
-            //Log.d("bugbug", status);
         }
     }
 
@@ -274,47 +208,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         return pkt.getLength();
     }
 
-    /*{
-        "GPSLastFixSinceMidnightUTC": 67337.6,
-            "GPSLatitude": 39.108533,
-            "GPSLongitude": -76.770862,
-            "GPSFixQuality": 2,
-            "GPSHeightAboveEllipsoid": 115.51,
-            "GPSGeoidSep": -17.523,
-            "GPSSatellites": 5,
-            "GPSSatellitesTracked": 11,
-            "GPSSatellitesSeen": 8,
-            "GPSHorizontalAccuracy": 10.2,
-            "GPSNACp": 9,
-            "GPSAltitudeMSL": 170.10767,
-            "GPSVerticalAccuracy": 8,
-            "GPSVerticalSpeed": -0.6135171,
-            "GPSLastFixLocalTime": "0001-01-01T00:06:44.24Z",
-            "GPSTrueCourse": 0,
-            "GPSTurnRate": 0,
-            "GPSGroundSpeed": 0.77598433056951,
-            "GPSLastGroundTrackTime": "0001-01-01T00:06:44.24Z",
-            "GPSTime": "2017-09-26T18:42:17Z",
-            "GPSLastGPSTimeStratuxTime": "0001-01-01T00:06:43.65Z",
-            "GPSLastValidNMEAMessageTime": "0001-01-01T00:06:44.24Z",
-            "GPSLastValidNMEAMessage": "$PUBX,04,184426.00,260917,240266.00,1968,18,-177618,-952.368,21*1A",
-            "GPSPositionSampleRate": 0,
-            "BaroTemperature": 37.02,
-            "BaroPressureAltitude": 153.32,
-            "BaroVerticalSpeed": 1.3123479,
-            "BaroLastMeasurementTime": "0001-01-01T00:06:44.23Z",
-            "AHRSPitch": -0.97934145732801,
-            "AHRSRoll": -2.2013729217108,
-            "AHRSGyroHeading": 187741.08073052,
-            "AHRSMagHeading": 3276.7,
-            "AHRSSlipSkid": 0.52267604604907,
-            "AHRSTurnRate": 3276.7,
-            "AHRSGLoad": 0.99847599584255,
-            "AHRSGLoadMin": 0.99815989027411,
-            "AHRSGLoadMax": 1.0043409597397,
-            "AHRSLastAttitudeTime": "0001-01-01T00:06:44.28Z",
-            "AHRSStatus": 7
-    }*/
 
     // Stratux getSituation post
     private String getSituation()
@@ -326,6 +219,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     private String getDeviceStatus()
     {
         return getHttp("http://192.168.10.1/getStatus");
+    }
+
+    // Stratux "level" attitude display. Submit a blank POST to this URL.
+    private String cageAhrs()
+    {
+        return getHttp("http://192.168.10.1/cageAHRS");
     }
 
 
@@ -378,9 +277,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     }
 
 
-
-
-
     public boolean connect(String to, boolean secure)
     {
         try {
@@ -390,16 +286,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             return false;
         }
 
-        //Logger.Logit("Making socket to listen");
+        Logger.Logit(id + "Making socket to listen");
 
         try {
             mSocket = new DatagramSocket(mPort);
             mSocket.setBroadcast(true);
         }
         catch (Exception e) {
-            //Logger.Logit("Failed! Connecting socket " + e.getMessage());
+            Logger.Logit(id + "Failed! Connecting socket " + e.getMessage());
             return false;
         }
+        mState = CONNECTED;
         return true; //connectConnection();
     }
 
@@ -415,14 +312,92 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             mSocket.close();
         }
         catch (Exception e2) {
-            //Logger.Logit("Error stream close");
+            Logger.Logit(id + "Error stream close");
         }
-
-        //disconnectConnection();
+        mState = DISCONNECTED;
     }
 
 
+    public void stop()
+    {
+        Logger.Logit(id + "Stopping ");
+        if (mState != CONNECTED) {
+            Logger.Logit(id + ": Stop failed because already stopped");
+            return;
+        }
+        mRunning = false;
+        disconnect();
+        Logger.Logit(id + "Stopped!");
+    }
+
+
+    public void start()
+    {
+        Logger.Logit(id + "Starting ");
+        if (mState != DISCONNECTED) {
+            Logger.Logit(id + ": Starting failed because already started");
+            return;
+        }
+        mRunning = true;
+        disconnect();
+        connect(Integer.toString(mPort), false);
+        Logger.Logit(id + "Started!");
+    }
+
+    protected boolean isRunning()
+    {
+        return mRunning;
+    }
+
+    protected boolean isStopped()
+    {
+        return !mRunning;
+    }
 }
+
+
+    /*{
+        "GPSLastFixSinceMidnightUTC": 67337.6,
+            "GPSLatitude": 39.108533,
+            "GPSLongitude": -76.770862,
+            "GPSFixQuality": 2,
+            "GPSHeightAboveEllipsoid": 115.51,
+            "GPSGeoidSep": -17.523,
+            "GPSSatellites": 5,
+            "GPSSatellitesTracked": 11,
+            "GPSSatellitesSeen": 8,
+            "GPSHorizontalAccuracy": 10.2,
+            "GPSNACp": 9,
+            "GPSAltitudeMSL": 170.10767,
+            "GPSVerticalAccuracy": 8,
+            "GPSVerticalSpeed": -0.6135171,
+            "GPSLastFixLocalTime": "0001-01-01T00:06:44.24Z",
+            "GPSTrueCourse": 0,
+            "GPSTurnRate": 0,
+            "GPSGroundSpeed": 0.77598433056951,
+            "GPSLastGroundTrackTime": "0001-01-01T00:06:44.24Z",
+            "GPSTime": "2017-09-26T18:42:17Z",
+            "GPSLastGPSTimeStratuxTime": "0001-01-01T00:06:43.65Z",
+            "GPSLastValidNMEAMessageTime": "0001-01-01T00:06:44.24Z",
+            "GPSLastValidNMEAMessage": "$PUBX,04,184426.00,260917,240266.00,1968,18,-177618,-952.368,21*1A",
+            "GPSPositionSampleRate": 0,
+            "BaroTemperature": 37.02,
+            "BaroPressureAltitude": 153.32,
+            "BaroVerticalSpeed": 1.3123479,
+            "BaroLastMeasurementTime": "0001-01-01T00:06:44.23Z",
+            "AHRSPitch": -0.97934145732801,
+            "AHRSRoll": -2.2013729217108,
+            "AHRSGyroHeading": 187741.08073052,
+            "AHRSMagHeading": 3276.7,
+            "AHRSSlipSkid": 0.52267604604907,
+            "AHRSTurnRate": 3276.7,
+            "AHRSGLoad": 0.99847599584255,
+            "AHRSGLoadMin": 0.99815989027411,
+            "AHRSGLoadMax": 1.0043409597397,
+            "AHRSLastAttitudeTime": "0001-01-01T00:06:44.28Z",
+            "AHRSStatus": 7
+    }*/
+
 
 
 /*
@@ -453,3 +428,54 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // TODO: do something with the feed
     }
 */
+
+            /* < debug - add ghost AC traffic
+            long unixTime = System.currentTimeMillis() / 1000L;
+            long aaa = unixTime - pt;
+            if (unixTime - pt > 4) {
+                pt = unixTime;
+                b = b + 0.01f;
+
+                JSONObject object = new JSONObject();
+                //LongReportMessage tm = (LongReportMessage) m;
+                try {
+                    object.put("type", "traffic");
+                    object.put("longitude", (double) 115.9 - b/5);
+                    object.put("latitude", (double) -32.2 + b);
+                    object.put("speed", (double) 123.0);
+                    object.put("bearing", (double) 348.7);
+                    object.put("altitude", (double) 4321);
+                    object.put("callsign", (String) "GHOST-1");
+                    object.put("address", (int) 555);
+                    object.put("time", (long) unixTime);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+
+            if (unixTime - pt2 > 1) {
+                pt2 = unixTime;
+                a = a + 0.01f;
+
+                JSONObject object = new JSONObject();
+                //LongReportMessage tm = (LongReportMessage) m;
+                try {
+                    object.put("type", "traffic");
+                    object.put("longitude", (double) 115.7 + a/5);
+                    object.put("latitude", (double) -32.2 + a);
+                    object.put("speed", (double) 246.0);
+                    object.put("bearing", (double) 11.3);
+                    object.put("altitude", (double) 7654);
+                    object.put("callsign", (String) "GHOST-2");
+                    object.put("address", (int) 666);
+                    object.put("time", (long) unixTime);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+            // debug > */
+

@@ -322,6 +322,13 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    public void setAct(StratuxWiFiTask Stratux)
+    {
+        mRenderer.setAct(Stratux);
+        requestRender();
+    }
+
+
     //
     // Map Zooming
     //
@@ -346,12 +353,9 @@ public class MFDSurfaceView extends GLSurfaceView
     public void setAutoZoomActive(boolean active)
     {
         mRenderer.setAutoZoomActive(active);
+        requestRender();
     }
 
-    public void setAct(StratuxWiFiTask Stratux)
-    {
-        mRenderer.setAct(Stratux);
-    }
 
 
 

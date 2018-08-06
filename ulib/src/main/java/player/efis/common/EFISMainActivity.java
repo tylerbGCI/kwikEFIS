@@ -19,15 +19,21 @@ package player.efis.common;
 import player.ulib.DigitalFilter;
 import player.ulib.UTrig;
 import player.ulib.Unit;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.GpsStatus;
 import android.location.LocationManager;
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 
 // sensor imports
 import android.text.format.Time;
+
 import java.util.Random;
 
 
@@ -45,12 +51,12 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected int colorTheme; // 0=Normal, 1=High Contrast, 2=Monochrome
 
     protected /*static final*/ int SLIP_SENS = 25; //50;	 // Arbitrary choice
-    private static final float STD_RATE = 0.0524f;	     // = rate 1 = 3deg/s
+    private static final float STD_RATE = 0.0524f;         // = rate 1 = 3deg/s
     protected static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
     protected static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
     // Location abstracts
-   //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
+    //_gps_lat = -33.98f;  _gps_lon =   18.82f; // Stellenbosh
     protected float gps_lat;// = -34f;            // in decimal degrees
     protected float gps_lon;// = +19f;            // in decimal degrees
     protected float gps_altitude;       // in m
@@ -81,12 +87,99 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected DigitalFilter filterG = new DigitalFilter(32);              //32
     protected DigitalFilter filterGpsSpeed = new DigitalFilter(6);        //4
     protected DigitalFilter filterGpsAltitude = new DigitalFilter(6);     //4
-    protected DigitalFilter filterGpsCourse = new DigitalFilter(6);       //4
+    protected DigitalFilter filterGpsCourse = new DigitalFilter(16);       //4
 
     /*private MediaPlayer mpCautionTerrian;
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;*/
+
+    protected WifiManager wifiManager;
+    // Stratux Wifi
+    protected StratuxWiFiTask mStratux;
+
+
+    protected boolean connectWiFi(String ssid)
+    {
+        // Connect to wifi
+        WifiConfiguration wifiConfig = new WifiConfiguration();
+        wifiConfig.SSID = String.format("\"%s\"", ssid);
+        //wifiConfig.preSharedKey = String.format("\"%s\"", key);
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+
+        /*WifiManager*/
+        wifiManager = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(WIFI_SERVICE);
+        int netId = wifiManager.addNetwork(wifiConfig);
+        wifiManager.disconnect();
+        wifiManager.enableNetwork(netId, true);
+        wifiManager.reconnect();
+
+        try {
+            Thread.sleep(10*1000);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //return checkWiFiStatus();
+        return true;
+    }
+
+    protected boolean checkWiFiStatus()
+    {
+        WifiInfo info = wifiManager.getConnectionInfo();
+        if (info.getSupplicantState() == SupplicantState.COMPLETED) return true;
+        else
+            return false;
+    }
+
+        /*List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for( WifiConfiguration i : list ) {
+            if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(i.networkId, true);
+                wifiManager.reconnect();
+
+                break;
+            }
+        } */
+
+
+    //
+    // Stratux handler
+    //
+    protected boolean handleStratux()
+    {
+        if (mStratux != null) {
+            pitchValue = (float) mStratux.AHRSPitch;
+            rollValue = (float) mStratux.AHRSRoll;
+            slipValue = (float) mStratux.AHRSSlipSkid;
+            loadfactor = (float) mStratux.AHRSGLoad;
+
+            slipValue = (float) -mStratux.AHRSSlipSkid;
+            SLIP_SENS = 10;
+
+            gps_lat = (float) mStratux.GPSLatitude;
+            gps_lon = (float) mStratux.GPSLongitude;
+            gps_altitude = Unit.Feet.toMeter((float) mStratux.GPSAltitudeMSL);
+            gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
+            gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
+            gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
+            gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
+            sensorBias = 0;
+
+            gps_infix = mStratux.GPSSatellites;
+            gps_insky = mStratux.GPSSatellitesSeen; // GPSSatellitesTracked;
+            if (gps_speed > 5) hasSpeed = true;
+            else hasSpeed = false;
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     //-------------------------------------------------------------------------
     // Utility function to determine the direction of the turn and try to eliminate
@@ -96,9 +189,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     // +1 for right turn
     //  0 for no turn
     static int rs = 0;  // variable to keep the running count
+
     private int getTurnDirection(float rotValue)
     {
-        if (Math.signum(rotValue) > 0)	rs++;
+        if (Math.signum(rotValue) > 0) rs++;
         else rs--;
 
         final int JITTER_COUNT = 10;
@@ -117,9 +211,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     //-------------------------------------------------------------------------
     // Utility function to calculate rate of climb
     // Rate of climb in m/s
-    protected static Time  time = new Time(); 	// Time class
-    private static long   time_a, _time_a;
-    private static float _altitude;   	// previous altitude
+    protected static Time time = new Time();    // Time class
+    private static long time_a, _time_a;
+    private static float _altitude;    // previous altitude
+
     protected float calculateRateOfClimb(float altitude)
     {
         float rateOfClimb = 0;
@@ -130,7 +225,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         time_a = time.toMillis(true);
         deltaT = time_a - _time_a;
         if (deltaT > 0) {
-            rateOfClimb = 1000* filterRateOfClimb.runningAverage((float) deltaAlt /(float) deltaT); // m/s
+            rateOfClimb = 1000 * filterRateOfClimb.runningAverage((float) deltaAlt / (float) deltaT); // m/s
             _time_a = time_a;
             _altitude = altitude; // save the previous altitude
         }
@@ -140,9 +235,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     //-------------------------------------------------------------------------
     // Utility function to calculate rate of turn
     // Rate of turn in rad/s
-    private static float _course;   	// previous course
-    private static long  time_c, _time_c;
+    private static float _course;    // previous course
+    private static long time_c, _time_c;
     private static float _rateOfTurn;
+
     protected float calculateRateOfTurn(float course)
     {
         float rateOfTurn = 0;
@@ -159,7 +255,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         time_c = time.toMillis(true);
         deltaT = time_c - _time_c;
         if (deltaT > 0) {
-            rateOfTurn = 1000 * (float)(deltaCrs) / deltaT; // rad/s
+            rateOfTurn = 1000 * (float) (deltaCrs) / deltaT; // rad/s
             _time_c = time_c; // save the previous time
         }
         else {
@@ -181,7 +277,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         Intent batteryStatus = this.registerReceiver(null, ifilter);
         int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        float batteryPct = level / (float)scale;
+        float batteryPct = level / (float) scale;
 
         return batteryPct;
     }
@@ -207,7 +303,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     {
         onStop();
 
-        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
@@ -216,7 +312,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     // Utility function to do a simple simulation for demo mode
     // It acts like a crude flight simulator
     //
-    protected float _gps_lat = 00.00f; protected float _gps_lon = 00.00f;   // null island
+    protected float _gps_lat = 00.00f;
+    protected float _gps_lon = 00.00f;   // null island
     float _gps_course = 0.96f;    // in radians
     float _gps_altitude = 3000;   // meters
     protected float _gps_agl = 0; // meters
@@ -239,14 +336,14 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
 
         if (Math.abs(pitchValue) > 10) {
             _gps_speed -= 0.01f * pitchValue;
-            if (_gps_speed > setSpeed) _gps_speed =  setSpeed;
+            if (_gps_speed > setSpeed) _gps_speed = setSpeed;
             if (_gps_speed < -setSpeed) _gps_speed = -setSpeed;
         }
         else {
             _gps_speed *= 0.99998;  // decay to zero
         }
         gps_speed = setSpeed + _gps_speed;
-        gps_rateOfClimb = (pitchValue * gps_speed / 50 );
+        gps_rateOfClimb = (pitchValue * gps_speed / 50);
 
         _gps_altitude += (gps_rateOfClimb / 10);
         if (_gps_altitude < -100) _gps_altitude = -100;   // meters
@@ -254,7 +351,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         gps_altitude = _gps_altitude;
 
         if (gps_speed != 0) {
-            _gps_course += (rollValue * gps_speed / 1e6f );
+            _gps_course += (rollValue * gps_speed / 1e6f);
             while (_gps_course > (UTrig.M_2PI)) _gps_course %= (UTrig.M_2PI);
             while (_gps_course < 0) _gps_course += (UTrig.M_2PI);
         }
@@ -312,8 +409,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
             gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
             gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
 
-            if (gps_lon > 180) gps_lon = -180; if (gps_lon < -180) gps_lon = 180;
-            if (gps_lat > 90) gps_lat = -90;   if (gps_lat < -90) gps_lat = 90;
+            if (gps_lon > 180) gps_lon = -180;
+            if (gps_lon < -180) gps_lon = 180;
+            if (gps_lat > 90) gps_lat = -90;
+            if (gps_lat < -90) gps_lat = 90;
         }
         gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
     }

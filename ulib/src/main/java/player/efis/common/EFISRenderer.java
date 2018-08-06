@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceChanged}</li>
  * </ul>
  */
-public class EFISRenderer 
+public class EFISRenderer
 {
     private static final String TAG = "EFISRenderer";
 
@@ -136,7 +136,7 @@ public class EFISRenderer
     protected boolean autoZoomActive;
 
     // 3D map display
-    protected boolean displayAirport;
+    protected boolean displayAirport = true;
     protected boolean displayAirspace;
     protected boolean displayAHColors;
     protected boolean displayTape;
@@ -1844,24 +1844,18 @@ public class EFISRenderer
 
 
 
-
     private StratuxWiFiTask mStratux;
-
     public void setAct(StratuxWiFiTask Stratux)
     {
         this.mStratux = Stratux;
     }
-
-    //LinkedList<String> objs = new LinkedList<String>();
 
     protected void renderACT(float[] matrix)
     {
         float z, x1, y1;
 
         z = zfloat;
-
         LinkedList<String> objs = mStratux.getAcList();
-        //if (_objs != null) objs = _objs;
 
         for (String s : objs) {
             // sendDataToHelper(s);
@@ -1869,10 +1863,6 @@ public class EFISRenderer
                 JSONObject jObject = new JSONObject(s);
                 if (jObject.getString("type").contains("traffic")) {
                     String callsign = jObject.getString("callsign");
-                    //Log.d("callsign=", callsign);
-                    //if (!s.contains("ZS-TEST"))
-                    Log.d("traffic", s);
-
                     float lon = (float)jObject.getDouble("longitude");
                     float lat = (float)jObject.getDouble("latitude");
                     float spd = (float)jObject.getDouble("speed");
@@ -1894,10 +1884,9 @@ public class EFISRenderer
                     dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
                     actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
 
-                    x1 = project(actRelBrg, dme).x;
-                    y1 = project(actRelBrg, dme).y;
+                    x1 = project(actRelBrg, dme, alt).x;
+                    y1 = project(actRelBrg, dme, alt).y;
                     renderACTSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd);
-
                 }
             }
             catch (JSONException e) {
@@ -1913,7 +1902,7 @@ public class EFISRenderer
         float z = zfloat;
 
         mPolyLine.SetWidth(3);
-        mPolyLine.SetColor(theta*foreShadeR, theta*foreShadeR, theta*foreShadeB, 1);  //white'ish
+        mPolyLine.SetColor(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1);  //white'ish
 
         float[] vertPoly = {
                 x1 + radius, y1 + radius, z,
@@ -1923,7 +1912,7 @@ public class EFISRenderer
                 x1 + radius, y1 + radius, z
         };
         mPolyLine.VertexCount = 5;
-        mPolyLine.SetVerts(vertPoly);  //crash here
+        mPolyLine.SetVerts(vertPoly);
         mPolyLine.draw(matrix);
 
         // Text at target
@@ -1961,6 +1950,12 @@ public class EFISRenderer
 
     // this must be overridden in the child classes
     protected Point project(float x, float y)
+    {
+        return null;
+    }
+
+    // this must be overridden in the child classes
+    protected Point project(float relbrg, float dme, float elev)
     {
         return null;
     }

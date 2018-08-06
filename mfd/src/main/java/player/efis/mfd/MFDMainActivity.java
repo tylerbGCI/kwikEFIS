@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package player.efis.mfd; 
+package player.efis.mfd;
 
 import player.efis.common.AirspaceClass;
 import player.efis.common.OpenAir;
@@ -29,6 +29,7 @@ import player.ulib.UMath;
 import player.ulib.UNavigation;
 import player.ulib.Unit;
 import player.efis.common.orientation_t;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +49,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater; 
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -60,50 +61,50 @@ import android.preference.PreferenceManager;
 
 public class MFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
-	public static final String PREFS_NAME = R.string.app_name + ".prefs";
-	private MFDSurfaceView mGLView;
+    public static final String PREFS_NAME = R.string.app_name + ".prefs";
+    private MFDSurfaceView mGLView;
     private MediaPlayer mpCautionTerrian;
     private MediaPlayer mpFiveHundred;
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;
 
     // sensor members
-	private SensorManager mSensorManager;
+    private SensorManager mSensorManager;
     private OpenAir mAirspace;
-	
-	// Stratux Wifi
-	private StratuxWiFiTask mStratux;
 
-	// Location abstracts
-    
-	//
-	//  Add the action bar buttons
-	//
-	//Menu menu;
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+    // Stratux Wifi
+    //private StratuxWiFiTask mStratux;
 
-	@Override
-	public void onBackPressed()
-	{
+    // Location abstracts
+
+    //
+    //  Add the action bar buttons
+    //
+    //Menu menu;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
         if (mGLView.mRenderer.fatFingerActive == true) {
             mGLView.mRenderer.fatFingerActive = false;
             mGLView.mRenderer.setSpinnerParams();
         }
         else openOptionsMenu();
-	}
+    }
 
-	// This method is called once the menu is selected
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId()) {
+    // This method is called once the menu is selected
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId()) {
             case R.id.settings:
                 // Launch settings activity
                 Intent i = new Intent(this, MFDPrefSettings.class);
@@ -119,267 +120,271 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 if (bLockedMode == false) finish();
                 else Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
                 break;
-                // more code...
+            // more code...
             default:
                 return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
-	// This code will catch the actual keypress.
-	// for now we will leave the menu bar in case it is needed later 
+    // This code will catch the actual keypress.
+    // for now we will leave the menu bar in case it is needed later
     @Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{ 
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
             mGLView.setAutoZoomActive(false);
             mGLView.zoomIn();
             return true;
         }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             mGLView.setAutoZoomActive(false);
             mGLView.zoomOut();
             return true;
         }
-		return super.onKeyDown(keyCode, event);
-	}
+        return super.onKeyDown(keyCode, event);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		// Keep the screen on
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // Keep the screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Create a GLSurfaceView instance and set it
-		// as the ContentView for this Activity
-		mGLView = new MFDSurfaceView(this);
-		setContentView(mGLView);
+        // as the ContentView for this Activity
+        mGLView = new MFDSurfaceView(this);
+        setContentView(mGLView);
 
         // Get the version number of the app
-		PackageInfo pInfo = null;
-		try {
-			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-		}
-		catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		String version = pInfo.versionName;
-		Toast.makeText(this, "Kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        }
+        catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = pInfo.versionName;
+        Toast.makeText(this, "Kwik DMAP version: " + version, Toast.LENGTH_LONG).show();
 
-		try {
-			mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
-			registerSensorManagerListeners();
-		}
-		catch (Exception e) {
-			Toast.makeText(this, "Hardware compatibility issue", Toast.LENGTH_LONG).show();
-		}
+        try {
+            mSensorManager = (SensorManager) getSystemService(Activity.SENSOR_SERVICE);
+            registerSensorManagerListeners();
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Hardware compatibility issue", Toast.LENGTH_LONG).show();
+        }
 
-		// testing for lightweight -- may or may not use
-		sensorComplementaryFilter = new SensorComplementaryFilter();
+        // testing for lightweight -- may or may not use
+        sensorComplementaryFilter = new SensorComplementaryFilter();
 
-		// Location
-		// Get the location manager
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Define the criteria how to select the location provider -> use default
-		// Criteria criteria = new Criteria();
-		// provider = locationManager.getBestProvider(criteria, false);
-		provider = LocationManager.GPS_PROVIDER;  // Always use the GPS as the provide
-		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
-		locationManager.addGpsStatusListener(this);
-		Location location = locationManager.getLastKnownLocation(provider);
-		// end location
+        // Location
+        // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the location provider -> use default
+        // Criteria criteria = new Criteria();
+        // provider = locationManager.getBestProvider(criteria, false);
+        provider = LocationManager.GPS_PROVIDER;  // Always use the GPS as the provide
+        locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+        locationManager.addGpsStatusListener(this);
+        Location location = locationManager.getLastKnownLocation(provider);
+        // end location
 
-		// Preferences
-		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-		PreferenceManager.setDefaultValues(this, R.xml.manage , false);
+        // Preferences
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.manage, false);
 
-		// Set the window to be full brightness
-		WindowManager.LayoutParams layout = getWindow().getAttributes();
-    	layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
-    	getWindow().setAttributes(layout);
+        // Set the window to be full brightness
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = -1f;  // 1f = full bright 0 = selected
+        getWindow().setAttributes(layout);
 
-		// Restore persistent preferences
+        // Restore persistent preferences
         restorePersistentSettings();
 
-    	// This should never happen but we catch and force it to something known it just in case
-    	if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
+        // This should never happen but we catch and force it to something known it just in case
+        if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-		// Instantiate a new apts gpx/xml
-		mGpx = new Gpx(this);
+        // Instantiate a new apts gpx/xml
+        mGpx = new Gpx(this);
         mDemGTOPO30 = new DemGTOPO30(this);
         mAirspace = new OpenAir(this);
         mGLView.setTheme(colorTheme);
 
         // Wifi
-        //new RetrieveWiFiTask().execute();
-        mStratux = new StratuxWiFiTask();
+        connectWiFi("stratux");
+        mStratux = new StratuxWiFiTask("mfd");
         mStratux.execute();
 
-		// Overall the device is now ready.
-		// The individual elements will be enabled or disabled by the location provided
-		// based on availability
-		mGLView.setServiceableDevice();
+        // Overall the device is now ready.
+        // The individual elements will be enabled or disabled by the location provided
+        // based on availability
+        mGLView.setServiceableDevice();
         updateEFIS();
 
-	}
+    }
 
-	@Override
+
+    @Override
     protected void onStop()
     {
+        mStratux.stop();
         savePersistentSettings();
         super.onStop();
     }
 
-	public void registerSensorManagerListeners()
-	{
-		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 	mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
-		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 		mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
-	}
+    public void registerSensorManagerListeners()
+    {
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
+    }
 
-	public void unregisterSensorManagerListeners()
-	{
-		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
-		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); //SENSOR_DELAY_FASTEST);
-	}
+    public void unregisterSensorManagerListeners()
+    {
+        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); //SENSOR_DELAY_FASTEST);
+        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));     //SENSOR_DELAY_FASTEST);
+    }
 
     @Override
-	protected void onPause()
-	{
-		super.onPause();
-		// The following call pauses the rendering thread.
-		// If your OpenGL application is memory intensive,
-		// you should consider de-allocating objects that
-		// consume significant memory here.
-		mGLView.onPause();
+    protected void onPause()
+    {
+        super.onPause();
+        // The following call pauses the rendering thread.
+        // If your OpenGL application is memory intensive,
+        // you should consider de-allocating objects that
+        // consume significant memory here.
+        mGLView.onPause();
+        mStratux.stop();
 
         /*
-		locationManager.removeUpdates(this);
+        locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
 		*/
-	}
+    }
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		// The following call resumes a paused rendering thread.
-		// If you de-allocated graphic objects for onPause()
-		// this is a good place to re-allocate them.
-		mGLView.onResume();
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        // The following call resumes a paused rendering thread.
+        // If you de-allocated graphic objects for onPause()
+        // this is a good place to re-allocate them.
+        mGLView.onResume();
+        mStratux.start();
 
         /*
 		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
 		//locationManager.addNmeaListener(this);
 		registerSensorManagerListeners();
 		*/
-	}
+    }
 
-	//
-	// Sensor methods
-	//
-    	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy)
-	{
-		switch(sensor.getType()) {
-		case Sensor.TYPE_GRAVITY:
-			break;
+    //
+    // Sensor methods
+    //
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy)
+    {
+        switch (sensor.getType()) {
+            case Sensor.TYPE_GRAVITY:
+                break;
 
-		case Sensor.TYPE_MAGNETIC_FIELD:
-			// SENSOR_STATUS_ACCURACY_HIGH
-			// SENSOR_STATUS_ACCURACY_MEDIUM
-			// SENSOR_STATUS_ACCURACY_LOW
-			// SENSOR_STATUS_UNRELIABLE
-			break;
-		}
-	}
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                // SENSOR_STATUS_ACCURACY_HIGH
+                // SENSOR_STATUS_ACCURACY_MEDIUM
+                // SENSOR_STATUS_ACCURACY_LOW
+                // SENSOR_STATUS_UNRELIABLE
+                break;
+        }
+    }
 
     @Override
-	public void onSensorChanged(SensorEvent event)
-	{
-		switch (event.sensor.getType()) {
-		case Sensor.TYPE_ACCELEROMETER:
-			sensorComplementaryFilter.setAccel(event.values);
-			break;
+    public void onSensorChanged(SensorEvent event)
+    {
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                sensorComplementaryFilter.setAccel(event.values);
+                break;
 
 
-		case Sensor.TYPE_MAGNETIC_FIELD:
-			//b2b2 sensorFusion.setMagnet(event.values);
-			break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                //b2b2 sensorFusion.setMagnet(event.values);
+                break;
 
-		case Sensor.TYPE_ORIENTATION:
-			orientationAzimuth = event.values[0];
-			orientationPitch = -event.values[2];
-			orientationRoll = -event.values[1];
-			break;
+            case Sensor.TYPE_ORIENTATION:
+                orientationAzimuth = event.values[0];
+                orientationPitch = -event.values[2];
+                orientationRoll = -event.values[1];
+                break;
 
-		case Sensor.TYPE_PRESSURE:
-			// altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
-			break;
-		}
-		updateEFIS();
-	}
-
-
-    @Override
-	public void onLocationChanged(Location location)
-	{
-		if (!bSimulatorActive) {
-			gps_lat =  (float) location.getLatitude();
-			gps_lon = (float) location.getLongitude();
-            gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
-
-			if (location.hasSpeed()) {
-				gps_speed = location.getSpeed();
-				if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
-				mGLView.setServiceableAsi();
-				hasSpeed = true;
-			}
-			else {
-				mGLView.setUnServiceableAsi();
-				hasSpeed = false;
-			}
-
-			if (location.hasAltitude()) {
-				gps_altitude = (float) location.getAltitude();
-				gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
-				mGLView.setServiceableAlt();
-			}
-			else {
-				mGLView.setUnServiceableAlt();
-			}
-
-			if (location.hasBearing()) {
-				gps_course = (float) Math.toRadians(location.getBearing());
-				gps_rateOfTurn = calculateRateOfTurn(gps_course);
-				mGLView.setServiceableDi();
-			}
-			else {
-				gps_rateOfTurn = 0;
-				mGLView.setUnServiceableDi();
-			}
-
-			if (location.hasSpeed() && location.hasBearing() ) {
-				mGLView.setServiceableAh();
-			}
-			else {
-				mGLView.setUnServiceableAh();
-			}
-		}
-		updateEFIS();
+            case Sensor.TYPE_PRESSURE:
+                // altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
+                break;
+        }
+        updateEFIS();
     }
 
 
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras)
-	{
-		if (!LocationManager.GPS_PROVIDER.equals(provider)) {
-			return;
-		}
-		// do something
-	}
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        if (!bSimulatorActive) {
+            gps_lat = (float) location.getLatitude();
+            gps_lon = (float) location.getLongitude();
+            gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
+
+            if (location.hasSpeed()) {
+                gps_speed = location.getSpeed();
+                if (gps_speed == 0) gps_speed = 0.01f;  // nip div zero issues in the bud
+                mGLView.setServiceableAsi();
+                hasSpeed = true;
+            }
+            else {
+                mGLView.setUnServiceableAsi();
+                hasSpeed = false;
+            }
+
+            if (location.hasAltitude()) {
+                gps_altitude = (float) location.getAltitude();
+                gps_rateOfClimb = calculateRateOfClimb(gps_altitude);
+                mGLView.setServiceableAlt();
+            }
+            else {
+                mGLView.setUnServiceableAlt();
+            }
+
+            if (location.hasBearing()) {
+                gps_course = (float) Math.toRadians(location.getBearing());
+                gps_rateOfTurn = calculateRateOfTurn(gps_course);
+                mGLView.setServiceableDi();
+            }
+            else {
+                gps_rateOfTurn = 0;
+                mGLView.setUnServiceableDi();
+            }
+
+            if (location.hasSpeed() && location.hasBearing()) {
+                mGLView.setServiceableAh();
+            }
+            else {
+                mGLView.setUnServiceableAh();
+            }
+        }
+        updateEFIS();
+    }
+
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras)
+    {
+        if (!LocationManager.GPS_PROVIDER.equals(provider)) {
+            return;
+        }
+        // do something
+    }
 
 
     private void savePersistentSettings()
@@ -430,42 +435,41 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-
     protected void setGpsStatus()
-	{
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
-			Iterable<GpsSatellite> sats = mGpsStatus.getSatellites();
-			gps_insky = 0;
-			gps_infix = 0;
-			for (GpsSatellite s : sats) {
-				gps_insky += 1;
-				if (s.usedInFix()) gps_infix += 1;
-			}
-		}
-	}
+    {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
+            Iterable<GpsSatellite> sats = mGpsStatus.getSatellites();
+            gps_insky = 0;
+            gps_infix = 0;
+            for (GpsSatellite s : sats) {
+                gps_insky += 1;
+                if (s.usedInFix()) gps_infix += 1;
+            }
+        }
+    }
 
-	// This must be implemented otherwise the older
-	// systems does not get seem to get updates.
-	@Override
-	public void onGpsStatusChanged(int state)
-	{
-		setGpsStatus();
-	}
+    // This must be implemented otherwise the older
+    // systems does not get seem to get updates.
+    @Override
+    public void onGpsStatusChanged(int state)
+    {
+        setGpsStatus();
+    }
 
 
-	@Override
-	public void onProviderEnabled(String provider)
-	{
-		Toast.makeText(this, "Enabled new provider " + provider, Toast.LENGTH_SHORT).show();
-	}
+    @Override
+    public void onProviderEnabled(String provider)
+    {
+        Toast.makeText(this, "Enabled new provider " + provider, Toast.LENGTH_SHORT).show();
+    }
 
-	@Override
-	public void onProviderDisabled(String provider)
-	{
-		Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
-	}
-	// end location abs ------------------------
+    @Override
+    public void onProviderDisabled(String provider)
+    {
+        Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
+    }
+    // end location abs ------------------------
 
 
     private void setUserPrefs()
@@ -478,9 +482,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRMI", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         // Only used in PFD
-		// mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayAHColor", true));
+        // mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayAHColor", true));
         // mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
-		// Only used in MFD
+        // Only used in MFD
         mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
         AirspaceClass.A = settings.getBoolean("classA", true);
         AirspaceClass.B = settings.getBoolean("classB", true);
@@ -490,7 +494,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         AirspaceClass.F = settings.getBoolean("classF", true);
         AirspaceClass.G = settings.getBoolean("classG", true);
         AirspaceClass.P = settings.getBoolean("classP", true);
-        AirspaceClass.R= settings.getBoolean("classR", true);
+        AirspaceClass.R = settings.getBoolean("classR", true);
         AirspaceClass.Q = settings.getBoolean("classQ", true);
         AirspaceClass.CTR = settings.getBoolean("classCTR", true);
 
@@ -537,128 +541,122 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
     }
 
-	//-------------------------------------------------------------------------
-	// Effectively the main execution loop. updateEFIS will get called when
-	// something changes, eg a sensor has new data or new gps fix becomes available.
-	//
-	private void updateEFIS()
-	{
-        float[] accel = new float[3]; // accelerometer vector
 
-		//
-		// Read the Sensors
-		//
-        if (bLandscapeMode) {
-            if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_LANDSCAPE);
-            else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
-        }
-        else {
-            if (bHudMode) sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_PORTRAIT);
-            else          sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
-        }
-
-		sensorComplementaryFilter.getAccel(accel);	// Use the accelerometer for G and slip
-
-		pitchValue = -sensorComplementaryFilter.getPitchAcc();
-		rollValue = -sensorComplementaryFilter.getRollAcc();
-
-
-		//
-		// Check if we have a valid GPS
-		//
-		hasGps = isGPSAvailable();
-
-		// for debug - set to true
-		if (false) {
-			hasGps = true;          //debug
-			hasSpeed = true;        //debug
-			gps_speed = 3;//60;     //m/s debug
-			gps_rateOfClimb = 1.0f; //m/s debug
-		}
-		// end debug
-
-		//
-        // From Stratux
-        if (mStratux != null) {
-            // totdo - check startux status
+    //
+    // Stratux handler
+    //
+    protected boolean handleStratux()
+    {
+        //todo: // - check stratux status
+        if (checkWiFiStatus()) {
             hasGps = true;
-            hasSpeed = true;
+            //hasSpeed = true;
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
             mGLView.setServiceableAlt();
             mGLView.setServiceableAh();
             mGLView.setDisplayAirport(true);
-
-            pitchValue = (float) mStratux.AHRSPitch;
-            rollValue =  (float) mStratux.AHRSRoll;
-            slipValue =  (float) mStratux.AHRSSlipSkid;
-            loadfactor = (float) mStratux.AHRSGLoad;
-
-            slipValue = (float) -mStratux.AHRSSlipSkid;
-            SLIP_SENS = 10;
-
-            gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
-            gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
-            gps_altitude = Unit.Feet.toMeter((float)mStratux.GPSAltitudeMSL);
-
-            gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
-            sensorBias = 0;
-
-            gps_infix = mStratux.GPSSatellites;
-            gps_insky = mStratux.GPSSatellitesSeen; /*GPSSatellitesTracked;*/
-
-            mGLView.setAct(mStratux);
-
-            gps_course = (float)Math.toRadians(30); // debug // TODO: 2018-08-04
-            /*
-            Iterator<String> i = objs.iterator();
-            while (i.hasNext()) {
-                // sendDataToHelper(s);
-                String s = i.next();
-                Log.d("s", s);
-
-                try {
-                    JSONObject jObject = new JSONObject(s);
-                    if (jObject.getString("type") == "traffic") {
-                        String callsign = jObject.getString("callsign");
-                        Log.d("callsign=", callsign);
-                    }
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            */
-
-
-
+            mGLView.setBannerMsg(false, " ");
         }
-		//Demo mode handler
-		//
-		if (bSimulatorActive) {
-			mGLView.setSimulatorActive(true, "SIMULATOR");
-			Simulate();
-			// Set the GPS flag to true and
-			// make all the instruments serviceable
-			hasGps = true;
-			hasSpeed = true;
-		}
-		else {
+        else {
+            hasGps = false;
+            hasSpeed = false;
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX CONNECTION");
+            connectWiFi("stratux");
+        }
+        return super.handleStratux();
+    }
+
+    //
+    // Android  handler
+    //
+    protected boolean handleAndroid()
+    {
+        float[] gyro = new float[3]; // gyroscope vector
+        float[] accel = new float[3]; // accelerometer vector
+
+        //
+        // Read the Sensors
+        //
+        if (bLandscapeMode) {
+            if (bHudMode)
+                sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_LANDSCAPE);
+            else sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_LANDSCAPE);
+        }
+        else {
+            if (bHudMode)
+                sensorComplementaryFilter.setOrientation(orientation_t.HORIZONTAL_PORTRAIT);
+            else sensorComplementaryFilter.setOrientation(orientation_t.VERTICAL_PORTRAIT);
+        }
+
+        sensorComplementaryFilter.getAccel(accel);    // Use the accelerometer for G and slip
+
+        //pitchValue = -sensorComplementaryFilter.getPitchAcc();
+        //rollValue = -sensorComplementaryFilter.getRollAcc();
+
+        //
+        // Check if we have a valid GPS
+        //
+        hasGps = isGPSAvailable();
+
+        // for debug - set to true
+        if (false) {
+            hasGps = true;          //debug
+            hasSpeed = true;        //debug
+            gps_speed = 3;//60;     //m/s debug
+            gps_rateOfClimb = 1.0f; //m/s debug
+        }
+        // end debug
+        return true;
+    }
+
+
+
+    //-------------------------------------------------------------------------
+    // Effectively the main execution loop. updateEFIS will get called when
+    // something changes, eg a sensor has new data or new gps fix becomes available.
+    //
+    private void updateEFIS()
+    {
+        //
+        // Read and Set the user preferences
+        //
+        setUserPrefs();
+
+        // Android internal sensors handler
+        handleAndroid();
+
+        //
+        //Demo mode handler
+        //
+        if (bSimulatorActive) {
+            mGLView.setSimulatorActive(true, "SIMULATOR");
+            Simulate();
+            // Set the GPS flag to true and
+            // make all the instruments serviceable
+            hasGps = true;
+            hasSpeed = true;
+        }
+        else {
             mGLView.setSimulatorActive(false, " ");
             mGLView.setDisplayAirport(true);
+
+            // Stratux handler
+            handleStratux();
         }
 
-		//
-		// Read and Set the user preferences
-		//
-		setUserPrefs();
+        // Apply a little filtering to the pitch, bank and course
+        pitchValue = filterPitch.runningAverage(pitchValue);
+        rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
+        gps_course = (float) filterGpsCourse.runningAverage(Math.toRadians(mStratux.GPSTrueCourse));
 
-		//
-		// Get the battery percentage
-		//
-		float batteryPct = getRemainingBattery();
+
+        //
+        // Get the battery percentage
+        //
+        float batteryPct = getRemainingBattery();
 
         //
         // Handle the DEM buffer.
@@ -672,7 +670,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
-		if (ctr++ > 100) {
+        if (ctr++ > 100) {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
@@ -689,23 +687,25 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             ctr = 0;
         }
 
-		//
-		// Pass the values to mGLView for updating
-		//
-		String s; // general purpose string
+        //
+        // Pass the values to mGLView for updating
+        //
+        String s; // general purpose string
 
-		mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
+        mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
-        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl)); 	     // in Feet
-		mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
-		mGLView.setLatLon(gps_lat, gps_lon);
-		mGLView.setBatteryPct(batteryPct);                       // in percentage
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
+        mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
+        mGLView.setLatLon(gps_lat, gps_lon);
+        mGLView.setBatteryPct(batteryPct);                       // in percentage
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
 
+        mGLView.setAct(mStratux); // traffic list
+
         _gps_agl = gps_agl; // save the previous altitude
-	}
+    }
 
     protected void Simulate()
     {
@@ -714,8 +714,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
 
-        pitchValue = 0.25f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
-        rollValue = 1.25f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+        pitchValue = 0.125f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
+        rollValue = 1.125f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
 
         super.Simulate();
     }

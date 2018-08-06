@@ -54,6 +54,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
     <!-- avare -->
+    <!--
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
 
@@ -63,10 +64,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    -->
     <!-- avare -->
     
-    
-    
+    <!-- stratux -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- Stratux -->
 
     <permission android:name="ACCESS_COARSE_LOCATION" >
     </permission>

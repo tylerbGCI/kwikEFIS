@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="DISPLAY" style="?android:attr/listSeparatorTextViewStyle">
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="displayTerrain"
+            android:key="displayAHColor"
             android:summary="Display full color artificial horizon"
             android:title="Color earth and sky" />
 
