@@ -1758,6 +1758,7 @@ public class EFISRenderer
         float _dme = 1000;
         float aptRelBrg;   
         String wptId = mWptSelName;
+        float elev;
 
         // Aways draw at least the selected waypoint
         wptId = mWptSelName;
@@ -1765,6 +1766,7 @@ public class EFISRenderer
         aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
         x1 = project(aptRelBrg, dme).x;
         y1 = project(aptRelBrg, dme).y;
+
         renderAPTSymbol(matrix, x1, y1, wptId);
 
         // draw all the other waypoints that fit the criteria
@@ -1783,6 +1785,7 @@ public class EFISRenderer
             wptId = currApt.name;
             dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
 
+
             // Apply selection criteria
             if (dme < 5) nrAptsFound++;                                                // always show apts closer then 5nm
             else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange)) nrAptsFound++; // show all others up to MX_NR_APT for AptSeekRange
@@ -1790,9 +1793,14 @@ public class EFISRenderer
 
             aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
 
-            x1 = project(aptRelBrg, dme).x;
+            /*x1 = project(aptRelBrg, dme).x;
             y1 = project(aptRelBrg, dme).y;
+            renderAPTSymbol(matrix, x1, y1, wptId);*/
+
+            x1 = project(aptRelBrg, dme, currApt.elev).x;
+            y1 = project(aptRelBrg, dme, currApt.elev).y;
             renderAPTSymbol(matrix, x1, y1, wptId);
+
 
             if (Math.abs(dme) < Math.abs(_dme)) {
                 // closest apt (dme)

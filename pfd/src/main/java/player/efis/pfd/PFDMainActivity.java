@@ -724,7 +724,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Apply a little filtering to the pitch, bank and course
         pitchValue = filterPitch.runningAverage(pitchValue);
         rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
-        gps_course = (float) filterGpsCourse.runningAverage(Math.toRadians(mStratux.GPSTrueCourse));
+        gps_course = filterGpsCourse.runningAverage(gps_course);
 
 
         //
