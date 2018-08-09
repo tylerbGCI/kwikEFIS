@@ -67,8 +67,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     // sensor members
     private SensorManager mSensorManager;
-    // Stratux Wifi
-    //private StratuxWiFiTask mStratux = null;
 
     // Location abstracts
 
@@ -525,7 +523,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 _gps_lat = gps_lat;
             }
         }
+
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
+        bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
@@ -567,7 +567,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //todo: // - check stratux status
         if (checkWiFiStatus()) {
             hasGps = true;
-            hasSpeed = true;
+            //hasSpeed = true;
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
@@ -585,7 +585,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         return super.handleStratux();
     }
-
 
     //
     // Android  handler
@@ -713,7 +712,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAh();
             mGLView.setDisplayAirport(true);
         }
-        else {
+        else if (bStratuxActive) {
             mGLView.setSimulatorActive(false, " ");
             mGLView.setDisplayAirport(true);
 

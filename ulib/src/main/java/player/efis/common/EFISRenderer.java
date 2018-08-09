@@ -1959,14 +1959,15 @@ public class EFISRenderer
     // this must be overridden in the child classes
     protected Point project(float x, float y)
     {
-        return null;
+        return new Point(0, 0);
     }
 
     // this must be overridden in the child classes
     protected Point project(float relbrg, float dme, float elev)
     {
-        return null;
+        return new Point(0, 0);
     }
+
 
     //-------------------------------------------------------------------------
     // Synthetic Vision

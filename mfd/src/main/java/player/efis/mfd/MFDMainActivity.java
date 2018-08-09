@@ -72,8 +72,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     private SensorManager mSensorManager;
     private OpenAir mAirspace;
 
-    // Stratux Wifi
-    //private StratuxWiFiTask mStratux;
 
     // Location abstracts
 
@@ -508,7 +506,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 _gps_lat = gps_lat;
             }
         }
+
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
+        bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
 
         // If the aircraft is changed, update the paramaters
@@ -639,7 +639,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             hasGps = true;
             hasSpeed = true;
         }
-        else {
+        else if (bStratuxActive) {
             mGLView.setSimulatorActive(false, " ");
             mGLView.setDisplayAirport(true);
 
@@ -650,7 +650,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Apply a little filtering to the pitch, bank and course
         pitchValue = filterPitch.runningAverage(pitchValue);
         rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
-        gps_course = (float) filterGpsCourse.runningAverage(Math.toRadians(mStratux.GPSTrueCourse));
+        gps_course = filterGpsCourse.runningAverage(gps_course);
 
 
         //
@@ -714,7 +714,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
 
-        pitchValue = 0.125f * (float) Math.random() - UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
+        pitchValue = 0.125f * (float) Math.random() - 0.75f * UMath.clamp(gps_agl - Unit.Feet.toMeter(target_agl), -3, 3);
         rollValue = 1.125f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
 
         super.Simulate();

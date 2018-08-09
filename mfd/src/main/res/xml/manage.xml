@@ -82,7 +82,6 @@
                     android:key="landscapeMode"
                     android:summary="Select Landscape view"
                     android:title="Landscape" />
-               
 
                 <CheckBoxPreference
                     android:defaultValue="false"
@@ -92,6 +91,11 @@
             </PreferenceCategory>
                     
             <PreferenceCategory android:title="ADMIN" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="stratuxActive"
+                    android:summary="Enable Stratux module"
+                    android:title="Stratux" />
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="simulatorActive"
