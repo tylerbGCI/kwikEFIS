@@ -31,8 +31,6 @@ import player.efis.common.prefs_t;
 //
 public class MFDSurfaceView extends GLSurfaceView
 {
-
-    //private final MFDRenderer mRenderer;
     public final MFDRenderer mRenderer;  // normally this would be private but we want to access the sel wpt from main activity
 
     public MFDSurfaceView(Context context)

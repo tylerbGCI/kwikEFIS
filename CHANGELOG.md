@@ -2,8 +2,8 @@ Changelog
 =========
 REL_21 (tbd)
 ------------------
+* Add support for Stratux ADS-B ADHRS 
 * Drive simulator using the flight director
-* 
 * 
 * Beta Release EFIS v3.12
 * Beta Release DMAP v1.7

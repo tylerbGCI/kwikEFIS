@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceChanged}</li>
  * </ul>
  */
-public class EFISRenderer
+abstract public class EFISRenderer
 {
     private static final String TAG = "EFISRenderer";
 
@@ -1956,17 +1956,27 @@ public class EFISRenderer
     }
 
 
+    /*
     // this must be overridden in the child classes
-    protected Point project(float x, float y)
+    abstract protected Point project(float x, float y)
     {
         return new Point(0, 0);
     }
 
     // this must be overridden in the child classes
-    protected Point project(float relbrg, float dme, float elev)
+    abstract protected Point project(float relbrg, float dme, float elev)
     {
         return new Point(0, 0);
     }
+    */
+
+
+    // this must be overridden in the child classes
+    abstract protected Point project(float x, float y);
+
+    // this must be overridden in the child classes
+    abstract protected Point project(float relbrg, float dme, float elev);
+
 
 
     //-------------------------------------------------------------------------

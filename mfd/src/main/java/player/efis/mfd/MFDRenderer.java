@@ -241,6 +241,34 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         );
     } // end of project
 
+    @Override
+    protected Point project(float relbrg, float dme, float elev)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
+
+
+/*    {
+        float pixPerDegree = pixM / pitchInView;
+
+        // note: we take apt elevation into account
+        //float y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
+
+        float dme_ft = dme * 6080;
+        float y = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - elev * 3.28084f, dme_ft)) * pixPerDegree);
+
+        //relbrg = 0; //bugbug
+
+        return new Point(
+                (float) (+pixPerDegree * relbrg),
+                (float) y
+        );
+    } // end of project
+*/
+
 
     //-------------------------------------------------------------------------
     // Set the spinner control parameters

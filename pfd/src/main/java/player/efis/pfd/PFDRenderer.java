@@ -323,10 +323,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 (float) (+pixPerDegree * relbrg),
                 (float) y
         );
-        /*return new Point(
-                (float) (+pixPerDegree * relbrg),
-                (float) (-pixPerDegree * Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))))
-        );*/
     } // end of project
 
 
