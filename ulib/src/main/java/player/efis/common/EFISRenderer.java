@@ -1761,12 +1761,12 @@ abstract public class EFISRenderer
         float elev;
 
         // Aways draw at least the selected waypoint
+        // TODO: 2018-08-12 Add elev to selected WPT 
         wptId = mWptSelName;
         dme = UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in nm
         aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
         x1 = project(aptRelBrg, dme).x;
         y1 = project(aptRelBrg, dme).y;
-
         renderAPTSymbol(matrix, x1, y1, wptId);
 
         // draw all the other waypoints that fit the criteria
@@ -1864,6 +1864,7 @@ abstract public class EFISRenderer
 
         z = zfloat;
         LinkedList<String> objs = mStratux.getAcList();
+        if (objs == null) return;
 
         for (String s : objs) {
             // sendDataToHelper(s);
@@ -1875,26 +1876,29 @@ abstract public class EFISRenderer
                     float lat = (float)jObject.getDouble("latitude");
                     float spd = (float)jObject.getDouble("speed");
                     float brg = (float)jObject.getDouble("bearing");
-                    float alt = (float)jObject.getDouble("altitude");
+                    float alt = (float)jObject.getDouble("altitude") / 3.28084f;  // conv to m
                     String call = (String) jObject.getString("callsign");
 
                     //renderACTSymbol(matrix, lon, lat, call);
                     // 0.16667 deg lat  = 10 nm
                     // 0.1 approx 5nm
                     float dme;
-                    float _dme = 1000;
                     float actRelBrg;
                     String acId = call;
-                    String acAlt = Integer.toString(Math.round(alt/100f)) + "FL";
+                    //String acAlt = Integer.toString(Math.round(alt*3.28084f/100f)) + "FL";
+                    String acAlt = Integer.toString(Math.round(alt*0.0328084f)) + "FL";
                     int acBrg = (int)brg;
                     int acSpd = (int)spd;
 
                     dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
                     actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
 
+                    String acDme = Float.toString(UMath.round(dme,1)) + "nm";
+
+                    //alt = alt
                     x1 = project(actRelBrg, dme, alt).x;
                     y1 = project(actRelBrg, dme, alt).y;
-                    renderACTSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd);
+                    renderACTSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd, acDme);
                 }
             }
             catch (JSONException e) {
@@ -1904,7 +1908,7 @@ abstract public class EFISRenderer
     }
 
 
-    private void renderACTSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd)
+    private void renderACTSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd, String dme)
     {
         float radius = 5 * 2.5f;
         float z = zfloat;
@@ -1928,6 +1932,7 @@ abstract public class EFISRenderer
         glText.setScale(2.0f);
         glText.drawCY(callsign, x1, y1 - glText.getCharHeight());
         glText.drawCY(alt, x1, y1 - 1.8f*glText.getCharHeight());
+        glText.drawCY(dme, x1, y1 - 2.6f*glText.getCharHeight());
         glText.end();
 
         //

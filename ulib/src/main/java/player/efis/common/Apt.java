@@ -20,7 +20,7 @@ public class Apt
 {
 	public String name;
 	public String cmt;
-	public  float lat;
-	public  float lon;
-	public  float elev;
+	public  float lat;  // in decimal dgrees
+	public  float lon;  // in decimal dgrees
+	public  float elev; // in m
 }

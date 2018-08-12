@@ -33,6 +33,7 @@ import android.os.BatteryManager;
 
 // sensor imports
 import android.text.format.Time;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -103,33 +104,38 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected boolean connectWiFi(String ssid)
     {
         // Connect to wifi
+        Toast.makeText(this, "Stratux: Connecting ...", Toast.LENGTH_SHORT).show();
         WifiConfiguration wifiConfig = new WifiConfiguration();
         wifiConfig.SSID = String.format("\"%s\"", ssid);
-        //wifiConfig.preSharedKey = String.format("\"%s\"", key);
+        //wifiConfig.preSharedKey = String.format("\"%s\"", key); // not used for Stratux
         wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
 
-        /*WifiManager*/
+        // WifiManager
         wifiManager = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         int netId = wifiManager.addNetwork(wifiConfig);
         wifiManager.disconnect();
         wifiManager.enableNetwork(netId, true);
-        wifiManager.reconnect();
+        boolean rv = wifiManager.reconnect();
 
-        try {
-            Thread.sleep(10*1000);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        if ((wifiManager.getConnectionInfo().getSupplicantState() == SupplicantState.COMPLETED)
+            &&  (wifiManager.getConnectionInfo().getSSID().contains(ssid))) {
 
-        //return checkWiFiStatus();
-        return true;
+            String s = wifiManager.getConnectionInfo().getSSID();
+            Toast.makeText(this, "Stratux: Connected", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
-    protected boolean checkWiFiStatus()
+    protected boolean checkWiFiStatus(String ssid)
     {
         WifiInfo info = wifiManager.getConnectionInfo();
-        if (info.getSupplicantState() == SupplicantState.COMPLETED) return true;
+        //if (info.getSupplicantState() == SupplicantState.COMPLETED) return true;
+        //String s = info.getSSID();
+        //if (info.getSSID().contains("stratux")) return true;
+        if ((info.getSupplicantState() == SupplicantState.COMPLETED)
+                && (info.getSSID().contains(ssid)))
+            return true;
         else
             return false;
     }

@@ -16,8 +16,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 import player.ulib.UTime;
+import player.ulib.Unit;
 
 //class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
 
@@ -29,6 +31,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     private Exception exception;
     private boolean mRunning;
+    private boolean mCancel;
     //private Thread mThread;
 
     DatagramSocket mSocket;
@@ -63,6 +66,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         this.id = id;
         mState = DISCONNECTED;
         mRunning = false;
+        mCancel = false;
     }
 
 
@@ -86,17 +90,33 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // TODO: do something with the feed
     }
 
+    static Semaphore mutex = new Semaphore(1, true);
+    private LinkedList<String> trafficList = new LinkedList<String>();
+
     LinkedList<String> getAcList()
     {
-        if (trafficList != null) return new LinkedList<String>(trafficList);
-        else return null;
+
+        //if (trafficList == null) return null;
+        //return new LinkedList<String>(trafficList);
+        try {
+            mutex.acquire();
+            try {
+                return new LinkedList<String>(trafficList);
+            }
+            finally {
+                mutex.release();
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    private LinkedList<String> trafficList = new LinkedList<String>();
 
     //private LinkedList<String> objs;// = bp.decode();
     float a, b;
-    long pt = 0, pt2 = 0;
+    long pt1 = 0, pt2 = 0;
 
     private void mainExecutionLoop()
     {
@@ -108,8 +128,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // ADBS/GPS receiver
         //
         //while (mRunning == true) {
-        while (true) {
-            //  Read.
+        while (mCancel == false) {
+            //  Read
             int nrBytesRead = read(buffer);
             if (nrBytesRead <= 0) {
                 try {
@@ -126,70 +146,161 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 continue;
             }
 
+
             //  Put both in Decode and ADSB buffers
             bp.put(buffer, nrBytesRead);
-            LinkedList<String> objs = bp.decode();
 
-            // Extract traffic
-            long unixTime = UTime.getUtcTimeMillis();
-            for (String s : objs) {
+            try {
+                mutex.acquire();
                 try {
-                    JSONObject js = new JSONObject(s);
-                    if (js.getString("type").contains("traffic")) {
-                        for (int i = 0; i < trafficList.size(); i++) {
-                            String t = trafficList.get(i);
-                            JSONObject jt = new JSONObject(t);
-                            if (jt.getInt("address") == js.getInt("address")) {
-                                trafficList.remove(i);
-                            }
-                            // If a target is older then 20 seconds remove it from the list
-                            long deltaT = unixTime - jt.getLong("time");
-                            if (deltaT > 20 * 1000) {
-                                trafficList.remove(i);
+
+                    LinkedList<String> objs = bp.decode();
+
+                    long unixTime = UTime.getUtcTimeMillis();
+
+                    // /*-------------------------------------
+                    // < debug - add ghost AC traffic
+
+                    // fixed target
+                    JSONObject object = new JSONObject();
+
+                    //LongReportMessage tm = (LongReportMessage) m;
+                    try {
+                        object.put("type", "traffic");
+                        object.put("longitude", (double) 115.83);
+                        object.put("latitude", (double) -31.80);
+                        object.put("speed", (double) 123.0);
+                        object.put("bearing", (double) 348.7);
+                        //object.put("altitude", (double) Unit.Meter.toFeet(75));
+                        object.put("altitude", 4321);
+                        object.put("callsign", (String) "GHOST-0");
+                        object.put("address", (int) 777);
+                        object.put("time", (long) unixTime);
+                    }
+                    catch (JSONException e1) {
+                        continue;
+                    }
+                    objs.add(object.toString());
+
+
+                    // 2 moving targets
+                    if (unixTime - pt1 > 4000) {
+                        pt1 = unixTime;
+                        b = b + 0.001f;
+
+                        object = new JSONObject();
+                        //LongReportMessage tm = (LongReportMessage) m;
+                        try {
+                            object.put("type", "traffic");
+                            object.put("longitude", (double) 115.9 - b / 5);
+                            object.put("latitude", (double) -32.2 + b);
+                            object.put("speed", (double) 123.0);
+                            object.put("bearing", (double) 348.7);
+                            object.put("altitude", (double) 4321);
+                            object.put("callsign", (String) "GHOST-1");
+                            object.put("address", (int) 555);
+                            object.put("time", (long) unixTime);
+                        }
+                        catch (JSONException e1) {
+                            continue;
+                        }
+                        objs.add(object.toString());
+                    }
+
+                    if (unixTime - pt2 > 1000) {
+                        pt2 = unixTime;
+                        a = a + 0.001f;
+
+                        object = new JSONObject();
+                        //LongReportMessage tm = (LongReportMessage) m;
+                        try {
+                            object.put("type", "traffic");
+                            object.put("longitude", (double) 115.7 + a / 5);
+                            object.put("latitude", (double) -32.2 + a);
+                            object.put("speed", (double) 246.0);
+                            object.put("bearing", (double) 11.3);
+                            object.put("altitude", (double) 7654);
+                            object.put("callsign", (String) "GHOST-2");
+                            object.put("address", (int) 666);
+                            object.put("time", (long) unixTime);
+                        }
+                        catch (JSONException e1) {
+                            continue;
+                        }
+                        objs.add(object.toString());
+                    }
+                    // debug >
+                    //-------------------------------------*/
+
+
+                    // Extract traffic
+                    for (String s : objs) {
+                        try {
+                            JSONObject js = new JSONObject(s);
+                            if (js.getString("type").contains("traffic")) {
+                                for (int i = 0; i < trafficList.size(); i++) {
+                                    String t = trafficList.get(i);
+                                    JSONObject jt = new JSONObject(t);
+                                    if (jt.getInt("address") == js.getInt("address")) {
+                                        trafficList.remove(i);
+                                    }
+                                    // If a target is older then 20 seconds remove it from the list
+                                    long deltaT = unixTime - jt.getLong("time");
+                                    if (deltaT > 20 * 1000) {
+                                        trafficList.remove(i);
+                                    }
+                                }
+                                trafficList.add(s);
                             }
                         }
-                        trafficList.add(s);
+                        catch (JSONException e) {
+                        }
+                    }
+
+                    //----------------------------------------------
+                    try {
+                        String situation = getSituation();
+
+                        JSONObject jObject;
+                        jObject = new JSONObject(situation);
+
+                        GPSSatellites = jObject.getInt("GPSSatellites");
+                        GPSSatellitesTracked = jObject.getInt("GPSSatellitesTracked");
+                        GPSSatellitesSeen = jObject.getInt("GPSSatellitesSeen");
+
+                        AHRSPitch = jObject.getDouble("AHRSPitch");
+                        AHRSRoll = jObject.getDouble("AHRSRoll");
+                        AHRSGyroHeading = jObject.getDouble("AHRSGyroHeading");
+                        AHRSMagHeading = jObject.getDouble("AHRSMagHeading");
+                        AHRSSlipSkid = jObject.getDouble("AHRSSlipSkid");
+                        AHRSTurnRate = jObject.getDouble("AHRSTurnRate");
+                        AHRSGLoad = jObject.getDouble("AHRSGLoad");
+                        AHRSGLoadMin = jObject.getDouble("AHRSGLoadMin");
+                        AHRSGLoadMax = jObject.getDouble("AHRSGLoadMax");
+
+                        GPSLatitude = jObject.getDouble("GPSLatitude");
+                        GPSLongitude = jObject.getDouble("GPSLongitude");
+                        GPSAltitudeMSL = jObject.getDouble("GPSAltitudeMSL");
+                        GPSTrueCourse = jObject.getDouble("GPSTrueCourse");
+                        GPSTurnRate = jObject.getDouble("GPSTurnRate");
+                        GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
+
+                        String status = getDeviceStatus();
+                        jObject = new JSONObject(status);
+
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-                catch (JSONException e) {
+                finally {
+                    mutex.release();
                 }
             }
-
-            //----------------------------------------------
-            try {
-                String situation = getSituation();
-
-                JSONObject jObject;
-                jObject = new JSONObject(situation);
-
-                GPSSatellites = jObject.getInt("GPSSatellites");
-                GPSSatellitesTracked = jObject.getInt("GPSSatellitesTracked");
-                GPSSatellitesSeen = jObject.getInt("GPSSatellitesSeen");
-
-                AHRSPitch = jObject.getDouble("AHRSPitch");
-                AHRSRoll = jObject.getDouble("AHRSRoll");
-                AHRSGyroHeading = jObject.getDouble("AHRSGyroHeading");
-                AHRSMagHeading = jObject.getDouble("AHRSMagHeading");
-                AHRSSlipSkid = jObject.getDouble("AHRSSlipSkid");
-                AHRSTurnRate = jObject.getDouble("AHRSTurnRate");
-                AHRSGLoad = jObject.getDouble("AHRSGLoad");
-                AHRSGLoadMin = jObject.getDouble("AHRSGLoadMin");
-                AHRSGLoadMax = jObject.getDouble("AHRSGLoadMax");
-
-                GPSLatitude = jObject.getDouble("GPSLatitude");
-                GPSLongitude = jObject.getDouble("GPSLongitude");
-                GPSAltitudeMSL = jObject.getDouble("GPSAltitudeMSL");
-                GPSTrueCourse = jObject.getDouble("GPSTrueCourse");
-                GPSTurnRate = jObject.getDouble("GPSTurnRate");
-                GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
-
-                String status = getDeviceStatus();
-                jObject = new JSONObject(status);
-
-            }
-            catch (JSONException e) {
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -204,7 +315,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
 
         //saveToFile(pkt.getLength(), buffer);
-
         return pkt.getLength();
     }
 
@@ -317,23 +427,26 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         mState = DISCONNECTED;
     }
 
+    public void finish()
+    {
+        mCancel = true;
+    }
+
 
     public void stop()
     {
-        Logger.Logit(id + "Stopping ");
         if (mState != CONNECTED) {
             Logger.Logit(id + ": Stop failed because already stopped");
             return;
         }
         mRunning = false;
         disconnect();
-        Logger.Logit(id + "Stopped!");
+        Logger.Logit(id + "Stopped");
     }
 
 
     public void start()
     {
-        Logger.Logit(id + "Starting ");
         if (mState != DISCONNECTED) {
             Logger.Logit(id + ": Starting failed because already started");
             return;
@@ -341,7 +454,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         mRunning = true;
         disconnect();
         connect(Integer.toString(mPort), false);
-        Logger.Logit(id + "Started!");
+        Logger.Logit(id + "Started");
     }
 
     protected boolean isRunning()
@@ -353,6 +466,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     {
         return !mRunning;
     }
+
+
+
 }
 
 
@@ -429,53 +545,4 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     }
 */
 
-            /* < debug - add ghost AC traffic
-            long unixTime = System.currentTimeMillis() / 1000L;
-            long aaa = unixTime - pt;
-            if (unixTime - pt > 4) {
-                pt = unixTime;
-                b = b + 0.01f;
-
-                JSONObject object = new JSONObject();
-                //LongReportMessage tm = (LongReportMessage) m;
-                try {
-                    object.put("type", "traffic");
-                    object.put("longitude", (double) 115.9 - b/5);
-                    object.put("latitude", (double) -32.2 + b);
-                    object.put("speed", (double) 123.0);
-                    object.put("bearing", (double) 348.7);
-                    object.put("altitude", (double) 4321);
-                    object.put("callsign", (String) "GHOST-1");
-                    object.put("address", (int) 555);
-                    object.put("time", (long) unixTime);
-                }
-                catch (JSONException e1) {
-                    continue;
-                }
-                objs.add(object.toString());
-            }
-
-            if (unixTime - pt2 > 1) {
-                pt2 = unixTime;
-                a = a + 0.01f;
-
-                JSONObject object = new JSONObject();
-                //LongReportMessage tm = (LongReportMessage) m;
-                try {
-                    object.put("type", "traffic");
-                    object.put("longitude", (double) 115.7 + a/5);
-                    object.put("latitude", (double) -32.2 + a);
-                    object.put("speed", (double) 246.0);
-                    object.put("bearing", (double) 11.3);
-                    object.put("altitude", (double) 7654);
-                    object.put("callsign", (String) "GHOST-2");
-                    object.put("address", (int) 666);
-                    object.put("time", (long) unixTime);
-                }
-                catch (JSONException e1) {
-                    continue;
-                }
-                objs.add(object.toString());
-            }
-            // debug > */
 

@@ -19,6 +19,7 @@ package player.efis.pfd;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import player.efis.common.StratuxWiFiTask;
 import player.efis.common.prefs_t;
@@ -53,6 +54,7 @@ public class PFDSurfaceView extends GLSurfaceView
     //private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
+    private static final int MIN_DISTANCE = 150;
 
     @Override
     public boolean onTouchEvent(MotionEvent e)
@@ -89,6 +91,40 @@ public class PFDSurfaceView extends GLSurfaceView
                 mRenderer.setActionDown(x, y);
                 requestRender();
                 break;
+
+            //--
+            case MotionEvent.ACTION_UP:
+                float deltaX = x - mPreviousX;
+                float deltaY = y - mPreviousY;
+
+                if (Math.abs(deltaY) > MIN_DISTANCE) {
+                    if (mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom OFF", Toast.LENGTH_SHORT).show();
+                    if (deltaY < 0) {
+                        // swipe up
+                    }
+                    else {
+                        // swipe down
+                    }
+                }
+                else if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    if (!mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom ON", Toast.LENGTH_SHORT).show();
+                    //mStratux.cageAhrs();
+
+                    if (deltaY > 0) {
+                        // swipe right
+                    }
+                    else {
+                        // swipe left
+                    }
+                }
+                else {
+                    // consider as something else - a screen tap for example
+                }
+                break;
+            //--
+
+
+
         }
         mPreviousX = x;
         mPreviousY = y;

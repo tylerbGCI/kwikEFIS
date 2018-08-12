@@ -40,6 +40,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 // sensor imports
@@ -115,7 +116,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 break;
             case R.id.quit:
                 // Quit the app
-                if (bLockedMode == false) finish();
+                if (bLockedMode == false) {
+                    finish();
+                    System.exit(0);
+                }
                 else Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
                 break;
             // more code...
@@ -230,6 +234,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void onStop()
     {
         mStratux.stop();
+        mStratux.cancel(true);
         savePersistentSettings();
         super.onStop();
     }
@@ -255,8 +260,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // you should consider de-allocating objects that
         // consume significant memory here.
         mGLView.onPause();
-        mStratux.stop();
 
+        mStratux.stop();
+		
         /*
         locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
@@ -271,6 +277,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
         mGLView.onResume();
+
         mStratux.start();
 
         /*
@@ -548,8 +555,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected boolean handleStratux()
     {
         //todo: // - check stratux status
-        if (checkWiFiStatus()) {
-            hasGps = true;
+        if (checkWiFiStatus("stratux")) {
+            hasGps = true;  // TODO: 2018-08-10 Properly test for hasGps 
             //hasSpeed = true;
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
@@ -559,12 +566,14 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setDisplayAirport(true);
             mGLView.setBannerMsg(false, " ");
         }
-        else {
+        else if (ctr % 100 == 0 ) {
             hasGps = false;
             hasSpeed = false;
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX CONNECTION");
-            connectWiFi("stratux");
+            mStratux.stop();
+            if (connectWiFi("stratux"))  // force the connection to stratux
+              mStratux.start();
         }
         return super.handleStratux();
     }
@@ -620,6 +629,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     private void updateEFIS()
     {
+        ctr ++;
+
         //
         // Read and Set the user preferences
         //
@@ -670,7 +681,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Wait for 100 cycles to allow at least some
         // prior drawing to take place on startup
-        if (ctr++ > 100) {
+        //if (ctr++ > 100) {
+        if (ctr % 100 == 0) {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
@@ -684,7 +696,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
             }
-            ctr = 0;
+            //ctr = 0;
         }
 
         //

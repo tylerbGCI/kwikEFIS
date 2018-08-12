@@ -119,6 +119,9 @@ public class Gpx
 					}
 				}
 				else if (currentWpt != null) {
+                    if (txt.equals("ele")) {
+                        currentWpt.elev = Float.valueOf(parser.nextText());
+                    }
 					if (txt.equals("name")) {
 						currentWpt.name = parser.nextText();
 					}

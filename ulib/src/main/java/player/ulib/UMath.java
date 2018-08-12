@@ -35,6 +35,17 @@ public class UMath {
     public static float clamp(float val, float min, float max) 
     {
         return Math.max(min, Math.min(max, val));
-    }    
+    }
 
+    public static float round (float value, int precision)
+    {
+        int scale = (int) Math.pow(10, precision);
+        return (float) Math.round(value * scale) / scale;
+    }
+
+    public static double round (double value, int precision)
+    {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
 }

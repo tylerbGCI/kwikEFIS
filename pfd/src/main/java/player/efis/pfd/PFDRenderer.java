@@ -116,7 +116,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (displayAirport) renderACT(mMVPMatrix);  // must be on the same matrix as the Pitch
+        if (true) renderACT(scratch1);  // must be on the same matrix as the Pitch
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
         // Flight Director - FD
@@ -314,10 +314,9 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // note: we take apt elevation into account
         //float y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
 
-        float dme_ft = dme * 6080;
-        float y = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - elev * 3.28084f, dme_ft)) * pixPerDegree);
-
-        //relbrg = 0; //bugbug
+        //float dme_ft = dme * 6080;
+        //float y = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - elev * 3.28084f, dme_ft)) * pixPerDegree);
+        float y =  (float) (-pixPerDegree * Math.toDegrees(Math.atan2(MSLValue - Unit.Meter.toFeet(elev), Unit.NauticalMile.toFeet(dme))));
 
         return new Point(
                 (float) (+pixPerDegree * relbrg),
