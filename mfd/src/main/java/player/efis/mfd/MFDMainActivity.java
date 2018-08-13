@@ -548,7 +548,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
     }
 
-
     //
     // Stratux handler
     //

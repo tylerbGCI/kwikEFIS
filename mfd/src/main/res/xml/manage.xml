@@ -93,11 +93,6 @@
             <PreferenceCategory android:title="ADMIN" >
                 <CheckBoxPreference
                     android:defaultValue="false"
-                    android:key="stratuxActive"
-                    android:summary="Enable Stratux module"
-                    android:title="Stratux" />
-                <CheckBoxPreference
-                    android:defaultValue="false"
                     android:key="simulatorActive"
                     android:summary="Simulate GPS movement for demonstration"
                     android:title="Simulator" />
@@ -115,6 +110,7 @@
             </PreferenceCategory>
             </PreferenceScreen>
 
+        <!-- Moved to settings.xml     
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/color_theme_names"
@@ -122,6 +118,14 @@
             android:key="colorTheme"
             android:summary="Select color theme"
             android:title="Theme" />
+            -->
+            
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="stratuxActive"
+            android:summary="Enable Stratux module"
+            android:title="Stratux" />
+            
 
     </PreferenceCategory>
 </PreferenceScreen>

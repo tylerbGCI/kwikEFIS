@@ -28,6 +28,17 @@ public class MFDPrefSettings extends PreferenceActivity
 	{
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+        updateSummary();
 	}
+
+    @SuppressWarnings("deprecation")
+    private void updateSummary()
+    {
+        ListPreference lp;
+
+        lp = (ListPreference) findPreference("colorTheme");
+        lp.setSummary(lp.getEntry());
+    }
+
 }
 

@@ -46,41 +46,37 @@
             </PreferenceCategory>
 
             <PreferenceCategory android:title="ADMIN" >
+                    
                 <CheckBoxPreference
                     android:defaultValue="false"
-                    android:key="stratuxActive"
-                    android:summary="Enable Stratux module"
-                    android:title="Stratux" />
-                    
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="simulatorActive"
-                android:summary="Simulate GPS movement for demonstration"
-                android:title="Simulator" />
+                    android:key="simulatorActive"
+                    android:summary="Simulate GPS movement for demonstration"
+                    android:title="Simulator" />
 
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="lockedMode"
-                android:summary="Lock the exit on back button"
-                android:title="Locked" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="lockedMode"
+                    android:summary="Lock the exit on back button"
+                    android:title="Locked" />
 
-            <ListPreference
-                android:defaultValue="0.15f"
-                android:entries="@array/sensor_bias_names"
-                android:entryValues="@array/sensor_bias_values"
-                android:key="sensorBias"
-                android:summary="Select the bank sensor/GPS bias"
-                android:title="Bank Sensor" />
+                <ListPreference
+                    android:defaultValue="0.15f"
+                    android:entries="@array/sensor_bias_names"
+                    android:entryValues="@array/sensor_bias_values"
+                    android:key="sensorBias"
+                    android:summary="Select the bank sensor/GPS bias"
+                    android:title="Bank Sensor" />
 
-            <PreferenceScreen
-                android:defaultValue="0.0"
-                android:key="version"
-                android:summary="0.0"
-                android:title="Version" />
+                    <PreferenceScreen
+                    android:defaultValue="0.0"
+                    android:key="version"
+                    android:summary="0.0"
+                    android:title="Version" />
 
             </PreferenceCategory>
         </PreferenceScreen>
 
+        <!-- Moved to settings.xml     
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/color_theme_names"
@@ -88,6 +84,14 @@
             android:key="colorTheme"
             android:summary="Select color theme"
             android:title="Theme" />
+            -->
+            
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="stratuxActive"
+            android:summary="Enable Stratux module"
+            android:title="Stratux" />
+            
 
     </PreferenceCategory>
 </PreferenceScreen>

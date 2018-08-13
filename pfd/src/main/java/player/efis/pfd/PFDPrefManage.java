@@ -46,8 +46,8 @@ public class PFDPrefManage extends PreferenceActivity
         lp = (ListPreference) findPreference("AircraftModel");
         lp.setSummary(lp.getEntry());
 
-        lp = (ListPreference) findPreference("colorTheme");
-        lp.setSummary(lp.getEntry());
+        //lp = (ListPreference) findPreference("colorTheme");
+        //lp.setSummary(lp.getEntry());
 
         lp = (ListPreference) findPreference("sensorBias");
         lp.setSummary(lp.getEntry());

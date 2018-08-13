@@ -16,9 +16,12 @@
 
 package player.efis.pfd;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 
 public class PFDPrefSettings extends PreferenceActivity
 {
@@ -28,6 +31,17 @@ public class PFDPrefSettings extends PreferenceActivity
 	{
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+        updateSummary();
 	}
+
+    @SuppressWarnings("deprecation")
+    private void updateSummary()
+    {
+        ListPreference lp;
+
+        lp = (ListPreference) findPreference("colorTheme");
+        lp.setSummary(lp.getEntry());
+    }
+
 }
 

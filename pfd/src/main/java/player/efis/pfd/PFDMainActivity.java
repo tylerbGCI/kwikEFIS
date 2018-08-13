@@ -203,7 +203,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // based on availability
         mGLView.setServiceableDevice();
         updateEFIS();
-
     }
 
 
