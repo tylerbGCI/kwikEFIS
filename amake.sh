@@ -24,7 +24,7 @@ cp h:/src/kwikEFIS/CHANGELOG.md h:/src/kwikEFIS/apk/CHANGELOG.md
 
 cd h:/src/kwikEFIS/apk
 
-if [ ! -z $1 ] && [ $1 == '-l' ] 
+if [ ! -z $1 ] && [ $1 == '-i' ] 
 then
     #gsm nexus 7
     #adb -s 015d3249295c160b install -r ./kwik-efis.apk

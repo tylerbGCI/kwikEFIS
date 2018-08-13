@@ -135,8 +135,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 try {
                     Thread.sleep(1000);
                 }
-                catch (Exception e) {
-                }
+                catch (Exception e) {}
                 if (mRunning) {
                     //  Try to reconnect
                     Logger.Logit(id + "Listener error, re-starting listener");
@@ -319,22 +318,36 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     }
 
 
+    //
     // Stratux getSituation post
+    //
     private String getSituation()
     {
         return getHttp("http://192.168.10.1/getSituation");
     }
 
+    //
     // Stratux getSituation post
+    //
     private String getDeviceStatus()
     {
         return getHttp("http://192.168.10.1/getStatus");
     }
 
+    //
     // Stratux "level" attitude display. Submit a blank POST to this URL.
+    //
     private String cageAhrs()
     {
         return getHttp("http://192.168.10.1/cageAHRS");
+    }
+
+    //
+    // Stratux sensor calibration. Submit a blank POST to this URL.
+    //
+    private String calibrateAhrs()
+    {
+        return getHttp("http://192.168.10.1/calibrateAHRS");
     }
 
 
