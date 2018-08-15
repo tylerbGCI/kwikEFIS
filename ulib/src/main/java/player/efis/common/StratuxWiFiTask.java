@@ -1,6 +1,7 @@
 package player.efis.common;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.stratux.stratuvare.utils.Logger;
 
@@ -67,6 +68,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         mState = DISCONNECTED;
         mRunning = false;
         mCancel = false;
+
+        //calibrateAhrs();
+        //cageAhrs();
     }
 
 
@@ -129,6 +133,14 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         //
         //while (mRunning == true) {
         while (mCancel == false) {
+            if (!mRunning) {
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (Exception e) {}
+                continue;
+            }
+
             //  Read
             int nrBytesRead = read(buffer);
             if (nrBytesRead <= 0) {
@@ -136,15 +148,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     Thread.sleep(1000);
                 }
                 catch (Exception e) {}
-                if (mRunning) {
+                disconnect();
+                connect(Integer.toString(mPort), false);
+                /*if (mRunning) {
                     //  Try to reconnect
                     Logger.Logit(id + "Listener error, re-starting listener");
                     disconnect();
-                    connect(Integer.toString(mPort), false);
-                }
+                    if (connect(Integer.toString(mPort), false)) start();
+                    else stop();
+                }*/
                 continue;
             }
-
 
             //  Put both in Decode and ADSB buffers
             bp.put(buffer, nrBytesRead);
@@ -154,10 +168,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 try {
 
                     LinkedList<String> objs = bp.decode();
-
                     long unixTime = UTime.getUtcTimeMillis();
 
-                    // /*-------------------------------------
+                    /*-------------------------------------
                     // < debug - add ghost AC traffic
 
                     // fixed target
@@ -251,13 +264,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 }
                                 trafficList.add(s);
                             }
+
+
                         }
                         catch (JSONException e) {
                         }
                     }
 
                     //----------------------------------------------
+                    // use the Http
                     try {
+                        // Situation
                         String situation = getSituation();
 
                         JSONObject jObject;
@@ -284,8 +301,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         GPSTurnRate = jObject.getDouble("GPSTurnRate");
                         GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
 
+                        // Status
                         String status = getDeviceStatus();
                         jObject = new JSONObject(status);
+
+                        String rv = jObject.getString("Ping_connected");
+                        //Log.v("bugbug", rv);
 
                     }
                     catch (JSONException e) {
@@ -339,7 +360,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //
     private String cageAhrs()
     {
-        return getHttp("http://192.168.10.1/cageAHRS");
+        return postHttp("http://192.168.10.1/cageAHRS");
     }
 
     //
@@ -347,11 +368,23 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //
     private String calibrateAhrs()
     {
-        return getHttp("http://192.168.10.1/calibrateAHRS");
+        return postHttp("http://192.168.10.1/calibrateAHRS");
     }
 
 
+
     private String getHttp(String addr)
+    {
+        return doHttp(addr, "GET");
+    }
+
+    private String postHttp(String addr)
+    {
+        return doHttp(addr, "POST");
+    }
+
+
+    private String doHttp(String addr, String method)
     {
         URL url;
         StringBuffer response = new StringBuffer();
@@ -369,7 +402,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             conn.setDoOutput(false);
             conn.setDoInput(true);
             conn.setUseCaches(false);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(method); //"GET"
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
             // handle the response
@@ -430,7 +463,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void disconnect()
     {
-
         try {
             mSocket.close();
         }
@@ -444,7 +476,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     {
         mCancel = true;
     }
-
 
     public void stop()
     {

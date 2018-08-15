@@ -1,20 +1,19 @@
 Changelog
 =========
-REL_21 (tbd)
+REL_21 (2018-08-18)
 ------------------
 * Add support for Stratux ADS-B ADHRS 
 * Drive simulator using the flight director
-* 
-* Beta Release EFIS v3.12
-* Beta Release DMAP v1.7
+* Release EFIS v3.12
+* Release DMAP v1.7
 
 REL_20 (2018-06-28)
 ------------------
 * Change airspace sequencing
 * Improve monochrome handling
 * Long overdue code maintenance
-* Beta Release EFIS v3.11
-* Beta Release DMAP v1.6
+* Release EFIS v3.11
+* Release DMAP v1.6
 
 REL_19 (2018-06-08)
 ------------------

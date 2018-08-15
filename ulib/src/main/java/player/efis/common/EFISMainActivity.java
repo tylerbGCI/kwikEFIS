@@ -96,10 +96,9 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     private MediaPlayer mpSinkRate;
     private MediaPlayer mpStall;*/
 
-    protected WifiManager wifiManager;
     // Stratux Wifi
+    protected WifiManager wifiManager;
     protected StratuxWiFiTask mStratux;
-
 
     protected boolean connectWiFi(String ssid)
     {
@@ -117,40 +116,23 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         wifiManager.enableNetwork(netId, true);
         boolean rv = wifiManager.reconnect();
 
-        if ((wifiManager.getConnectionInfo().getSupplicantState() == SupplicantState.COMPLETED)
-            &&  (wifiManager.getConnectionInfo().getSSID().contains(ssid))) {
-
-            String s = wifiManager.getConnectionInfo().getSSID();
+        if (checkWiFiStatus(ssid)) {
             Toast.makeText(this, "Stratux: Connected", Toast.LENGTH_SHORT).show();
             return true;
         }
-        return false;
+        else
+            return false;
     }
 
     protected boolean checkWiFiStatus(String ssid)
     {
         WifiInfo info = wifiManager.getConnectionInfo();
-        //if (info.getSupplicantState() == SupplicantState.COMPLETED) return true;
-        //String s = info.getSSID();
-        //if (info.getSSID().contains("stratux")) return true;
         if ((info.getSupplicantState() == SupplicantState.COMPLETED)
                 && (info.getSSID().contains(ssid)))
             return true;
         else
             return false;
     }
-
-        /*List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        for( WifiConfiguration i : list ) {
-            if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-                wifiManager.disconnect();
-                wifiManager.enableNetwork(i.networkId, true);
-                wifiManager.reconnect();
-
-                break;
-            }
-        } */
-
 
     //
     // Stratux handler

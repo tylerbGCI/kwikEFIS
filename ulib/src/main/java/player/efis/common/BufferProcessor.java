@@ -111,7 +111,7 @@ public class BufferProcessor
             else if (nmeaOwnship.addMessage(m)) {
 
                 /*
-                 * Make a GPS locaiton message from ADSB ownship message.
+                 * Make a GPS location message from ADSB ownship message.
                  */
                 JSONObject object = new JSONObject();
                 Ownship om = nmeaOwnship;
@@ -137,7 +137,7 @@ public class BufferProcessor
             // * Post on UI thread.
             if (m instanceof TrafficReportMessage) {
 
-                 // * Make a GPS locaiton message from ADSB ownship message.
+                 // * Make a GPS location message from ADSB ownship message.
                 JSONObject object = new JSONObject();
                 TrafficReportMessage tm = (TrafficReportMessage) m;
                 try {
@@ -159,7 +159,7 @@ public class BufferProcessor
 
             else if (m instanceof BasicReportMessage) {
 
-                // * Make a GPS locaiton message from ADSB ownship message.
+                // * Make a GPS location message from ADSB ownship message.
                 JSONObject object = new JSONObject();
                 BasicReportMessage tm = (BasicReportMessage) m;
                 try {
@@ -181,7 +181,7 @@ public class BufferProcessor
             }
 
             else if (m instanceof LongReportMessage) {
-                // Make a GPS locaiton message from ADSB ownship message. xxxx
+                // Make a GPS location message from ADSB ownship message. xxxx
                 JSONObject object = new JSONObject();
                 LongReportMessage tm = (LongReportMessage) m;
                 try {
@@ -447,36 +447,6 @@ public class BufferProcessor
                 }
                 objs.add(object.toString());
             }
-
-            /*  b2 debug message
-            else {
-                Random rnd = new Random();
-
-                double a = 10 * rnd.nextGaussian();
-
-                long unixTime = System.currentTimeMillis() / 1000L;
-
-                JSONObject object = new JSONObject();
-                //LongReportMessage tm = (LongReportMessage) m;
-                try {
-                    object.put("type", "traffic");
-                    object.put("longitude", (double) 115.9 - a / 5);
-                    object.put("latitude", (double) -32.2 + a);
-                    object.put("speed", (double) 123.0);
-                    object.put("bearing", (double) 348.7);
-                    object.put("altitude", (double) 4321);
-                    object.put("callsign", (String) "GHOST-1");
-                    object.put("address", (int) 555);
-                    object.put("time", (long) unixTime);
-                }
-                catch (JSONException e1) {
-                    continue;
-                }
-                objs.add(object.toString());
-            }
-            // b2 debug message */
-
-
         }
         return objs;
     }

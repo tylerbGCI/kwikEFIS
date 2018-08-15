@@ -269,16 +269,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // If your OpenGL application is memory intensive,
         // you should consider de-allocating objects that
         // consume significant memory here.
-
+        mStratux.stop();
         releaseMediaPlayer();
         mGLView.onPause();
 
-        mStratux.stop();
-
-
-        //();
-        //System.exit(0);
-		
         /*
         locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
@@ -295,7 +289,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // this is a good place to re-allocate them.
         createMediaPlayer();
         mGLView.onResume();
-
         mStratux.start();
 
         /*
@@ -577,7 +570,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         //todo: // - check stratux status
         if (checkWiFiStatus("stratux")) {
-            hasGps = true;  // TODO: 2018-08-10 Properly test for hasGps 
+            hasGps = true;  // TODO: 2018-08-10 Properly test for hasGps
             //hasSpeed = true;
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
@@ -592,9 +585,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             hasSpeed = false;
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX CONNECTION");
-            mStratux.stop();
-            if (connectWiFi("stratux"))  // force the connection to stratux
-              mStratux.start();
+            connectWiFi("stratux");  // force the connection to stratux
         }
         return super.handleStratux();
     }
@@ -644,7 +635,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         hasGps = isGPSAvailable();
 
-
         //
         // Calculate the augmented bank angle and also the flight path vector
         //
@@ -680,6 +670,15 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             pitchValue = -270;
             mGLView.setFPV(180, 180);
         }
+		
+        // for debug - set to true
+        if (false) {
+            hasGps = true;          //debug
+            hasSpeed = true;        //debug
+            gps_speed = 3;//60;     //m/s debug
+            gps_rateOfClimb = 1.0f; //m/s debug
+        }
+        // end debug
         return true;
     }
 

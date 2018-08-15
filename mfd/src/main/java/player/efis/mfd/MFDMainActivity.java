@@ -259,10 +259,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // If your OpenGL application is memory intensive,
         // you should consider de-allocating objects that
         // consume significant memory here.
+        mStratux.stop();
+        //releaseMediaPlayer();
         mGLView.onPause();
 
-        mStratux.stop();
-		
         /*
         locationManager.removeUpdates(this);
 		unregisterSensorManagerListeners();
@@ -276,8 +276,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
+        //createMediaPlayer();
         mGLView.onResume();
-
         mStratux.start();
 
         /*
@@ -570,9 +570,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             hasSpeed = false;
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX CONNECTION");
-            mStratux.stop();
-            if (connectWiFi("stratux"))  // force the connection to stratux
-              mStratux.start();
+            connectWiFi("stratux");  // force the connection to stratux
         }
         return super.handleStratux();
     }
@@ -628,7 +626,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     private void updateEFIS()
     {
-        ctr ++;
+        ctr++;
 
         //
         // Read and Set the user preferences
