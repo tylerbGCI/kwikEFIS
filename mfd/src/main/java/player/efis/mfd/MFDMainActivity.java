@@ -646,6 +646,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             // make all the instruments serviceable
             hasGps = true;
             hasSpeed = true;
+            mGLView.setServiceableDevice();
         }
         else if (bStratuxActive) {
             mGLView.setSimulatorActive(false, " ");
@@ -653,6 +654,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             // Stratux handler
             handleStratux();
+        }
+        else {
+            mGLView.setSimulatorActive(false, " ");
+            mGLView.setServiceableDevice();
         }
 
         // Apply a little filtering to the pitch, bank and course

@@ -724,6 +724,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // Stratux handler
             handleStratux();
         }
+        else {
+            mGLView.setSimulatorActive(false, " ");
+            mGLView.setServiceableDevice();
+        }
 
         // Apply a little filtering to the pitch, bank and course
         pitchValue = filterPitch.runningAverage(pitchValue);
