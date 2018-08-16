@@ -126,12 +126,18 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
 
     protected boolean checkWiFiStatus(String ssid)
     {
-        WifiInfo info = wifiManager.getConnectionInfo();
-        if ((info.getSupplicantState() == SupplicantState.COMPLETED)
-                && (info.getSSID().contains(ssid)))
-            return true;
-        else
+        try {
+            WifiInfo info = wifiManager.getConnectionInfo();
+            if ((info.getSupplicantState() == SupplicantState.COMPLETED)
+                    && (info.getSSID().contains(ssid)))
+                return true;
+            else
+                return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
             return false;
+        }
     }
 
     //
