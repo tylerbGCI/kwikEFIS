@@ -27,6 +27,7 @@ package player.efis.common;
 import com.stratux.stratuvare.gdl90.BasicReportMessage;
 import com.stratux.stratuvare.gdl90.Constants;
 import com.stratux.stratuvare.gdl90.FisBuffer;
+import com.stratux.stratuvare.gdl90.HeartbeatMessage;
 import com.stratux.stratuvare.gdl90.Id413Product;
 import com.stratux.stratuvare.gdl90.Id6364Product;
 import com.stratux.stratuvare.gdl90.LongReportMessage;
@@ -221,9 +222,9 @@ public class BufferProcessor
             }
 
             else if (m instanceof UplinkMessage) {
-                /*
-                 * Send an uplink nexrad message
-                 */
+                //
+                // Send an uplink nexrad message
+                //
                 float lat, lon;
                 int TISid;
                 FisBuffer fis = ((UplinkMessage) m).getFis();
@@ -289,11 +290,11 @@ public class BufferProcessor
                          */
 
                         try {
-                            /*
+
                             //if(type.equals("METAR") || type.equals("SPECI")) {
                             //    object.put("flight_category", MetarFlightCategory.getFlightCategory(pn.getLocation(), pn.getData()));
                             //}
-                            */
+
                             if (type.equals("WINDS")) {
 
                                 String tokens[] = data.split("\n");
@@ -447,6 +448,36 @@ public class BufferProcessor
                 }
                 objs.add(object.toString());
             }
+            // b2 start
+            else if (m instanceof HeartbeatMessage) {
+
+                /*
+                int mHour;
+                int mMinute;
+                int mSecond;
+                Boolean mGpsPositionValid;
+                Boolean mBatteryLow;
+                Boolean mDeviceRunning;
+                */
+
+                JSONObject object = new JSONObject();
+                HeartbeatMessage om = (HeartbeatMessage) m;
+                try {
+                    object.put("type", "heartbeat");
+                    //object.put("hour", (int) om.mHour);
+                    //object.put("minute", (double) om.mLat);
+                    //object.put("second", (double) (om.mHorizontalVelocity));
+                    object.put("gpsvalid", (boolean) om.mGpsPositionValid);
+                    object.put("lowbattery", (boolean) om.mBatteryLow);
+                    object.put("running", (boolean) om.mDeviceRunning);
+                }
+                catch (JSONException e1) {
+                    continue;
+                }
+                objs.add(object.toString());
+            }
+            // b2 start
+
         }
         return objs;
     }

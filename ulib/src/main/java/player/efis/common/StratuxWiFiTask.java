@@ -99,9 +99,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     LinkedList<String> getAcList()
     {
-
-        //if (trafficList == null) return null;
-        //return new LinkedList<String>(trafficList);
         try {
             mutex.acquire();
             try {
@@ -113,14 +110,49 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
         catch (InterruptedException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
+    boolean mGpsPositionValid;
+    boolean mBatteryLow;
+    boolean mDeviceRunning;
 
-    //private LinkedList<String> objs;// = bp.decode();
-    float a, b;
-    long pt1 = 0, pt2 = 0;
+    public boolean isGpsValid()
+    {
+        try {
+            mutex.acquire();
+            try {
+                return mGpsPositionValid;
+            }
+            finally {
+                mutex.release();
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isDeviceRunning()
+    {
+        try {
+            mutex.acquire();
+            try {
+                return mDeviceRunning;
+            }
+            finally {
+                mutex.release();
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //float a, b;
 
     private void mainExecutionLoop()
     {
@@ -249,6 +281,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     for (String s : objs) {
                         try {
                             JSONObject js = new JSONObject(s);
+                            // Traffic
                             if (js.getString("type").contains("traffic")) {
                                 for (int i = 0; i < trafficList.size(); i++) {
                                     String t = trafficList.get(i);
@@ -265,7 +298,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 trafficList.add(s);
                             }
 
-
+                            // Heartbeat
+                            if (js.getString("type").contains("heartbeat")) {
+                                mGpsPositionValid = js.getBoolean("gpsvalid");
+                                mBatteryLow = js.getBoolean("lowbattery");;
+                                mDeviceRunning = js.getBoolean("running");;
+                            }
                         }
                         catch (JSONException e) {
                         }

@@ -555,15 +555,20 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         //todo: // - check stratux status
         if (checkWiFiStatus("stratux")) {
-            hasGps = true;  // TODO: 2018-08-10 Properly test for hasGps 
-            //hasSpeed = true;
-            mGLView.setServiceableDevice();
-            mGLView.setServiceableDi();
-            mGLView.setServiceableAsi();
-            mGLView.setServiceableAlt();
-            mGLView.setServiceableAh();
-            mGLView.setDisplayAirport(true);
-            mGLView.setBannerMsg(false, " ");
+            if (mStratux.isDeviceRunning()) {
+                if (mStratux.isGpsValid()) {
+                    hasGps = true;
+                    //hasSpeed = true;
+                    mGLView.setServiceableDevice();
+                    mGLView.setServiceableDi();
+                    mGLView.setServiceableAsi();
+                    mGLView.setServiceableAlt();
+                    mGLView.setServiceableAh();
+                    mGLView.setDisplayAirport(true);
+                    mGLView.setBannerMsg(false, " ");
+                    return super.handleStratux();
+                }
+            }
         }
         else if (ctr % 100 == 0 ) {
             hasGps = false;
@@ -572,7 +577,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setBannerMsg(true, "STRATUX CONNECTION");
             connectWiFi("stratux");  // force the connection to stratux
         }
-        return super.handleStratux();
+        return false;
+        //return super.handleStratux();
     }
 
     //
