@@ -568,32 +568,31 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     protected boolean handleStratux()
     {
-        //todo: // - check stratux status
-        if (checkWiFiStatus("stratux")) {
-            if (mStratux.isDeviceRunning()) {
-                if (mStratux.isGpsValid()) {
-                    hasGps = true;
-                    //hasSpeed = true;
-                    mGLView.setServiceableDevice();
-                    mGLView.setServiceableDi();
-                    mGLView.setServiceableAsi();
-                    mGLView.setServiceableAlt();
-                    mGLView.setServiceableAh();
-                    mGLView.setDisplayAirport(true);
-                    mGLView.setBannerMsg(false, " ");
-                    return super.handleStratux();
-                }
+        if (checkWiFiStatus("stratux")
+            && mStratux.isDeviceRunning()
+            && mStratux.isGpsValid()) {
+
+            // We have a stratux running vir valid GPS
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableAh();
+            mGLView.setServiceableDi();
+            mGLView.setServiceableAsi();
+            mGLView.setServiceableAlt();
+            mGLView.setDisplayAirport(true);
+            mGLView.setBannerMsg(false, " ");
+            hasGps = true;
+            return super.handleStratux();
+        }
+        else {
+            if (ctr % 100 == 0 ) {
+                hasGps = false;
+                hasSpeed = false;
+                mGLView.setUnServiceableDevice();
+                mGLView.setBannerMsg(true, "STRATUX CONNECTION");
+                connectWiFi("stratux");  // force the connection to stratux
             }
+            return false;
         }
-        else if (ctr % 100 == 0 ) {
-            hasGps = false;
-            hasSpeed = false;
-            mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX CONNECTION");
-            connectWiFi("stratux");  // force the connection to stratux
-        }
-        return false;
-        //return super.handleStratux();
     }
 
     //

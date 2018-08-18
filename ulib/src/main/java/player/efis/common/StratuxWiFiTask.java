@@ -176,19 +176,15 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             //  Read
             int nrBytesRead = read(buffer);
             if (nrBytesRead <= 0) {
+                mGpsPositionValid = false;
+                mDeviceRunning = false;
+                mBatteryLow = true;
                 try {
                     Thread.sleep(1000);
                 }
                 catch (Exception e) {}
                 disconnect();
                 connect(Integer.toString(mPort), false);
-                /*if (mRunning) {
-                    //  Try to reconnect
-                    Logger.Logit(id + "Listener error, re-starting listener");
-                    disconnect();
-                    if (connect(Integer.toString(mPort), false)) start();
-                    else stop();
-                }*/
                 continue;
             }
 
