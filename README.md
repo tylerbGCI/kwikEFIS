@@ -14,3 +14,5 @@ Ed Williams 	(http://edwilliams.org/)
 Aviation Formulary; I have used information from this most useful work so many times 
 and in so many projects that I have lost count.
 
+Apps4Av     (https://github.com/apps4av)
+WiFi and GDL90; Served as the basis for Stratux integration.
