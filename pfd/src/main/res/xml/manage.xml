@@ -21,10 +21,17 @@
             android:key="AircraftModel"
             android:summary="Select active aircraft model"
             android:title="Aircraft" />
-
     </PreferenceCategory>
 
+
     <PreferenceCategory android:title="CONTROL" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="stratuxActive"
+            android:summary="Enable Stratux module"
+            android:title="Stratux" />
+
         <PreferenceScreen
             android:key="modeSelection"
             android:title="System"
@@ -46,13 +53,11 @@
             </PreferenceCategory>
 
             <PreferenceCategory android:title="ADMIN" >
-                    
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="simulatorActive"
                     android:summary="Simulate GPS movement for demonstration"
                     android:title="Simulator" />
-
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="lockedMode"
@@ -72,7 +77,6 @@
                     android:key="version"
                     android:summary="0.0"
                     android:title="Version" />
-
             </PreferenceCategory>
         </PreferenceScreen>
 
@@ -85,13 +89,8 @@
             android:summary="Select color theme"
             android:title="Theme" />
             -->
-            
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="stratuxActive"
-            android:summary="Enable Stratux module"
-            android:title="Stratux" />
-            
+
+
 
     </PreferenceCategory>
 </PreferenceScreen>

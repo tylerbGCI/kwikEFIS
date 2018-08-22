@@ -3,6 +3,14 @@
 
     <PreferenceCategory android:title="DISPLAY" style="?android:attr/listSeparatorTextViewStyle">
 
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/color_theme_names"
+            android:entryValues="@array/color_theme_values"
+            android:key="colorTheme"
+            android:summary="Select color theme"
+            android:title="Theme" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displayAirspace"
@@ -26,15 +34,6 @@
             android:key="infoPage"
             android:summary="Ancillary details page"
             android:title="Details" />
-            
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/color_theme_names"
-            android:entryValues="@array/color_theme_values"
-            android:key="colorTheme"
-            android:summary="Select color theme"
-            android:title="Theme" />
-            
     </PreferenceCategory>
 
     <PreferenceCategory android:title="NAVIGATION" > 

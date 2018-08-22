@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
 <!--
     <PreferenceCategory android:title="AIRCRAFT" >
         <ListPreference
@@ -20,7 +21,6 @@
             android:key="AircraftModel"
             android:summary="Select active aircraft model"
             android:title="Aircraft" />
-
     </PreferenceCategory>
 
     <PreferenceScreen
@@ -29,7 +29,6 @@
         android:summary="Select Airspace"
         android:title="Airspace"
         android:persistent="false">
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="classA"
@@ -67,9 +66,14 @@
             android:title="CTR" />
     </PreferenceScreen>
 
-
-
     <PreferenceCategory android:title="CONTROL" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="stratuxActive"
+            android:summary="Enable Stratux module"
+            android:title="Stratux" />
+
         <PreferenceScreen
             android:key="modeSelection"
             android:title="System"
@@ -106,7 +110,6 @@
                 android:key="version"
                 android:summary="0.0"
                 android:title="Version" />
-
             </PreferenceCategory>
             </PreferenceScreen>
 
@@ -119,13 +122,8 @@
             android:summary="Select color theme"
             android:title="Theme" />
             -->
-            
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="stratuxActive"
-            android:summary="Enable Stratux module"
-            android:title="Stratux" />
-            
+
+
 
     </PreferenceCategory>
 </PreferenceScreen>
