@@ -40,6 +40,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     private int mState;
 
     // Public Stratux vars
+    public long StratuxTimeStamp;
+
     public int GPSSatellites;
     public int GPSSatellitesTracked;
     public int GPSSatellitesSeen;
@@ -296,9 +298,10 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
                             // Heartbeat
                             if (js.getString("type").contains("heartbeat")) {
+                                StratuxTimeStamp = js.getLong("timestamp");
                                 mGpsPositionValid = js.getBoolean("gpsvalid");
-                                mBatteryLow = js.getBoolean("lowbattery");;
-                                mDeviceRunning = js.getBoolean("running");;
+                                mBatteryLow = js.getBoolean("lowbattery");
+                                mDeviceRunning = js.getBoolean("running");
                             }
                         }
                         catch (JSONException e) {

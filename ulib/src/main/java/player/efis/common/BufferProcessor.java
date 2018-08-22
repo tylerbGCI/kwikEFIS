@@ -467,6 +467,8 @@ public class BufferProcessor
                     //object.put("hour", (int) om.mHour);
                     //object.put("minute", (double) om.mLat);
                     //object.put("second", (double) (om.mHorizontalVelocity));
+
+                    object.put("timestamp", (long) om.mTimeStamp);
                     object.put("gpsvalid", (boolean) om.mGpsPositionValid);
                     object.put("lowbattery", (boolean) om.mBatteryLow);
                     object.put("running", (boolean) om.mDeviceRunning);

@@ -26,6 +26,7 @@ public class HeartbeatMessage extends Message {
     int mMinute;
     int mSecond;
 
+    public long mTimeStamp;
     public Boolean mGpsPositionValid;
     public Boolean mBatteryLow;
     public Boolean mDeviceRunning;
@@ -46,7 +47,7 @@ public class HeartbeatMessage extends Message {
        mGpsPositionValid = (d & 0x80L) != 0;
        mBatteryLow = (d & 0x40L) != 0;
        mDeviceRunning = (d & 0x01L) != 0;
-       
+
        /*
         * Get time
         */
@@ -54,8 +55,9 @@ public class HeartbeatMessage extends Message {
        int d2 = msg[2] & 0xFF;
        int d3 = msg[3] & 0xFF;
 
-       long timeStamp = ((d1 & 0x80L) << 9) | (d3 << 8) | d2;
-       double mHourFrac = (float)timeStamp / 3600.0f;
+       mTimeStamp = ((d1 & 0x80L) << 9) | (d3 << 8) | d2;
+
+       /*double mHourFrac = (float)mTimeStamp / 3600.0f;
        mHour = (int)Math.floor((double)mHourFrac);
        double mMinuteFrac = (double)mHourFrac - (double)mHour;
        mMinute = (int)Math.floor((double)mMinuteFrac * 60.0f);
@@ -70,6 +72,12 @@ public class HeartbeatMessage extends Message {
            mHour++;
        }
        Logger.Logit(" mHour " + mHour + " mMinute " + mMinute + " mSecond " + mSecond + " isBatteryLow " + mBatteryLow);
+       */
+       Logger.Logit("Timestamp " + mTimeStamp
+               + " isBatteryLow " + mBatteryLow
+               + " GpsPositionValid" + mGpsPositionValid
+               + " IsBatteryLow"     + mBatteryLow
+               + " IsDeviceRunning"  + mDeviceRunning);
    }
 
 }
