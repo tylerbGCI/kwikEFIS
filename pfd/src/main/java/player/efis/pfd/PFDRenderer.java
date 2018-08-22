@@ -232,7 +232,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
-        if (bCalibrating) renderCalibrate(mMVPMatrix);
+        if (bBannerActive) renderBannerMsg(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
 
