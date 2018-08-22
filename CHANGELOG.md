@@ -1,5 +1,13 @@
 Changelog
 =========
+REL_21 (2018-08-24)
+------------------
+* Improve Stratux wifi and GPS handling
+* Clear issue 20
+* Bump Stratus up a major version
+* Release EFIS v4.0
+* Release DMAP v2.0
+
 REL_21 (2018-08-18)
 ------------------
 * Add support for Stratux ADS-B ADHRS 
