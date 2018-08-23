@@ -21,6 +21,7 @@ import player.ulib.UTrig;
 import player.ulib.Unit;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.GpsStatus;

@@ -30,7 +30,7 @@ public class Logger {
         m.obj = (Object)msg;
         mHandler.sendMessage(m);*/
 
-        Log.v("Stratux", msg);
+        Log.i("Stratux", msg);
     }
     
     /**

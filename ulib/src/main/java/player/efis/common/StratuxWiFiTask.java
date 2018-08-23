@@ -343,8 +343,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         jObject = new JSONObject(status);
 
                         String rv = jObject.getString("Ping_connected");
-                        //Log.v("bugbug", rv);
-
                     }
                     catch (JSONException e) {
                         e.printStackTrace();
