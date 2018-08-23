@@ -500,12 +500,19 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void disconnect()
     {
-        try {
+        if (mSocket != null) {
+            while (!mSocket.isClosed()) {
+                mSocket.disconnect();
+                mSocket.close();
+            }
+        }
+
+        /*try {
             mSocket.close();
         }
         catch (Exception e2) {
             Logger.Logit(id + "Error stream close");
-        }
+        }*/
         mState = DISCONNECTED;
     }
 
@@ -520,8 +527,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             Logger.Logit(id + ": Stop failed because already stopped");
             return;
         }
-        mRunning = false;
         disconnect();
+        mRunning = false;
         Logger.Logit(id + "Stopped");
     }
 
