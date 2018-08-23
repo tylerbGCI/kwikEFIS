@@ -11,7 +11,8 @@ rm h:/src/kwikEFIS/apk/kwik-efis-datapac-eur.rus.apk
 rm h:/src/kwikEFIS/apk/kwik-efis-datapac-sah.jap.apk
 rm h:/src/kwikEFIS/apk/kwik-efis-datapac-pan.arg.apk
 
-./gradlew build
+#./gradlew build
+./gradlew assemble
 
 cp h:/src/kwikEFIS/pfd/build/outputs/apk/pfd-debug.apk h:/src/kwikEFIS/apk/kwik-efis.apk
 cp h:/src/kwikEFIS/mfd/build/outputs/apk/mfd-debug.apk h:/src/kwikEFIS/apk/kwik-dmap.apk
