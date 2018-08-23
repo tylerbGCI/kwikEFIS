@@ -99,6 +99,17 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     // Stratux Wifi
     protected WifiManager wifiManager;
     protected StratuxWiFiTask mStratux;
+    protected long PrevStratuxTimeStamp;
+    
+    
+    protected void killProcess(String process)
+    {
+        // Required the following permission:
+        // <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+        ActivityManager am = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
+        am.killBackgroundProcesses(process);
+    }
+    
 
     protected boolean connectWiFi(String ssid)
     {
@@ -141,18 +152,20 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     }
 
     //
-    // Stratux handler
+    // Stratux handler - not used anymore
     //
     protected boolean handleStratux()
     {
         if (mStratux != null) {
-            pitchValue = (float) mStratux.AHRSPitch;
-            rollValue = (float) mStratux.AHRSRoll;
-            slipValue = (float) mStratux.AHRSSlipSkid;
+            gps_infix = mStratux.GPSSatellites;
+            gps_insky = mStratux.GPSSatellitesSeen; // GPSSatellitesTracked;
             loadfactor = (float) mStratux.AHRSGLoad;
-
             slipValue = (float) -mStratux.AHRSSlipSkid;
             SLIP_SENS = 10;
+
+            // Dependant on GPS fix
+            pitchValue = (float) mStratux.AHRSPitch;
+            rollValue = (float) mStratux.AHRSRoll;
 
             gps_lat = (float) mStratux.GPSLatitude;
             gps_lon = (float) mStratux.GPSLongitude;
@@ -163,8 +176,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
             gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
             sensorBias = 0;
 
-            gps_infix = mStratux.GPSSatellites;
-            gps_insky = mStratux.GPSSatellitesSeen; // GPSSatellitesTracked;
             if (gps_speed > 5) hasSpeed = true;
             else hasSpeed = false;
 
