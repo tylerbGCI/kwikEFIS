@@ -149,8 +149,8 @@ abstract public class EFISRenderer
     protected boolean ServiceableAsi;     // Flag to indicate Airspeed failure
     protected boolean ServiceableDi;      // Flag to indicate DI failure
 
-    protected boolean bCalibrating;       //
-    private String CalibratingMsg;        //
+    protected boolean bBannerActive;      // Banner message
+    private String sBannerMsg;             // Flag to control banner display
 
     private float mX, mY;                          // keypress location
     protected final float portraitOffset = 0.40f;  // the magic number for portrait offset
@@ -266,19 +266,19 @@ abstract public class EFISRenderer
         mAngle = angle;
     }
 
-    protected void renderCalibrate(float[] matrix)
+    protected void renderBannerMsg(float[] matrix)
     {
-        String t = CalibratingMsg;
+        String s = sBannerMsg;
         glText.begin(1.0f, 0f, 0f, 1.0f, matrix); // Red
         glText.setScale(5.0f);
-        glText.drawCX(t, 0, pixM2/2);             // Draw  String
+        glText.drawCX(s, 0, pixM2/2);             // Draw  String
         glText.end();
     }
 
     public void setBannerMsg(boolean cal, String msg)
     {
-        bCalibrating = cal;
-        CalibratingMsg = msg;
+        bBannerActive = cal;
+        sBannerMsg = msg;
     }
 
     protected void renderSimulatorActive(float[] matrix)
