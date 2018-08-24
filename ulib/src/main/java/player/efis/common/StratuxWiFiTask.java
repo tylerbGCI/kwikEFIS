@@ -30,7 +30,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     protected static final int CONNECTING = 2;
     protected static final int DISCONNECTED = 0;
 
-    private Exception exception;
     private boolean mRunning;
     private boolean mCancel;
     //private Thread mThread;
@@ -79,14 +78,16 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
-        try {
+        //try {
             mRunning = true;
+            mGpsPositionValid = false;
+            mDeviceRunning = false;
+            mBatteryLow = true;
+
             mainExecutionLoop();
-        }
-        catch (Exception e) {
-        }
-        finally {
-        }
+        //}
+        //catch (Exception e) {}
+        //finally {}
         return null;
     }
 
@@ -154,7 +155,25 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
     }
 
-    //float a, b;
+    public boolean isTaskRunning()
+    {
+        try {
+            mutex.acquire();
+            try {
+                return mRunning;
+            }
+            finally {
+                mutex.release();
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
 
     private void mainExecutionLoop()
     {
@@ -177,14 +196,31 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
             //  Read
             int nrBytesRead = read(buffer);
+
             if (nrBytesRead <= 0) {
-                mGpsPositionValid = false;
-                mDeviceRunning = false;
-                mBatteryLow = true;
+                // Set the flags to worst case
+                try {
+                    mutex.acquire();
+                    try {
+                        mGpsPositionValid = false;
+                        mDeviceRunning = false;
+                        mBatteryLow = true;
+                    }
+                    finally {
+                        mutex.release();
+                    }
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // Wait a sec
                 try {
                     Thread.sleep(1000);
                 }
                 catch (Exception e) {}
+
+                // Try and re-connect
                 disconnect();
                 connect(Integer.toString(mPort), false);
                 continue;
@@ -196,7 +232,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             try {
                 mutex.acquire();
                 try {
-
                     LinkedList<String> objs = bp.decode();
                     long unixTime = UTime.getUtcTimeMillis();
 
@@ -284,12 +319,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 for (int i = 0; i < trafficList.size(); i++) {
                                     String t = trafficList.get(i);
                                     JSONObject jt = new JSONObject(t);
-                                    if (jt.getInt("address") == js.getInt("address")) {
-                                        trafficList.remove(i);
-                                    }
-                                    // If a target is older then 20 seconds remove it from the list
+
+                                    // If it has the same id or is older then
+                                    // 20 seconds then remove it from the list
                                     long deltaT = unixTime - jt.getLong("time");
-                                    if (deltaT > 20 * 1000) {
+                                    if ((jt.getInt("address") == js.getInt("address"))
+                                    || (deltaT > 20 * 1000)) {
                                         trafficList.remove(i);
                                     }
                                 }
@@ -342,7 +377,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         String status = getDeviceStatus();
                         jObject = new JSONObject(status);
 
-                        String rv = jObject.getString("Ping_connected");
+                        //String rv = jObject.getString("Ping_connected");
                     }
                     catch (JSONException e) {
                         e.printStackTrace();
@@ -355,8 +390,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
+        disconnect();
+        stop();
     }
 
     private int read(byte[] buffer)
@@ -498,20 +534,13 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void disconnect()
     {
-        if (mSocket != null) {
-            while (!mSocket.isClosed()) {
-                mSocket.disconnect();
-                mSocket.close();
-            }
-        }
-
-        /*try {
+        try {
             mSocket.close();
+            mState = DISCONNECTED;
         }
         catch (Exception e2) {
             Logger.Logit(id + "Error stream close");
-        }*/
-        mState = DISCONNECTED;
+        }
     }
 
     public void finish()
@@ -543,7 +572,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         Logger.Logit(id + "Started");
     }
 
-    protected boolean isRunning()
+    /*protected boolean isRunning()
     {
         return mRunning;
     }
@@ -551,7 +580,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     protected boolean isStopped()
     {
         return !mRunning;
-    }
+    }*/
 
 
 
