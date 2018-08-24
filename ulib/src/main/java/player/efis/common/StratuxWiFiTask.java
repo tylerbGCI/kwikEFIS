@@ -316,20 +316,27 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                             JSONObject js = new JSONObject(s);
                             // Traffic
                             if (js.getString("type").contains("traffic")) {
+                                //trafficList.clear();
+                                //trafficList.add(s);
+
+                                // See if it exists in the list and
+                                // delete the entry first
                                 for (int i = 0; i < trafficList.size(); i++) {
                                     String t = trafficList.get(i);
                                     JSONObject jt = new JSONObject(t);
 
-                                    // If it has the same id or is older then
-                                    // 20 seconds then remove it from the list
+                                    // Also check for anything older then 20 seconds
                                     long deltaT = unixTime - jt.getLong("time");
-                                    if ((jt.getInt("address") == js.getInt("address"))
-                                    || (deltaT > 20 * 1000)) {
+                                    if ((jt.getInt("address") == js.getInt("address")) ||
+                                            (deltaT > 20 * 1000)) {
                                         trafficList.remove(i);
                                     }
                                 }
+
                                 trafficList.add(s);
                             }
+
+
 
                             // Heartbeat
                             if (js.getString("type").contains("heartbeat")) {
@@ -538,7 +545,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             mSocket.close();
             mState = DISCONNECTED;
         }
-        catch (Exception e2) {
+        catch (Exception e) {
+            e.printStackTrace();
             Logger.Logit(id + "Error stream close");
         }
     }
@@ -550,10 +558,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void stop()
     {
-        if (mState != CONNECTED) {
-            Logger.Logit(id + ": Stop failed because already stopped");
-            return;
-        }
         disconnect();
         mRunning = false;
         Logger.Logit(id + "Stopped");
@@ -562,10 +566,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void start()
     {
-        if (mState != DISCONNECTED) {
-            Logger.Logit(id + ": Starting failed because already started");
-            return;
-        }
         mRunning = true;
         disconnect();
         connect(Integer.toString(mPort), false);
