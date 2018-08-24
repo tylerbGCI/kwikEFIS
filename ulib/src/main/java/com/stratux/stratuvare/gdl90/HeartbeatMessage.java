@@ -73,11 +73,12 @@ public class HeartbeatMessage extends Message {
        }
        Logger.Logit(" mHour " + mHour + " mMinute " + mMinute + " mSecond " + mSecond + " isBatteryLow " + mBatteryLow);
        */
-       Logger.Logit("Timestamp " + mTimeStamp
-               + " isBatteryLow " + mBatteryLow
-               + " GpsPositionValid" + mGpsPositionValid
-               + " IsBatteryLow"     + mBatteryLow
-               + " IsDeviceRunning"  + mDeviceRunning);
+       Logger.Logit("Timestamp: " + mTimeStamp
+               + " IsDeviceRunning: "  + mDeviceRunning
+               + " GpsPositionValid: " + mGpsPositionValid
+               + " IsBatteryLow: "     + mBatteryLow
+               + " isBatteryLow: " + mBatteryLow
+               );
    }
 
 }

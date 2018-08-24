@@ -29,7 +29,7 @@
     package="player.efis.mfd"
     android:installLocation="preferExternal"
     android:versionCode="22"
-    android:versionName="1.8">
+    android:versionName="2.0">
 
     <!-- We need to target 10 for the menu button -->
     <!-- it is overridden in the gradle files -->

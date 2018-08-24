@@ -158,17 +158,21 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderBatteryPct(mMVPMatrix);
 
             // North Que
-            {
-                float xlx = -0.84f * pixW2;
-                float xly = +0.88f * pixH2;
+            float xlx = -0.84f * pixW2;
+            float xly = +0.88f * pixH2;
 
-                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-                Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
-                Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-                renderNorthQue(rmiMatrix);
-            }
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
+            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            renderNorthQue(rmiMatrix);
         }
+
+        if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
+        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
+        if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
+        if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
+        if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 

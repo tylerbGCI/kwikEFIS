@@ -17,6 +17,7 @@
 package player.efis.common;
 
 import player.ulib.DigitalFilter;
+import player.ulib.UMath;
 import player.ulib.UTrig;
 import player.ulib.Unit;
 
@@ -33,10 +34,13 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 
 // sensor imports
+import android.os.Bundle;
 import android.text.format.Time;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
@@ -100,7 +104,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     // Stratux Wifi
     protected WifiManager wifiManager;
     protected StratuxWiFiTask mStratux;
-    protected long PrevStratuxTimeStamp;
+    protected long PrevStratuxTimeStamp;// = Long.MAX_VALUE;
     
     
     protected void killProcess(String process)
@@ -155,35 +159,56 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     //
     // Stratux handler - not used anymore
     //
-    protected boolean handleStratux()
+    protected int handleStratux()
     {
-        if (mStratux != null) {
-            gps_infix = mStratux.GPSSatellites;
-            gps_insky = mStratux.GPSSatellitesSeen; // GPSSatellitesTracked;
-            loadfactor = (float) mStratux.AHRSGLoad;
-            slipValue = (float) -mStratux.AHRSSlipSkid;
-            SLIP_SENS = 10;
+        if (checkWiFiStatus("stratux")) {
+            // We have a wifi connection to "stratux"
+            // check for task and pulse
+            if (!mStratux.isTaskRunning()) {
+                return -1;
+            }
+            if (!mStratux.isDeviceRunning()) {
+                return -1;
+            }
 
-            // Dependant on GPS fix
+            gps_infix = mStratux.GPSSatellites;
+            gps_insky = mStratux.GPSSatellitesSeen;
+            //gps_insky = mStratux.GPSSatellitesTracked;
+
             pitchValue = (float) mStratux.AHRSPitch;
             rollValue = (float) mStratux.AHRSRoll;
 
-            gps_lat = (float) mStratux.GPSLatitude;
-            gps_lon = (float) mStratux.GPSLongitude;
-            gps_altitude = Unit.Feet.toMeter((float) mStratux.GPSAltitudeMSL);
-            gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
-            gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
-            gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
-            gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
-            sensorBias = 0;
+            // We have pulse/task check for GPS
+            if (mStratux.isGpsValid()) {
+                // and we have valid GPS (also implies running Stratux)
+                gps_lat = (float) mStratux.GPSLatitude;
+                gps_lon = (float) mStratux.GPSLongitude;
+                gps_altitude = Unit.Feet.toMeter((float) mStratux.GPSAltitudeMSL);
+                gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
+                gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
+                gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
+                gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
+                sensorBias = 0;
+                hasGps = true;
 
-            if (gps_speed > 5) hasSpeed = true;
-            else hasSpeed = false;
-
-            return true;
+                if (gps_speed > 5) {
+                    hasSpeed = true;
+                    //updateFPV();
+                }
+                else hasSpeed = false;
+                return 0;
+            }
+            else {
+                return -2;
+            }
         }
         else {
-            return false;
+            if (ctr % 100 == 0 ) {
+                hasGps = false;
+                hasSpeed = false;
+                connectWiFi("stratux");  // force the connection to stratux
+            }
+            return -3;
         }
     }
 
@@ -433,7 +458,36 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float loadfactor;
     protected float slipValue;
     protected int ctr = 0;
+
+
+    // Create a Timer
+    Timer timer = new Timer();
+    //Then you extend the timer task
+    class UpdateStartuxTask extends TimerTask
+    {
+        //Ball myBall;
+
+        public void run() {
+            //calculate the new position of myBall
+            //handleStratux();
+        }
+    }
+    //And then add the new task to the Timer with some update interval
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        final int FPS = 40;
+        TimerTask updateStartux = new UpdateStartuxTask();
+        timer.scheduleAtFixedRate(updateStartux, 0, 1000 / FPS);
+    }
+
+
+
 }
+
 
 
 /*

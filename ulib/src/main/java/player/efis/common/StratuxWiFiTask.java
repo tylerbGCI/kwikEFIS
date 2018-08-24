@@ -313,6 +313,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     // Extract traffic
                     for (String s : objs) {
                         try {
+                            long deltaT = 0;
                             JSONObject js = new JSONObject(s);
                             // Traffic
                             if (js.getString("type").contains("traffic")) {
@@ -325,18 +326,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                     String t = trafficList.get(i);
                                     JSONObject jt = new JSONObject(t);
 
-                                    // Also check for anything older then 20 seconds
-                                    long deltaT = unixTime - jt.getLong("time");
-                                    if ((jt.getInt("address") == js.getInt("address")) ||
-                                            (deltaT > 20 * 1000)) {
+                                    if (jt.getInt("address") == js.getInt("address")) {
                                         trafficList.remove(i);
                                     }
                                 }
-
                                 trafficList.add(s);
+                                deltaT = unixTime - js.getLong("time");
                             }
 
-
+                            if (deltaT > 20 * 1000) {
+                                trafficList.clear();
+                            }
 
                             // Heartbeat
                             if (js.getString("type").contains("heartbeat")) {
@@ -347,6 +347,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                             }
                         }
                         catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
 

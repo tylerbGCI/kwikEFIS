@@ -187,6 +187,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         provider = LocationManager.GPS_PROVIDER;  // Always use the GPS as the provide
         locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
         locationManager.addGpsStatusListener(this);
+        //locationManager.addNmeaListener(this);
         Location location = locationManager.getLastKnownLocation(provider);
         // end location
 
@@ -259,8 +260,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.onResume();
         mStratux.start();
 
-		locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
-		//locationManager.addNmeaListener(this);
+        if (!(bStratuxActive || bSimulatorActive))
+		    locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+
 		registerSensorManagerListeners();
     }
 
@@ -598,7 +600,47 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     // Stratux handler
     //
-    protected boolean handleStratux()
+    protected int handleStratux()
+    {
+        int rv = super.handleStratux();
+
+        if (rv == 0) {
+            mGLView.setBannerMsg(false, " ");
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableDi();
+            mGLView.setServiceableAsi();
+            mGLView.setServiceableAlt();
+            mGLView.setServiceableAh();
+            mGLView.setDisplayAirport(true);
+
+            if (hasSpeed) {
+                updateFPV();
+            }
+            mGLView.setBannerMsg(false, " ");
+        }
+
+        if (rv == -1) {
+            // no pulse
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX PULSE");
+        }
+
+        if (rv == -2) {
+            // No Gps
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableAh();
+            mGLView.setBannerMsg(true, "STRATUX GPS");
+        }
+
+        if (rv == -3) {
+            // No Wifi
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX WIFI");
+        }
+        return rv;
+    }
+
+    protected boolean __handleStratux()
     {
         if (checkWiFiStatus("stratux")) {
             // We have a wifi connection to "stratux"
@@ -694,9 +736,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         sensorComplementaryFilter.getGyro(gyro);      // Use the gyroscopes for the attitude
         sensorComplementaryFilter.getAccel(accel);    // Use the accelerometer for G and slip
 
-        //pitchValue = -sensorComplementaryFilter.getPitchAcc();
-        //rollValue = -sensorComplementaryFilter.getRollAcc();
-
         if (bLandscapeMode) {
             gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);
             slipValue = filterSlip.runningAverage(accel[1]);
@@ -770,7 +809,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         if (bSimulatorActive) {
             // Simulator handler
-            locationManager.removeUpdates(this);
             mGLView.setSimulatorActive(true, "SIMULATOR");
             Simulate();
             // Set the GPS flag to true and
@@ -793,8 +831,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 handleStratux();
             }
             else {
-                // Android sensors active
-                locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
                 // Clear any banners that may be set
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
