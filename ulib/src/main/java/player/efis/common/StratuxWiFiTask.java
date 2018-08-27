@@ -69,25 +69,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         mState = DISCONNECTED;
         mRunning = false;
         mCancel = false;
-
-        //calibrateAhrs();
-        //cageAhrs();
     }
 
 
     //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
-        //try {
-            mRunning = true;
-            mGpsPositionValid = false;
-            mDeviceRunning = false;
-            mBatteryLow = true;
-
-            mainExecutionLoop();
-        //}
-        //catch (Exception e) {}
-        //finally {}
+        mRunning = true;
+        mGpsPositionValid = false;
+        mDeviceRunning = false;
+        mBatteryLow = true;
+        mainExecutionLoop();
         return null;
     }
 
@@ -173,6 +165,16 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     }
 
 
+    private static void doSleep(int ms)
+    {
+        // Wait ms milliseconds
+        try {
+            Thread.sleep(ms);
+        }
+        catch (Exception e) {
+        }
+    }
+
 
 
     private void mainExecutionLoop()
@@ -187,10 +189,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         //while (mRunning == true) {
         while (mCancel == false) {
             if (!mRunning) {
-                try {
-                    Thread.sleep(1000);
-                }
-                catch (Exception e) {}
+                doSleep(1000);
                 continue;
             }
 
@@ -215,10 +214,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 }
 
                 // Wait a sec
-                try {
-                    Thread.sleep(1000);
-                }
-                catch (Exception e) {}
+                doSleep(1000);
 
                 // Try and re-connect
                 disconnect();
@@ -437,8 +433,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //
     // Stratux "level" attitude display. Submit a blank POST to this URL.
     //
-    private String cageAhrs()
+    public static void cageAhrs()
     {
+        Log.d("bugbug ", "cageAhrs");
         return postHttp("http://192.168.10.1/cageAHRS");
     }
 
@@ -457,13 +454,13 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         return doHttp(addr, "GET");
     }
 
-    private String postHttp(String addr)
+    private static String postHttp(String addr)
     {
         return doHttp(addr, "POST");
     }
 
 
-    private String doHttp(String addr, String method)
+    private static String doHttp(String addr, String method)
     {
         URL url;
         StringBuffer response = new StringBuffer();

@@ -90,6 +90,9 @@ public class PFDSurfaceView extends GLSurfaceView
             case MotionEvent.ACTION_DOWN:
                 mRenderer.setActionDown(x, y);
                 requestRender();
+
+                mPreviousX = x;
+                mPreviousY = y;
                 break;
 
             //--
@@ -107,10 +110,11 @@ public class PFDSurfaceView extends GLSurfaceView
                     }
                 }
                 else if (Math.abs(deltaX) > MIN_DISTANCE) {
-                    if (!mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom ON", Toast.LENGTH_SHORT).show();
-                    //mStratux.cageAhrs();
+                    //if (!mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom ON", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Cage AHRS", Toast.LENGTH_SHORT).show();
+                    StratuxWiFiTask.cageAhrs();
 
-                    if (deltaY > 0) {
+                    if (deltaX > 0) {
                         // swipe right
                     }
                     else {
@@ -122,13 +126,7 @@ public class PFDSurfaceView extends GLSurfaceView
                 }
                 break;
             //--
-
-
-
         }
-        mPreviousX = x;
-        mPreviousY = y;
-
         requestRender();
         return true;
     }

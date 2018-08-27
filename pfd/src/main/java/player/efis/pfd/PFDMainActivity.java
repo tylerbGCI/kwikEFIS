@@ -129,7 +129,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     // for now we will leave the menu bar in case it is needed later
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
-    {   /*
+    {
+        //mStratux.cageAhrs();
+
+        /*
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
             mGLView.setAutoZoomActive(false);
             mGLView.zoomIn();
