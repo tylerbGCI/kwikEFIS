@@ -129,8 +129,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        //mStratux.cageAhrs();
-
         /*
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
             mGLView.setAutoZoomActive(false);
@@ -255,6 +253,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void onResume()
     {
         super.onResume();
+
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
@@ -267,6 +266,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
 		registerSensorManagerListeners();
     }
+
 
     //
     // Sensor methods
@@ -621,12 +621,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setBannerMsg(false, " ");
         }
 
-        if (rv == STRATUX_TASK) {
-            // no task -- it is hopeless
+        if (rv == STRATUX_LOOP) {
+            // no loop running, no hope of restart -- it is hopeless
             mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX TASK");
-            Toast.makeText(this, "Stratux handler thread stoppend ... Exiting", Toast.LENGTH_LONG).show();
-            finish(); // there is no point ... exit the main app as well
+            mGLView.setBannerMsg(true, "STRATUX LOOP");
+            Toast.makeText(this, "Stratux handler loop terminated", Toast.LENGTH_LONG).show();
+            //finish(); // there is no point ... exit the main app as well
         }
 
         if (rv == STRATUX_DEVICE) {
@@ -909,7 +909,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setTurn((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn);
         mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
-        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));        // in Feet
         mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
         mGLView.setLatLon(gps_lat, gps_lon);
         mGLView.setBatteryPct(batteryPct);                       // in percentage

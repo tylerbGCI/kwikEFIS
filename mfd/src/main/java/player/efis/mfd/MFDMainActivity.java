@@ -810,7 +810,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
-        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));        // in Feet
         mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
         mGLView.setLatLon(gps_lat, gps_lon);
         mGLView.setBatteryPct(batteryPct);                       // in percentage

@@ -22,8 +22,6 @@ import java.util.concurrent.Semaphore;
 import player.ulib.UTime;
 import player.ulib.Unit;
 
-//class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
-
 public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 {
     protected static final int CONNECTED = 1;
@@ -71,8 +69,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         mCancel = false;
     }
 
-
-    //protected RSSFeed doInBackground(String... urls) {
     protected Void doInBackground(String... urls)
     {
         mRunning = true;
@@ -164,6 +160,22 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
     }
 
+    public boolean isTaskCancelled()
+    {
+        try {
+            mutex.acquire();
+            try {
+                return !mCancel;
+            }
+            finally {
+                mutex.release();
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     private static void doSleep(int ms)
     {
@@ -175,6 +187,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
     }
 
+    private static boolean bCageAhrs = false;
+    public static void doCageAhrs()
+    {
+        // Wait ms milliseconds
+        bCageAhrs = true;
+    }
 
 
     private void mainExecutionLoop()
@@ -191,6 +209,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             if (!mRunning) {
                 doSleep(1000);
                 continue;
+            }
+
+            if (bCageAhrs) {
+                bCageAhrs = false;
+                calibrateAhrs();
+                cageAhrs();
             }
 
             //  Read
@@ -230,6 +254,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 try {
                     LinkedList<String> objs = bp.decode();
                     long unixTime = UTime.getUtcTimeMillis();
+                    long lastTime = 0;
 
                     /*-------------------------------------
                     // < debug - add ghost AC traffic
@@ -313,25 +338,18 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                             JSONObject js = new JSONObject(s);
                             // Traffic
                             if (js.getString("type").contains("traffic")) {
-                                //trafficList.clear();
-                                //trafficList.add(s);
-
                                 // See if it exists in the list and
                                 // delete the entry first
                                 for (int i = 0; i < trafficList.size(); i++) {
                                     String t = trafficList.get(i);
                                     JSONObject jt = new JSONObject(t);
-
-                                    if (jt.getInt("address") == js.getInt("address")) {
+                                    deltaT = unixTime - jt.getLong("time");;
+                                    if ((jt.getInt("address") == js.getInt("address"))
+                                          || (deltaT > 20 * 1000)) {
                                         trafficList.remove(i);
                                     }
                                 }
                                 trafficList.add(s);
-                                deltaT = unixTime - js.getLong("time");
-                            }
-
-                            if (deltaT > 20 * 1000) {
-                                trafficList.clear();
                             }
 
                             // Heartbeat
@@ -341,6 +359,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 mBatteryLow = js.getBoolean("lowbattery");
                                 mDeviceRunning = js.getBoolean("running");
                             }
+
+                            /*deltaT = StratuxTimeStamp - lastTime;
+                            if (deltaT > 20 * 1000) {
+                                trafficList.clear();
+                            }*/
+
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -395,6 +419,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 e.printStackTrace();
             }
         }
+        mCancel = true;
         disconnect();
         stop();
     }
@@ -412,7 +437,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         //saveToFile(pkt.getLength(), buffer);
         return pkt.getLength();
     }
-
 
     //
     // Stratux getSituation post
@@ -433,21 +457,18 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     //
     // Stratux "level" attitude display. Submit a blank POST to this URL.
     //
-    public static void cageAhrs()
+    private void cageAhrs()
     {
-        Log.d("bugbug ", "cageAhrs");
         postHttp("http://192.168.10.1/cageAHRS");
     }
 
     //
     // Stratux sensor calibration. Submit a blank POST to this URL.
     //
-    private String calibrateAhrs()
+    private void calibrateAhrs()
     {
-        return postHttp("http://192.168.10.1/calibrateAHRS");
+        postHttp("http://192.168.10.1/calibrateAHRS");
     }
-
-
 
     private String getHttp(String addr)
     {
@@ -532,10 +553,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         return true; //connectConnection();
     }
 
+
     public String getParam()
     {
         return Integer.toString(mPort);
     }
+
 
     public void disconnect()
     {
@@ -549,10 +572,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
     }
 
+
     public void finish()
     {
         mCancel = true;
     }
+
 
     public void stop()
     {

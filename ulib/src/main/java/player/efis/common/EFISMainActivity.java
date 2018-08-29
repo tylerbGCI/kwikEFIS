@@ -163,12 +163,17 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected final int STRATUX_DEVICE = -2;
     protected final int STRATUX_GPS = -3;
     protected final int STRATUX_WIFI = -4;
+    protected final int STRATUX_LOOP = -5;
+
 
     protected int handleStratux()
     {
         if (checkWiFiStatus("stratux")) {
             // We have a wifi connection to "stratux"
             // check for task and pulse
+            if (!mStratux.isTaskCancelled()) {
+                return STRATUX_LOOP;
+            }
             if (!mStratux.isTaskRunning()) {
                 return STRATUX_TASK;
             }

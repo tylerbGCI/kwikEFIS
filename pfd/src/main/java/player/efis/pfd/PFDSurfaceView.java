@@ -54,7 +54,9 @@ public class PFDSurfaceView extends GLSurfaceView
     //private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
-    private static final int MIN_DISTANCE = 150;
+    private final int MIN_DISTANCE = 150;
+    private boolean primed = false;
+
 
     @Override
     public boolean onTouchEvent(MotionEvent e)
@@ -111,14 +113,17 @@ public class PFDSurfaceView extends GLSurfaceView
                 }
                 else if (Math.abs(deltaX) > MIN_DISTANCE) {
                     //if (!mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom ON", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getContext(), "Cage AHRS", Toast.LENGTH_SHORT).show();
-                    StratuxWiFiTask.cageAhrs();
-
                     if (deltaX > 0) {
                         // swipe right
+                        primed = !primed;
                     }
                     else {
                         // swipe left
+                        if (primed) {
+                            Toast.makeText(getContext(), "Cage AHRS", Toast.LENGTH_SHORT).show();
+                            StratuxWiFiTask.doCageAhrs();
+                        }
+                        primed = false;
                     }
                 }
                 else {
