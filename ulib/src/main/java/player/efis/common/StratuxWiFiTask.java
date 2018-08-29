@@ -436,7 +436,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     public static void cageAhrs()
     {
         Log.d("bugbug ", "cageAhrs");
-        return postHttp("http://192.168.10.1/cageAHRS");
+        postHttp("http://192.168.10.1/cageAHRS");
     }
 
     //
