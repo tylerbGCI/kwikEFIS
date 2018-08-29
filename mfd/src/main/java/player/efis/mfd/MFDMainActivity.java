@@ -31,7 +31,6 @@ import player.ulib.Unit;
 import player.efis.common.orientation_t;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -568,19 +567,25 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setBannerMsg(false, " ");
         }
 
-        if (rv == -1) {
+        if (rv == STRATUX_TASK) {
+            // no task -- it is hopeless
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX TASK");
+        }
+
+        if (rv == STRATUX_DEVICE) {
             // no pulse
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX PULSE");
         }
 
-        if (rv == -2) {
+        if (rv == STRATUX_GPS) {
             // No Gps
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX GPS");
         }
 
-        if (rv == -3) {
+        if (rv == STRATUX_WIFI) {
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");

@@ -29,7 +29,6 @@ import player.ulib.Unit;
 import player.efis.common.orientation_t;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -607,7 +606,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         int rv = super.handleStratux();
 
-        if (rv == 0) {
+        if (rv == STRATUX_OK) {
             mGLView.setBannerMsg(false, " ");
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
@@ -622,20 +621,28 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setBannerMsg(false, " ");
         }
 
-        if (rv == -1) {
+        if (rv == STRATUX_TASK) {
+            // no task -- it is hopeless
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX TASK");
+            Toast.makeText(this, "Stratux handler thread stoppend ... Exiting", Toast.LENGTH_LONG).show();
+            finish(); // there is no point ... exit the main app as well
+        }
+
+        if (rv == STRATUX_DEVICE) {
             // no pulse
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX PULSE");
         }
 
-        if (rv == -2) {
+        if (rv == STRATUX_GPS) {
             // No Gps
             mGLView.setServiceableDevice();
             mGLView.setServiceableAh();
             mGLView.setBannerMsg(true, "STRATUX GPS");
         }
 
-        if (rv == -3) {
+        if (rv == STRATUX_WIFI) {
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");

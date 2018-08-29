@@ -17,7 +17,6 @@
 package player.efis.common;
 
 import player.ulib.DigitalFilter;
-import player.ulib.UMath;
 import player.ulib.UTrig;
 import player.ulib.Unit;
 
@@ -159,16 +158,22 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     //
     // Stratux handler - not used anymore
     //
+    protected final int STRATUX_OK = 0;
+    protected final int STRATUX_TASK = -1;
+    protected final int STRATUX_DEVICE = -2;
+    protected final int STRATUX_GPS = -3;
+    protected final int STRATUX_WIFI = -4;
+
     protected int handleStratux()
     {
         if (checkWiFiStatus("stratux")) {
             // We have a wifi connection to "stratux"
             // check for task and pulse
             if (!mStratux.isTaskRunning()) {
-                return -1;
+                return STRATUX_TASK;
             }
             if (!mStratux.isDeviceRunning()) {
-                return -1;
+                return STRATUX_DEVICE;
             }
 
             gps_infix = mStratux.GPSSatellites;
@@ -196,10 +201,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                     //updateFPV();
                 }
                 else hasSpeed = false;
-                return 0;
+                return STRATUX_OK;
             }
             else {
-                return -2;
+                return STRATUX_GPS;
             }
         }
         else {
@@ -208,7 +213,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                 hasSpeed = false;
                 connectWiFi("stratux");  // force the connection to stratux
             }
-            return -3;
+            return STRATUX_WIFI;
         }
     }
 
