@@ -1,8 +1,8 @@
 Changelog
 =========
-REL_21 (2018-08-24)
+REL_22 (2018-08-30)
 ------------------
-* Improve Stratux wifi and GPS handling
+* Improve Stratux Wifi and GPS handling
 * Clear issues: 20, 22, 21
 * Bump Stratux development up a major version
 * Release EFIS v4.0
