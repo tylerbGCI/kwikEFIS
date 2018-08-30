@@ -3,7 +3,7 @@ Changelog
 REL_21 (2018-08-24)
 ------------------
 * Improve Stratux wifi and GPS handling
-* Clear issue 20
+* Clear issues: 20, 22, 21
 * Bump Stratus up a major version
 * Release EFIS v4.0
 * Release DMAP v2.0
