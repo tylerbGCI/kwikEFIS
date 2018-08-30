@@ -343,7 +343,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 for (int i = 0; i < trafficList.size(); i++) {
                                     String t = trafficList.get(i);
                                     JSONObject jt = new JSONObject(t);
-                                    deltaT = unixTime - jt.getLong("time");;
+                                    deltaT = unixTime - jt.getLong("time");
+
                                     if ((jt.getInt("address") == js.getInt("address"))
                                           || (deltaT > 20 * 1000)) {
                                         trafficList.remove(i);
