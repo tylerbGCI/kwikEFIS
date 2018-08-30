@@ -419,7 +419,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                 e.printStackTrace();
             }
         }
-        mCancel = true;
         disconnect();
         stop();
     }
