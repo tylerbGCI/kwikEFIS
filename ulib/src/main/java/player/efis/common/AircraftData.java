@@ -54,7 +54,6 @@ public class AircraftData
         try {
             mAircraftModel = AircraftModel.valueOf(model);
         }
-        //catch (IllegalArgumentException e) {
         catch (Exception e) {
             mAircraftModel = AircraftModel.RV8;
         }

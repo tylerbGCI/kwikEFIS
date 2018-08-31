@@ -144,10 +144,11 @@ abstract public class EFISRenderer
     protected boolean displayFPV;
 
     protected boolean ServiceableDevice;  // Flag to indicate no faults
-    protected boolean ServiceableAh;      // Flag to indicate AH failure
+    //protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableAlt;     // Flag to indicate Altimeter failure
     protected boolean ServiceableAsi;     // Flag to indicate Airspeed failure
     protected boolean ServiceableDi;      // Flag to indicate DI failure
+    protected boolean ServiceableRose;    // Flag to indicate Rose failure
 
     protected boolean bBannerActive;      // Banner message
     private String sBannerMsg;             // Flag to control banner display
@@ -1425,15 +1426,19 @@ abstract public class EFISRenderer
     //---------------------------------------------------------------------------
     // EFIS serviceability ... aka the Red X's
     //
-    protected void renderUnserviceableDevice(float[] matrix)
+    /*protected void renderUnserviceableDevice(float[] matrix)
     {
-        renderUnserviceableAh(matrix);
+        //renderUnserviceablePage(matrix);
         renderUnserviceableDi(matrix);
         renderUnserviceableAlt(matrix);
         renderUnserviceableAsi(matrix);
-    }
+    }*/
 
-    protected void renderUnserviceableAh(float[] matrix)
+    // this must be overridden in the child classes
+    abstract protected void renderUnserviceableDevice(float[] matrix);
+
+
+    protected void renderUnserviceablePage(float[] matrix)
     {
         float z;
         z = zfloat;
@@ -1452,6 +1457,49 @@ abstract public class EFISRenderer
         );
         mLine.draw(matrix);
     }
+
+    protected void renderUnserviceableAh(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        mLine.SetColor(1, 0, 0, 1);  // red
+        mLine.SetWidth(20);
+
+        mLine.SetVerts(
+                -0.7f * pixM2, 0.8f * pixH2, z,
+                0.7f * pixM2, -0.0f * pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                0.7f * pixM2, 0.8f * pixH2, z,
+                -0.7f * pixM2, -0.0f * pixH2, z
+        );
+        mLine.draw(matrix);
+    }
+
+
+    protected void renderUnserviceableCompassRose(float[] matrix)
+    {
+        float z;
+        z = zfloat;
+
+        mLine.SetColor(1, 0, 0, 1);  // red
+        mLine.SetWidth(20);
+
+        mLine.SetVerts(
+                -0.7f * pixM2, 0.0f * pixH2, z,
+                0.7f * pixM2, -0.8f * pixH2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                0.7f * pixM2, 0.0f * pixH2, z,
+                -0.7f * pixM2, -0.8f * pixH2, z
+        );
+        mLine.draw(matrix);
+    }
+
+
 
     protected void renderUnserviceableDi(float[] matrix)
     {
@@ -1526,16 +1574,19 @@ abstract public class EFISRenderer
         ServiceableDevice = false;
     }
 
-    // Artificial Horizon serviceability
-    public void setServiceableAh()
+    // Compass Rose serviceability
+    public void setServiceableRose()
     {
-        ServiceableAh = true;
+        ServiceableRose = true;
     }
 
-    public void setUnServiceableAh()
+    public void setUnServiceableRose()
     {
-        ServiceableAh = false;
+        ServiceableRose = false;
     }
+
+
+
 
     // Altimeter serviceability
     public void setServiceableAlt()
@@ -1853,17 +1904,19 @@ abstract public class EFISRenderer
 
 
     private StratuxWiFiTask mStratux;
-    public void setAct(StratuxWiFiTask Stratux)
+    public void setTargets(StratuxWiFiTask Stratux)
     {
         this.mStratux = Stratux;
     }
 
-    protected void renderACT(float[] matrix)
+    protected void renderTargets(float[] matrix)
     {
+        if (mStratux == null) return;
+
         float z, x1, y1;
 
         z = zfloat;
-        LinkedList<String> objs = mStratux.getAcList();
+        LinkedList<String> objs = mStratux.getTargetList();
         if (objs == null) return;
 
         for (String s : objs) {
@@ -1898,7 +1951,7 @@ abstract public class EFISRenderer
                     //alt = alt
                     x1 = project(actRelBrg, dme, alt).x;
                     y1 = project(actRelBrg, dme, alt).y;
-                    renderACTSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd, acDme);
+                    renderTargetSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd, acDme);
                 }
             }
             catch (JSONException e) {
@@ -1908,7 +1961,7 @@ abstract public class EFISRenderer
     }
 
 
-    private void renderACTSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd, String dme)
+    private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd, String dme)
     {
         float radius = 5 * 2.5f;
         float z = zfloat;

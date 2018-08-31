@@ -29,8 +29,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     protected static final int DISCONNECTED = 0;
 
     private boolean mRunning;
-    private boolean mCancel;
-    //private Thread mThread;
 
     DatagramSocket mSocket;
     private int mPort = 4000;
@@ -66,15 +64,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         this.id = id;
         mState = DISCONNECTED;
         mRunning = false;
-        mCancel = false;
+        //mCancel = false;
     }
 
     protected Void doInBackground(String... urls)
     {
         mRunning = true;
-        mGpsPositionValid = false;
-        mDeviceRunning = false;
-        mBatteryLow = true;
         mainExecutionLoop();
         return null;
     }
@@ -88,7 +83,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     static Semaphore mutex = new Semaphore(1, true);
     private LinkedList<String> trafficList = new LinkedList<String>();
 
-    LinkedList<String> getAcList()
+    LinkedList<String> getTargetList()
     {
         try {
             mutex.acquire();
@@ -105,9 +100,9 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         }
     }
 
-    boolean mGpsPositionValid;
-    boolean mBatteryLow;
-    boolean mDeviceRunning;
+    private boolean mGpsPositionValid;
+    private boolean mBatteryLow;
+    private boolean mDeviceRunning;
 
     public boolean isGpsValid()
     {
@@ -131,41 +126,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         try {
             mutex.acquire();
             try {
+                Log.d("B2: ", "mDeviceRunning=" + Boolean.toString (mDeviceRunning )) ;
                 return mDeviceRunning;
-            }
-            finally {
-                mutex.release();
-            }
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isTaskRunning()
-    {
-        try {
-            mutex.acquire();
-            try {
-                return mRunning;
-            }
-            finally {
-                mutex.release();
-            }
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isTaskCancelled()
-    {
-        try {
-            mutex.acquire();
-            try {
-                return !mCancel;
             }
             finally {
                 mutex.release();
@@ -204,13 +166,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         // This state machine will keep trying to connect to
         // ADBS/GPS receiver
         //
-        //while (mRunning == true) {
-        while (mCancel == false) {
-            if (!mRunning) {
-                doSleep(1000);
-                continue;
-            }
-
+        while (mRunning == true) {
             if (bCageAhrs) {
                 bCageAhrs = false;
                 calibrateAhrs();
@@ -226,8 +182,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     mutex.acquire();
                     try {
                         mGpsPositionValid = false;
-                        mDeviceRunning = false;
-                        mBatteryLow = true;
+                        //mDeviceRunning = false;
+                        //mBatteryLow = true;
                     }
                     finally {
                         mutex.release();
@@ -255,81 +211,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     LinkedList<String> objs = bp.decode();
                     long unixTime = UTime.getUtcTimeMillis();
                     long lastTime = 0;
-
-                    /*-------------------------------------
-                    // < debug - add ghost AC traffic
-
-                    // fixed target
-                    JSONObject object = new JSONObject();
-
-                    //LongReportMessage tm = (LongReportMessage) m;
-                    try {
-                        object.put("type", "traffic");
-                        object.put("longitude", (double) 115.83);
-                        object.put("latitude", (double) -31.80);
-                        object.put("speed", (double) 123.0);
-                        object.put("bearing", (double) 348.7);
-                        //object.put("altitude", (double) Unit.Meter.toFeet(75));
-                        object.put("altitude", 4321);
-                        object.put("callsign", (String) "GHOST-0");
-                        object.put("address", (int) 777);
-                        object.put("time", (long) unixTime);
-                    }
-                    catch (JSONException e1) {
-                        continue;
-                    }
-                    objs.add(object.toString());
-
-
-                    // 2 moving targets
-                    if (unixTime - pt1 > 4000) {
-                        pt1 = unixTime;
-                        b = b + 0.001f;
-
-                        object = new JSONObject();
-                        //LongReportMessage tm = (LongReportMessage) m;
-                        try {
-                            object.put("type", "traffic");
-                            object.put("longitude", (double) 115.9 - b / 5);
-                            object.put("latitude", (double) -32.2 + b);
-                            object.put("speed", (double) 123.0);
-                            object.put("bearing", (double) 348.7);
-                            object.put("altitude", (double) 4321);
-                            object.put("callsign", (String) "GHOST-1");
-                            object.put("address", (int) 555);
-                            object.put("time", (long) unixTime);
-                        }
-                        catch (JSONException e1) {
-                            continue;
-                        }
-                        objs.add(object.toString());
-                    }
-
-                    if (unixTime - pt2 > 1000) {
-                        pt2 = unixTime;
-                        a = a + 0.001f;
-
-                        object = new JSONObject();
-                        //LongReportMessage tm = (LongReportMessage) m;
-                        try {
-                            object.put("type", "traffic");
-                            object.put("longitude", (double) 115.7 + a / 5);
-                            object.put("latitude", (double) -32.2 + a);
-                            object.put("speed", (double) 246.0);
-                            object.put("bearing", (double) 11.3);
-                            object.put("altitude", (double) 7654);
-                            object.put("callsign", (String) "GHOST-2");
-                            object.put("address", (int) 666);
-                            object.put("time", (long) unixTime);
-                        }
-                        catch (JSONException e1) {
-                            continue;
-                        }
-                        objs.add(object.toString());
-                    }
-                    // debug >
-                    //-------------------------------------*/
-
 
                     // Extract traffic
                     for (String s : objs) {
@@ -421,7 +302,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             }
         }
         disconnect();
-        stop();
+        //stop();
     }
 
     private int read(byte[] buffer)
@@ -575,27 +456,10 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void finish()
     {
-        mCancel = true;
-    }
-
-
-    public void stop()
-    {
-        disconnect();
         mRunning = false;
-        Logger.Logit(id + "Stopped");
     }
 
-
-    public void start()
-    {
-        mRunning = true;
-        disconnect();
-        connect(Integer.toString(mPort), false);
-        Logger.Logit(id + "Started");
-    }
-
-    /*protected boolean isRunning()
+    protected boolean isRunning()
     {
         return mRunning;
     }
@@ -603,9 +467,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     protected boolean isStopped()
     {
         return !mRunning;
-    }*/
-
-
+    }
 
 }
 
@@ -650,9 +512,8 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             "AHRSGLoadMax": 1.0043409597397,
             "AHRSLastAttitudeTime": "0001-01-01T00:06:44.28Z",
             "AHRSStatus": 7
-    }*/
-
-
+    }
+    */
 
 /*
     protected RSSFeed doInBackground(String... urls) {
@@ -683,4 +544,77 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     }
 */
 
+                    /*-------------------------------------
+                    // < debug - add ghost AC traffic
+
+                    // fixed target
+                    JSONObject object = new JSONObject();
+
+                    //LongReportMessage tm = (LongReportMessage) m;
+                    try {
+                        object.put("type", "traffic");
+                        object.put("longitude", (double) 115.83);
+                        object.put("latitude", (double) -31.80);
+                        object.put("speed", (double) 123.0);
+                        object.put("bearing", (double) 348.7);
+                        //object.put("altitude", (double) Unit.Meter.toFeet(75));
+                        object.put("altitude", 4321);
+                        object.put("callsign", (String) "GHOST-0");
+                        object.put("address", (int) 777);
+                        object.put("time", (long) unixTime);
+                    }
+                    catch (JSONException e1) {
+                        continue;
+                    }
+                    objs.add(object.toString());
+
+
+                    // 2 moving targets
+                    if (unixTime - pt1 > 4000) {
+                        pt1 = unixTime;
+                        b = b + 0.001f;
+
+                        object = new JSONObject();
+                        //LongReportMessage tm = (LongReportMessage) m;
+                        try {
+                            object.put("type", "traffic");
+                            object.put("longitude", (double) 115.9 - b / 5);
+                            object.put("latitude", (double) -32.2 + b);
+                            object.put("speed", (double) 123.0);
+                            object.put("bearing", (double) 348.7);
+                            object.put("altitude", (double) 4321);
+                            object.put("callsign", (String) "GHOST-1");
+                            object.put("address", (int) 555);
+                            object.put("time", (long) unixTime);
+                        }
+                        catch (JSONException e1) {
+                            continue;
+                        }
+                        objs.add(object.toString());
+                    }
+
+                    if (unixTime - pt2 > 1000) {
+                        pt2 = unixTime;
+                        a = a + 0.001f;
+
+                        object = new JSONObject();
+                        //LongReportMessage tm = (LongReportMessage) m;
+                        try {
+                            object.put("type", "traffic");
+                            object.put("longitude", (double) 115.7 + a / 5);
+                            object.put("latitude", (double) -32.2 + a);
+                            object.put("speed", (double) 246.0);
+                            object.put("bearing", (double) 11.3);
+                            object.put("altitude", (double) 7654);
+                            object.put("callsign", (String) "GHOST-2");
+                            object.put("address", (int) 666);
+                            object.put("time", (long) unixTime);
+                        }
+                        catch (JSONException e1) {
+                            continue;
+                        }
+                        objs.add(object.toString());
+                    }
+                    // debug >
+                    //-------------------------------------*/
 

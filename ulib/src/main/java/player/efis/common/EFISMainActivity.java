@@ -24,8 +24,10 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -44,6 +46,14 @@ import java.util.TimerTask;
 
 public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
 {
+
+    protected MediaPlayer mpCautionTraffic;
+    protected MediaPlayer mpCautionTerrian;
+    protected MediaPlayer mpFiveHundred;
+    protected MediaPlayer mpSinkRate;
+    protected MediaPlayer mpStall;
+
+
     protected SensorComplementaryFilter sensorComplementaryFilter;
     // location members
     protected LocationManager locationManager;
@@ -104,7 +114,23 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected WifiManager wifiManager;
     protected StratuxWiFiTask mStratux;
     protected long PrevStratuxTimeStamp;// = Long.MAX_VALUE;
-    
+
+
+    protected void setGpsStatus()
+    {
+        gps_insky = 0;
+        gps_infix = 0;
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
+            Iterable<GpsSatellite> sats = mGpsStatus.getSatellites();
+            for (GpsSatellite s : sats) {
+                gps_insky += 1;
+                if (s.usedInFix()) gps_infix += 1;
+            }
+        }
+    }
+
+
     
     protected void killProcess(String process)
     {
@@ -163,20 +189,20 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected final int STRATUX_DEVICE = -2;
     protected final int STRATUX_GPS = -3;
     protected final int STRATUX_WIFI = -4;
-    protected final int STRATUX_LOOP = -5;
+    protected final int STRATUX_SERVICE = -5;
 
 
     protected int handleStratux()
     {
+        if (bSimulatorActive) return STRATUX_OK;
+
         if (checkWiFiStatus("stratux")) {
             // We have a wifi connection to "stratux"
             // check for task and pulse
-            if (!mStratux.isTaskCancelled()) {
-                return STRATUX_LOOP;
-            }
-            if (!mStratux.isTaskRunning()) {
+            if (!mStratux.isRunning()) {
                 return STRATUX_TASK;
             }
+
             if (!mStratux.isDeviceRunning()) {
                 return STRATUX_DEVICE;
             }
@@ -469,14 +495,11 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float slipValue;
     protected int ctr = 0;
 
-
     // Create a Timer
     Timer timer = new Timer();
     //Then you extend the timer task
     class UpdateStartuxTask extends TimerTask
     {
-        //Ball myBall;
-
         public void run() {
             //calculate the new position of myBall
             //handleStratux();
@@ -493,10 +516,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         TimerTask updateStartux = new UpdateStartuxTask();
         timer.scheduleAtFixedRate(updateStartux, 0, 1000 / FPS);
     }
-
-
-
 }
+
 
 
 

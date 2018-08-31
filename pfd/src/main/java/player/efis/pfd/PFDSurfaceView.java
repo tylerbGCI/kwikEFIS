@@ -120,7 +120,7 @@ public class PFDSurfaceView extends GLSurfaceView
                     else {
                         // swipe left
                         if (primed) {
-                            Toast.makeText(getContext(), "Cage AHRS", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Level AHRS", Toast.LENGTH_SHORT).show();
                             StratuxWiFiTask.doCageAhrs();
                         }
                         primed = false;
@@ -273,6 +273,20 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    // Artificial Horizon
+    public void setUnServiceableRose()
+    {
+        mRenderer.setUnServiceableRose();
+        requestRender();
+    }
+
+    public void setServiceableRose()
+    {
+        mRenderer.setServiceableRose();
+        requestRender();
+    }
+
+
     // Altimeter
     public void setUnServiceableAlt()
     {
@@ -368,9 +382,9 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    public void setAct(StratuxWiFiTask Stratux)
+    public void setTargets(StratuxWiFiTask Stratux)
     {
-        mRenderer.setAct(Stratux);
+        mRenderer.setTargets(Stratux);
         requestRender();
     }
 

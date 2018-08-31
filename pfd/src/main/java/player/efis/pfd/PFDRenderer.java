@@ -38,6 +38,8 @@ import android.opengl.Matrix;
 public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
     private static final String TAG = "PFDRenderer";
+    protected boolean ServiceableAh;      // Flag to indicate AH failure
+
     public PFDRenderer(Context context)
     {
         super(context);
@@ -116,7 +118,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (true) renderACT(scratch1);  // must be on the same matrix as the Pitch
+        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control tof targets
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
         // Flight Director - FD
@@ -228,10 +230,14 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
 
         if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
+        //if (!ServiceableAh) renderUnserviceablePage(mMVPMatrix);
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
-        if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
+        if (!ServiceableDi) {
+            renderUnserviceableDi(mMVPMatrix);
+            renderUnserviceableCompassRose(mMVPMatrix);
+        }
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
@@ -294,6 +300,15 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    @Override
+    protected void renderUnserviceableDevice(float[] matrix)
+    {
+        renderUnserviceableAh(matrix);
+        renderUnserviceableCompassRose(matrix);
+        renderUnserviceableDi(matrix);
+        renderUnserviceableAlt(matrix);
+        renderUnserviceableAsi(matrix);
+    }
 
     @Override
     protected Point project(float relbrg, float dme)
@@ -550,4 +565,22 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         // Maybe later
     }
+
+
+    //---------------------------------------------------------------------------
+    // EFIS serviceability ... aka the Red X's
+    //
+
+    // Artificial Horizon serviceability
+    public void setServiceableAh()
+    {
+        ServiceableAh = true;
+    }
+
+    public void setUnServiceableAh()
+    {
+        ServiceableAh = false;
+    }
+
+
 }

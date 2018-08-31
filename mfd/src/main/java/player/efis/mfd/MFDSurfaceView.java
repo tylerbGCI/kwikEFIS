@@ -216,16 +216,16 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    // Artificial Horizon
-    public void setUnServiceableAh()
+    // Moving Map
+    public void setUnServiceableMap()
     {
-        mRenderer.setUnServiceableAh();
+        mRenderer.setUnServiceableMap();
         requestRender();
     }
 
-    public void setServiceableAh()
+    public void setServiceableMap()
     {
-        mRenderer.setServiceableAh();
+        mRenderer.setServiceableMap();
         requestRender();
     }
 
@@ -321,7 +321,7 @@ public class MFDSurfaceView extends GLSurfaceView
 
     public void setAct(StratuxWiFiTask Stratux)
     {
-        mRenderer.setAct(Stratux);
+        mRenderer.setTargets(Stratux);
         requestRender();
     }
 

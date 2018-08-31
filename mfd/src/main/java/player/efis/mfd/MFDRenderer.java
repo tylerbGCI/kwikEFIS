@@ -43,6 +43,8 @@ import android.opengl.Matrix;
 public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
     private static final String TAG = "MFDRenderer";
+    protected boolean ServiceableMap;      // Flag to indicate Map failure
+
     public MFDRenderer(Context context)
     {
         super(context);
@@ -117,7 +119,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         if (displayAirspace) renderAirspace(mMVPMatrix);
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
-        if (displayAirport) renderACT(mMVPMatrix);  // must be on the same matrix as the Pitch
+        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control tof targets
 
         //-----------------------------
         if (displayFlightDirector) {
@@ -169,7 +171,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
 
         if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
-        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
+        if (!ServiceableMap) renderUnserviceablePage(mMVPMatrix);
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
@@ -233,6 +235,15 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // enable texture + alpha blending
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    @Override
+    protected void renderUnserviceableDevice(float[] matrix)
+    {
+        renderUnserviceablePage(matrix);
+        renderUnserviceableDi(matrix);
+        renderUnserviceableAlt(matrix);
+        renderUnserviceableAsi(matrix);
     }
 
 
@@ -506,4 +517,20 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
         }
     }
+
+    //---------------------------------------------------------------------------
+    // EFIS serviceability ... aka the Red X's
+    //
+
+    // Artificial Horizon serviceability
+    public void setServiceableMap()
+    {
+        ServiceableMap = true;
+    }
+
+    public void setUnServiceableMap()
+    {
+        ServiceableMap = false;
+    }
+
 }

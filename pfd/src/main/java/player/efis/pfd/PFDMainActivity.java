@@ -33,7 +33,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.GpsStatus.Listener;
-import android.location.GpsSatellite;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -61,10 +60,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 {
     public static final String PREFS_NAME = R.string.app_name + ".prefs";
     private PFDSurfaceView mGLView;
-    private MediaPlayer mpCautionTerrian;
-    private MediaPlayer mpFiveHundred;
-    private MediaPlayer mpSinkRate;
-    private MediaPlayer mpStall;
 
     // sensor members
     private SensorManager mSensorManager;
@@ -129,17 +124,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        /*
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            mGLView.setAutoZoomActive(false);
-            mGLView.zoomIn();
-            return true;
-        }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            mGLView.setAutoZoomActive(false);
-            mGLView.zoomOut();
-            return true;
-        } */
         return super.onKeyDown(keyCode, event);
     }
 
@@ -237,11 +221,21 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void onPause()
     {
         super.onPause();
+
+        //
+        // Read and Set the user preferences
+        //
+        setUserPrefs();
+
         // The following call pauses the rendering thread.
         // If your OpenGL application is memory intensive,
         // you should consider de-allocating objects that
         // consume significant memory here.
-        mStratux.stop();
+        if (mStratux != null) {
+            mStratux.finish();
+            mStratux = null;
+        }
+
         releaseMediaPlayer();
         mGLView.onPause();
 
@@ -254,22 +248,31 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         super.onResume();
 
+        //
+        // Read and Set the user preferences
+        //
+        setUserPrefs();
+
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
         createMediaPlayer();
         mGLView.onResume();
-        mStratux.start();
 
-        if (!(bStratuxActive || bSimulatorActive)) {
-            locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
-            setGpsStatus();
+        if (bStratuxActive) {
+            if (mStratux == null) {
+                mStratux = new StratuxWiFiTask("pfd");
+                mStratux.execute();
+            }
+
         }
-        setGpsStatus();
-
-		registerSensorManagerListeners();
+        else if (!bSimulatorActive) {
+            gps_insky = 0;
+            gps_infix = 0;
+            locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+        }
+        registerSensorManagerListeners();
     }
-
 
     //
     // Sensor methods
@@ -323,6 +326,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
     public void onLocationChanged(Location location)
     {
+        if (bSimulatorActive) return;
+        
         gps_lat = (float) location.getLatitude();
         gps_lon = (float) location.getLongitude();
         gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
@@ -624,25 +629,25 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setBannerMsg(false, " ");
         }
 
-        if (rv == STRATUX_LOOP) {
+        if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
             mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX LOOP");
-            Toast.makeText(this, "Stratux handler loop terminated", Toast.LENGTH_LONG).show();
-            //finish(); // there is no point ... exit the main app as well
+            mGLView.setBannerMsg(true, "STRATUX SERVICE");
+            Toast.makeText(this, "Stratux service routine", Toast.LENGTH_LONG).show();
         }
 
         if (rv == STRATUX_DEVICE) {
             // no pulse
             mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX PULSE");
+            mGLView.setBannerMsg(true, "STRATUX DEVICE");
         }
 
         if (rv == STRATUX_GPS) {
-            // No Gps
+            // No GPS, but we may still have attitude
             mGLView.setServiceableDevice();
             mGLView.setServiceableAh();
-            mGLView.setBannerMsg(true, "STRATUX GPS");
+            //mGLView.setBannerMsg(true, "STRATUX GPS");
+            Toast.makeText(this, "Stratux GPS", Toast.LENGTH_SHORT).show();
         }
 
         if (rv == STRATUX_WIFI) {
@@ -652,80 +657,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         return rv;
     }
-
-    /*
-    protected boolean __handleStratux()
-    {
-        if (checkWiFiStatus("stratux")) {
-            // We have a wifi connection to "stratux"
-            // check for pulse
-            if (ctr % 100 == 0 ) {
-                if (mStratux.StratuxTimeStamp - PrevStratuxTimeStamp > 20) {
-                    mGLView.setUnServiceableDevice();
-                    mGLView.setBannerMsg(true, "STRATUX PULSE");
-                    return false;
-                }
-                else {
-                    mGLView.setBannerMsg(false, " ");
-                }
-                PrevStratuxTimeStamp = mStratux.StratuxTimeStamp;
-            }
-
-            // We have pulse check for GPS
-            gps_infix = mStratux.GPSSatellites;
-            gps_insky = mStratux.GPSSatellitesSeen; // GPSSatellitesTracked;
-
-            if (mStratux.isGpsValid()) {
-                // and we have valid GPS (also implies running Stratux)
-                pitchValue = (float) mStratux.AHRSPitch;
-                rollValue = (float) mStratux.AHRSRoll;
-
-                gps_lat = (float) mStratux.GPSLatitude;
-                gps_lon = (float) mStratux.GPSLongitude;
-                gps_altitude = Unit.Feet.toMeter((float) mStratux.GPSAltitudeMSL);
-                gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
-                gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
-                gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
-                gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
-                sensorBias = 0;
-
-                // Flag everything as good
-                hasGps = true;
-                mGLView.setBannerMsg(false, " ");
-                mGLView.setServiceableDevice();
-                mGLView.setServiceableDi();
-                mGLView.setServiceableAsi();
-                mGLView.setServiceableAlt();
-                mGLView.setServiceableAh();
-                mGLView.setDisplayAirport(true);
-
-                if (gps_speed > 5) {
-                    hasSpeed = true;
-                    updateFPV();
-                }
-                else hasSpeed = false;
-                mGLView.setBannerMsg(false, " ");
-                return true;
-            }
-            else {
-                mGLView.setUnServiceableDevice();
-                mGLView.setBannerMsg(true, "STRATUX GPS");
-                return false;
-            }
-        }
-        else {
-            if (ctr % 100 == 0 ) {
-                hasGps = false;
-                hasSpeed = false;
-                mGLView.setUnServiceableDevice();
-                mGLView.setBannerMsg(true, "STRATUX WIFI");
-                connectWiFi("stratux");  // force the connection to stratux
-            }
-            return false;
-        }
-    }
-    */
-
+    
     //
     // Android  handler
     //
@@ -772,27 +704,30 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Calculate the augmented bank angle and also the flight path vector
         //
         float deltaA, fpvX = 0, fpvY = 0;
-        if (hasGps && gps_speed > 5) {
-            // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
-            // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
-            rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn, gps_speed);
-            pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
+        if (hasGps) {
+            mGLView.setServiceableDevice();
+            if (gps_speed > 5) {
+                // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
+                // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
+                rollValue = sensorComplementaryFilter.calculateBankAngle((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn, gps_speed);
+                pitchValue = sensorComplementaryFilter.calculatePitchAngle(gps_rateOfClimb, gps_speed);
 
-            // the Flight Path Vector (FPV)
-            updateFPV();
-            mGLView.setDisplayAirport(true);
-        }
-        else if (hasGps && gps_speed < 9) {  // m/s
-            // taxi mode
-            rollValue = 0;
-            pitchValue = 0;
+                // the Flight Path Vector (FPV)
+                updateFPV();
+                mGLView.setDisplayAirport(true);
+            }
+            if (gps_speed < 9) {  // m/s
+                // taxi mode
+                rollValue = 0;
+                pitchValue = 0;
+            }
         }
         else {
             // No GPS no speed ... no idea what the AH is
             //forceBlankScreen();
             mGLView.setUnServiceableDevice();
-            mGLView.setUnServiceableAh();
-            mGLView.setUnServiceableDi();
+            //mGLView.setUnServiceableAh();
+            //mGLView.setUnServiceableDi();
         }
 		
         // for debug - set to true
@@ -815,11 +750,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     private void updateEFIS()
     {
         ctr++;
-
-        //
-        // Read and Set the user preferences
-        //
-        setUserPrefs();
 
         //
         // Mode handlers
@@ -923,7 +853,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
-        mGLView.setAct(mStratux); // traffic list
+        if (mStratux != null) mGLView.setTargets(mStratux); // traffic list
 
         //
         // Audio cautions and messages
@@ -942,6 +872,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                     if (!mpSinkRate.isPlaying()) mpSinkRate.start();
                 }
 
+                // We are at risk of becoming a wet spot somewhere on terra firma
                 if (DemGTOPO30.demDataValid) {
                     // Play the "caution terrain" song above Vx
                     if ((gps_speed > AircraftData.Vx / 2)  // m/s
