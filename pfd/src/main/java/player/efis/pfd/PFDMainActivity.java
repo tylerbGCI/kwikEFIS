@@ -261,8 +261,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.onResume();
         mStratux.start();
 
-        if (!(bStratuxActive || bSimulatorActive))
-		    locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+        if (!(bStratuxActive || bSimulatorActive)) {
+            locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+            setGpsStatus();
+        }
+        setGpsStatus();
 
 		registerSensorManagerListeners();
     }
@@ -467,7 +470,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-    protected void setGpsStatus()
+    /*protected void setGpsStatus()
     {
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             mGpsStatus = locationManager.getGpsStatus(mGpsStatus);
@@ -479,7 +482,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 if (s.usedInFix()) gps_infix += 1;
             }
         }
-    }
+    }*/
 
     // This must be implemented otherwise the older
     // systems does not get seem to get updates.
@@ -650,6 +653,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         return rv;
     }
 
+    /*
     protected boolean __handleStratux()
     {
         if (checkWiFiStatus("stratux")) {
@@ -720,6 +724,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             return false;
         }
     }
+    */
 
     //
     // Android  handler
@@ -786,6 +791,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No GPS no speed ... no idea what the AH is
             //forceBlankScreen();
             mGLView.setUnServiceableDevice();
+            mGLView.setUnServiceableAh();
+            mGLView.setUnServiceableDi();
         }
 		
         // for debug - set to true
