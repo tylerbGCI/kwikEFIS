@@ -83,7 +83,7 @@ abstract public class EFISRenderer
     protected float IASInView;        // The indicated units to display above the center line
 
     //private int   IASValue;         // Indicated Airspeed
-    protected float IASValue;         // Indicated Airspeed
+    protected float IASValue;         // Indicated Airspeed, in knots
     protected float IASTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
 
     // The following should be read from a calibration file by an init routine
@@ -91,7 +91,7 @@ abstract public class EFISRenderer
 
     // Altimeter
     protected float MSLInView;        // The indicated units to display above the center line
-    protected int MSLValue;           // Altitude above mean sea level, MSL
+    protected int MSLValue;           // Altitude above mean sea level, MSL in feet
     protected float MSLTranslation;   // Value amplified by 1/2 window pixels for use by glTranslate
     private float baroPressure;       // Barometric pressure in in-Hg
     public int AGLValue;              // Altitude above ground, AGL
@@ -107,7 +107,7 @@ abstract public class EFISRenderer
 
     //DI
     private float DIInView;           // The indicated units to display above the center line
-    protected float DIValue;          // Altitude MSL
+    protected float DIValue;          // Direction Indicator / Compass, in degrees
     private float SlipValue;          // was int
     private float BatteryPct;         // Battery usage
     private float GForceValue;        // G force
@@ -1902,7 +1902,9 @@ abstract public class EFISRenderer
     }
 
 
-
+    //
+    // Traffic targets
+    //
     private StratuxWiFiTask mStratux;
     public void setTargets(StratuxWiFiTask Stratux)
     {
@@ -1929,29 +1931,27 @@ abstract public class EFISRenderer
                     float lat = (float)jObject.getDouble("latitude");
                     float spd = (float)jObject.getDouble("speed");
                     float brg = (float)jObject.getDouble("bearing");
-                    float alt = (float)jObject.getDouble("altitude") / 3.28084f;  // conv to m
+                    float alt = (float)jObject.getDouble("altitude"); // note: in feet
                     String call = (String) jObject.getString("callsign");
 
                     //renderACTSymbol(matrix, lon, lat, call);
                     // 0.16667 deg lat  = 10 nm
                     // 0.1 approx 5nm
-                    float dme;
                     float actRelBrg;
                     String acId = call;
                     //String acAlt = Integer.toString(Math.round(alt*3.28084f/100f)) + "FL";
-                    String acAlt = Integer.toString(Math.round(alt*0.0328084f)) + "FL";
-                    int acBrg = (int)brg;
-                    int acSpd = (int)spd;
+                    String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + "FL"; // convert m to flight level
+                    int tgtBrg = (int)brg;
+                    int tgtSpd = (int)spd;
 
-                    dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
+                    float dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
                     actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
 
-                    String acDme = Float.toString(UMath.round(dme,1)) + "nm";
+                    String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + "nm";
 
-                    //alt = alt
-                    x1 = project(actRelBrg, dme, alt).x;
-                    y1 = project(actRelBrg, dme, alt).y;
-                    renderTargetSymbol(matrix, x1, y1, acId, acAlt, acBrg, acSpd, acDme);
+                    x1 = project(actRelBrg, dme, Unit.Feet.toMeter(alt)).x;
+                    y1 = project(actRelBrg, dme, Unit.Feet.toMeter(alt)).y;
+                    renderTargetSymbol(matrix, x1, y1, acId, tgtAltLabel, tgtBrg, tgtSpd, tgtDmeLabel);
                 }
             }
             catch (JSONException e) {
@@ -2008,9 +2008,13 @@ abstract public class EFISRenderer
         glText.drawCY(callsign, x2, y2 - 0*glText.getCharHeight());
         glText.drawCY(alt, x2, y2 - 0.8f*glText.getCharHeight());
         glText.end();*/
+    }
 
 
-
+    private String mActiveDevice = "NONE";
+    public void setActiveDevice(String device)
+    {
+        mActiveDevice = device;
     }
 
 
@@ -2033,6 +2037,9 @@ abstract public class EFISRenderer
     abstract protected Point project(float x, float y);
 
     // this must be overridden in the child classes
+    // relbrg in degrees
+    // dme in nm
+    // elev in feet
     abstract protected Point project(float relbrg, float dme, float elev);
 
 
@@ -2302,7 +2309,7 @@ abstract public class EFISRenderer
         String t = String.format("G %03.1f", GForceValue);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
         glText.setScale(3.0f);                        
-        glText.draw(t, -0.97f * pixW2, -0.9f * pixH2 - glText.getCharHeight() / 2);
+        glText.draw(t, -0.97f * pixW2, -0.95f * pixH2 - glText.getCharHeight() / 2);
         glText.end();
     }
 
@@ -2386,10 +2393,12 @@ abstract public class EFISRenderer
         s = String.format("RNG %d   #AP %d", AptSeekRange, nrAptsFound);
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.4f) * pixM2 - glText.getCharHeight() / 2);
 
-        ///*
         s = String.format("%c%03.2f %c%03.2f", (LatValue < 0) ? 'S' : 'N', Math.abs(LatValue), (LonValue < 0) ? 'W' : 'E', Math.abs(LonValue));
         glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.5f) * pixM2 - glText.getCharHeight() / 2);
-        //*/
+
+        //s = String.format("DEV %s", mActiveDevice);
+        s = mActiveDevice;
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.6f) * pixM2 - glText.getCharHeight() / 2);
 
         glText.end();
     }
@@ -3201,6 +3210,8 @@ abstract public class EFISRenderer
     {
         float z;
         z = zfloat;
+        float ypos = -0.97f;
+        float ytip = ypos + 0.03f;
 
         float distance = 20;
         float x1 = mMapZoom * distance;
@@ -3223,25 +3234,25 @@ abstract public class EFISRenderer
         mLine.SetWidth(1);
         mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
         mLine.SetVerts(
-                -0.95f * pixW2 + 0, -0.95f * pixH2, z,
-                -0.95f * pixW2 + x1, -0.95f * pixH2, z
+                ypos * pixW2 + 0, ypos * pixH2, z,
+                ypos * pixW2 + x1, ypos * pixH2, z
         );
         mLine.draw(matrix);
         mLine.SetVerts(
-                -0.95f * pixW2 + 0, -0.95f * pixH2, z,
-                -0.95f * pixW2 + 0, -0.92f * pixH2, z
+                ypos * pixW2 + 0, ypos * pixH2, z,
+                ypos * pixW2 + 0, ytip * pixH2, z
         );
         mLine.draw(matrix);
         mLine.SetVerts(
-                -0.95f * pixW2 + x1, -0.95f * pixH2, z,
-                -0.95f * pixW2 + x1, -0.92f * pixH2, z
+                ypos * pixW2 + x1, ypos * pixH2, z,
+                ypos * pixW2 + x1, ytip * pixH2, z
         );
         mLine.draw(matrix);
 
         String t = String.format("%3.0f nm", distance);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1, matrix); // White
         glText.setScale(1.5f);
-        glText.draw(t, -0.92f * pixW2, -0.95f * pixH2);            // Draw  String
+        glText.draw(t, ytip * pixW2, ypos * pixH2);            // Draw  String
         glText.end();
 
         // leader line
