@@ -653,7 +653,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No GPS, but we may still have attitude
             mGLView.setServiceableDevice();
             mGLView.setServiceableAh();
-            //mGLView.setBannerMsg(true, "STRATUX GPS");
             Toast.makeText(this, "Stratux GPS", Toast.LENGTH_SHORT).show();
         }
 
@@ -780,6 +779,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             // Handle Stratux or Android sensors
             if (bStratuxActive) {
+                // We are set to SENSOR_DELAY_UI approx 60ms
+                // 5 x 60 will give 3 updates a second
                 if (ctr % 5 == 0)
                   handleStratux();
             }
@@ -789,9 +790,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 handleAndroid();
 
                 // Apply a little filtering to the pitch, bank and course
+                gps_course = filterGpsCourse.runningAverage(gps_course);
                 pitchValue = filterPitch.runningAverage(pitchValue);
                 rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
-                gps_course = filterGpsCourse.runningAverage(gps_course);
             }
         }
 

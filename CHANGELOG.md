@@ -4,7 +4,7 @@ REL_22 (2018-09-01)
 ------------------
 * Improve Stratux Wifi and GPS handling
 * Add individual red X's for Ah, Rose and Map
-* Add audio alert for traffic for DMAP
+* Add audio alert for traffic for DMAP (work in progress)
 * Clear issues: 20, 22, 21
 * Bump Stratux development up a major version
 * Release EFIS v4.0

@@ -393,6 +393,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // do something
     }
 
+    //
+    // SENSOR_DELAY_GAME    (20,000 microsecond delay),
+    // SENSOR_DELAY_UI      (60,000 microsecond delay), or
+    // SENSOR_DELAY_FASTEST (0 microsecond delay)
+    //
     public void registerSensorManagerListeners()
     {
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
@@ -702,19 +707,21 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             // Handle Stratux or Android sensors
             if (bStratuxActive) {
-                handleStratux();
+                // We are set to SENSOR_DELAY_UI approx 60ms
+                // 5 x 60 will give 3 updates a second
+                if (ctr % 5 == 0)
+                  handleStratux();
             }
             else {
                 // Clear any banners that may be set
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
+
+                // Apply a little filtering to the  course
+                gps_course = filterGpsCourse.runningAverage(gps_course);
             }
         }
 
-        // Apply a little filtering to the pitch, bank and course
-        pitchValue = filterPitch.runningAverage(pitchValue);
-        rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
-        gps_course = filterGpsCourse.runningAverage(gps_course);
 
         //
         // Get the battery percentage
