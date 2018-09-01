@@ -319,9 +319,21 @@ public class MFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
-    public void setAct(StratuxWiFiTask Stratux)
+    //
+    // ADSB targets
+    //
+    public void setTargets(StratuxWiFiTask Stratux)
     {
         mRenderer.setTargets(Stratux);
+        requestRender();
+    }
+
+    //
+    // Active Device
+    //
+    public void setActiveDevice(String device)
+    {
+        mRenderer.setActiveDevice(device);
         requestRender();
     }
 

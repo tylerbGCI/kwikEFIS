@@ -382,11 +382,24 @@ public class PFDSurfaceView extends GLSurfaceView
         requestRender();
     }
 
+    //
+    // ADSB targets
+    //
     public void setTargets(StratuxWiFiTask Stratux)
     {
         mRenderer.setTargets(Stratux);
         requestRender();
     }
+
+    //
+    // Active Device
+    //
+    public void setActiveDevice(String device)
+    {
+        mRenderer.setActiveDevice(device);
+        requestRender();
+    }
+
 
     /*public void setFlightDirector(boolean active, float pit, float rol)
     {

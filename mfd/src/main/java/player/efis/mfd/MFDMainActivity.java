@@ -111,7 +111,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // Quit the app
                 if (bLockedMode == false) {
                     finish();
-                    System.exit(0);
+                    //System.exit(0); // This is brutal, it does not exit gracefully
                 }
                 else Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
                 break;
@@ -246,6 +246,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // consume significant memory here.
         if (mStratux != null) {
             mStratux.finish();
+            mStratux.cancel(true);
             mStratux = null;
         }
 
@@ -340,6 +341,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     public void onLocationChanged(Location location)
     {
         if (bSimulatorActive) return;
+        if (bStratuxActive) return;
 
         gps_lat = (float) location.getLatitude();
         gps_lon = (float) location.getLongitude();
@@ -775,7 +777,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         s = String.format("GPS %d / %d", gps_infix, gps_insky);
         mGLView.setGpsStatus(s);
-        mGLView.setAct(mStratux); // traffic list
+        if (mStratux != null) mGLView.setTargets(mStratux); // traffic list
+
+        if (bStratuxActive) mGLView.setActiveDevice("Stratux");
+        else mGLView.setActiveDevice("Android");
 
         //
         // Audio cautions and messages
