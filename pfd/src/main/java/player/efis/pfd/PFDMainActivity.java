@@ -108,7 +108,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // Quit the app
                 if (bLockedMode == false) {
                     finish();
-                    System.exit(0);
+                    //System.exit(0); // This is brutal, it does not exit gracefully
                 }
                 else Toast.makeText(this, "Locked Mode: Active", Toast.LENGTH_SHORT).show();
                 break;
@@ -233,6 +233,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // consume significant memory here.
         if (mStratux != null) {
             mStratux.finish();
+            mStratux.cancel(true);
             mStratux = null;
         }
 
@@ -327,7 +328,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     public void onLocationChanged(Location location)
     {
         if (bSimulatorActive) return;
-        
+        if (bStratuxActive) return;
+
         gps_lat = (float) location.getLatitude();
         gps_lon = (float) location.getLongitude();
         gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
@@ -382,6 +384,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // do something
     }
 
+    //
+    // SENSOR_DELAY_GAME    (20,000 microsecond delay),
+    // SENSOR_DELAY_UI      (60,000 microsecond delay), or
+    // SENSOR_DELAY_FASTEST (0 microsecond delay)
+    //
     public void registerSensorManagerListeners()
     {
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), mSensorManager.SENSOR_DELAY_UI); //SENSOR_DELAY_FASTEST);
@@ -726,8 +733,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No GPS no speed ... no idea what the AH is
             //forceBlankScreen();
             mGLView.setUnServiceableDevice();
-            //mGLView.setUnServiceableAh();
-            //mGLView.setUnServiceableDi();
         }
 		
         // for debug - set to true
@@ -775,19 +780,21 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             // Handle Stratux or Android sensors
             if (bStratuxActive) {
-                handleStratux();
+                if (ctr % 5 == 0)
+                  handleStratux();
             }
             else {
                 // Clear any banners that may be set
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
+
+                // Apply a little filtering to the pitch, bank and course
+                pitchValue = filterPitch.runningAverage(pitchValue);
+                rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
+                gps_course = filterGpsCourse.runningAverage(gps_course);
             }
         }
 
-        // Apply a little filtering to the pitch, bank and course
-        pitchValue = filterPitch.runningAverage(pitchValue);
-        rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
-        gps_course = filterGpsCourse.runningAverage(gps_course);
 
         //
         // Get the battery percentage
@@ -855,6 +862,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setGpsStatus(s);
         if (mStratux != null) mGLView.setTargets(mStratux); // traffic list
 
+        if (bStratuxActive) mGLView.setActiveDevice("Stratux");
+        else mGLView.setActiveDevice("Android");
+        //if (bStratuxActive) mGLView.setActiveDevice("STRATUX");
+        //else mGLView.setActiveDevice("ANDRIOD");
+
         //
         // Audio cautions and messages
         //
@@ -901,7 +913,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         rollValue = -sensorComplementaryFilter.getRoll();
 
         pitchValue = 0.125f * (float) Math.random() + 0.75f * UMath.clamp(mGLView.mRenderer.commandPitch, -3, 3);
-        rollValue = 1.125f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
+        rollValue = 0.125f * (float) Math.random() + 0.75f * mGLView.mRenderer.commandRoll;
 
         super.Simulate();
     }
