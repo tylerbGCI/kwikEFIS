@@ -63,8 +63,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     {
         this.id = id;
         mState = DISCONNECTED;
-        mRunning = false;
-        //mCancel = false;
     }
 
     protected Void doInBackground(String... urls)
@@ -126,7 +124,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         try {
             mutex.acquire();
             try {
-                Log.d("B2: ", "mDeviceRunning=" + Boolean.toString (mDeviceRunning )) ;
                 return mDeviceRunning;
             }
             finally {
