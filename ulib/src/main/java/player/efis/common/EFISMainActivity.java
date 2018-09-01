@@ -199,13 +199,9 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         if (checkWiFiStatus("stratux")) {
             // We have a wifi connection to "stratux"
             // check for task and pulse
-            if (!mStratux.isRunning()) {
-                return STRATUX_TASK;
-            }
-
-            if (!mStratux.isDeviceRunning()) {
-                return STRATUX_DEVICE;
-            }
+            if (mStratux == null) return STRATUX_TASK;
+            if (!mStratux.isRunning()) return STRATUX_TASK;
+            if (!mStratux.isDeviceRunning()) return STRATUX_DEVICE;
 
             gps_infix = mStratux.GPSSatellites;
             gps_insky = mStratux.GPSSatellitesSeen;
@@ -400,7 +396,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         hasSpeed = true;
         hasGps = true;
 
-        final float setSpeed = 100; // m/s
+        final float setSpeed = Unit.Knot.toMeterPerSecond(123); //100; // m/s
 
         if (Math.abs(pitchValue) > 10) {
             _gps_speed -= 0.01f * pitchValue;
