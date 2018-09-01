@@ -118,7 +118,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control tof targets
+        if (true) renderTargets(scratch1);        // TODO: 2018-08-31 Add control tof targets
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
         // Flight Director - FD
@@ -310,6 +310,12 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         renderUnserviceableAsi(matrix);
     }
 
+    //
+    // project
+    //
+    // relbrg in degrees
+    // dme in nm
+    // elev in m
     @Override
     protected Point project(float relbrg, float dme)
     {
@@ -319,7 +325,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             (float) (+pixPerDegree * relbrg),
             (float) (-pixPerDegree * Math.toDegrees(Math.atan2(MSLValue, Unit.NauticalMile.toFeet(dme))))
         );
-    } // end of project
+    }
+
 
     @Override
     protected Point project(float relbrg, float dme, float elev)
@@ -337,7 +344,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 (float) (+pixPerDegree * relbrg),
                 (float) y
         );
-    } // end of project
+    }
 
 
     //-------------------------------------------------------------------------
