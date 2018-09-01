@@ -2,12 +2,9 @@ package player.efis.common;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.stratux.stratuvare.utils.Logger;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
-
 import player.ulib.UTime;
 import player.ulib.Unit;
 
@@ -239,11 +235,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                                 mDeviceRunning = js.getBoolean("running");
                             }
 
-                            /*deltaT = StratuxTimeStamp - lastTime;
-                            if (deltaT > 20 * 1000) {
-                                trafficList.clear();
-                            }*/
-
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -283,8 +274,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         // Status
                         String status = getDeviceStatus();
                         jObject = new JSONObject(status);
-
-                        //String rv = jObject.getString("Ping_connected");
                     }
                     catch (JSONException e) {
                         e.printStackTrace();
@@ -299,7 +288,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
             }
         }
         disconnect();
-        //stop();
     }
 
     private int read(byte[] buffer)
@@ -364,7 +352,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         URL url;
         StringBuffer response = new StringBuffer();
         try {
-            //url = new URL("http://192.168.10.1/getSituation");
             url = new URL(addr);
         }
         catch (MalformedURLException e) {

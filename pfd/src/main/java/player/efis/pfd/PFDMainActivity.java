@@ -867,8 +867,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         if (bStratuxActive) mGLView.setActiveDevice("Stratux");
         else mGLView.setActiveDevice("Android");
-        //if (bStratuxActive) mGLView.setActiveDevice("STRATUX");
-        //else mGLView.setActiveDevice("ANDRIOD");
 
         //
         // Audio cautions and messages
