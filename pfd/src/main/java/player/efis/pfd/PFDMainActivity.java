@@ -585,8 +585,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             setContentView(mGLView);
             mGLView.setTheme(colorTheme);
             mGLView.invalidate();
+
             restorePersistentSettings();
             mGLView.setServiceableDevice();
+            setUserPrefs();  // make a recursive call
         }
     }
 
