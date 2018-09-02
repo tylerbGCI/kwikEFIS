@@ -656,8 +656,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     protected boolean handleAndroid()
     {
-        float[] gyro = new float[3]; // gyroscope vector
-        float[] accel = new float[3]; // accelerometer vector
+        float[] gyro = new float[3]; // gyroscope vector, rad/sec
+        float[] accel = new float[3]; // accelerometer vector, m/s^2
 
         //
         // Read the Sensors

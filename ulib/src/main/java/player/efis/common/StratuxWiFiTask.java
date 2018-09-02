@@ -46,6 +46,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     public double AHRSGLoad;
     public double AHRSGLoadMin;
     public double AHRSGLoadMax;
+    public int AHRSStatus;
 
     public double GPSLongitude;
     public double GPSLatitude;
@@ -53,6 +54,12 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     public double GPSTrueCourse;
     public double GPSTurnRate;
     public double GPSGroundSpeed;
+
+    public double BaroTemperature;
+    public double BaroPressureAltitude;
+    public double BaroVerticalSpeed;
+    //public String BaroLastMeasurementTime;
+
     private String id;
 
     public StratuxWiFiTask(String id)
@@ -260,7 +267,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         AHRSRoll = jObject.getDouble("AHRSRoll");
                         AHRSGyroHeading = jObject.getDouble("AHRSGyroHeading");
                         AHRSMagHeading = jObject.getDouble("AHRSMagHeading");
-                        AHRSSlipSkid = jObject.getDouble("AHRSSlipSkid");
+                        AHRSSlipSkid = jObject.getDouble("AHRSSlipSkid"); // in degrees
                         AHRSTurnRate = jObject.getDouble("AHRSTurnRate");
                         AHRSGLoad = jObject.getDouble("AHRSGLoad");
                         AHRSGLoadMin = jObject.getDouble("AHRSGLoadMin");
@@ -273,9 +280,22 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         GPSTurnRate = jObject.getDouble("GPSTurnRate");
                         GPSGroundSpeed = jObject.getDouble("GPSGroundSpeed");
 
+                        BaroTemperature = jObject.getDouble("BaroTemperature");
+                        BaroPressureAltitude = jObject.getDouble("BaroPressureAltitude");
+                        BaroVerticalSpeed = jObject.getDouble("BaroVerticalSpeed");
+                        //BaroLastMeasurementTime = jObject.getDouble("BaroLastMeasurementTime");
+
                         // Status
                         //String status = getDeviceStatus();
                         //jObject = new JSONObject(status);
+                        Log.v("b2", //" AHRSSlipSkid " + AHRSSlipSkid  +
+                                    " AHRSGLoad " + AHRSGLoad  +
+                                    " AHRSTurnRate " + GPSTurnRate +
+                                    " AHRSTurnRate " + GPSTurnRate +
+                                    " BaroTemperature " + BaroTemperature
+
+                        );
+
                     }
                     catch (JSONException e) {
                         e.printStackTrace();
