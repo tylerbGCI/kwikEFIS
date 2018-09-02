@@ -595,30 +595,27 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
             mGLView.setBannerMsg(false, " ");
         }
-
-        if (rv == STRATUX_SERVICE) {
-            // no loop running, no hope of restart -- it is hopeless
-            mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX SERVICE");
-        }
-
-        if (rv == STRATUX_DEVICE) {
-            // no pulse
-            mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX DEVICE");
-        }
-
-        if (rv == STRATUX_GPS) {
+        else if (rv == STRATUX_GPS) {
             // No GPS, the map is wholly reliant on GPS
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX GPS");
         }
-
-        if (rv == STRATUX_WIFI) {
+        else if (rv == STRATUX_SERVICE) {
+            // no loop running, no hope of restart -- it is hopeless
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX SERVICE");
+        }
+        else if (rv == STRATUX_DEVICE) {
+            // no pulse
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX DEVICE");
+        }
+        else if (rv == STRATUX_WIFI) {
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");
         }
+
         return rv;
     }
     

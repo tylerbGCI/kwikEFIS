@@ -618,36 +618,35 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAlt();
             mGLView.setServiceableAh();
             mGLView.setDisplayAirport(true);
-
             if (hasSpeed) {
                 updateFPV();
             }
             mGLView.setBannerMsg(false, " ");
         }
-
-        if (rv == STRATUX_SERVICE) {
+        else if (rv == STRATUX_GPS) {
+            // No GPS, but we may still have attitude
+            mGLView.setUnServiceableDi();  // also does the rose
+            mGLView.setUnServiceableAsi();
+            mGLView.setUnServiceableAlt();
+            mGLView.setUnServiceableAh();
+            mGLView.setDisplayAirport(false);
+        }
+        else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX SERVICE");
         }
-
-        if (rv == STRATUX_DEVICE) {
+        else if (rv == STRATUX_DEVICE) {
             // no pulse
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX DEVICE");
         }
-
-        if (rv == STRATUX_GPS) {
-            // No GPS, but we may still have attitude
-            mGLView.setServiceableDevice();
-            mGLView.setServiceableAh();
-        }
-
-        if (rv == STRATUX_WIFI) {
+        else if (rv == STRATUX_WIFI) {
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");
         }
+
         return rv;
     }
     
