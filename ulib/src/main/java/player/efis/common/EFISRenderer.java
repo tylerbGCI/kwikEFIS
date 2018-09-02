@@ -2295,7 +2295,7 @@ abstract public class EFISRenderer
         else glText.begin(0, foreShadeG, foreShadeB, 1.0f, matrix); // cyan
 
         glText.setScale(2.0f);                            
-        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.2f) * pixM2 - glText.getCharHeight() / 2); // as part of the ancillaray group
+        glText.draw(s, -0.97f * pixW2, (lineAncillaryDetails - 0.2f) * pixM2 - glText.getCharHeight() / 2); // as part of the ancillary group
         glText.end();
     }
 
@@ -2309,7 +2309,7 @@ abstract public class EFISRenderer
         String t = String.format("G %03.1f", GForceValue);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
         glText.setScale(3.0f);                        
-        glText.draw(t, -0.97f * pixW2, -0.95f * pixH2 - glText.getCharHeight() / 2);
+        glText.draw(t, -0.97f * pixW2, -0.94f * pixH2 - glText.getCharHeight() / 2);
         glText.end();
     }
 
