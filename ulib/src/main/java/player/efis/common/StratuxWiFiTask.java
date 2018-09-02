@@ -252,9 +252,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     // use the Http
                     try {
                         // Situation
-                        //String situation = getSituation();
-                        String situation = readSituation();
-
+                        String situation = getSituation();
 
                         JSONObject jObject;
                         jObject = new JSONObject(situation);
@@ -283,18 +281,17 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         BaroTemperature = jObject.getDouble("BaroTemperature");
                         BaroPressureAltitude = jObject.getDouble("BaroPressureAltitude");
                         BaroVerticalSpeed = jObject.getDouble("BaroVerticalSpeed");
-                        //BaroLastMeasurementTime = jObject.getDouble("BaroLastMeasurementTime");
 
                         // Status
                         //String status = getDeviceStatus();
                         //jObject = new JSONObject(status);
-                        Log.v("b2", //" AHRSSlipSkid " + AHRSSlipSkid  +
+
+                        /* Log.v("b2", //" AHRSSlipSkid " + AHRSSlipSkid  +
                                     " AHRSGLoad " + AHRSGLoad  +
                                     " AHRSTurnRate " + GPSTurnRate +
                                     " AHRSTurnRate " + GPSTurnRate +
                                     " BaroTemperature " + BaroTemperature
-
-                        );
+                        );*/
 
                     }
                     catch (JSONException e) {
@@ -325,94 +322,6 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
         //saveToFile(pkt.getLength(), buffer);
         return pkt.getLength();
     }
-
-
-
-
-
-    //static HttpURLConnection conn = null;
-    private static String readSituation()
-    {
-        HttpURLConnection conn = null;
-        if (conn == null) conn = setupHttp("http://192.168.10.1/getSituation", "GET");
-        return readStream(conn);
-    }
-
-    private static HttpURLConnection setupHttp(String addr, String method)
-    {
-        URL url;
-        StringBuffer response = new StringBuffer();
-        try {
-            url = new URL(addr);
-        }
-        catch (MalformedURLException e) {
-            throw new IllegalArgumentException("invalid url");
-        }
-
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(false);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(method); //"GET"
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-            // handle the response
-            int status = conn.getResponseCode();
-            if (status != 200) {
-                throw new IOException("Post failed with error code " + status);
-            }
-            else {
-                /*BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();*/
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        /*finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-            //Here is your json in string format
-            String responseJSON = response.toString();
-            return responseJSON;
-        }*/
-        return conn;
-    }
-
-
-    private static String readStream(HttpURLConnection conn)
-    {
-        StringBuffer response = new StringBuffer();
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response.toString();
-    }
-
-
-
-
-
-
-
-
-
 
     //
     // Stratux getSituation post
