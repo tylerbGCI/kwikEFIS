@@ -776,7 +776,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
 
-                // Apply a little filtering to the pitch, bank and course
+                // Apply a little filtering to the pitch, bank
                 pitchValue = filterPitch.runningAverage(pitchValue);
                 rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
             }

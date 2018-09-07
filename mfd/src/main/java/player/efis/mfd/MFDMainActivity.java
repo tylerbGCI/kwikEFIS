@@ -701,9 +701,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // Clear any banners that may be set
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
-
-                // Apply a little filtering to the  course
-                gps_course = filterGpsCourse.runningAverage(gps_course);
             }
         }
 
