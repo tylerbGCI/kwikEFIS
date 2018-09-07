@@ -702,7 +702,6 @@ abstract public class EFISRenderer
         // Level to -180 pitch
         // Handle Monochrome
         if (colorTheme == 2) mSquare.SetColor(0, 0.2f, 0, 1); //green
-        //else mSquare.SetColor(gamma * 0.30f * foreShadeR, gamma * 0.20f * foreShadeG, gamma * 0.10f * foreShadeB, 1); //brown (3,2,1)
         else mSquare.SetColor(gamma * 0.30f, gamma * 0.20f, gamma * 0.10f, 1); //brown (3,2,1)
         mSquare.SetWidth(1);
         {
@@ -722,7 +721,6 @@ abstract public class EFISRenderer
 
         // Handle Monochrome
         if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
-        //else mSquare.SetColor(gamma * 0.10f * foreShadeR, gamma * 0.20f * foreShadeG, gamma * 0.30f * foreShadeB, 1); //blue (1,2,3)
         else mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue (1,2,3)
         mSquare.SetWidth(1);
         {
