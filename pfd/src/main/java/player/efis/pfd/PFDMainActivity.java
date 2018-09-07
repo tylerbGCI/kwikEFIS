@@ -770,10 +770,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 if (ctr % 5 == 0)
                   handleStratux();
 
-                // Apply a little filtering to the pitch, bank and course
+                // Apply a little filtering to the pitch, bank and (course later)
+                // Cannot filte the heading/course until we have a filter that can work the
+                // discontinuity at 359 -> 0
                 //gps_course = filterGpsCourse.runningAverage(gps_course);
                 pitchValue = filterPitch.runningAverage(pitchValue);
-                rollValue = filterRoll.runningAverage(rollValue);
+                //rollValue = filterRoll.runningAverage(rollValue);
+                rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
             }
             else {
                 // Clear any banners that may be set
@@ -781,7 +784,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 handleAndroid();
 
                 // Apply a little filtering to the pitch, bank and course
-                gps_course = filterGpsCourse.runningAverage(gps_course);
+                //gps_course = filterGpsCourse.runningAverage(gps_course);
                 pitchValue = filterPitch.runningAverage(pitchValue);
                 rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
             }
