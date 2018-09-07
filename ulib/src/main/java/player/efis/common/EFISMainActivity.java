@@ -17,6 +17,7 @@
 package player.efis.common;
 
 import player.ulib.DigitalFilter;
+import player.ulib.UMath;
 import player.ulib.UTrig;
 import player.ulib.Unit;
 
@@ -103,7 +104,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected DigitalFilter filterG = new DigitalFilter(32);              //32
     protected DigitalFilter filterGpsSpeed = new DigitalFilter(6);        //4
     protected DigitalFilter filterGpsAltitude = new DigitalFilter(6);     //4
-    protected DigitalFilter filterGpsCourse = new DigitalFilter(16);       //4
+    protected DigitalFilter filterGpsCourse = new DigitalFilter(8);       //4
 
     /*private MediaPlayer mpCautionTerrian;
     private MediaPlayer mpFiveHundred;
