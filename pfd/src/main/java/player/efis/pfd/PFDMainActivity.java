@@ -769,6 +769,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // 5 x 60 will give 3 updates a second
                 if (ctr % 5 == 0)
                   handleStratux();
+
+                // Apply a little filtering to the pitch, bank and course
+                //gps_course = filterGpsCourse.runningAverage(gps_course);
+                pitchValue = filterPitch.runningAverage(pitchValue);
+                rollValue = filterRoll.runningAverage(rollValue);
             }
             else {
                 // Clear any banners that may be set

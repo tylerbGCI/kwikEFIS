@@ -286,12 +286,14 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         //String status = getDeviceStatus();
                         //jObject = new JSONObject(status);
 
-                        /* Log.v("b2", //" AHRSSlipSkid " + AHRSSlipSkid  +
-                                    " AHRSGLoad " + AHRSGLoad  +
-                                    " AHRSTurnRate " + GPSTurnRate +
-                                    " AHRSTurnRate " + GPSTurnRate +
-                                    " BaroTemperature " + BaroTemperature
-                        );*/
+                        /*
+                        Log.v("b2", //" AHRSSlipSkid " + AHRSSlipSkid  +
+                                    //" AHRSGLoad " + AHRSGLoad  +
+                                    " AHRSTurnRate " + AHRSTurnRate +
+                                    //" BaroTemperature " + BaroTemperature +
+                                    " GPSTurnRate " + GPSTurnRate
+                        );
+                        // */
 
                     }
                     catch (JSONException e) {
