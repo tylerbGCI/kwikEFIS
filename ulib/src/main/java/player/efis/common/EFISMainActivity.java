@@ -403,7 +403,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         hasSpeed = true;
         hasGps = true;
 
-        final float setSpeed = Unit.Knot.toMeterPerSecond(123); //100; // m/s
+        final float setSpeed = Unit.Knot.toMeterPerSecond(AircraftData.Vno);
 
         if (Math.abs(pitchValue) > 10) {
             _gps_speed -= 0.01f * pitchValue;
