@@ -30,6 +30,7 @@ enum AircraftModel
     RV7,
     RV8,
     W10,
+    JET,
     HELI
 }
 
@@ -146,6 +147,7 @@ public class AircraftData
                 break;
 
             case M20J:
+				// Mooney M20J
                 Vs0 = 53;   // Stall, flap extended
                 Vs1 = 53;   // Stall, flap retracted
                 Vx = 66;    // Best angle climb
@@ -193,6 +195,19 @@ public class AircraftData
                 Vno = 155; // Max structural cruise - tbd
                 Vne = 174; // Never exceed
                 break;
+				
+            case JET:
+                // Generic business jet
+                Vs0 = 96;   // Stall, flap extended
+                Vs1 = 120;  // Stall, flap retracted - used for green arc
+                Vx = 200;    // Best angle climb - tbd
+                Vy = 250;    // Best rate climb
+                Vfe = 220;  // Flaps extension
+                Va = 155;   // Maneuvering
+                Vno = 418;  // Max structural cruise - tbd
+                Vne = 471;  // Never exceed
+                break;
+				
 
             // V Speeds for various rotor wing aircraft models
             // White Arc  Vs0 - Vfe
@@ -200,19 +215,19 @@ public class AircraftData
             // Yellow Arc Vno - Vne
             case HELI:
                 // Generic Helicopter
-                Vs0 = -999;   // Stall, flap extended
-                Vs1 = 50;  // Stall, flap retracted - used for green arc
-                Vx = 55;   // Best angle climb - tbd
-                Vy = 55;   // Best rate climb
-                Vfe = -999;   // Flaps extension
+                Vs0 = -999; // Stall, flap extended
+                Vs1 = 50;   // Stall, flap retracted - used for green arc
+                Vx = 55;    // Best angle climb - tbd
+                Vy = 55;    // Best rate climb
+                Vfe = -999; // Flaps extension
                 Va = -999;  // Maneuvering
-                Vno = 100; // Max structural cruise - tbd
-                Vne = 100; // Never exceed
+                Vno = 100;  // Max structural cruise - tbd
+                Vne = 100;  // Never exceed
                 break;
 
             default:
-                Vs0 = 0;  // Stall, flap extended
-                Vs1 = 0;  // Stall, flap retracted
+                Vs0 = 0;   // Stall, flap extended
+                Vs1 = 0;   // Stall, flap retracted
                 Vx = 40;   // Best angle climb
                 Vy = 50;   // Best rate climb
                 Vfe = 60;  // Flaps extension

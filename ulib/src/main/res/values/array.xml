@@ -43,6 +43,7 @@
         <item>RV8 - Vans RV-6, 7, 8</item>
         <item>W10 - Wittman Tailwind</item>
         <item>HELI - Generic Helicopter</item>
+        <item>JET - Generic Bizjet</item>
         <item>ULTRA - Generic Ultralight</item>
     </string-array>
     <string-array name="ac_list_values">
@@ -56,6 +57,7 @@
         <item>RV8</item>
         <item>W10</item>
         <item>HELI</item>
+        <item>JET</item>
         <item>ULTRA</item>
     </string-array>
 
