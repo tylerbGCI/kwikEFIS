@@ -1,5 +1,14 @@
 Changelog
 =========
+
+REL_23 (WIP)
+------------------
+* Add genereic bizjet
+* Use Vso as simulator speed
+* Clear issues: 
+* Release EFIS v4.1
+* Release DMAP v2.1
+
 REL_22 (2018-09-01)
 ------------------
 * Improve Stratux Wifi and GPS handling
