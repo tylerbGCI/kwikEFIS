@@ -628,7 +628,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setUnServiceableDi();  // also does the rose
             mGLView.setUnServiceableAsi();
             mGLView.setUnServiceableAlt();
-            mGLView.setUnServiceableAh();
             mGLView.setDisplayAirport(false);
         }
         else if (rv == STRATUX_SERVICE) {
@@ -769,14 +768,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // 5 x 60 will give 3 updates a second
                 if (ctr % 5 == 0)
                   handleStratux();
-                // We do not filter Stratux
             }
             else {
                 // Clear any banners that may be set
                 mGLView.setBannerMsg(false, " ");
                 handleAndroid();
 
-                // Apply a little filtering to the pitch, bank
+                // Apply a little filtering to the pitch, bank (only for Android, not Stratux)
                 pitchValue = filterPitch.runningAverage(pitchValue);
                 rollValue = filterRoll.runningAverage(UNavigation.compassRose180(rollValue));
             }
