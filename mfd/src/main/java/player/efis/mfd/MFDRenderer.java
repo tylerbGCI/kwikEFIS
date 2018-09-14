@@ -85,6 +85,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for performance
+        if (displayAirspace) renderAirspace(mMVPMatrix);
+        if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
+        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
@@ -116,10 +119,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderCompassRose(rmiMatrix);
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
-
-        if (displayAirspace) renderAirspace(mMVPMatrix);
-        if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control tof targets
 
         //-----------------------------
         if (displayFlightDirector) {
