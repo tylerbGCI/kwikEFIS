@@ -219,7 +219,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                 gps_altitude = Unit.Feet.toMeter((float) mStratux.GPSAltitudeMSL);
                 gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
                 gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
-                gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
+                if (gps_speed > 2)
+                  gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
                 //slipValue = (float) -Math.toRadians(mStratux.AHRSSlipSkid);
                 slipValue = (float) -mStratux.AHRSSlipSkid / 4; // fudge it to be similar to the Android
                 loadfactor = (float) mStratux.AHRSGLoad;        // in gunits
