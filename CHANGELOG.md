@@ -3,7 +3,7 @@ Changelog
 
 REL_23 (WIP)
 ------------------
-* Add genereic bizjet
+* Add generic bizjet
 * Use Vso as simulator speed
 * Clear issues: 
 * Release EFIS v4.1
