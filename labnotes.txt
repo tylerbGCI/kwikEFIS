@@ -29,3 +29,33 @@ git fetch upstream
 git checkout master
 git reset --hard upstream/master  
 git push origin master --force 
+
+----------------------------
+Rename SDR
+You can name the SDRs to let Stratux know which to use for which purpose.
+First log into the Raspberry Pi using your favorite ssh client. 
+The user is 'pi' and the default password is 'raspberry'.
+
+Switch to root.
+    $ sudo su -
+
+Depending on the version of Stratux some or all of the following commands may be required to shut down the Stratux processes.
+    # service stratux stop
+    # screen -x stratux Ctrl-C
+    # screen -x dump1090 Ctrl-C
+    
+Ensure only the 978 MHz SDR is plugged in.
+    # rtl_eeprom -d 0 -s stratux:978
+    
+Unplug the 978 MHz SDR and plug in the 1090 MHz SDR.
+    # rtl_eeprom -d 0 -s stratux:1090
+    
+Plug the 978 MHz SDR back in.
+    # shutdown -r now
+    
+Stratux has a script to automate this process of setting the SDR Serials.
+
+SSH into Stratux and do:
+Type sudo su -
+Type sdr-tool.sh
+READ THE SCREEN    
