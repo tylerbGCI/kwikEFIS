@@ -365,29 +365,31 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         float dme;             //in nm
         float step = 0.50f;    //in nm, normally this should be = gridy
+                               // 0.5 nm is appox 1km which is the size of the DEM tiles.
         float agl_ft;          //in Feet
-
         float demRelBrg;       // = DIValue + Math.toDegrees(Math.atan2(deltaLon, deltaLat));
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
+        float range = 1.1f * pixM / mMapZoom;
 
-        float m = 1;  // 1 = normal
-        if (mMapZoom < 10) m = 2;
-        if (mMapZoom < 5) m = 4;
+        if (mMapZoom < 16) step *= 2;
+        if (mMapZoom < 8) step *= 2;
 
-        for (dme = 0; dme <= 700f / mMapZoom; dme = dme + m*step) { // DEM_HORIZON=20, was 30
+
+        //for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
+        for (dme = range; dme >= 0; dme = dme - step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
-            for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 2*m*step) { //1
+            for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 1) { //1
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
                 lon = LonValue + dme / 60 * UTrig.isin((int) (DIValue + demRelBrg));
                 z1 = DemGTOPO30.getElev(lat, lon);
 
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
                 y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+
                 if ((_x1 != 0) || (_y1 != 0)) {
-                    // float wid = mMapZoom * ((1.4148f*m*step) * UTrig.isin(90 - 0)); // simplified below
-                    float wid = mMapZoom * ((1.4148f*m*step)); // simplified version, sin(90) = 1
+
                     DemColor color = DemGTOPO30.getColor((short) z1);
                     // Handle Monochrome
                     if (colorTheme == 2) {
@@ -396,17 +398,21 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     }
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
-                    if (agl_ft > 1000) mLine.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
-                    else if (IASValue < IASValueThreshold) mLine.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
-                    else if (agl_ft > 200) mLine.SetColor(caution, caution, 0, 1f);  // Proximity notification
-                    else mLine.SetColor(caution, 0, 0, 1f);                          // Proximity warning
 
-                    mLine.SetWidth(wid);
-                    mLine.SetVerts(
-                            _x1, _y1, z,
-                             x1,  y1, z
-                    );
-                    mLine.draw(matrix);
+                    float wid = mMapZoom * step; // optional  * 0.7071f;  // 1/sqrt(2)
+
+                    if (agl_ft > 1000) mSquare.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
+                    else if (IASValue < IASValueThreshold) mSquare.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
+                    else if (agl_ft > 200) mSquare.SetColor(caution, caution, 0, 1f);  // Proximity notification
+                    else mSquare.SetColor(caution, 0, 0, 1f);                          // Proximity warning
+                    float[] squarePoly = {
+                            x1-wid, y1-wid, z,
+                            x1-wid, y1+wid, z,
+                            x1+wid, y1+wid, z,
+                            x1+wid, y1-wid, z
+                    };
+                    mSquare.SetVerts(squarePoly);
+                    mSquare.draw(matrix);
                 }
                 _x1 = x1;
                 _y1 = y1;
