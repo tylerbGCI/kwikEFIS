@@ -346,7 +346,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         );
     }
 
-
     //-------------------------------------------------------------------------
     // Set the spinner control parameters
     //
