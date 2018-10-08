@@ -377,8 +377,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (mMapZoom < 8) step *= 2;
 
 
-        //for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
-        for (dme = range; dme >= 0; dme = dme - step) { // DEM_HORIZON=20, was 30
+        for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
             for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 1) { //1
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
