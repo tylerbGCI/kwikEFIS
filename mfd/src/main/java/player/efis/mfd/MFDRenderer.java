@@ -398,7 +398,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
 
-                    float wid = mMapZoom * step; // optional  * 0.7071f;  // 1/sqrt(2)
+                    float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
 
                     if (agl_ft > 1000) mSquare.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                     else if (IASValue < IASValueThreshold) mSquare.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
