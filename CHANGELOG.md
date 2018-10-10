@@ -5,7 +5,7 @@ REL_23 (WIP)
 ------------------
 * Add generic bizjet
 * Use Vso as simulator speed
-* Clear issues: 26
+* Clear issues: 26, 28
 * Release EFIS v4.1
 * Release DMAP v2.1
 
