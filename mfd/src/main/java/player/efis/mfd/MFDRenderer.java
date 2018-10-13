@@ -149,8 +149,12 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
 			
+            xlx = 0;
+            xly = +0.90f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedDIMarkers(mMVPMatrix);
             renderHDGValue(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
 
         //-----------------------------
