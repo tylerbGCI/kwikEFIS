@@ -154,7 +154,7 @@ abstract public class EFISRenderer
     private String sBannerMsg;             // Flag to control banner display
 
     private float mX, mY;                          // keypress location
-    protected final float portraitOffset = 0.40f;  // the magic number for portrait offset
+        protected float portraitOffset = 0.40f;  // the magic number for portrait offset
 
     //Demo Modes
     protected boolean bSimulatorActive;
@@ -1371,7 +1371,7 @@ abstract public class EFISRenderer
     protected void renderFixedDIMarkers(float[] matrix)
     {
         float z = zfloat;
-        float top = 0.9f * pixH2;
+        //float top = 0.9f * pixH2;
         float left = -0.15f * pixM2;
         float right = 0.15f * pixM2;
 
@@ -1389,10 +1389,10 @@ abstract public class EFISRenderer
         mSquare.SetWidth(2);
         {
             float[] squarePoly = {
-                    right, top - glText.getCharHeight(), z,
-                    right, top + glText.getCharHeight(), z,
-                    left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z
+                    right, - glText.getCharHeight(), z,
+                    right, + glText.getCharHeight(), z,
+                    left,  + glText.getCharHeight(), z,
+                    left,  - glText.getCharHeight(), z
             };
             mSquare.SetVerts(squarePoly);
             mSquare.draw(matrix);
@@ -1402,17 +1402,17 @@ abstract public class EFISRenderer
             mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
             mPolyLine.SetWidth(2);
             float[] vertPoly = {
-                    right, top + glText.getCharHeight(), z,
-                    left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
-                    right, top - glText.getCharHeight(), z,
-                    right, top + glText.getCharHeight(), z,
+                    right, + glText.getCharHeight(), z,
+                    left,  + glText.getCharHeight(), z,
+                    left,  - glText.getCharHeight(), z,
+                    right, - glText.getCharHeight(), z,
+                    right, + glText.getCharHeight(), z,
 
                     // for some reason this causes a crash on restart if there are not 8 vertexes
                     // most probably a a bug in PolyLine - b2 maye be fixed comma after last z
-                    left, top + glText.getCharHeight(), z,
-                    left, top - glText.getCharHeight(), z,
-                    right, top - glText.getCharHeight(), z
+                    left,  + glText.getCharHeight(), z,
+                    left,  - glText.getCharHeight(), z,
+                    right, - glText.getCharHeight(), z
             };
             mPolyLine.VertexCount = 8;
             mPolyLine.SetVerts(vertPoly);
@@ -1644,7 +1644,7 @@ abstract public class EFISRenderer
         String t = Integer.toString(rd);
         glText.begin(foreShadeR, foreShadeG, foreShadeB, 1, matrix);     // white
         glText.setScale(3.5f);  
-        glText.drawCX(t, 0, 0.9f * pixH2 - glText.getCharHeight() / 2);  // Draw String
+        glText.drawCX(t, 0, - glText.getCharHeight() / 2);  // Draw String
         glText.end();
     }
 

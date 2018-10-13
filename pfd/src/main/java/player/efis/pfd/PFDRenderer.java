@@ -88,10 +88,12 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Pitch
         if (Layout == layout_t.LANDSCAPE) {
+            portraitOffset = 0;
             // Slide pitch to current value
             Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
         }
         else {
+            portraitOffset = 0.40f;  // the magic number for portrait offset
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
@@ -109,7 +111,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
-            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrain(scratch1);  // underground is not valid
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid))
+                renderDEMTerrain(scratch1);  // underground is not valid
         }
         else if (displayAHColors) renderAHColors(scratch1);
 
@@ -156,8 +159,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             else {
                 //Portrait
                 xlx = 0;
-                xly = -0.44f * pixH2; 
-                roseScale = 0.52f; 
+                xly = -0.44f * pixH2;
+                roseScale = 0.52f;
             }
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -177,8 +180,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         if (Layout == layout_t.PORTRAIT) {
             // Slide pitch to current value adj for portrait
-            float Adjust = pixH2 * portraitOffset;
-            GLES20.glViewport(0, (int) Adjust, pixW, pixH); // Portrait //
+            int Adjust = (int) (pixH2 * portraitOffset);
+            GLES20.glViewport(0,  Adjust, pixW, pixH); // Portrait //
         }
         renderFixedHorizonMarkers();
         renderRollMarkers(scratch2);
@@ -192,32 +195,45 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayTape) {
             renderALTMarkers(altMatrix);
             renderASIMarkers(iasMatrix);
+            renderVSIMarkers(mMVPMatrix);
         }
 
-        float xlx;
-        float xly;
+        {
+            int Adjust = (int) (pixH2 * portraitOffset);
+            GLES20.glViewport(0, Adjust, pixW, pixH + Adjust); // Portrait //
 
-        //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
+            float xlx;
+            float xly;
 
-        xlx = 1.14f * pixM2;
-        xly = -0.7f * pixH2;
+            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
 
-        Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
-        renderFixedALTMarkers(mMVPMatrix);
-        Matrix.translateM(mMVPMatrix, 0, 0, xly, 0);
-        renderFixedRADALTMarkers(mMVPMatrix); // AGL
-        Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            xlx = 1.14f * pixM2;
+            xly = -0.5f * portraitOffset * pixH2; // half of tape viewport //-0.7f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedALTMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
+            xly = -0.5f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedRADALTMarkers(mMVPMatrix);   // AGL
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-        xlx = -1.10f*pixM2;
-        Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
-        renderFixedASIMarkers(mMVPMatrix);
-        Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
+            xlx = -1.10f * pixM2;
+            xly = -0.5f * portraitOffset * pixH2; // half of tape viewport //-0.7f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedASIMarkers(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-        renderVSIMarkers(mMVPMatrix);
-        renderFixedDIMarkers(mMVPMatrix);
-        renderHDGValue(mMVPMatrix);
-        GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+
+            xlx = 0;
+            xly = +0.90f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedDIMarkers(mMVPMatrix);
+            renderHDGValue(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+        }
+
 
         //-----------------------------
         renderTurnMarkers(mMVPMatrix);
