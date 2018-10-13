@@ -623,13 +623,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             }
             mGLView.setBannerMsg(false, " ");
         }
-        else if (rv == STRATUX_GPS) {
-            // No GPS, but we may still have attitude
-            mGLView.setUnServiceableDi();  // also does the rose
-            mGLView.setUnServiceableAsi();
-            mGLView.setUnServiceableAlt();
-            mGLView.setDisplayAirport(false);
-        }
         else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
             mGLView.setUnServiceableDevice();
@@ -644,6 +637,18 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");
+        }
+        else if (rv == STRATUX_GPS) {
+            // No GPS, but we may still have attitude
+            // since all the fatal checks are prior
+            mGLView.setServiceableDevice();
+            mGLView.setServiceableAh();
+
+            mGLView.setUnServiceableDi();   // also does the rose
+            mGLView.setUnServiceableAsi();
+            mGLView.setUnServiceableAlt();
+            mGLView.setDisplayAirport(false);
+            mGLView.setBannerMsg(true, " "); // "STRATUX GPS"
         }
 
         return rv;
