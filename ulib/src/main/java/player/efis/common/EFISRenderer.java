@@ -154,7 +154,8 @@ abstract public class EFISRenderer
     private String sBannerMsg;             // Flag to control banner display
 
     private float mX, mY;                          // keypress location
-        protected float portraitOffset = 0.40f;  // the magic number for portrait offset
+
+    protected float portraitOffset = 0.40f;  // the magic number for portrait offset
 
     //Demo Modes
     protected boolean bSimulatorActive;
@@ -2880,12 +2881,12 @@ abstract public class EFISRenderer
             mLine.draw(matrix);
 
             glText.begin(tapeShadeR, tapeShadeG, tapeShadeB, 1.0f, matrix); // grey
-            glText.setScale(1.5f*roseTextScale);
+            glText.setScale(2.0f*roseTextScale);
             switch (i) {
                 case 0:
                     t = "N";
                     glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-                    glText.setScale(2.0f*roseTextScale);
+                    glText.setScale(3.0f*roseTextScale);
                     break;
                 case 30:
                     t = "3";
@@ -2896,7 +2897,7 @@ abstract public class EFISRenderer
                 case 90:
                     t = "E";
                     glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseTextScale);
+                    glText.setScale(2.5f*roseTextScale);
                     break;
                 case 120:
                     t = "12";
@@ -2907,9 +2908,9 @@ abstract public class EFISRenderer
                 case 180:
                     t = "S";
                     glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseTextScale);
+                    glText.setScale(2.5f*roseTextScale);
                     break;
-                case 220:
+                case 210:
                     t = "21";
                     break;
                 case 240:
@@ -2918,7 +2919,7 @@ abstract public class EFISRenderer
                 case 270:
                     t = "W";
                     glText.begin(foreShadeR, foreShadeG, foreShadeB, 1.0f, matrix); // white
-                    glText.setScale(1.5f*roseTextScale);
+                    glText.setScale(2.5f*roseTextScale);
                     break;
                 case 300:
                     t = "30";
