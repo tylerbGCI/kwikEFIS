@@ -135,7 +135,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
 			
             xlx = 0.99f * pixW2;
-            xly = -0.3f * pixM2;
+            xly = -0.6f * pixM2;
 			
             Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
             renderFixedALTMarkers(mMVPMatrix);
