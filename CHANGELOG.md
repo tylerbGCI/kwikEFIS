@@ -1,7 +1,7 @@
 Changelog
 =========
 
-REL_23 (WIP)
+REL_23 (2018-10-13)
 ------------------
 * Add generic bizjet
 * Use Vso as simulator speed
