@@ -1,10 +1,11 @@
 Changelog
 =========
 
-REL_23 (2018-10-13)
+REL_23 (2018-10-15)
 ------------------
 * Add generic bizjet
 * Use Vso as simulator speed
+* Make ADS-B targets more prominent
 * Clear issues: 26, 27, 28
 * Release EFIS v4.1
 * Release DMAP v2.1

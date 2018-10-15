@@ -1962,10 +1962,10 @@ abstract public class EFISRenderer
 
     private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd, String dme)
     {
-        float radius = 5 * 2.5f;
+        float radius = 12; //5 * 2.5f;
         float z = zfloat;
 
-        mPolyLine.SetWidth(3);
+        mPolyLine.SetWidth(radius/2);
         mPolyLine.SetColor(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1);  //white'ish
 
         float[] vertPoly = {

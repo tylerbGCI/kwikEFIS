@@ -212,6 +212,32 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                     long unixTime = UTime.getUtcTimeMillis();
                     long lastTime = 0;
 
+                    /*-------------------------------------
+                    // < debug - add ghost AC traffic
+
+                    // fixed target
+                    JSONObject object = new JSONObject();
+
+                    //LongReportMessage tm = (LongReportMessage) m;
+                    try {
+                        object.put("type", "traffic");
+                        object.put("longitude", (double) 115.83);
+                        object.put("latitude", (double) -31.80);
+                        object.put("speed", (double) 123.0);
+                        object.put("bearing", (double) 348.7);
+                        //object.put("altitude", (double) Unit.Meter.toFeet(75));
+                        object.put("altitude", 4321);
+                        object.put("callsign", (String) "GHOST-0");
+                        object.put("address", (int) 777);
+                        object.put("time", (long) unixTime);
+                    }
+                    catch (JSONException e1) {
+                        continue;
+                    }
+                    objs.add(object.toString());
+                    // debug >
+                    //-------------------------------------*/
+
                     // Extract traffic
                     for (String s : objs) {
                         try {
@@ -247,6 +273,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                             e.printStackTrace();
                         }
                     }
+
 
                     //----------------------------------------------
                     // use the Http
