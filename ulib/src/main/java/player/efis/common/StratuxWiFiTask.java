@@ -293,7 +293,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         AHRSGyroHeading = jObject.getDouble("AHRSGyroHeading");
                         AHRSMagHeading = jObject.getDouble("AHRSMagHeading");
                         AHRSSlipSkid = jObject.getDouble("AHRSSlipSkid"); // in degrees
-                        AHRSTurnRate = jObject.getDouble("AHRSTurnRate");
+                        AHRSTurnRate = jObject.getDouble("AHRSTurnRate"); // degrees/second
                         AHRSGLoad = jObject.getDouble("AHRSGLoad");
                         AHRSGLoadMin = jObject.getDouble("AHRSGLoadMin");
                         AHRSGLoadMax = jObject.getDouble("AHRSGLoadMax");

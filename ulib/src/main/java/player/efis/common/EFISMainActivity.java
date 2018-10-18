@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (C) 2016 Player One
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -223,10 +224,10 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                 slipValue = (float) -mStratux.AHRSSlipSkid / 4; // fudge it to be similar to the Android
                 loadfactor = (float) mStratux.AHRSGLoad;        // in gunits
 
-                //gyro_rateOfTurn = (float) mStratux.GPSTurnRate;
+                gps_rateOfTurn = (float) Math.toRadians(mStratux.GPSTurnRate);
                 gyro_rateOfTurn = (float) Math.toRadians(mStratux.AHRSTurnRate); // check this
 
-                sensorBias = 0;
+                //sensorBias = 1; /// choose a setting from options
                 hasGps = true;
 
                 if (gps_speed > 5) {
