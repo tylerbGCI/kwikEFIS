@@ -1877,7 +1877,7 @@ abstract public class EFISRenderer
 
     private void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
     {
-        float radius = 5 * 2.0f;
+        float radius = pixM / 70;
         float z = zfloat;
 
         mPolyLine.SetWidth(3);
@@ -1958,7 +1958,7 @@ abstract public class EFISRenderer
 
     private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, float alt, int brg, int spd, float dme)
     {
-        float radius = 12; //5 * 2.5f;
+        float radius = pixM / 60;
         float z = zfloat;
         String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + "nm";
         String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + "FL"; // convert to flight level
