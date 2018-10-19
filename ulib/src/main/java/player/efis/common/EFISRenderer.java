@@ -1938,19 +1938,15 @@ abstract public class EFISRenderer
                     // 0.1 approx 5nm
                     float actRelBrg;
                     String acId = call;
-                    //String acAlt = Integer.toString(Math.round(alt*3.28084f/100f)) + "FL";
-                    String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + "FL"; // convert m to flight level
                     int tgtBrg = (int)brg;
                     int tgtSpd = (int)spd;
 
-                    float dme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
+                    float tgtDme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
                     actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
 
-                    String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + "nm";
-
-                    x1 = project(actRelBrg, dme, Unit.Feet.toMeter(alt)).x;
-                    y1 = project(actRelBrg, dme, Unit.Feet.toMeter(alt)).y;
-                    renderTargetSymbol(matrix, x1, y1, acId, tgtAltLabel, tgtBrg, tgtSpd, tgtDmeLabel);
+                    x1 = project(actRelBrg, tgtDme, Unit.Feet.toMeter(alt)).x;
+                    y1 = project(actRelBrg, tgtDme, Unit.Feet.toMeter(alt)).y;
+                    renderTargetSymbol(matrix, x1, y1, acId, alt, tgtBrg, tgtSpd, tgtDme);
                 }
             }
             catch (JSONException e) {
@@ -1960,12 +1956,16 @@ abstract public class EFISRenderer
     }
 
 
-    private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, String alt, int brg, int spd, String dme)
+    private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, float alt, int brg, int spd, float dme)
     {
         float radius = 12; //5 * 2.5f;
         float z = zfloat;
+        String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + "nm";
+        String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + "FL"; // convert to flight level
 
-        mPolyLine.SetWidth(radius/2);
+        if (dme < 5) mPolyLine.SetWidth(radius/2);
+        else mPolyLine.SetWidth(radius/4);
+
         mPolyLine.SetColor(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1);  //white'ish
 
         float[] vertPoly = {
@@ -1979,12 +1979,20 @@ abstract public class EFISRenderer
         mPolyLine.SetVerts(vertPoly);
         mPolyLine.draw(matrix);
 
+        if ((dme < 2) && (Math.abs(alt - MSLValue) < 500)) {
+            mPolygon.SetColor(theta * foreShadeR, theta * foreShadeG, theta * foreShadeB, 1); // white
+            mPolygon.VertexCount = 5;
+            mPolygon.SetVerts(vertPoly);
+            mPolygon.draw(matrix);
+        }
+
+
         // Text at target
         glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
         glText.setScale(2.0f);
-        glText.drawCY(callsign, x1, y1 - glText.getCharHeight());
-        glText.drawCY(alt, x1, y1 - 1.8f*glText.getCharHeight());
-        glText.drawCY(dme, x1, y1 - 2.6f*glText.getCharHeight());
+        glText.drawCY(callsign,    x1, y1 - glText.getCharHeight());
+        glText.drawCY(tgtAltLabel, x1, y1 - 1.8f*glText.getCharHeight());
+        glText.drawCY(tgtDmeLabel, x1, y1 - 2.6f*glText.getCharHeight());
         glText.end();
 
         //
@@ -2000,6 +2008,7 @@ abstract public class EFISRenderer
                 x2, y2, z
         );
         mLine.draw(matrix);
+
 
         // Text at stem
         /*glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
