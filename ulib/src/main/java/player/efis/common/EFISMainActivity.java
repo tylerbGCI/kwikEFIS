@@ -233,7 +233,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                 if (gps_speed > 5) {
                     hasSpeed = true;
                     gps_course = (float) Math.toRadians(mStratux.GPSTrueCourse);
-                    //updateFPV();
                 }
                 else hasSpeed = false;
                 return STRATUX_OK;
