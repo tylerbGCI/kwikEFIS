@@ -68,8 +68,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected boolean bLandscapeMode = false;
     protected int colorTheme; // 0=Normal, 1=High Contrast, 2=Monochrome
 
-    protected /*static final*/ int SLIP_SENS = 25; //50;	 // Arbitrary choice
-    private static final float STD_RATE = 0.0524f;         // = rate 1 = 3deg/s
+    private static final float STD_RATE = 0.0524f;       // = rate 1 = 3deg/s
     protected static final long GPS_UPDATE_PERIOD = 0;   //ms // 400
     protected static final long GPS_UPDATE_DISTANCE = 0; //ms // 1
 
@@ -221,13 +220,14 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
                 gps_agl = DemGTOPO30.calculateAgl(gps_lat, gps_lon, gps_altitude);
                 gps_speed = Unit.Knot.toMeterPerSecond((float) mStratux.GPSGroundSpeed);
                 //slipValue = (float) -Math.toRadians(mStratux.AHRSSlipSkid);
-                slipValue = (float) -mStratux.AHRSSlipSkid / 4; // fudge it to be similar to the Android
+                slipValue = (float) -mStratux.AHRSSlipSkid; // in degrees (todo make all radians)
                 loadfactor = (float) mStratux.AHRSGLoad;        // in gunits
-
                 gps_rateOfTurn = (float) Math.toRadians(mStratux.GPSTurnRate);
-                gyro_rateOfTurn = (float) Math.toRadians(mStratux.AHRSTurnRate); // check this
+                if (mStratux.AHRSTurnRate == 3276.7)  // 3276.7 is the magic number from Stratus to show invalid
+                    gyro_rateOfTurn = 0;
+                else
+                    gyro_rateOfTurn = (float) Math.toRadians(mStratux.AHRSTurnRate); // check this
 
-                //sensorBias = 1; /// choose a setting from options
                 hasGps = true;
 
                 if (gps_speed > 5) {
