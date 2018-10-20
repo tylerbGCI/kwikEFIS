@@ -25,6 +25,7 @@ import player.efis.common.SensorComplementaryFilter;
 import player.efis.common.prefs_t;
 import player.ulib.UMath;
 import player.ulib.UNavigation;
+import player.ulib.UTrig;
 import player.ulib.Unit;
 import player.efis.common.orientation_t;
 
@@ -681,12 +682,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         if (bLandscapeMode) {
             gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[0]);
-            slipValue = filterSlip.runningAverage(accel[1]);
         }
         else {
             gyro_rateOfTurn = (float) filterRateOfTurnGyro.runningAverage(-gyro[1]);
-            slipValue = filterSlip.runningAverage(-accel[0]);
         }
+        slipValue = (float) -Math.toDegrees(Math.atan2(accel[0], accel[1]));
 
         loadfactor = sensorComplementaryFilter.getLoadFactor();
         loadfactor = filterG.runningAverage(loadfactor);
@@ -838,7 +838,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setPitch(pitchValue);                             // in degrees
         mGLView.setRoll(rollValue);                               // in degrees
         mGLView.setGForce(loadfactor);                            // in gunits
-        mGLView.setSlip(SLIP_SENS * slipValue);
+        mGLView.setSlip(slipValue);
         mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute(gps_rateOfClimb));  // in fpm
         mGLView.setTurn((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn);
         mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees

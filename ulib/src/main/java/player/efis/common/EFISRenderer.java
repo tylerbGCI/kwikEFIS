@@ -1665,7 +1665,7 @@ abstract public class EFISRenderer
         z = zfloat;
 
         float radius = 10 * pixM / 736;
-        float x1 = SlipValue;
+        float x1 = SlipValue / 100 * pixM;
         float y1 = -0.9f * pixH2;
 
 
