@@ -59,6 +59,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
     public double BaroPressureAltitude;
     public double BaroVerticalSpeed;
     //public String BaroLastMeasurementTime;
+    public boolean proximityAlert;// = false;
 
     private String id;
 
@@ -226,7 +227,7 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
                         object.put("speed", (double) 123.0);
                         object.put("bearing", (double) 348.7);
                         //object.put("altitude", (double) Unit.Meter.toFeet(75));
-                        object.put("altitude", 4321);
+                        object.put("altitude", 2000);
                         object.put("callsign", (String) "GHOST-0");
                         object.put("address", (int) 777);
                         object.put("time", (long) unixTime);

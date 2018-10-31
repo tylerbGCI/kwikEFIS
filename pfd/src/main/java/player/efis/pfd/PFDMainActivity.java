@@ -864,6 +864,13 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         if (hasGps) {
             try {
+                // We have new traffic
+                // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
+                if (mStratux.proximityAlert) {
+                    if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();
+                    mStratux.proximityAlert = false;
+                }
+
                 // We are stalling, advise captain "Crash" of his imminent flight emergency
                 if (hasSpeed
                         && (gps_speed < 3 + AircraftData.Vs0 / 2) // m/s, warn 3 m/s before stall
@@ -883,14 +890,15 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                             && (gps_agl > 0)
                             && (gps_agl < 100)) { // meters
                         if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
-                    }
+                    } // caution terrain
 
                     // Play the "five hundred" song when decending through 500ft
                     if ((_gps_agl > 152.4f)
                             && (gps_agl <= 152.4f)) { // 500ft
                         if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
                     }
-                }
+				} // DemGTOPO30 required options
+				
             }
             catch (IllegalStateException e) {
                 //e.printStackTrace();

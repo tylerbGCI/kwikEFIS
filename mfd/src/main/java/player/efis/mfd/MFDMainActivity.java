@@ -128,6 +128,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        /*
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
             mGLView.setAutoZoomActive(false);
             mGLView.zoomIn();
@@ -138,6 +139,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.zoomOut();
             return true;
         }
+        */
         return super.onKeyDown(keyCode, event);
     }
 
@@ -783,8 +785,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             try {
                 // We have new traffic
                 // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
-                if (false) {
+                if (mStratux.proximityAlert) {
                     if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();
+                    mStratux.proximityAlert = false;
                 }
 
                 // We are at risk of becoming a wet spot somewhere on terra firma
@@ -794,8 +797,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                             && (gps_agl > 0)
                             && (gps_agl < 100)) { // meters
                         if (!mpCautionTerrian.isPlaying()) mpCautionTerrian.start();
-                    }
-				}
+                    } // caution terrain
+				} // DemGTOPO30 required options
+				
             }
             catch (IllegalStateException e) {
                 //e.printStackTrace();

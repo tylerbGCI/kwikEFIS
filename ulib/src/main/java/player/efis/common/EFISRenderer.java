@@ -1944,6 +1944,12 @@ abstract public class EFISRenderer
                     float tgtDme = UNavigation.calcDme(LatValue, LonValue, lat, lon); // in nm
                     actRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, lat, lon, DIValue);
 
+                    // Todo move from renderTargetSymbol and replace with flag?
+                    // 1nm +- 500 ft is same specs as ATD-300
+                    if ((tgtDme < 1) && (Math.abs(alt - MSLValue) < 500)) {
+                        mStratux.proximityAlert = true;
+                    }
+
                     x1 = project(actRelBrg, tgtDme, Unit.Feet.toMeter(alt)).x;
                     y1 = project(actRelBrg, tgtDme, Unit.Feet.toMeter(alt)).y;
                     renderTargetSymbol(matrix, x1, y1, acId, alt, tgtBrg, tgtSpd, tgtDme);
