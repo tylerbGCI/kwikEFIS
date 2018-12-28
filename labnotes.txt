@@ -59,3 +59,14 @@ SSH into Stratux and do:
 Type sudo su -
 Type sdr-tool.sh
 READ THE SCREEN    
+---------------------------
+simplified steps to login as root / set root password.
+
+HOW
+Step 1 -Set root password
+sudo passwd root
+
+Step 2 - allow root login
+just go to /etc/ssh/sshd_config change the line as below
+PermitRootLogin yes #(i just added this to the bottom of the file)
+

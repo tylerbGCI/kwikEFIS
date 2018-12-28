@@ -866,9 +866,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             try {
                 // We have new traffic
                 // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
-                if (mStratux.proximityAlert) {
-                    if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();
-                    mStratux.proximityAlert = false;
+                if (mStratux != null) {
+                    if (mStratux.proximityAlert) {
+                        if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();
+                        mStratux.proximityAlert = false;
+                    }
                 }
 
                 // We are stalling, advise captain "Crash" of his imminent flight emergency
