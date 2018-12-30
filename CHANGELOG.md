@@ -1,6 +1,12 @@
 Changelog
 =========
 
+REL_24 (2019-01-02)
+------------------
+* Clear issues: 29
+* Release EFIS v4.2
+* Release DMAP v2.2
+
 REL_23 (2018-10-15)
 ------------------
 * Add generic bizjet

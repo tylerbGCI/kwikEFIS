@@ -604,5 +604,4 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         ServiceableAh = false;
     }
 
-
 }
