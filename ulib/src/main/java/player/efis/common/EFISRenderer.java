@@ -2004,7 +2004,9 @@ abstract public class EFISRenderer
         //
         // Track/speed line
         //
-        mLine.SetWidth(1);
+        if (dme < 5) mLine.SetWidth(radius/2);
+        else mLine.SetWidth(radius/4);
+
         mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * foreShadeB, 1); // white
 
         float x2 = x1 + mMapZoom * (spd/50 * UTrig.icos(90-(int)(brg - DIValue)));
