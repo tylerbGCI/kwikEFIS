@@ -3296,13 +3296,13 @@ abstract public class EFISRenderer
 
     public void zoomIn()
     {
-        mMapZoom += 5;
+        mMapZoom *= 1.5;
         if (mMapZoom > MAX_ZOOM) mMapZoom = MAX_ZOOM;
     }
 
     public void zoomOut()
     {
-        mMapZoom -= 5;
+        mMapZoom /= 1.5;
         if (mMapZoom < MIN_ZOOM) mMapZoom = MIN_ZOOM;
     }
 
