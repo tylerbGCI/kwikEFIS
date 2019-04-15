@@ -11,7 +11,6 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 package com.stratux.stratuvare.gdl90;
 
-import android.util.Log;
 
 import com.stratux.stratuvare.utils.Logger;
 
@@ -22,14 +21,15 @@ import com.stratux.stratuvare.utils.Logger;
  */
 public class HeartbeatMessage extends Message {
 
-    int mHour;
-    int mMinute;
-    int mSecond;
 
     public long mTimeStamp;
     public Boolean mGpsPositionValid;
     public Boolean mBatteryLow;
     public Boolean mDeviceRunning;
+	
+    int mHour;
+    int mMinute;
+    int mSecond;
 
     public HeartbeatMessage() {
         super(MessageType.HEARTBEAT);

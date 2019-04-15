@@ -771,7 +771,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             if (bStratuxActive) {
                 // We are set to SENSOR_DELAY_UI approx 60ms
                 // 5 x 60 will give 3 updates a second
-                if (ctr % 5 == 0)
+                // if (ctr % 5 == 0)
                   handleStratux();
             }
             else {
