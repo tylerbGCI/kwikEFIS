@@ -1,6 +1,11 @@
 Changelog
 =========
 
+REL_24 (2019-01-14)
+------------------
+* Clear issues: 30
+* Release DMAP v2.3
+
 REL_24 (2019-01-02)
 ------------------
 * Clear issues: 29
