@@ -476,13 +476,16 @@ public class StratuxWiFiTask extends AsyncTask<String, Void, Void>
 
     public void disconnect()
     {
-        try {
-            mSocket.close();
-            mState = DISCONNECTED;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.Logit(id + "Error stream close");
+        //if (mSocket != null) {
+        {
+            try {
+                mSocket.close();
+                mState = DISCONNECTED;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Logger.Logit(id + "Error stream close");
+            }
         }
     }
 

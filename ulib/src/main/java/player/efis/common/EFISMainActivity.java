@@ -18,7 +18,6 @@
 package player.efis.common;
 
 import player.ulib.DigitalFilter;
-import player.ulib.UMath;
 import player.ulib.UTrig;
 import player.ulib.Unit;
 
@@ -46,7 +45,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
+abstract public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
 {
 
     protected MediaPlayer mpCautionTraffic;
@@ -243,6 +242,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         }
         else {
             if (ctr % 100 == 0 ) {
+            //if (true) {
                 hasGps = false;
                 hasSpeed = false;
                 connectWiFi("stratux");  // force the connection to stratux
@@ -498,14 +498,21 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float slipValue;
     protected int ctr = 0;
 
+
+    // this must be overridden in the child classes
+    abstract protected void updateEFIS();
+
     // Create a Timer
     Timer timer = new Timer();
+
     //Then you extend the timer task
-    class UpdateStartuxTask extends TimerTask
+    class UpdateStratuxTask extends TimerTask
     {
         public void run() {
-            //calculate the new position of myBall
-            //handleStratux();
+            try {
+                updateEFIS();
+            }
+            catch (Exception e) {}
         }
     }
     //And then add the new task to the Timer with some update interval
@@ -516,8 +523,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         super.onCreate(savedInstanceState);
 
         final int FPS = 40;
-        TimerTask updateStartux = new UpdateStartuxTask();
-        timer.scheduleAtFixedRate(updateStartux, 0, 1000 / FPS);
+        TimerTask updateStratux = new UpdateStratuxTask();
+        timer.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
     }
 }
 

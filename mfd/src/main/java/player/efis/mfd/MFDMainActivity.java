@@ -223,7 +223,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // The individual elements will be enabled or disabled by the location provided
         // based on availability
         mGLView.setServiceableDevice();
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -337,7 +337,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
                 break;
         }
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -383,7 +383,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         mGLView.setServiceableMap();
 
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -667,7 +667,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     // Effectively the main execution loop. updateEFIS will get called when
     // something changes, eg a sensor has new data or new gps fix becomes available.
     //
-    private void updateEFIS()
+    protected void updateEFIS()
     {
         ctr++;
 

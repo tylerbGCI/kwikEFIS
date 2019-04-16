@@ -56,6 +56,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class PFDMainActivity extends EFISMainActivity implements Listener, SensorEventListener, LocationListener
 {
@@ -207,7 +210,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // The individual elements will be enabled or disabled by the location provided
         // based on availability
         mGLView.setServiceableDevice();
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -321,7 +324,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
                 break;
         }
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -371,7 +374,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         else {
             mGLView.setUnServiceableAh();
         }
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -741,7 +744,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     // Effectively the main execution loop. updateEFIS will get called when
     // something changes, eg a sensor has new data or new gps fix becomes available.
     //
-    private void updateEFIS()
+    protected void updateEFIS()
     {
         ctr++;
 
@@ -832,7 +835,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         // end debug
 
-
         //
         // Pass the values to mGLView for updating
         //
@@ -846,9 +848,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setTurn((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn);
         //mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
         mGLView.setHeading((float) Math.toDegrees(courseValue));  // in degrees
-        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
-        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));        // in Feet
-        mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
+        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));    // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
+        mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));   // in knots
         mGLView.setLatLon(gps_lat, gps_lon);
         mGLView.setBatteryPct(batteryPct);                       // in percentage
 
@@ -919,6 +921,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         super.Simulate();
     }
+
+
+
 }
 
 
