@@ -209,6 +209,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         // Instantiate a new apts gpx/xml
         mGpx = new Gpx(this);
+        mGpx.loadDatabase(gps_lat, gps_lon);
         mDemGTOPO30 = new DemGTOPO30(this);
         mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
 
