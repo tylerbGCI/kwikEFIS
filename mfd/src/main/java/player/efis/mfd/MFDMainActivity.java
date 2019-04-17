@@ -210,14 +210,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Instantiate a new apts gpx/xml
         mGpx = new Gpx(this);
         mDemGTOPO30 = new DemGTOPO30(this);
+        mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+
+        // Wifi
+        connectWiFi("stratux");
+        mStratux = new StratuxWiFiTask("kwik");
+        mStratux.execute();
+
         createMediaPlayer();
         mAirspace = new OpenAir(this);
         mGLView.setTheme(colorTheme);
 
-        // Wifi
-        connectWiFi("stratux");
-        mStratux = new StratuxWiFiTask("mfd");
-        mStratux.execute();
 
         // Overall the device is now ready.
         // The individual elements will be enabled or disabled by the location provided
@@ -662,6 +665,39 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
+    protected void updateDEM()
+    {
+        //
+        // Handle the DEM buffer.
+        // Load new data to the buffer when the horizon gets close to the edge or
+        // if we have gone off the current tile.
+        //
+        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
+
+        //
+        // Load new data into the buffer when the horizon gets close to the edge
+        //
+        // Check every 1 minute
+        // 40 hz * 60 sec = 2400
+        //if (ctr % 2400 == 0) {
+        //if (ctr % 600 == 0) {
+        {
+            // See if we are close to the edge or
+            // see if we are stuck on null island or even on the tile
+            if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
+                    ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
+                //{
+
+                mGLView.setBannerMsg(true, "LOADING TERRAIN");
+                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
+                mGLView.setBannerMsg(false, " ");
+            }
+            //ctr = 0;
+        }
+    }
+
+
 
     //-------------------------------------------------------------------------
     // Effectively the main execution loop. updateEFIS will get called when
@@ -715,36 +751,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Get the battery percentage
         //
         float batteryPct = getRemainingBattery();
-
-        //
-        // Handle the DEM buffer.
-        // Load new data to the buffer when the horizon gets close to the edge or
-        // if we have gone off the current tile.
-        //
-        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
-
-        //
-        // Load new data into the buffer when the horizon gets close to the edge
-        //
-        // Wait for 100 cycles to allow at least some
-        // prior drawing to take place on startup
-        //if (ctr++ > 100) {
-        if (ctr % 100 == 0) {
-            // See if we are close to the edge or
-            // see if we are stuck on null island or even on the tile
-            if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
-                    ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
-
-                mGLView.setBannerMsg(true, "LOADING TERRAIN");
-                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-                mGpx.loadDatabase(gps_lat, gps_lon);
-
-                mGLView.setBannerMsg(true, "LOADING AIRSPACE");
-                mAirspace.loadDatabase(gps_lat, gps_lon);
-                mGLView.setBannerMsg(false, " ");
-            }
-            //ctr = 0;
-        }
 
 
         // for debug - set to true

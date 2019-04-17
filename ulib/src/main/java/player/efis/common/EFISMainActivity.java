@@ -501,12 +501,13 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
 
     // this must be overridden in the child classes
     abstract protected void updateEFIS();
+    abstract protected void updateDEM();
 
     // Create a Timer
     Timer timer = new Timer();
 
     //Then you extend the timer task
-    class UpdateStratuxTask extends TimerTask
+    class UpdateEFISTask extends TimerTask
     {
         public void run() {
             try {
@@ -515,16 +516,32 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
             catch (Exception e) {}
         }
     }
-    //And then add the new task to the Timer with some update interval
+
+    Timer timerDem = new Timer();
+    class UpdateDemTask extends TimerTask
+    {
+        public void run() {
+            try {
+                updateDEM();
+            }
+            catch (Exception e) {}
+        }
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        final int FPS = 40;
-        TimerTask updateStratux = new UpdateStratuxTask();
+        // Add the new task to the Timer with some update interval
+        final int FPS = 25; // 40;
+        TimerTask updateStratux = new UpdateEFISTask();
         timer.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
+
+        TimerTask updateDem = new UpdateDemTask();
+        timer.scheduleAtFixedRate(updateDem, 0, 15*1000);  // 15 sec
     }
 }
 
