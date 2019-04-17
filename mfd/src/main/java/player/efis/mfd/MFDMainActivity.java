@@ -220,6 +220,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         createMediaPlayer();
         mAirspace = new OpenAir(this);
+        mAirspace.loadDatabase(gps_lat, gps_lon);
+
         mGLView.setTheme(colorTheme);
 
 
@@ -687,6 +689,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mGLView.setBannerMsg(true, "LOADING TERRAIN");
                 mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
+
+                mGLView.setBannerMsg(true, "LOADING AIRSPACE");
+                mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
             }
         }
