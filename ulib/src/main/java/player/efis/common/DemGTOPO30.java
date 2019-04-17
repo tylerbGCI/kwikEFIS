@@ -386,7 +386,7 @@ public class DemGTOPO30
         }
 
         if (isValidLocation(lat, lon)) {
-            //Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show(); // causes error
+            Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show(); // causes error ?
             fillBuffer((short) 0);
 
             try {
