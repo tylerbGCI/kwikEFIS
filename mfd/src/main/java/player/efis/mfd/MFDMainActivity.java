@@ -677,23 +677,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
-        // Check every 1 minute
-        // 40 hz * 60 sec = 2400
-        //if (ctr % 2400 == 0) {
-        //if (ctr % 600 == 0) {
         {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
             if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
                     ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
-                //{
 
                 mGLView.setBannerMsg(true, "LOADING TERRAIN");
                 mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
             }
-            //ctr = 0;
         }
     }
 
