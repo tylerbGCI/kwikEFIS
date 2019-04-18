@@ -197,7 +197,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGpx = new Gpx(this);
         mGpx.loadDatabase(gps_lat, gps_lon);
         mDemGTOPO30 = new DemGTOPO30(this);
-        mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
 
         // Wifi
         connectWiFi("stratux");

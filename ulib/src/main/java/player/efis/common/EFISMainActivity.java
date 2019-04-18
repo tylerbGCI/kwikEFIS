@@ -504,7 +504,7 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
     abstract protected void updateDEM();
 
     // Create a Timer
-    Timer timer = new Timer();
+    Timer timerEfis = new Timer();
 
     //Then you extend the timer task
     class UpdateEFISTask extends TimerTask
@@ -538,10 +538,10 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
         // Add the new task to the Timer with some update interval
         final int FPS = 25; // 40;
         TimerTask updateStratux = new UpdateEFISTask();
-        timer.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
+        timerEfis.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
 
         TimerTask updateDem = new UpdateDemTask();
-        timer.scheduleAtFixedRate(updateDem, 0, 15*1000);  // 15 sec
+        timerDem.scheduleAtFixedRate(updateDem, 10*1000, 30*1000);  // delay 10 sec then every 20 sec
     }
 }
 

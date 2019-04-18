@@ -207,11 +207,14 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
+
         // Instantiate a new apts gpx/xml
         mGpx = new Gpx(this);
         mGpx.loadDatabase(gps_lat, gps_lon);
         mDemGTOPO30 = new DemGTOPO30(this);
-        mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        //b2mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        mAirspace = new OpenAir(this);
+        //mAirspace.loadDatabase(gps_lat, gps_lon);
 
         // Wifi
         connectWiFi("stratux");
@@ -219,11 +222,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mStratux.execute();
 
         createMediaPlayer();
-        mAirspace = new OpenAir(this);
-        mAirspace.loadDatabase(gps_lat, gps_lon);
-
         mGLView.setTheme(colorTheme);
-
 
         // Overall the device is now ready.
         // The individual elements will be enabled or disabled by the location provided
@@ -762,7 +761,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             gps_course = (float) Math.toRadians(1); // debug
         }
         // end debug
-
 
         //
         // Pass the values to mGLView for updating
