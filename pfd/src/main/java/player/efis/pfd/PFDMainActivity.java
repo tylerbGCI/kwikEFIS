@@ -411,6 +411,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         mpCautionTerrian.stop();
         mpCautionTerrian.release();
+		
+        mpCautionTraffic.stop();
+        mpCautionTraffic.release();
 
         mpFiveHundred.stop();
         mpFiveHundred.release();
@@ -427,6 +430,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         mpCautionTerrian = MediaPlayer.create(this, R.raw.caution_terrain);
         mpCautionTerrian.setLooping(false);
+		
+        mpCautionTraffic = MediaPlayer.create(this, R.raw.traffic);
+        mpCautionTraffic.setLooping(false);
 
         mpFiveHundred = MediaPlayer.create(this, R.raw.five_hundred);
         mpFiveHundred.setLooping(false);
