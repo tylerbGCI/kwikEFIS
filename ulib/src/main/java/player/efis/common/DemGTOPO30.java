@@ -288,7 +288,7 @@ public class DemGTOPO30
     //-------------------------------------------------------------------------
     // use the lat lon to determine which region file is active
     //
-    public String getRegionDatabaseName(float lat, float lon)
+    public static String getRegionDatabaseName(float lat, float lon)
     {
         String sRegion = "null.null";
 
@@ -371,9 +371,9 @@ public class DemGTOPO30
     -1: //b2-  cause bug: Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
     -2: //b2-  cause bug: Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
      */
-    protected final int DEM_OK = 0;
-    protected final int DEM_SYN_NOT_INSTALLED = -1;
-    protected final int DEM_TERRAIN_ERROR = -2;
+    protected final static int DEM_OK = 0;
+    protected final static int DEM_SYN_NOT_INSTALLED = -1;
+    protected final static int DEM_TERRAIN_ERROR = -2;
 
     public int loadDemBuffer(float lat, float lon)
     {
@@ -389,7 +389,7 @@ public class DemGTOPO30
 
         // Check to see if player.efis.data.nnn.mmm (datapac) is installed
         if (isAppInstalledOrNot("player.efis.data." + region) == false) {
-            return -1;
+            return DEM_SYN_NOT_INSTALLED;
         }
 
         if (isValidLocation(lat, lon)) {
@@ -465,7 +465,7 @@ public class DemGTOPO30
                 demDataValid = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
-                return -2;
+                return DEM_TERRAIN_ERROR;
             }
             //catch (Exception e) { }
         }
