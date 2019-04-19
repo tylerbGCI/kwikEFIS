@@ -473,8 +473,8 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f;  // Ludicrous Speed
-        //deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
-        deltaT = 0.000000224f;  // Super Speed2
+        deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
+        //deltaT = 0.000000224f;  // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
 
         // YCMH 090 from Perth
@@ -486,7 +486,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
             _gps_lat = -33.98f; _gps_lon = 18.82f; // Stellenbosh, South Africa
 
             //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
-            //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
+            _gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City (KSLC) > KHVE
             //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
             //_gps_lat =  47.26f;  _gps_lon = 11.34f;    //Innsbruck
             //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
@@ -495,7 +495,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
             //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
             //_gps_lat = -10.8f;  _gps_lon =  -65.35f;   // Emilio Beltran
             //_gps_lat = 00.26f;  _gps_lon = 00.34f;   // close to null island
-            //_gps_lat = 55.86f; _gps_lon = 37.6f;   // Moscow
+            //_gps_lat = 55.86f;  _gps_lon = 37.6f;   // Moscow
 
             sim_primed = true;
         }
@@ -571,13 +571,14 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
     {
         super.onCreate(savedInstanceState);
 
-        // Add the new task to the Timer with some update interval
+        // Timer task for EFIS display updates
         final int FPS = 25; // 40;
         TimerTask updateStratux = new UpdateEFISTask();
         timerEfis.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
 
+        // Timer task for DEM updates
         TimerTask updateDem = new UpdateDemTask();
-        timerDem.scheduleAtFixedRate(updateDem, 10*1000, 30*1000);  // delay 10 sec then every 20 sec
+        timerDem.scheduleAtFixedRate(updateDem, 10*1000, 20*1000);  // delay 10 sec then every 20 sec
     }
 }
 
