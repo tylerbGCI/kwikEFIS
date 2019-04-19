@@ -685,12 +685,15 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                     ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
 
                 mGLView.setBannerMsg(true, "LOADING TERRAIN");
-                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                int rv = mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
                 mGpx.loadDatabase(gps_lat, gps_lon);
 
                 mGLView.setBannerMsg(true, "LOADING AIRSPACE");
                 mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
+
+                if (rv == DemGTOPO30.DEM_SYN_NOT_INSTALLED) Toast.makeText(this, "DataPac (player.efis.data." + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
+                else if (rv == DemGTOPO30.DEM_TERRAIN_ERROR) Toast.makeText(this, "Terrain file error: " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + "/" /*+ DemFilename*/, Toast.LENGTH_LONG).show();
             }
         }
     }
