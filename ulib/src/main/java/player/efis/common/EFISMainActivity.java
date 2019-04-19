@@ -175,9 +175,21 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         //wifiConfig.preSharedKey = String.format("\"%s\"", key); // not used for Stratux
         wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
 
+
         // WifiManager
         wifiManager = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         int netId = wifiManager.addNetwork(wifiConfig);
+
+        //
+        // https://stackoverflow.com/questions/8818290/how-do-i-connect-to-a-specific-wi-fi-network-in-android-programmatically
+        // Force connection to stratux wifi
+        //
+        WifiInfo wifi_inf = wifiManager.getConnectionInfo();
+        // important!
+        wifiManager.disableNetwork(wifi_inf.getNetworkId());
+        wifiManager.enableNetwork(netId, true);
+
+
         wifiManager.disconnect();
         wifiManager.enableNetwork(netId, true);
         boolean rv = wifiManager.reconnect();
