@@ -593,14 +593,12 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         int rv = super.handleStratux();
 
         if (rv == STRATUX_OK) {
-            mGLView.setBannerMsg(false, " ");
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
             mGLView.setServiceableAlt();
             mGLView.setServiceableMap();
             mGLView.setDisplayAirport(true);
-            mGLView.setBannerMsg(false, " ");
         }
         else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
@@ -668,6 +666,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     protected void updateDEM()
     {
+        mGLView.setBannerMsg(false, " "); // clear any banners
+
         //
         // Handle the DEM buffer.
         // Load new data to the buffer when the horizon gets close to the edge or
@@ -689,15 +689,15 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mGpx.loadDatabase(gps_lat, gps_lon);
 
                 mGLView.setBannerMsg(true, "LOADING AIRSPACE");
+
                 mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
 
-                if (rv == DemGTOPO30.DEM_SYN_NOT_INSTALLED) Toast.makeText(this, "DataPac (player.efis.data." + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
-                else if (rv == DemGTOPO30.DEM_TERRAIN_ERROR) Toast.makeText(this, "Terrain file error: " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + "/" /*+ DemFilename*/, Toast.LENGTH_LONG).show();
+                if (rv == DemGTOPO30.DEM_SYN_NOT_INSTALLED) mGLView.setBannerMsg(true, "DATAPAC " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + " MISSING");
+                //else if (rv == DemGTOPO30.DEM_TERRAIN_ERROR) Toast.makeText(this, "Terrain file error: " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + "/" /*+ DemFilename*/, Toast.LENGTH_LONG).show();
             }
         }
     }
-
 
 
     //-------------------------------------------------------------------------
@@ -734,12 +734,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             if (bStratuxActive) {
                 // We are set to SENSOR_DELAY_UI approx 60ms
                 // 5 x 60 will give 3 updates a second
-                if (ctr % 5 == 0)
+                //if (ctr % 5 == 0)
                   handleStratux();
             }
             else {
-                // Clear any banners that may be set
-                mGLView.setBannerMsg(false, " ");
                 handleAndroid();
             }
         }
