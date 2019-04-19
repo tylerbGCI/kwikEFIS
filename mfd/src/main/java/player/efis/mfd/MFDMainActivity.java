@@ -816,7 +816,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     protected void Simulate()
     {
-        int target_agl = 2000;
+        int target_agl = 3000; //ft
 
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
