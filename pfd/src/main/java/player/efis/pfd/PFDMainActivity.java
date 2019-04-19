@@ -267,17 +267,17 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         if (bStratuxActive) {
             if (mStratux == null) {
-                mStratux = new StratuxWiFiTask("pfd");
+                mStratux = new StratuxWiFiTask("kwik");
                 mStratux.execute();
             }
-
+            unregisterSensorManagerListeners();
         }
         else if (!bSimulatorActive) {
             gps_insky = 0;
             gps_infix = 0;
             locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+            registerSensorManagerListeners();
         }
-        registerSensorManagerListeners();
     }
 
     //
@@ -487,7 +487,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-
+/*
     // This must be implemented otherwise the older
     // systems does not get seem to get updates.
     @Override
@@ -495,7 +495,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         setGpsStatus();
     }
-
 
     @Override
     public void onProviderEnabled(String provider)
@@ -508,6 +507,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
     }
+	*/
     // end location abs ------------------------
 
 
@@ -752,10 +752,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Load new data into the buffer when the horizon gets close to the edge
         //
-        // Check every 1 minute
-        // 40 hz * 60 sec = 2400
-        //if (ctr % 2400 == 0) {
-        //if (ctr % 600 == 0) {
         {
             // See if we are close to the edge or
             // see if we are stuck on null island or even on the tile
@@ -827,7 +823,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         // Get the battery percentage
         //
         float batteryPct = getRemainingBattery();
-
 
 
         // for debug - set to true

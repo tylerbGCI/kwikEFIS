@@ -25,8 +25,10 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.SensorEventListener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.wifi.SupplicantState;
@@ -45,7 +47,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-abstract public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
+abstract public class EFISMainActivity extends Activity implements GpsStatus.Listener, SensorEventListener, LocationListener
 {
 
     protected MediaPlayer mpCautionTraffic;
@@ -116,6 +118,29 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
     protected long PrevStratuxTimeStamp;// = Long.MAX_VALUE;
 
 
+
+    // This must be implemented otherwise the older
+    // systems does not get seem to get updates.
+    @Override
+    public void onGpsStatusChanged(int state)
+    {
+        setGpsStatus();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider)
+    {
+        Toast.makeText(this, "Enabled new provider " + provider, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider)
+    {
+        Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
+    }
+
+
+
     protected void setGpsStatus()
     {
         gps_insky = 0;
@@ -181,8 +206,20 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
         }
     }
 
+
+    protected static void doSleep(int ms)
+    {
+        // Wait ms milliseconds
+        try {
+            Thread.sleep(ms);
+        }
+        catch (Exception e) {
+        }
+    }
+
+
     //
-    // Stratux handler - not used anymore
+    // Stratux handler
     //
     protected final int STRATUX_OK = 0;
     protected final int STRATUX_TASK = -1;
@@ -190,7 +227,6 @@ abstract public class EFISMainActivity extends Activity //implements Listener, S
     protected final int STRATUX_GPS = -3;
     protected final int STRATUX_WIFI = -4;
     protected final int STRATUX_SERVICE = -5;
-
 
     protected int handleStratux()
     {

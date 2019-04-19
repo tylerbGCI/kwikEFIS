@@ -284,17 +284,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         if (bStratuxActive) {
             if (mStratux == null) {
-                mStratux = new StratuxWiFiTask("pfd");
+                mStratux = new StratuxWiFiTask("kwik");
                 mStratux.execute();
             }
-
+            unregisterSensorManagerListeners();
         }
         else if (!bSimulatorActive) {
             gps_insky = 0;
             gps_infix = 0;
             locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+            registerSensorManagerListeners();
         }
-        registerSensorManagerListeners();
     }
 
     //
@@ -488,7 +488,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-
+/*
     // This must be implemented otherwise the older
     // systems does not get seem to get updates.
     @Override
@@ -496,7 +496,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         setGpsStatus();
     }
-
 
     @Override
     public void onProviderEnabled(String provider)
@@ -509,6 +508,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
     }
+	*/
     // end location abs ------------------------
 
 
@@ -600,13 +600,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAlt();
             mGLView.setServiceableMap();
             mGLView.setDisplayAirport(true);
-
             mGLView.setBannerMsg(false, " ");
-        }
-        else if (rv == STRATUX_GPS) {
-            // No GPS, the map is wholly reliant on GPS
-            mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX GPS");
         }
         else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
@@ -622,6 +616,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");
+        }
+        else if (rv == STRATUX_GPS) {
+            // No GPS, the map is wholly reliant on GPS
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX GPS");
         }
 
         return rv;
