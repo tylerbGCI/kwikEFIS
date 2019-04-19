@@ -207,12 +207,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-
         // Instantiate a new apts gpx/xml
         mGpx = new Gpx(this);
         mGpx.loadDatabase(gps_lat, gps_lon);
         mDemGTOPO30 = new DemGTOPO30(this);
-        //b2mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
         mAirspace = new OpenAir(this);
         //mAirspace.loadDatabase(gps_lat, gps_lon);
 
