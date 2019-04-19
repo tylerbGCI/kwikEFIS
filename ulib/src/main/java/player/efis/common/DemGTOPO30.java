@@ -366,11 +366,10 @@ public class DemGTOPO30
     }
 
     /*
-    error codes:
+    error return codes:
      0 : OK
     -1: //b2-  cause bug: Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
     -2: //b2-  cause bug: Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
-
      */
 
     public int loadDemBuffer(float lat, float lon)
