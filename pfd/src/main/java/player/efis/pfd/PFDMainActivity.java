@@ -193,17 +193,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-        // Instantiate a new apts gpx/xml
-        mGpx = new Gpx(this);
-        mGpx.loadDatabase(gps_lat, gps_lon);
-        mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-
-        // Wifi
-        connectWiFi("stratux");
-        mStratux = new StratuxWiFiTask("kwik");
-        mStratux.execute();
-
         createMediaPlayer();
         mGLView.setTheme(colorTheme);
 

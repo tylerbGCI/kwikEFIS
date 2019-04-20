@@ -570,6 +570,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
 
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -583,6 +584,18 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         // Timer task for DEM updates
         TimerTask updateDem = new UpdateDemTask();
         timerDem.scheduleAtFixedRate(updateDem, 10*1000, 20*1000);  // delay 10 sec then every 20 sec
+
+        // Wifi
+        connectWiFi("stratux");
+        mStratux = new StratuxWiFiTask("kwik");
+        mStratux.execute();
+
+        // Instantiate a new apts gpx/xml
+        mGpx = new Gpx(this);
+        mGpx.loadDatabase(gps_lat, gps_lon);
+        mDemGTOPO30 = new DemGTOPO30(this);
+        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+
     }
 }
 
