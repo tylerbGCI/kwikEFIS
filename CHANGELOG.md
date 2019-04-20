@@ -1,7 +1,7 @@
 Changelog
 =========
 
-REL_25 (2019-01-02)
+REL_25 (2019-04-22)
 ------------------
 * Make Stratux WiFi more robust 
 * Release EFIS v4.3
