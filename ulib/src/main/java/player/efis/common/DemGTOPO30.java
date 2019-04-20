@@ -20,7 +20,6 @@ package player.efis.common;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.widget.Toast;
 
 import java.io.*;
 
@@ -289,7 +288,7 @@ public class DemGTOPO30
     //-------------------------------------------------------------------------
     // use the lat lon to determine which region file is active
     //
-    public String getRegionDatabaseName(float lat, float lon)
+    public static String getRegionDatabaseName(float lat, float lon)
     {
         String sRegion = "null.null";
 
@@ -366,8 +365,17 @@ public class DemGTOPO30
         return false;
     }
 
+    /*
+    error return codes:
+     0 : OK
+    -1: //b2-  cause bug: Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
+    -2: //b2-  cause bug: Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
+     */
+    public final static int DEM_OK = 0;
+    public final static int DEM_SYN_NOT_INSTALLED = -1;
+    public final static int DEM_TERRAIN_ERROR = -2;
 
-    public void loadDemBuffer(float lat, float lon)
+    public int loadDemBuffer(float lat, float lon)
     {
         demDataValid = false;
         
@@ -381,12 +389,10 @@ public class DemGTOPO30
 
         // Check to see if player.efis.data.nnn.mmm (datapac) is installed
         if (isAppInstalledOrNot("player.efis.data." + region) == false) {
-            Toast.makeText(context, "DataPac (player.efis.data." + region + ") not installed.\nSynthetic vision not available",Toast.LENGTH_LONG).show();
-            return;
+            return DEM_SYN_NOT_INSTALLED;
         }
 
         if (isValidLocation(lat, lon)) {
-            Toast.makeText(context, "DEM terrain loading", Toast.LENGTH_SHORT).show();
             fillBuffer((short) 0);
 
             try {
@@ -448,7 +454,6 @@ public class DemGTOPO30
             }
             catch (PackageManager.NameNotFoundException e) {
                 // thrown by: context.createPackageContext
-                Toast.makeText(context, "Data pac file not found: " + region, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
@@ -457,10 +462,10 @@ public class DemGTOPO30
             }
             catch (IOException e) {
                 // thrown by: otherContext.getAssets().open
-                Toast.makeText(context, "Terrain file error: " + region + "/" + DemFilename, Toast.LENGTH_LONG).show();
                 demDataValid = false;
                 fillBuffer((short) 0);
                 e.printStackTrace();
+                return DEM_TERRAIN_ERROR;
             }
             //catch (Exception e) { }
         }
@@ -471,5 +476,7 @@ public class DemGTOPO30
             x0 = -9999;
             y0 = -9999;
         }
+        return 0;
     }
+
 }

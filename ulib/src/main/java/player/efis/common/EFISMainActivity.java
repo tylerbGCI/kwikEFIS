@@ -18,7 +18,6 @@
 package player.efis.common;
 
 import player.ulib.DigitalFilter;
-import player.ulib.UMath;
 import player.ulib.UTrig;
 import player.ulib.Unit;
 
@@ -26,8 +25,10 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.SensorEventListener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.wifi.SupplicantState;
@@ -46,7 +47,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class EFISMainActivity extends Activity //implements Listener, SensorEventListener, LocationListener
+abstract public class EFISMainActivity extends Activity implements GpsStatus.Listener, SensorEventListener, LocationListener
 {
 
     protected MediaPlayer mpCautionTraffic;
@@ -117,6 +118,29 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected long PrevStratuxTimeStamp;// = Long.MAX_VALUE;
 
 
+
+    // This must be implemented otherwise the older
+    // systems does not get seem to get updates.
+    @Override
+    public void onGpsStatusChanged(int state)
+    {
+        setGpsStatus();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider)
+    {
+        Toast.makeText(this, "Enabled new provider " + provider, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider)
+    {
+        Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
+    }
+
+
+
     protected void setGpsStatus()
     {
         gps_insky = 0;
@@ -146,44 +170,60 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     {
         // Connect to wifi
         Toast.makeText(this, "Stratux: Connecting ...", Toast.LENGTH_SHORT).show();
+
         WifiConfiguration wifiConfig = new WifiConfiguration();
         wifiConfig.SSID = String.format("\"%s\"", ssid);
         //wifiConfig.preSharedKey = String.format("\"%s\"", key); // not used for Stratux
-        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); // for open networks
 
         // WifiManager
         wifiManager = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(WIFI_SERVICE);
-        int netId = wifiManager.addNetwork(wifiConfig);
-        wifiManager.disconnect();
-        wifiManager.enableNetwork(netId, true);
-        boolean rv = wifiManager.reconnect();
+        WifiInfo wifi_inf = wifiManager.getConnectionInfo();
 
-        if (checkWiFiStatus(ssid)) {
-            Toast.makeText(this, "Stratux: Connected", Toast.LENGTH_SHORT).show();
-            return true;
+        //if (wifi_inf.getSSID().contains(ssid)) {
+        if (wifi_inf.getSSID().equals(String.format("\"%s\"", ssid))) {
+            int netId = wifiManager.addNetwork(wifiConfig);
         }
-        else
-            return false;
+        else {
+            wifiManager.disableNetwork(wifi_inf.getNetworkId());
+
+            int netId = wifiManager.addNetwork(wifiConfig);
+            wifiManager.disconnect();
+            wifiManager.enableNetwork(netId, true);
+            wifiManager.reconnect();
+        }
+        return (checkWiFiStatus(ssid));
     }
 
     protected boolean checkWiFiStatus(String ssid)
     {
+        boolean rv = false;
         try {
             WifiInfo info = wifiManager.getConnectionInfo();
             if ((info.getSupplicantState() == SupplicantState.COMPLETED)
                     && (info.getSSID().contains(ssid)))
-                return true;
+                rv =  true;
             else
-                return false;
+                rv =  false;
+        }
+        catch (Exception e) {}
+        return rv;
+    }
+
+
+    protected static void doSleep(int ms)
+    {
+        // Wait ms milliseconds
+        try {
+            Thread.sleep(ms);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
+
     //
-    // Stratux handler - not used anymore
+    // Stratux handler
     //
     protected final int STRATUX_OK = 0;
     protected final int STRATUX_TASK = -1;
@@ -191,7 +231,6 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected final int STRATUX_GPS = -3;
     protected final int STRATUX_WIFI = -4;
     protected final int STRATUX_SERVICE = -5;
-
 
     protected int handleStratux()
     {
@@ -243,6 +282,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         }
         else {
             if (ctr % 100 == 0 ) {
+            //if (true) {
                 hasGps = false;
                 hasSpeed = false;
                 connectWiFi("stratux");  // force the connection to stratux
@@ -437,8 +477,8 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f;  // Ludicrous Speed
-        //deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
-        deltaT = 0.000000224f;  // Super Speed2
+        deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
+        //deltaT = 0.000000224f;  // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
 
         // YCMH 090 from Perth
@@ -450,7 +490,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
             _gps_lat = -33.98f; _gps_lon = 18.82f; // Stellenbosh, South Africa
 
             //_gps_lat = +50f;  _gps_lon = -124f; // Vancouver
-            //_gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City
+            _gps_lat =  40.7f;   _gps_lon = -111.82f;  // Salt Lake City (KSLC) > KHVE
             //_gps_lat =  48.14f;  _gps_lon = 11.57f;    // Munich
             //_gps_lat =  47.26f;  _gps_lon = 11.34f;    //Innsbruck
             //_gps_lat =  55.67f;  _gps_lon = 12.57f;    // Copenhagen
@@ -459,7 +499,7 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
             //_gps_lat = -34.8f;  _gps_lon =  -56.0f;    // Motevideo
             //_gps_lat = -10.8f;  _gps_lon =  -65.35f;   // Emilio Beltran
             //_gps_lat = 00.26f;  _gps_lon = 00.34f;   // close to null island
-            //_gps_lat = 55.86f; _gps_lon = 37.6f;   // Moscow
+            //_gps_lat = 55.86f;  _gps_lon = 37.6f;   // Moscow
 
             sim_primed = true;
         }
@@ -498,26 +538,64 @@ public class EFISMainActivity extends Activity //implements Listener, SensorEven
     protected float slipValue;
     protected int ctr = 0;
 
+
+    // this must be overridden in the child classes
+    abstract protected void updateEFIS();
+    abstract protected void updateDEM();
+
     // Create a Timer
-    Timer timer = new Timer();
+    Timer timerEfis = new Timer();
+
     //Then you extend the timer task
-    class UpdateStartuxTask extends TimerTask
+    class UpdateEFISTask extends TimerTask
     {
         public void run() {
-            //calculate the new position of myBall
-            //handleStratux();
+            try {
+                updateEFIS();
+            }
+            catch (Exception e) {}
         }
     }
-    //And then add the new task to the Timer with some update interval
+
+    Timer timerDem = new Timer();
+    class UpdateDemTask extends TimerTask
+    {
+        public void run() {
+            try {
+                updateDEM();
+            }
+            catch (Exception e) {}
+        }
+    }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        final int FPS = 40;
-        TimerTask updateStartux = new UpdateStartuxTask();
-        timer.scheduleAtFixedRate(updateStartux, 0, 1000 / FPS);
+        // Timer task for EFIS display updates
+        final int FPS = 25; // 40;
+        TimerTask updateStratux = new UpdateEFISTask();
+        timerEfis.scheduleAtFixedRate(updateStratux, 0, 1000 / FPS);
+
+        // Timer task for DEM updates
+        TimerTask updateDem = new UpdateDemTask();
+        timerDem.scheduleAtFixedRate(updateDem, 10*1000, 20*1000);  // delay 10 sec then every 20 sec
+
+        // Wifi
+        connectWiFi("stratux");
+        mStratux = new StratuxWiFiTask("kwik");
+        mStratux.execute();
+
+        // Instantiate a new apts gpx/xml
+        mGpx = new Gpx(this);
+        mGpx.loadDatabase(gps_lat, gps_lon);
+        mDemGTOPO30 = new DemGTOPO30(this);
+        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+
     }
 }
 

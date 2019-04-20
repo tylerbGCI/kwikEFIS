@@ -207,23 +207,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
-        // Instantiate a new apts gpx/xml
-        mGpx = new Gpx(this);
-        mDemGTOPO30 = new DemGTOPO30(this);
-        createMediaPlayer();
         mAirspace = new OpenAir(this);
-        mGLView.setTheme(colorTheme);
+        //mAirspace.loadDatabase(gps_lat, gps_lon);
 
-        // Wifi
-        connectWiFi("stratux");
-        mStratux = new StratuxWiFiTask("mfd");
-        mStratux.execute();
+        createMediaPlayer();
+        mGLView.setTheme(colorTheme);
 
         // Overall the device is now ready.
         // The individual elements will be enabled or disabled by the location provided
         // based on availability
         mGLView.setServiceableDevice();
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -279,17 +273,17 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         if (bStratuxActive) {
             if (mStratux == null) {
-                mStratux = new StratuxWiFiTask("pfd");
+                mStratux = new StratuxWiFiTask("kwik");
                 mStratux.execute();
             }
-
+            unregisterSensorManagerListeners();
         }
         else if (!bSimulatorActive) {
             gps_insky = 0;
             gps_infix = 0;
             locationManager.requestLocationUpdates(provider, GPS_UPDATE_PERIOD, GPS_UPDATE_DISTANCE, this);  // 400ms or 1m
+            registerSensorManagerListeners();
         }
-        registerSensorManagerListeners();
     }
 
     //
@@ -337,7 +331,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
                 break;
         }
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -383,7 +377,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
         mGLView.setServiceableMap();
 
-        updateEFIS();
+        //updateEFIS();
     }
 
 
@@ -483,7 +477,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-
+/*
     // This must be implemented otherwise the older
     // systems does not get seem to get updates.
     @Override
@@ -491,7 +485,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         setGpsStatus();
     }
-
 
     @Override
     public void onProviderEnabled(String provider)
@@ -504,6 +497,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
     }
+	*/
     // end location abs ------------------------
 
 
@@ -588,20 +582,13 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         int rv = super.handleStratux();
 
         if (rv == STRATUX_OK) {
-            mGLView.setBannerMsg(false, " ");
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
             mGLView.setServiceableAlt();
             mGLView.setServiceableMap();
             mGLView.setDisplayAirport(true);
-
             mGLView.setBannerMsg(false, " ");
-        }
-        else if (rv == STRATUX_GPS) {
-            // No GPS, the map is wholly reliant on GPS
-            mGLView.setUnServiceableDevice();
-            mGLView.setBannerMsg(true, "STRATUX GPS");
         }
         else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
@@ -617,6 +604,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No Wifi
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX WIFI");
+        }
+        else if (rv == STRATUX_GPS) {
+            // No GPS, the map is wholly reliant on GPS
+            mGLView.setUnServiceableDevice();
+            mGLView.setBannerMsg(true, "STRATUX GPS");
         }
 
         return rv;
@@ -662,12 +654,47 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
+    protected void updateDEM()
+    {
+        mGLView.setBannerMsg(false, " "); // clear any banners
+
+        //
+        // Handle the DEM buffer.
+        // Load new data to the buffer when the horizon gets close to the edge or
+        // if we have gone off the current tile.
+        //
+        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
+
+        //
+        // Load new data into the buffer when the horizon gets close to the edge
+        //
+        {
+            // See if we are close to the edge or
+            // see if we are stuck on null island or even on the tile
+            if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
+                    ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
+
+                mGLView.setBannerMsg(true, "LOADING TERRAIN");
+                int rv = mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
+                mGpx.loadDatabase(gps_lat, gps_lon);
+
+                mGLView.setBannerMsg(true, "LOADING AIRSPACE");
+
+                mAirspace.loadDatabase(gps_lat, gps_lon);
+                mGLView.setBannerMsg(false, " ");
+
+                if (rv == DemGTOPO30.DEM_SYN_NOT_INSTALLED) mGLView.setBannerMsg(true, "DATAPAC " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + " MISSING");
+                //else if (rv == DemGTOPO30.DEM_TERRAIN_ERROR) Toast.makeText(this, "Terrain file error: " + DemGTOPO30.getRegionDatabaseName(gps_lat, gps_lon) + "/" /*+ DemFilename*/, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     //-------------------------------------------------------------------------
     // Effectively the main execution loop. updateEFIS will get called when
     // something changes, eg a sensor has new data or new gps fix becomes available.
     //
-    private void updateEFIS()
+    protected void updateEFIS()
     {
         ctr++;
 
@@ -697,12 +724,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             if (bStratuxActive) {
                 // We are set to SENSOR_DELAY_UI approx 60ms
                 // 5 x 60 will give 3 updates a second
-                if (ctr % 5 == 0)
+                //if (ctr % 5 == 0)
                   handleStratux();
             }
             else {
-                // Clear any banners that may be set
-                mGLView.setBannerMsg(false, " ");
                 handleAndroid();
             }
         }
@@ -716,36 +741,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         float batteryPct = getRemainingBattery();
 
-        //
-        // Handle the DEM buffer.
-        // Load new data to the buffer when the horizon gets close to the edge or
-        // if we have gone off the current tile.
-        //
-        float dem_dme = UNavigation.calcDme(mDemGTOPO30.lat0, mDemGTOPO30.lon0, gps_lat, gps_lon);
-
-        //
-        // Load new data into the buffer when the horizon gets close to the edge
-        //
-        // Wait for 100 cycles to allow at least some
-        // prior drawing to take place on startup
-        //if (ctr++ > 100) {
-        if (ctr % 100 == 0) {
-            // See if we are close to the edge or
-            // see if we are stuck on null island or even on the tile
-            if ((dem_dme + DemGTOPO30.DEM_HORIZON > DemGTOPO30.BUFX / 4) ||
-                    ((dem_dme != 0) && (mDemGTOPO30.isOnTile(gps_lat, gps_lon) == false))) {
-
-                mGLView.setBannerMsg(true, "LOADING TERRAIN");
-                mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-                mGpx.loadDatabase(gps_lat, gps_lon);
-
-                mGLView.setBannerMsg(true, "LOADING AIRSPACE");
-                mAirspace.loadDatabase(gps_lat, gps_lon);
-                mGLView.setBannerMsg(false, " ");
-            }
-            //ctr = 0;
-        }
-
 
         // for debug - set to true
         if (false) {
@@ -756,7 +751,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             gps_course = (float) Math.toRadians(1); // debug
         }
         // end debug
-
 
         //
         // Pass the values to mGLView for updating
@@ -812,7 +806,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
 
     protected void Simulate()
     {
-        int target_agl = 2000;
+        int target_agl = 3000; //ft
 
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
