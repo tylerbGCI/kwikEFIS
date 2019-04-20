@@ -598,6 +598,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAlt();
             mGLView.setServiceableMap();
             mGLView.setDisplayAirport(true);
+            mGLView.setBannerMsg(false, " ");
         }
         else if (rv == STRATUX_SERVICE) {
             // no loop running, no hope of restart -- it is hopeless
