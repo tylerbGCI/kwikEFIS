@@ -1,6 +1,12 @@
 Changelog
 =========
 
+REL_25 (2019-01-02)
+------------------
+* Make Stratux WiFi more robust 
+* Release EFIS v4.3
+* Release DMAP v2.4
+
 REL_24 (2019-01-02)
 ------------------
 * Clear issues: 29
