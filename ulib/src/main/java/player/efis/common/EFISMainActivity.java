@@ -170,52 +170,44 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
     {
         // Connect to wifi
         Toast.makeText(this, "Stratux: Connecting ...", Toast.LENGTH_SHORT).show();
+
         WifiConfiguration wifiConfig = new WifiConfiguration();
         wifiConfig.SSID = String.format("\"%s\"", ssid);
         //wifiConfig.preSharedKey = String.format("\"%s\"", key); // not used for Stratux
-        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); // for open networks
 
         // WifiManager
         wifiManager = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(WIFI_SERVICE);
-        int netId = wifiManager.addNetwork(wifiConfig);
-
-        //
-        // https://stackoverflow.com/questions/8818290/how-do-i-connect-to-a-specific-wi-fi-network-in-android-programmatically
-        // Force connection to stratux wifi
-        //
         WifiInfo wifi_inf = wifiManager.getConnectionInfo();
-        // important!
-        wifiManager.disableNetwork(wifi_inf.getNetworkId());
-        wifiManager.enableNetwork(netId, true);
 
-
-        wifiManager.disconnect();
-        wifiManager.enableNetwork(netId, true);
-        boolean rv = wifiManager.reconnect();
-
-        if (checkWiFiStatus(ssid)) {
-            Toast.makeText(this, "Stratux: Connected", Toast.LENGTH_SHORT).show();
-            return true;
+        //if (wifi_inf.getSSID().contains(ssid)) {
+        if (wifi_inf.getSSID().equals(String.format("\"%s\"", ssid))) {
+            int netId = wifiManager.addNetwork(wifiConfig);
         }
-        else
-            return false;
+        else {
+            wifiManager.disableNetwork(wifi_inf.getNetworkId());
+
+            int netId = wifiManager.addNetwork(wifiConfig);
+            wifiManager.disconnect();
+            wifiManager.enableNetwork(netId, true);
+            wifiManager.reconnect();
+        }
+        return (checkWiFiStatus(ssid));
     }
 
     protected boolean checkWiFiStatus(String ssid)
     {
+        boolean rv = false;
         try {
             WifiInfo info = wifiManager.getConnectionInfo();
             if ((info.getSupplicantState() == SupplicantState.COMPLETED)
                     && (info.getSSID().contains(ssid)))
-                return true;
+                rv =  true;
             else
-                return false;
+                rv =  false;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        catch (Exception e) {}
+        return rv;
     }
 
 
