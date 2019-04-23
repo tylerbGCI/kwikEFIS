@@ -470,14 +470,14 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
 
         time.setToNow();
         sim_ms = time.toMillis(true);
-        float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 3600f / 1.85f / 60f;  // in sec and scaled from meters to nm to degree
+        float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 1000f / 1.85f / 60f;  // in sec (fraction) and scaled from meters to nm to degree
 
         /*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
         //deltaT = 0.0000124f;  // Ludicrous Speed
-        deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
+          deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
         //deltaT = 0.000000224f;  // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
 
@@ -516,7 +516,8 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         // */
 
         _sim_ms = sim_ms;
-        if ((deltaT > 0) && (deltaT < 0.0000125)) {
+        //if ((deltaT > 0) && (deltaT < 0.0000125)) {
+        if (deltaT > 0) {
             gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
             gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
 
