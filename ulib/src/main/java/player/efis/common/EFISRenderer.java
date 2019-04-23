@@ -1968,8 +1968,8 @@ abstract public class EFISRenderer
     {
         float radius = pixM / 60;
         float z = zfloat;
-        String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + "nm";
-        String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + "FL"; // convert to flight level
+        String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + " nm";
+        String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + " FL"; // convert to flight level
 
         if (dme < 5) mPolyLine.SetWidth(radius/2);
         else mPolyLine.SetWidth(radius/4);
@@ -1997,7 +1997,10 @@ abstract public class EFISRenderer
 
         // Text at target
         glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
-        glText.setScale(2.0f);
+        if (dme < 5) glText.setScale(2.5f);
+        else if (dme < 10) glText.setScale(2.0f);
+        else glText.setScale(0); //1.5
+
         glText.drawCY(callsign,    x1, y1 - glText.getCharHeight());
         glText.drawCY(tgtAltLabel, x1, y1 - 1.8f*glText.getCharHeight());
         glText.drawCY(tgtDmeLabel, x1, y1 - 2.6f*glText.getCharHeight());
