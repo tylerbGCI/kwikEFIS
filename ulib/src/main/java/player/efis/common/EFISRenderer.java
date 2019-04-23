@@ -1962,6 +1962,8 @@ abstract public class EFISRenderer
     }
 
 
+    final float LEADER_TIME = 1f/60f; // n min / 60
+
     private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, float alt, int brg, int spd, float dme)
     {
         float radius = pixM / 60;
@@ -2009,8 +2011,8 @@ abstract public class EFISRenderer
 
         mLine.SetColor(theta * foreShadeR, theta * foreShadeG, theta * foreShadeB, 1); // white
 
-        float x2 = x1 + mMapZoom * (spd/50 * UTrig.icos(90-(int)(brg - DIValue)));
-        float y2 = y1 + mMapZoom * (spd/50 * UTrig.isin(90-(int)(brg - DIValue)));
+        float x2 = x1 + mMapZoom * (spd * LEADER_TIME * UTrig.icos(90-(int)(brg - DIValue)));
+        float y2 = y1 + mMapZoom * (spd * LEADER_TIME * UTrig.isin(90-(int)(brg - DIValue)));
         mLine.SetVerts(
                 x1, y1, z,
                 x2, y2, z
@@ -3217,6 +3219,35 @@ abstract public class EFISRenderer
             wid = 6;
             mLine.SetColor(backShadeR, backShadeG, backShadeB, 1);
         }
+
+        //
+        // leader line  - same as target leaders (1 and 2 minute markers)
+        // IASValue
+        float radius = pixM / 60;
+        float x2 = mMapZoom * (IASValue * LEADER_TIME);
+
+        mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
+        mLine.SetWidth(radius/2);
+        mLine.SetVerts(
+                0, 0, z,
+                0, x2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.025f * pixM2, x2, z,
+                +0.025f * pixM2, x2, z
+        );
+        mLine.draw(matrix);
+
+        /*
+        1 minute marker - Leave out for now
+        mLine.SetVerts(
+                -0.025f * pixM2, x2/2, z,
+                +0.025f * pixM2, x2/2, z
+        );
+        mLine.draw(matrix);*/
+
+
     }
 
     //-------------------------------------------------------------------------
@@ -3271,7 +3302,8 @@ abstract public class EFISRenderer
         glText.draw(t, ytip * pixW2, ypos * pixH2);            // Draw  String
         glText.end();
 
-        // leader line
+        // leader line  - same as scale line
+        /*
         mLine.SetVerts(
                 0, 0, z,
                 0, x1, z
@@ -3282,6 +3314,7 @@ abstract public class EFISRenderer
                 +0.025f * pixM2, x1, z
         );
         mLine.draw(matrix);
+        */
     }
 
     //-------------------------------------------------------------------------
