@@ -208,6 +208,14 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void onStop()
     {
         savePersistentSettings();
+
+        // Clear simulator checkbox
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("simulatorActive", false);
+        // Commit the edits
+        editor.commit();
+
         super.onStop();
     }
 
@@ -452,7 +460,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         editor.putFloat("GpsLon", gps_lon);
         editor.putFloat("mMapZoom", mGLView.mRenderer.mMapZoom);
         editor.putInt("colorTheme", colorTheme);
-
         // Commit the edits
         editor.commit();
     }
