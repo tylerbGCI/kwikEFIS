@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.SensorEventListener;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
@@ -39,6 +40,7 @@ import android.os.BatteryManager;
 
 // sensor imports
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.widget.Toast;
 
@@ -139,6 +141,23 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         Toast.makeText(this, "Disabled provider " + provider, Toast.LENGTH_SHORT).show();
     }
 
+
+    abstract protected void savePersistentSettings();
+
+    @Override
+    protected void onDestroy()
+    {
+        savePersistentSettings();
+
+        // Clear simulator checkbox
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("simulatorActive", false);
+        // Commit the edits
+        editor.commit();
+
+        super.onDestroy();
+    }
 
 
     protected void setGpsStatus()
@@ -476,7 +495,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
-        //deltaT = 0.0000124f;  // Ludicrous Speed
+        //deltaT = 0.0000124f;  // Ludicrous Speed ~ mach 15
           deltaT = 0.00000124f; // Warp Speed ~ 490m/s - mach 1.5
         //deltaT = 0.000000224f;  // Super Speed2
         //deltaT = 0; // freeze time, ie force stationary
@@ -516,8 +535,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         // */
 
         _sim_ms = sim_ms;
-        //if ((deltaT > 0) && (deltaT < 0.0000125)) {
-        if (deltaT > 0) {
+        if ((deltaT > 0) && (deltaT < 0.0000125)) {
             gps_lon = _gps_lon += deltaT * gps_speed * Math.sin(gps_course);
             gps_lat = _gps_lat += deltaT * gps_speed * Math.cos(gps_course);
 
@@ -611,3 +629,13 @@ new AlertDialog.Builder(this)
 */
 
 
+/*
+
+        // Clear simulator checkbox
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("simulatorActive", false);
+        // Commit the edits
+        editor.commit();
+
+*/

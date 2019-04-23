@@ -208,14 +208,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void onStop()
     {
         savePersistentSettings();
-
-        // Clear simulator checkbox
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("simulatorActive", false);
-        // Commit the edits
-        editor.commit();
-
         super.onStop();
     }
 
@@ -442,7 +434,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-    private void savePersistentSettings()
+    protected void savePersistentSettings()
     {
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context

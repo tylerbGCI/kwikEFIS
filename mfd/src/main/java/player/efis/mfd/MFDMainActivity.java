@@ -220,19 +220,10 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         //updateEFIS();
     }
 
-
     @Override
     protected void onStop()
     {
         savePersistentSettings();
-
-        // Clear simulator checkbox
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("simulatorActive", false);
-        // Commit the edits
-        editor.commit();
-
         super.onStop();
     }
 
@@ -384,7 +375,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
 
         mGLView.setServiceableMap();
-
         //updateEFIS();
     }
 
@@ -437,7 +427,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     }
 
 
-    private void savePersistentSettings()
+    protected void savePersistentSettings()
     {
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
@@ -537,15 +527,19 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
+        boolean debug = settings.getBoolean("simulatorActive", false);
+
         // If we changed to Demo mode, use the current GPS as seed location
-        if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
+        //if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
+        if (bSimulatorActive != debug) {
             if (gps_lon != 0 && gps_lat != 0) {
                 _gps_lon = gps_lon;
                 _gps_lat = gps_lat;
             }
         }
 
-        bSimulatorActive = settings.getBoolean("simulatorActive", false);
+        bSimulatorActive = debug;
+        //bSimulatorActive = settings.getBoolean("simulatorActive", false);
         bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
 
