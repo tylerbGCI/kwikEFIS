@@ -1963,9 +1963,10 @@ abstract public class EFISRenderer
 
 
 
+    final float LEADER_TIME = 1f/60f;  // n min / 60. Ie set to 1 minute.
+
     private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, float alt, int brg, int spd, float dme)
     {
-        final float LEADER_TIME = 1f/60f;  // n min / 60. Ie set to 1 minute.
         float radius = pixM / 60f;
         float z = zfloat;
         String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + " nm";
@@ -2032,32 +2033,6 @@ abstract public class EFISRenderer
         glText.drawCY(callsign, x2, y2 - 0*glText.getCharHeight());
         glText.drawCY(alt, x2, y2 - 0.8f*glText.getCharHeight());
         glText.end();*/
-
-        //
-        // Own ship track/speed line  - same as target leaders (1 and 2 minute markers)
-        //
-        x2 = mMapZoom * (IASValue * LEADER_TIME);
-
-        mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
-        mLine.SetWidth(radius/2);
-        mLine.SetVerts(
-                0, 0, z,
-                0, x2, z
-        );
-        mLine.draw(matrix);
-        mLine.SetVerts(
-                -0.025f * pixM2, x2, z,
-                +0.025f * pixM2, x2, z
-        );
-        mLine.draw(matrix);
-
-        /*
-        halfway  minute marker - Leave out for now
-        mLine.SetVerts(
-                -0.025f * pixM2, x2/2, z,
-                +0.025f * pixM2, x2/2, z
-        );
-        mLine.draw(matrix);*/
     }
 
 
@@ -3251,6 +3226,35 @@ abstract public class EFISRenderer
             wid = 6;
             mLine.SetColor(backShadeR, backShadeG, backShadeB, 1);
         }
+
+        //
+        // Own Ship track/speed line  - same as target leaders (1 and 2 minute markers)
+        //
+        float x2 = mMapZoom * (IASValue * LEADER_TIME);
+        float radius = pixM / 60f;
+
+        mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
+        mLine.SetWidth(radius/2);
+        mLine.SetVerts(
+                0, 0, z,
+                0, x2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.025f * pixM2, x2, z,
+                +0.025f * pixM2, x2, z
+        );
+        mLine.draw(matrix);
+
+        /*
+        halfway  minute marker - Leave out for now
+        mLine.SetVerts(
+                -0.025f * pixM2, x2/2, z,
+                +0.025f * pixM2, x2/2, z
+        );
+        mLine.draw(matrix);*/
+
+
     }
 
     //-------------------------------------------------------------------------
