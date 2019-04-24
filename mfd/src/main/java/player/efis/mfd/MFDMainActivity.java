@@ -208,7 +208,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
         mAirspace = new OpenAir(this);
-        //mAirspace.loadDatabase(gps_lat, gps_lon);
+        mAirspace.loadDatabase(gps_lat, gps_lon);
 
         createMediaPlayer();
         mGLView.setTheme(colorTheme);
@@ -217,7 +217,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         // The individual elements will be enabled or disabled by the location provided
         // based on availability
         mGLView.setServiceableDevice();
-        //updateEFIS();
     }
 
     @Override
@@ -411,7 +410,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     {
         mpCautionTerrian.stop();
         mpCautionTerrian.release();
-
+		
         mpCautionTraffic.stop();
         mpCautionTraffic.release();
     }
@@ -508,8 +507,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setPrefs(prefs_t.REMOTE_INDICATOR, settings.getBoolean("displayRMI", true));
         mGLView.setPrefs(prefs_t.FLIGHT_DIRECTOR, settings.getBoolean("displayFlightDirector", false));
         // Only used in PFD
-        // mGLView.setPrefs(prefs_t.TERRAIN, settings.getBoolean("displayAHColor", true));
-        // mGLView.setPrefs(prefs_t.HITS, settings.getBoolean("displayHITS", false));
         // Only used in MFD
         mGLView.setPrefs(prefs_t.AIRSPACE, settings.getBoolean("displayAirspace", true));
         AirspaceClass.A = settings.getBoolean("classA", true);
@@ -527,19 +524,15 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         bLockedMode = settings.getBoolean("lockedMode", false);
         sensorBias = Float.valueOf(settings.getString("sensorBias", "0.15f"));
 
-        boolean debug = settings.getBoolean("simulatorActive", false);
-
         // If we changed to Demo mode, use the current GPS as seed location
-        //if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
-        if (bSimulatorActive != debug) {
+        if (bSimulatorActive != settings.getBoolean("simulatorActive", false)) {
             if (gps_lon != 0 && gps_lat != 0) {
                 _gps_lon = gps_lon;
                 _gps_lat = gps_lat;
             }
         }
 
-        bSimulatorActive = debug;
-        //bSimulatorActive = settings.getBoolean("simulatorActive", false);
+        bSimulatorActive = settings.getBoolean("simulatorActive", false);
         bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
 
@@ -620,8 +613,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     //
     protected boolean handleAndroid()
     {
-        float[] gyro = new float[3]; // gyroscope vector
-        float[] accel = new float[3]; // accelerometer vector
+        float[] gyro = new float[3]; // gyroscope vector, rad/sec
+        float[] accel = new float[3]; // accelerometer vector, m/s^2
 
         //
         // Read the Sensors
@@ -725,7 +718,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             if (bStratuxActive) {
                 // We are set to SENSOR_DELAY_UI approx 60ms
                 // 5 x 60 will give 3 updates a second
-                //if (ctr % 5 == 0)
+                // if (ctr % 5 == 0)
                   handleStratux();
             }
             else {
@@ -780,7 +773,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             try {
                 // We have new traffic
                 // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
-                if (mStratux != null ) {
+                if (mStratux != null) {
                     if (mStratux.proximityAlert) {
                         if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();
                         mStratux.proximityAlert = false;

@@ -1962,11 +1962,11 @@ abstract public class EFISRenderer
     }
 
 
-    final float LEADER_TIME = 1f/60f; // n min / 60
 
     private void renderTargetSymbol(float[] matrix, float x1, float y1, String callsign, float alt, int brg, int spd, float dme)
     {
-        float radius = pixM / 60;
+        final float LEADER_TIME = 1f/60f;  // n min / 60. Ie set to 1 minute.
+        float radius = pixM / 60f;
         float z = zfloat;
         String tgtDmeLabel = Float.toString(UMath.round(dme, 1)) + " nm";
         String tgtAltLabel = Integer.toString(Math.round(alt / 100)) + " FL"; // convert to flight level
@@ -1997,9 +1997,12 @@ abstract public class EFISRenderer
 
         // Text at target
         glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
+
+        // Scale text to distance
         if (dme < 5) glText.setScale(2.5f);
         else if (dme < 10) glText.setScale(2.0f);
-        else glText.setScale(0); //1.5
+        else if (dme < 15) glText.setScale(1f);
+        else glText.setScale(0); //1.5, 0 = invisible
 
         glText.drawCY(callsign,    x1, y1 - glText.getCharHeight());
         glText.drawCY(tgtAltLabel, x1, y1 - 1.8f*glText.getCharHeight());
@@ -2029,6 +2032,32 @@ abstract public class EFISRenderer
         glText.drawCY(callsign, x2, y2 - 0*glText.getCharHeight());
         glText.drawCY(alt, x2, y2 - 0.8f*glText.getCharHeight());
         glText.end();*/
+
+        //
+        // Own ship track/speed line  - same as target leaders (1 and 2 minute markers)
+        //
+        x2 = mMapZoom * (IASValue * LEADER_TIME);
+
+        mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
+        mLine.SetWidth(radius/2);
+        mLine.SetVerts(
+                0, 0, z,
+                0, x2, z
+        );
+        mLine.draw(matrix);
+        mLine.SetVerts(
+                -0.025f * pixM2, x2, z,
+                +0.025f * pixM2, x2, z
+        );
+        mLine.draw(matrix);
+
+        /*
+        halfway  minute marker - Leave out for now
+        mLine.SetVerts(
+                -0.025f * pixM2, x2/2, z,
+                +0.025f * pixM2, x2/2, z
+        );
+        mLine.draw(matrix);*/
     }
 
 
@@ -3222,35 +3251,6 @@ abstract public class EFISRenderer
             wid = 6;
             mLine.SetColor(backShadeR, backShadeG, backShadeB, 1);
         }
-
-        //
-        // leader line  - same as target leaders (1 and 2 minute markers)
-        // IASValue
-        float radius = pixM / 60;
-        float x2 = mMapZoom * (IASValue * LEADER_TIME);
-
-        mLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1);
-        mLine.SetWidth(radius/2);
-        mLine.SetVerts(
-                0, 0, z,
-                0, x2, z
-        );
-        mLine.draw(matrix);
-        mLine.SetVerts(
-                -0.025f * pixM2, x2, z,
-                +0.025f * pixM2, x2, z
-        );
-        mLine.draw(matrix);
-
-        /*
-        1 minute marker - Leave out for now
-        mLine.SetVerts(
-                -0.025f * pixM2, x2/2, z,
-                +0.025f * pixM2, x2/2, z
-        );
-        mLine.draw(matrix);*/
-
-
     }
 
     //-------------------------------------------------------------------------
