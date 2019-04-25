@@ -1,7 +1,7 @@
 #!/bin/bash
 
-pskill java
-pskill adb
+#pskill java
+#pskill adb
 
 # ./gradlew clean
 rm ./apk/kwik-efis.apk
@@ -23,7 +23,10 @@ cp ./data.sah.jap/build/outputs/apk/data.sah.jap-debug.apk ./apk/kwik-efis-datap
 cp ./data.pan.arg/build/outputs/apk/data.pan.arg-debug.apk ./apk/kwik-efis-datapac-pan.arg.apk
 cp ./CHANGELOG.md ./apk/CHANGELOG.md
 
+exit
+
 cd ./apk
+
 
 if [ ! -z $1 ] && [ $1 == '-w' ] 
 then
