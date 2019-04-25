@@ -33,27 +33,32 @@
     </string-array>
     
     <string-array name="ac_list_names">
-        <item>AZTEC - Piper Aztec</item>
-        <item>CRICRI - Colomban CriCri</item>
-        <item>CRUZ - Piper Cruiser</item>
-        <item>J160 - Jabiru</item>
-        <item>LGEZ - Rutan Long EZ</item>
-        <item>M20J - Mooney M20J</item>
-        <item>PA28 - Piper Cherokee</item>
-        <item>RV8 - Vans RV-6, 7, 8</item>
-        <item>W10 - Wittman Tailwind</item>
-        <item>HELI - Generic Helicopter</item>
-        <item>JET - Generic Bizjet</item>
-        <item>ULTRA - Generic Ultralight</item>
+        <item>Colomban CriCri</item>
+        <item>Jabiru J160</item>
+        <item>Mooney M20J</item>
+        <item>Piper Aztec</item>
+        <item>Piper Warrior</item>
+        <item>Piper Cruiser</item>
+        <item>Rutan Long EZ</item>
+        <item>Vans RV-6/7/8</item>
+        <item>Wittman Tailwind</item>
+        <item>Generic Helicopter</item>
+        <item>Generic Bizjet</item>
+        <item>Generic Ultralight</item>
     </string-array>
+<!--
+// Note: This must correspond with the values defined as 
+// enum AircraftModel
+// /kwikEFIS/ulib/src/main/java/player/efis/common/AircraftData.java 
+-->
     <string-array name="ac_list_values">
-        <item>AZTEC</item>
         <item>CRICRI</item>
-        <item>CRUZ</item>
         <item>J160</item>
-        <item>LGEZ</item>
         <item>M20J</item>
+        <item>AZTEC</item>
         <item>PA28</item>
+        <item>CRUZ</item>
+        <item>LGEZ</item>
         <item>RV8</item>
         <item>W10</item>
         <item>HELI</item>

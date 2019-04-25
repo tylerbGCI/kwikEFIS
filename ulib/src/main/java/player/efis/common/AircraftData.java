@@ -16,23 +16,27 @@
 
 package player.efis.common;
 
+// Note: This must correspond with the values defined as 
+// <string-array name="ac_list_values"> in
+// /kwikEFIS/ulib/src/main/res/values/array.xml 
 enum AircraftModel
 {
-    ULTRA,
-    AZTEC,
     CRICRI,
-    CRUZ,
     J160,
     LGEZ,
     M20J,
+    AZTEC,
     PA28,
+    CRUZ,
     RV6,
     RV7,
     RV8,
     W10,
+    HELI,
     JET,
-    HELI
+    ULTRA
 }
+
 
 public class AircraftData
 {

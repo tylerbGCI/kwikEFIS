@@ -1995,12 +1995,11 @@ abstract public class EFISRenderer
             mPolygon.draw(matrix);
         }
 
-
         // Text at target
         glText.begin(theta*foreShadeR, theta*foreShadeG, theta*foreShadeB, 1, matrix);  // white'ish
 
         // Scale text to distance
-        if (dme < 5) glText.setScale(2.5f);
+        if ((dme < 5) && (Math.abs(alt - MSLValue) < 1000)) glText.setScale(2.5f);
         else if (dme < 10) glText.setScale(2.0f);
         else if (dme < 15) glText.setScale(1f);
         else glText.setScale(0); //1.5, 0 = invisible

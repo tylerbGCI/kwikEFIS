@@ -797,9 +797,11 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             }
         }
 
-        float courseValue = filterGpsCourse.runningAverage(gps_course
+        /*float courseValue = filterGpsCourse.runningAverage(gps_course
                 + (float) UTrig.M_2PI)
                 % (float) UTrig.M_2PI;
+
+        if (Math.abs(courseValue - gps_course) > 5) courseValue = gps_course;*/
 
         //
         // Get the battery percentage
@@ -828,8 +830,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setSlip(slipValue);                               // in degrees
         mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute(gps_rateOfClimb));  // in fpm
         mGLView.setTurn((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn);
-        //mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
-        mGLView.setHeading((float) Math.toDegrees(courseValue));  // in degrees
+        mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
+        //mGLView.setHeading((float) Math.toDegrees(courseValue));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));    // in Feet
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
         mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));   // in knots

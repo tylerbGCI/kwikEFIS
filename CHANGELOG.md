@@ -1,6 +1,12 @@
 Changelog
 =========
 
+REL_27 (under test)
+------------------
+* Clear issues: 34
+* Release EFIS v4.4
+* Release DMAP v2.5
+
 REL_26 (2019-04-25)
 ------------------
 * Improvements to "stratux" Wifi handling
