@@ -613,8 +613,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         mGpx = new Gpx(this);
         mGpx.loadDatabase(gps_lat, gps_lon);
         mDemGTOPO30 = new DemGTOPO30(this);
-        //mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon);
-
+        //This takes too long at startup - mDemGTOPO30.loadDemBuffer(gps_lat, gps_lon); // let the timer take care of it
     }
 }
 

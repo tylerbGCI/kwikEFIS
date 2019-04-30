@@ -208,7 +208,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
         mAirspace = new OpenAir(this);
-        mAirspace.loadDatabase(gps_lat, gps_lon);
+        //mAirspace.loadDatabase(gps_lat, gps_lon);  // let the timer do it
 
         createMediaPlayer();
         mGLView.setTheme(colorTheme);
@@ -673,7 +673,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mGpx.loadDatabase(gps_lat, gps_lon);
 
                 mGLView.setBannerMsg(true, "LOADING AIRSPACE");
-
                 mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
 
@@ -726,11 +725,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             }
         }
 
-        /*float courseValue = filterGpsCourse.runningAverage(gps_course
-                + (float) UTrig.M_2PI)
-                % (float) UTrig.M_2PI;
-
-        if (Math.abs(courseValue - gps_course) > 5) courseValue = gps_course;*/
 
         //
         // Get the battery percentage
@@ -754,7 +748,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         String s; // general purpose string
 
         mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
-        //mGLView.setHeading((float) Math.toDegrees(courseValue));  // in degrees
         mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
         mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));        // in Feet
         mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots

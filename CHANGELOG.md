@@ -3,6 +3,7 @@ Changelog
 
 REL_27 (under test)
 ------------------
+* Implement altitude discrimination to target display
 * Clear issues: 34
 * Release EFIS v4.4
 * Release DMAP v2.5
