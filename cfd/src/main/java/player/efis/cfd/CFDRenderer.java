@@ -71,8 +71,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        //onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
+        onDrawFramePfd(gl);
     }
 
 
@@ -657,6 +657,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         GLES20.glViewport(0, 0, pixW, pixH);
 
+        /*
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
             float xlx;
@@ -756,6 +757,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }
+        */
     }
 
 
@@ -797,7 +799,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 z1 = DemGTOPO30.getElev(lat, lon);
 
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+                y1 = 2*mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
 
                 if ((_x1 != 0) || (_y1 != 0)) {
 
