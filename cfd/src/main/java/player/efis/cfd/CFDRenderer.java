@@ -648,7 +648,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-       //GLES20.glViewport(0, 0, pixW, pixH2);
+        GLES20.glViewport(0, 0, pixW, pixH2);
 
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
         if (displayAirspace) renderAirspace(mMVPMatrix);
