@@ -3102,7 +3102,8 @@ abstract public class EFISRenderer
         //
         glText.begin(foreShadeR * theta, theta * tapeShadeG, theta * foreShadeB, 1.0f, matrix); // purple'ish
         glText.setScale(scale);
-        glText.drawC(mWptSelName, 0, 0.12f * roseRadius, 0);
+        //glText.drawC(mWptSelName, 0, -0.35f * roseRadius, 0.35f * roseRadius); //0.12, 0
+        glText.drawC(mWptSelName, 0.20f * roseRadius, -0.35f * roseRadius, 0); //0.12, 0
         glText.end();
 
         //
@@ -3110,7 +3111,8 @@ abstract public class EFISRenderer
         //
         glText.begin(foreShadeR * theta, foreShadeG * theta, backShadeB, 1.0f, matrix); // yellow
         glText.setScale(scale);
-        glText.drawC(mAutoWpt, 0, -0.12f * roseRadius, 0);
+        //glText.drawC(mAutoWpt, 0, -0.35f * roseRadius, -0.35f * roseRadius);
+        glText.drawC(mAutoWpt, -0.20f * roseRadius, -0.35f * roseRadius, 0);
         glText.end();
     }
 

@@ -56,6 +56,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -68,12 +69,11 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         roseTextScale = 1f;
     }
 
+    private int ctr;
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        // Draw background color
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
+        ctr++;
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -86,13 +86,15 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        onDrawFrameMfd(gl);
         onDrawFramePfd(gl);
+        onDrawFrameMfd(gl);
     }
 
 
     private void onDrawFramePfd(GL10 gl)
     {
+        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         /*
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -105,7 +107,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        */
+        //*/
 
         // Create a rotation for the horizon
         Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
@@ -151,13 +153,15 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         else if (displayAHColors) renderAHColors(scratch1);
 
         renderPitchMarkers(scratch1);
-        GLES20.glViewport(0, 0, pixW, pixH);
 
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
         if (true) renderTargets(scratch1);        // TODO: 2018-08-31 Add control tof targets
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
+
+        GLES20.glViewport(0, 0, pixW, pixH);
+
 
         // Flight Director - FD
         if (displayFlightDirector) {
@@ -171,13 +175,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
             else {
                 // Slide pitch to current value adj for portrait
-                float Adjust = pixH2 * portraitOffset;
+                float Adjust = pixH2 / 2 ;
                 // Slide FD to current value
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
             }
             renderFlightDirector(fdMatrix);
         }
 
+/* b1
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
             float xlx;
@@ -211,6 +216,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderAutoWptDetails(mMVPMatrix);
             GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
+        */
 
 
         if (Layout == layout_t.PORTRAIT) {
@@ -251,10 +257,19 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedALTMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
+            xly = 0.1f * pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            renderFixedRADALTMarkers(mMVPMatrix);   // AGL
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+
+
+            /*
             xly = -0.5f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedRADALTMarkers(mMVPMatrix);   // AGL
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            */
 
             xlx = -1.10f * pixM2;
             xly = +0.5f * pixH2; // half of tape viewport //-0.7f * pixH2;
@@ -274,6 +289,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
 
         //-----------------------------
+        /*b1
         renderTurnMarkers(mMVPMatrix);
         renderSlipBall(mMVPMatrix);
         renderGForceValue(mMVPMatrix);
@@ -282,7 +298,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
         }
+        */
 
+        /* b1
         if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         //if (!ServiceableAh) renderUnserviceablePage(mMVPMatrix);
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
@@ -292,16 +310,19 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderUnserviceableDi(mMVPMatrix);
             renderUnserviceableCompassRose(mMVPMatrix);
         }
+        */
+
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
-
+        /*b1
         // Do this last so that every else wil be dimmed for fatfinger entry
         if (displayFlightDirector || displayRMI || displayHITS) {
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
             renderSelAltValue(mMVPMatrix);
         }
+        */
     }
 
     @Override
@@ -621,7 +642,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Airspace
     //
-    protected void renderAirspace(float[] matrix)
+    protected void renderAirspacePfd(float[] matrix)
     {
         // Maybe later
     }
@@ -664,12 +685,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
         */
+        //displayAirspace = true;  // hardcode for now
+
         zfloat = 0;
 
-        GLES20.glViewport(0, 0, pixW, pixH2);
+        GLES20.glViewport(0, 0, pixW, pixH2*99/100);
 
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
-        if (displayAirspace) renderAirspace(mMVPMatrix);
+        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
 
@@ -743,6 +766,44 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderHDGValue(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
+        */
+        // use RMI from PFD
+        // Remote Magnetic Inidicator - RMI
+        if (displayRMI) {
+            float xlx;
+            float xly;
+
+            // Add switch for orientation
+            if (Layout == layout_t.LANDSCAPE) {
+                // Landscape
+                xlx = -0.74f * pixW2; // top left
+                xly = 0.50f * pixH2;  // top left
+                roseScale = 0.44f;
+                GLES20.glViewport(0, 0, pixW, pixH);
+            }
+            else {
+                //Portrait
+                xlx = 0;
+                xly = -0.44f * pixH2;
+                roseScale = 0.52f;
+            }
+
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+            // Create a rotation for the RMI
+            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
+            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
+            renderBearingTxt(mMVPMatrix);
+            renderFixedCompassMarkers(mMVPMatrix);
+            renderACSymbol(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+            renderCompassRose(rmiMatrix);
+            renderBearing(rmiMatrix);
+            renderAutoWptDetails(mMVPMatrix);
+            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+        }
+
+
 
         //-----------------------------
         if (displayInfoPage) {
@@ -751,7 +812,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
             // North Que
             float xlx = -0.84f * pixW2;
-            float xly = +0.88f * pixH2;
+            float xly = -0.12f * pixH2;
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
@@ -760,6 +821,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderNorthQue(rmiMatrix);
         }
 
+        /* b1
         if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         if (!ServiceableMap) renderUnserviceablePage(mMVPMatrix);
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
@@ -767,15 +829,27 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
+        */
 
-        renderACSymbol(mMVPMatrix);
+        //renderACSymbol(mMVPMatrix);
 
+        /*
         // Do this last so that every else wil be dimmed for fatfinger entry
         if (displayFlightDirector) {
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
         }
-        */
+        //*/
+        // PFD version
+        // Do this last so that every else wil be dimmed for fatfinger entry
+        if (displayFlightDirector || displayRMI || displayHITS) {
+            renderSelWptDetails(mMVPMatrix);
+            renderSelWptValue(mMVPMatrix);
+            renderSelAltValue(mMVPMatrix);
+        }
+
+
+
     }
 
 
@@ -854,7 +928,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Airspace
     //
-    protected void _renderAirspace(float[] matrix)
+    protected void renderAirspaceMfd(float[] matrix)
     {
         float z, pixPerDegree;
         float x1, y1;
