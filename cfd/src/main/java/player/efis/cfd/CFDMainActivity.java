@@ -196,7 +196,7 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mWptSelName.length() != 4) mGLView.mRenderer.mWptSelName = "ZZZZ";
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
         mAirspace = new OpenAir(this);
-        mAirspace.loadDatabase(gps_lat, gps_lon);  // let the timer do it
+        //mAirspace.loadDatabase(gps_lat, gps_lon);  // let the timer do it
 
         createMediaPlayer();
         mGLView.setTheme(colorTheme);
@@ -915,6 +915,7 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
     protected void Simulate()
     {
         int target_agl = 3000; //ft
+
         pitchValue = -sensorComplementaryFilter.getPitch();
         rollValue = -sensorComplementaryFilter.getRoll();
 

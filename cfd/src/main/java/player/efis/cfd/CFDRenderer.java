@@ -71,6 +71,21 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onDrawFrame(GL10 gl)
     {
+        // Draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        // Draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        // Set the camera position (View matrix)
+        if (displayMirror)
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
+        else
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Normal View
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
         onDrawFrameMfd(gl);
         onDrawFramePfd(gl);
     }
@@ -78,6 +93,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
     private void onDrawFramePfd(GL10 gl)
     {
+        /*
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -89,6 +105,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        */
 
         // Create a rotation for the horizon
         Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
@@ -229,7 +246,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
 
             xlx = 1.14f * pixM2;
-            xly = -0.5f * portraitOffset * pixH2; // half of tape viewport //-0.7f * pixH2;
+            xly = +0.5f * pixH2; // half of tape viewport //-0.7f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedALTMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -240,7 +257,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             xlx = -1.10f * pixM2;
-            xly = -0.5f * portraitOffset * pixH2; // half of tape viewport //-0.7f * pixH2;
+            xly = +0.5f * pixH2; // half of tape viewport //-0.7f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -632,8 +649,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
 
     
-    public void onDrawFrameMfd(GL10 gl)
+    private void onDrawFrameMfd(GL10 gl)
     {
+        /*
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -645,7 +663,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
+        */
         zfloat = 0;
 
         GLES20.glViewport(0, 0, pixW, pixH2);
@@ -799,7 +817,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 z1 = DemGTOPO30.getElev(lat, lon);
 
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-                y1 = 2*mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
 
                 if ((_x1 != 0) || (_y1 != 0)) {
 

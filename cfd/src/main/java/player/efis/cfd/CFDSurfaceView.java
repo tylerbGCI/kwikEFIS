@@ -104,11 +104,14 @@ public class CFDSurfaceView extends GLSurfaceView
 
                 if (Math.abs(deltaY) > MIN_DISTANCE) {
                     if (mRenderer.isAutoZoomActive()) Toast.makeText(getContext(), "Auto Zoom OFF", Toast.LENGTH_SHORT).show();
+                    setAutoZoomActive(false);
                     if (deltaY < 0) {
                         // swipe up
+                        zoomIn();
                     }
                     else {
                         // swipe down
+                        zoomOut();
                     }
                 }
                 else if (Math.abs(deltaX) > MIN_DISTANCE) {
