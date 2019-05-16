@@ -18,10 +18,12 @@ package player.efis.cfd;
 
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
+import player.efis.common.Apt;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
 import player.efis.common.EFISRenderer;
+import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
@@ -45,6 +47,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private static final String TAG = "CFDRenderer";
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
+
+    private float aspect = 2;
 
     public CFDRenderer(Context context)
     {
@@ -672,9 +676,11 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     
     private void onDrawFrameMfd(GL10 gl)
     {
+        GLES20.glViewport(0, 0, pixW, pixH2*99/100);
         /*
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        */
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -684,16 +690,15 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        */
+        //*/
         //displayAirspace = true;  // hardcode for now
 
         zfloat = 0;
 
-        GLES20.glViewport(0, 0, pixW, pixH2*99/100);
 
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
-        if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
+        if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
 
         GLES20.glViewport(0, 0, pixW, pixH);
@@ -883,6 +888,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (mMapZoom < 8) step *= 2;
 
 
+
+        float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
+        float hgt = 2*wid;
+
         for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
             for (demRelBrg = -180; demRelBrg <= 180; demRelBrg = demRelBrg + 1) { //1
@@ -891,7 +900,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 z1 = DemGTOPO30.getElev(lat, lon);
 
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+                //y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg)); //b2
+                y1 = aspect*mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
 
                 if ((_x1 != 0) || (_y1 != 0)) {
 
@@ -904,17 +914,18 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
 
-                    float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
+                    //float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
+                    //float hgt = 2*wid;
 
                     if (agl_ft > 1000) mSquare.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                     else if (IASValue < IASValueThreshold) mSquare.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
                     else if (agl_ft > 200) mSquare.SetColor(caution, caution, 0, 1f);  // Proximity notification
                     else mSquare.SetColor(caution, 0, 0, 1f);                          // Proximity warning
                     float[] squarePoly = {
-                            x1-wid, y1-wid, z,
-                            x1-wid, y1+wid, z,
-                            x1+wid, y1+wid, z,
-                            x1+wid, y1-wid, z
+                            x1-wid, y1-hgt, z,
+                            x1-wid, y1+hgt, z,
+                            x1+wid, y1+hgt, z,
+                            x1+wid, y1-hgt, z
                     };
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
@@ -992,7 +1003,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
                 airspacepntRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon, DIValue);
                 x1 = mMapZoom * (dme * UTrig.icos(90 - (int) airspacepntRelBrg));
-                y1 = mMapZoom * (dme * UTrig.isin(90 - (int) airspacepntRelBrg));
+                y1 = aspect*mMapZoom * (dme * UTrig.isin(90 - (int) airspacepntRelBrg)); //b2
 
                 if (_x1 != 0 || _y1 != 0) {
                     mLine.SetWidth(8);
@@ -1027,6 +1038,109 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
         }
     }
+
+
+    protected Point projectMfd(float relbrg, float dme)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
+
+    protected Point projectMfd(float relbrg, float dme, float elev)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
+
+
+    //
+    // Variables specific to render APT
+    //
+    protected void renderAPTMfd(float[] matrix)
+    {
+        float z, x1, y1;
+
+        z = zfloat;
+
+        // 0.16667 deg lat  = 10 nm
+        // 0.1 approx 5nm
+        float dme;
+        float _dme = 1000;
+        float aptRelBrg;
+        String wptId = mWptSelName;
+        float elev;
+
+        // Aways draw at least the selected waypoint
+        // TODO: 2018-08-12 Add elev to selected WPT
+        wptId = mWptSelName;
+        dme = UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in nm
+        aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
+        x1 = projectMfd(aptRelBrg, dme).x;
+        y1 = projectMfd(aptRelBrg, dme).y;
+        renderAPTSymbol(matrix, x1, y1, wptId);
+
+        // draw all the other waypoints that fit the criteria
+        nrAptsFound = 0;
+        Iterator<Apt> it = Gpx.aptList.iterator();
+        while (it.hasNext()) {
+            Apt currApt;
+            try {
+                currApt = it.next();
+            }
+            //catch (ConcurrentModificationException e) {
+            catch (Exception e) {
+                break;
+            }
+
+            wptId = currApt.name;
+            dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
+
+
+            // Apply selection criteria
+            if (dme < 5) nrAptsFound++;                                                // always show apts closer then 5nm
+            else if ((nrAptsFound < MX_NR_APT) && (dme < AptSeekRange)) nrAptsFound++; // show all others up to MX_NR_APT for AptSeekRange
+            else continue;  // we already have all the apts as we wish to display
+
+            aptRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
+
+            /*x1 = project(aptRelBrg, dme).x;
+            y1 = project(aptRelBrg, dme).y;
+            renderAPTSymbol(matrix, x1, y1, wptId);*/
+
+            x1 = projectMfd(aptRelBrg, dme, currApt.elev).x;
+            y1 = projectMfd(aptRelBrg, dme, currApt.elev).y;
+            renderAPTSymbol(matrix, x1, y1, wptId);
+
+
+            if (Math.abs(dme) < Math.abs(_dme)) {
+                // closest apt (dme)
+                float absBrg = UNavigation.calcAbsBrg(LatValue, LonValue, currApt.lat, currApt.lon);
+                float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, currApt.lat, currApt.lon, DIValue);
+
+                setAutoWptValue(wptId);
+                setAutoWptDme(dme);
+                setAutoWptBrg(absBrg);
+                setAutoWptRelBrg(relBrg);
+                _dme = dme;
+            }
+        }
+
+        //
+        // If we dont have the full compliment of apts expand the range incrementally
+        // If do we have a full compliment start reducing the range
+        // This also has the "useful" side effect of "flashing" new additions for a few cycles
+        //
+        if ((nrAptsFound < MX_NR_APT - 2) && (Aptscounter++ % 10 == 0)) AptSeekRange += 1;
+        else if ((nrAptsFound >= MX_NR_APT)) AptSeekRange -= 1;
+        AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
+    }
+
+
+
     //---------------------------------------------------------------------------
     // DMAP serviceability ... aka the Red X's
     //

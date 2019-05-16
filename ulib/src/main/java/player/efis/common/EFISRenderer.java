@@ -1875,7 +1875,7 @@ abstract public class EFISRenderer
         AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
     }
 
-    private void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
+    protected void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
     {
         float radius = pixM / 70;
         float z = zfloat;
