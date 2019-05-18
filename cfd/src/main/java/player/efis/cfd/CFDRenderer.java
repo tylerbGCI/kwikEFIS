@@ -16,6 +16,7 @@
 
 package player.efis.cfd;
 
+import java.nio.IntBuffer;
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
 import player.efis.common.Apt;
@@ -38,6 +39,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -47,8 +50,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private static final String TAG = "CFDRenderer";
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
-
-    private float aspect = 2;
 
     public CFDRenderer(Context context)
     {
@@ -90,6 +91,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
+        //if (ctr % 2 == 0) onDrawFramePfd(gl);
+        //if (ctr % 2 == 1) onDrawFrameMfd(gl);
+        //Bitmap bm = takeScreenshot(gl);*/
         onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
     }
@@ -98,6 +102,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private void onDrawFramePfd(GL10 gl)
     {
         GLES20.glViewport(0, pixH2, pixW, pixH2);
+        GLES20.glViewport(0, pixH2, pixW, pixH);
         //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         /*
         // Draw background color
@@ -130,12 +135,13 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             portraitOffset = 0.40f;  // the magic number for portrait offset
-            portraitOffset = 0.0f;  // the magic number for portrait offset
+            portraitOffset = -0.5f; //0.0f;  // the magic number for portrait offset
 
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
         }
+
 
         // Slide ALT to current value
         Matrix.translateM(altMatrix, 0, mMVPMatrix, 0, 0, -MSLTranslation, 0); // apply the altitude
@@ -144,8 +150,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         Matrix.translateM(iasMatrix, 0, mMVPMatrix, 0, 0, -IASTranslation, 0); // apply the altitude
 
         zfloat = 0;
-
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
 
         if (displayDEM && !fatFingerActive) {
             // Make the blue sky for the DEM.
@@ -158,13 +162,15 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         renderPitchMarkers(scratch1);
 
+        //GLES20.glViewport(0, pixH2, pixW, pixH2);
+
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
         if (true) renderTargets(scratch1);        // TODO: 2018-08-31 Add control tof targets
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
-        GLES20.glViewport(0, 0, pixW, pixH);
+        //GLES20.glViewport(0, 0, pixW, pixH);
 
 
         // Flight Director - FD
@@ -179,7 +185,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
             else {
                 // Slide pitch to current value adj for portrait
-                float Adjust = pixH2 / 2 ;
+                float Adjust = -pixH2/2;
                 // Slide FD to current value
                 Matrix.translateM(fdMatrix, 0, 0, pitchTranslation - FDTranslation + Adjust, 0); // apply the altitude
             }
@@ -238,7 +244,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
         else
             //GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
-            GLES20.glViewport(pixW / 100, pixH * 50 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
+              GLES20.glViewport(pixW / 100, pixH2*105/100, pixW - pixW / 50, pixH2*90/100); // Portrait
 
         if (displayTape) {
             renderALTMarkers(altMatrix);
@@ -248,7 +254,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         {
             int Adjust = (int) (pixH2 * portraitOffset);
-            GLES20.glViewport(0, Adjust, pixW, pixH + Adjust); // Portrait //
+            GLES20.glViewport(0, 0, pixW, pixH); // Portrait //
 
             float xlx;
             float xly;
@@ -256,7 +262,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
 
             xlx = 1.14f * pixM2;
-            xly = +0.5f * pixH2; // half of tape viewport //-0.7f * pixH2;
+            xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedALTMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -266,8 +272,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedRADALTMarkers(mMVPMatrix);   // AGL
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-
-
             /*
             xly = -0.5f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -276,7 +280,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             */
 
             xlx = -1.10f * pixM2;
-            xly = +0.5f * pixH2; // half of tape viewport //-0.7f * pixH2;
+            xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -677,10 +681,11 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private void onDrawFrameMfd(GL10 gl)
     {
         GLES20.glViewport(0, 0, pixW, pixH2*99/100);
-        /*
+        GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
+
         // Draw background color
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-        */
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -694,14 +699,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         //displayAirspace = true;  // hardcode for now
 
         zfloat = 0;
-
-
-        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
-        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
-        if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
-
-        GLES20.glViewport(0, 0, pixW, pixH);
 
         /*
         // Remote Magnetic Inidicator - RMI
@@ -772,58 +769,73 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
         */
+
+        // Add switch for orientation
+        float xlx;
+        float xly;
+        if (Layout == layout_t.LANDSCAPE) {
+            // Landscape
+            xlx = -0.74f * pixW2; // top left
+            xly = 0.50f * pixH2;  // top left
+            roseScale = 0.44f;
+            GLES20.glViewport(0, 0, pixW, pixH);
+        }
+        else {
+            //Portrait
+            xlx = 0;
+            xly = pixH2/2;
+            roseScale = 0.52f;
+        }
+
+        Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
+        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
+        if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
+        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
+        Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
         // use RMI from PFD
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
-            float xlx;
-            float xly;
-
-            // Add switch for orientation
-            if (Layout == layout_t.LANDSCAPE) {
-                // Landscape
-                xlx = -0.74f * pixW2; // top left
-                xly = 0.50f * pixH2;  // top left
-                roseScale = 0.44f;
-                GLES20.glViewport(0, 0, pixW, pixH);
-            }
-            else {
-                //Portrait
-                xlx = 0;
-                xly = -0.44f * pixH2;
-                roseScale = 0.52f;
-            }
-
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             // Create a rotation for the RMI
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
             Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            renderBearingTxt(mMVPMatrix);
+
+            //renderBearingTxt(mMVPMatrix);  // maybe too busy? b2
             renderFixedCompassMarkers(mMVPMatrix);
             renderACSymbol(mMVPMatrix);
+
+            if (autoZoomActive) setAutoZoom();
+            renderDctTrack(mMVPMatrix);
+
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             renderCompassRose(rmiMatrix);
-            renderBearing(rmiMatrix);
-            renderAutoWptDetails(mMVPMatrix);
-            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+            //renderBearing(rmiMatrix);
+            //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
 
 
 
         //-----------------------------
         if (displayInfoPage) {
+            xlx = 0;
+            xly = pixH2;
+            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             // North Que
-            float xlx = -0.84f * pixW2;
-            float xly = -0.12f * pixH2;
+            xlx = -0.84f * pixW2;
+            xly = 0.88f * pixH2;
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
             Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
             renderNorthQue(rmiMatrix);
+            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
 
         /* b1
@@ -845,16 +857,17 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderSelWptValue(mMVPMatrix);
         }
         //*/
-        // PFD version
+        // Use the PFD version
         // Do this last so that every else wil be dimmed for fatfinger entry
+        GLES20.glViewport(0, 0, pixW, pixH);  // use the whole screen to accomodate fatfinger
         if (displayFlightDirector || displayRMI || displayHITS) {
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
             renderSelAltValue(mMVPMatrix);
+
+            renderAutoWptDetails(mMVPMatrix);
+
         }
-
-
-
     }
 
 
@@ -882,11 +895,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-        float range = 1.1f * pixM / mMapZoom;
+        float range = 1.4f * pixM2 / mMapZoom ;
 
         if (mMapZoom < 16) step *= 2;
         if (mMapZoom < 8) step *= 2;
-
 
 
         float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
@@ -900,8 +912,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 z1 = DemGTOPO30.getElev(lat, lon);
 
                 x1 = mMapZoom * (dme * UTrig.icos(90-(int)demRelBrg));
-                //y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg)); //b2
-                y1 = aspect*mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
+                y1 = mMapZoom * (dme * UTrig.isin(90-(int)demRelBrg));
 
                 if ((_x1 != 0) || (_y1 != 0)) {
 
@@ -941,7 +952,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     protected void renderAirspaceMfd(float[] matrix)
     {
-        float z, pixPerDegree;
+        float z;
         float x1, y1;
         float _x1, _y1;
 
@@ -1003,7 +1014,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
                 airspacepntRelBrg = UNavigation.calcRelBrg(LatValue, LonValue, currAirPoint.lat, currAirPoint.lon, DIValue);
                 x1 = mMapZoom * (dme * UTrig.icos(90 - (int) airspacepntRelBrg));
-                y1 = aspect*mMapZoom * (dme * UTrig.isin(90 - (int) airspacepntRelBrg)); //b2
+                y1 = mMapZoom * (dme * UTrig.isin(90 - (int) airspacepntRelBrg));
 
                 if (_x1 != 0 || _y1 != 0) {
                     mLine.SetWidth(8);
@@ -1155,5 +1166,31 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         ServiceableMap = false;
     }
+
+
+
+    public Bitmap takeScreenshot(GL10 mGL)
+    {
+        final int mWidth = pixW;
+        final int mHeight = pixH;
+
+        IntBuffer ib = IntBuffer.allocate(mWidth * mHeight);
+        IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
+        mGL.glReadPixels(0, 0, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
+
+        // Convert upside down mirror-reversed image to right-side up normal
+        // image.
+        for (int i = 0; i < mHeight; i++) {
+            for (int j = 0; j < mWidth; j++) {
+                ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
+            }
+        }
+
+        Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
+        mBitmap.copyPixelsFromBuffer(ibt);
+        return mBitmap;
+    }
+
 
 }
