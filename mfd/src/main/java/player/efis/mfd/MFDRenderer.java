@@ -355,7 +355,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
     //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
+    // Render the Digital Elevation Model (DEM) - DMAP.
     //
     // This is the meat and potatoes of the synthetic vision implementation
     // The loops are very performance intensive, therefore all the hardcoded
@@ -380,6 +380,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (mMapZoom < 16) step *= 2;
         if (mMapZoom < 8) step *= 2;
 
+        float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
 
         for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
@@ -402,7 +403,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     caution = cautionMin + (color.red + color.green + color.blue);
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
 
-                    float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
+                    //float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
 
                     if (agl_ft > 1000) mSquare.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                     else if (IASValue < IASValueThreshold) mSquare.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
@@ -428,7 +429,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     protected void renderAirspace(float[] matrix)
     {
-        float z, pixPerDegree;
+        float z;
         float x1, y1;
         float _x1, _y1;
 
