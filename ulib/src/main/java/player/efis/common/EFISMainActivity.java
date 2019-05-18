@@ -445,7 +445,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
     protected float _gps_lat = 00.00f;
     protected float _gps_lon = 00.00f;   // null island
     float _gps_course = 0.96f;    // in radians
-    float _gps_altitude = 3000;   // meters
+    float _gps_altitude = 1000;   // meters
     protected float _gps_agl = 0; // meters
 
     float _gps_speed = 0;         // m/s
