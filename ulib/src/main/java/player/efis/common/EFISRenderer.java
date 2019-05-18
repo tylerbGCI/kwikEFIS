@@ -556,7 +556,6 @@ abstract public class EFISRenderer
             String t = Integer.toString(i);
             {
                 mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
-
                 mPolyLine.SetWidth(wid);
                 float[] vertPoly = {
                         // in counterclockwise order:
@@ -1722,7 +1721,7 @@ abstract public class EFISRenderer
         pixPerDegree = pixM2 / PPD_DIV;
         z = zfloat;
 
-        float radius = 10 * pixM / 736; 
+        float radius = 10 * pixM / 736;
 
         float x1 = fpvX * pixPerDegree;
         float y1 = fpvY * pixPerDegree;
@@ -2131,16 +2130,8 @@ abstract public class EFISRenderer
     }
 
 
-    //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
-    //
-    // This is the meat and potatoes of the synthetic vision implementation
-    // The loops are very performance intensive, therefore all the hardcoded
-    // magic numbers
-    //
-    //protected void renderDEMTerrain(float[] matrix)
-    //{
-    //}
+
+
 
 
     // This is only good for debugging
@@ -2739,35 +2730,41 @@ abstract public class EFISRenderer
 
                 Iterator<Apt> it = Gpx.aptList.iterator();
 
-                while (it.hasNext()) {
-                    Apt currApt = it.next();
+                try {
+                    while (it.hasNext()) {
+                        Apt currApt = it.next();
 
-                    // Look for a perfect match
-                    if (currApt.name.equals(String.valueOf(wpt))) {
-                        mWptSelName = currApt.name;
-                        mWptSelComment = currApt.cmt;
-                        mWptSelLat = currApt.lat;
-                        mWptSelLon = currApt.lon;
-                        break;
-                    }
-                    // Look for a partial match
-                    else if ((pos < 3) && currApt.name.startsWith(String.valueOf(wpt).substring(0, pos + 1))) {
-                        // We found a partial match, fill in the rest for a first guess
-                        for (int i = pos; i < 4; i++) wpt[i] = currApt.name.charAt(i);
-                        mWptSelName = currApt.name;
-                        mWptSelComment = currApt.cmt;
-                        mWptSelLat = currApt.lat;
-                        mWptSelLon = currApt.lon;
-                        break;
-                    }
-                    // No match at all
-                    else {
-                        mWptSelName = String.valueOf(wpt);
-                        mWptSelComment = " ";
-                        mWptSelLat = 0;
-                        mWptSelLon = 0;
+                        // Look for a perfect match
+                        if (currApt.name.equals(String.valueOf(wpt))) {
+                            mWptSelName = currApt.name;
+                            mWptSelComment = currApt.cmt;
+                            mWptSelLat = currApt.lat;
+                            mWptSelLon = currApt.lon;
+                            break;
+                        }
+                        // Look for a partial match
+                        else if ((pos < 3) && currApt.name.startsWith(String.valueOf(wpt).substring(0, pos + 1))) {
+                            // We found a partial match, fill in the rest for a first guess
+                            for (int i = pos; i < 4; i++) wpt[i] = currApt.name.charAt(i);
+                            mWptSelName = currApt.name;
+                            mWptSelComment = currApt.cmt;
+                            mWptSelLat = currApt.lat;
+                            mWptSelLon = currApt.lon;
+                            break;
+                        }
+                        // No match at all
+                        else {
+                            mWptSelName = String.valueOf(wpt);
+                            mWptSelComment = " ";
+                            mWptSelLat = 0;
+                            mWptSelLon = 0;
+                        }
                     }
                 }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 // The selected waypoint has changed
                 // Update the OBS as well
                 mObsValue = UNavigation.calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
