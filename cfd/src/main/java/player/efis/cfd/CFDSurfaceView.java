@@ -49,6 +49,21 @@ public class CFDSurfaceView extends GLSurfaceView
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+
+        /*
+        Then just use this Renderer in your GLSurfaceView
+
+        glSurfaceView.setEGLContextClientVersion(1);
+        glSurfaceView.setRenderer(new BitmapRenderer(getResources()));
+        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        */
+        setEGLContextClientVersion(1);
+        setRenderer(new BitmapRenderer(getResources()));
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+
+
     }
 
     //private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
