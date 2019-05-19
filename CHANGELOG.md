@@ -3,10 +3,12 @@ Changelog
 
 REL_27 (under test)
 ------------------
+* Beta version of Kwik Composite
 * Implement altitude discrimination to target display
 * Clear issues: 34
 * Release EFIS v4.4
 * Release DMAP v2.5
+* Release COMP v0.2 beta
 
 REL_26 (2019-04-25)
 ------------------
