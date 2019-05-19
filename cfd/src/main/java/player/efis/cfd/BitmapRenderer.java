@@ -15,9 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 //private static class BitmapRenderer implements GLSurfaceView.Renderer
 public class BitmapRenderer implements GLSurfaceView.Renderer
 {
-
     private int[] textures;
-
     private Resources resources;
 
     public BitmapRenderer(Resources resources)
@@ -62,13 +60,14 @@ public class BitmapRenderer implements GLSurfaceView.Renderer
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
-        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher), 0);
+        //GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher), 0);
+        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.drawable.ic_launcher), 0);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
-        gl.glViewport(0, 0, width, height);
+        gl.glViewport(0, 0, width, height/2);
     }
 
     @Override
