@@ -2,6 +2,7 @@
 
 #pskill java
 #pskill adb
+adb devices
 
 cd ./apk
 
