@@ -875,7 +875,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
 
     //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
+    // Render the Digital Elevation Model (DEM) - DMAP.
     //
     // This is the meat and potatoes of the synthetic vision implementation
     // The loops are very performance intensive, therefore all the hardcoded
@@ -926,7 +926,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     agl_ft = MSLValue - z1 * 3.28084f;  // in ft
 
                     //float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
-                    //float hgt = 2*wid;
 
                     if (agl_ft > 1000) mSquare.SetColor(color.red, color.green, color.blue, 1);                     // Enroute
                     else if (IASValue < IASValueThreshold) mSquare.SetColor(color.red, color.green, color.blue, 1); // Taxi or  approach
