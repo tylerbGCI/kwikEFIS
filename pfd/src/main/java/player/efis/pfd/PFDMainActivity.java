@@ -813,6 +813,8 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         // end debug
 
+        float gps_dme = mGLView.mRenderer.mSelWptDme; // in nm
+
         //
         // Pass the values to mGLView for updating
         //
@@ -874,8 +876,10 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                     } // caution terrain
 
                     // Play the "five hundred" song when decending through 500ft
-                    if ((_gps_agl > 152.4f)
-                            && (gps_agl <= 152.4f)) { // 500ft
+                    // and closer than 2nm from dest
+                    if ((_gps_agl > 152.4f)  // 500ft
+                            && (gps_agl <= 152.4f) // 500ft
+                            && (gps_dme < 2)) {
                         if (!mpFiveHundred.isPlaying()) mpFiveHundred.start();
                     }
 				} // DemGTOPO30 required options
