@@ -2347,9 +2347,9 @@ abstract public class EFISRenderer
         mAutoWptBrg = brg;
     }
 
-    private float mSelWptBrg;             // Selected waypoint Bearing
-    protected float mSelWptRlb;           // Selected waypoint Relative bearing
-    protected float mSelWptDme;           // Selected waypoint Dme distance (nm)
+    public float mSelWptBrg;             // Selected waypoint Bearing
+    public float mSelWptRlb;           // Selected waypoint Relative bearing
+    public float mSelWptDme;           // Selected waypoint Dme distance (nm)
     private void setSelWptBrg(float brg)
     {
         mSelWptBrg = brg;
@@ -2477,7 +2477,7 @@ abstract public class EFISRenderer
         }
 
         // Calculate the relative bearing to the selected wpt
-        float dme = 6080 * UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in ft
+        float dme = UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in nm
         float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
 
         // Calculate how many degrees of pitch to command
@@ -2503,7 +2503,7 @@ abstract public class EFISRenderer
         // Setting data in this renderer does not make much logical sense. This could be re-factored
         // Perhaps introduce a new function to explicitly handle "navigation"?
         setSelWptBrg(absBrg);
-        setSelWptDme(dme / 6080);
+        setSelWptDme(dme);  // todo: refactor out
         setSelWptRelBrg(relBrg);
     }
 
