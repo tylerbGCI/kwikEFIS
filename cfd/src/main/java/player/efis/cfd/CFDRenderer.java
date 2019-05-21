@@ -95,9 +95,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config)
+    public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
-        /*
+        ///*
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -111,27 +111,30 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Create the GLText
         glText = new GLText(context.getAssets());
         roseTextScale = 1f;
-        */
+        //*/
 
+        /*
         // Bitmap
         textures = new int[1];
-        gl.glEnable(GL10.GL_TEXTURE_2D);
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        GLES20.glEnable(GL10.GL_TEXTURE_2D);
+        unused.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        unused.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-        gl.glGenTextures(1, textures, 0);
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+        GLES20.glGenTextures(1, textures, 0);
+        GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
         //GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher), 0);
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.drawable.ic_launcher), 0);
         // Bitmap
+        //*/
 
     }
+
 
     private int ctr;
     @Override
@@ -1253,11 +1256,102 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
             }
         }
-
         Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
         mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
         mBitmap.copyPixelsFromBuffer(ibt);
         return mBitmap;
+    }
+
+
+    // ================================
+    public void renderToTexture()
+    {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+        // specify texture as color attachment
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
+        // attach render buffer as depth buffer
+        GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
+        // check status
+        int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+        drawRender();
+
+        Bitmap bitmap = SavePixels(0,0,texW,texH);
+        //blur bitmap and get back a bluredBitmap not yet implemented
+        texture = TextureHelper.loadTexture(bluredBitmap, 128);
+
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture);
+
+        drawRender2();
+    }
+
+
+    // To create a bitmap I read pixels from the framebuffer because didn't find any other way to do it but I'm open for other methods
+    public static Bitmap SavePixels(int x, int y, int w, int h)
+    {
+        int b[]=new int[w*(y+h)];
+        int bt[]=new int[w*h];
+        IntBuffer ib=IntBuffer.wrap(b);
+        ib.position(0);
+        GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, ib);
+
+        for(int i=0, k=0; i<h; i++, k++)
+        {
+            for(int j=0; j<w; j++)
+            {
+                int pix=b[i*w+j];
+                int pb=(pix>>16)&0xff;
+                int pr=(pix<<16)&0x00ff0000;
+                int pix1=(pix&0xff00ff00) | pr | pb;
+                bt[(h-k-1)*w+j]=pix1;
+            }
+        }
+        Bitmap sb=Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
+        return sb;
+    }
+
+    // Here is the bitmap to texture code:
+    public static int loadTexture(final Bitmap pics, int size)
+    {
+        final int[] textureHandle = new int[1];
+
+        GLES20.glGenTextures(1, textureHandle, 0);
+
+        if (textureHandle[0] != 0)
+        {
+            // Read in the resource
+            final Bitmap bitmap = pics;
+
+            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+            GLES20.glEnable(GLES20.GL_BLEND);
+
+            // Bind to the texture in OpenGL
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+
+            // Set filtering
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+
+            // Load the bitmap into the bound texture.
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+            // Recycle the bitmap, since its data has been loaded into OpenGL.
+            bitmap.recycle();
+        }
+
+        if (textureHandle[0] == 0)
+        {
+            throw new RuntimeException("Error loading texture.");
+        }
+
+        return textureHandle[0];
     }
 
 

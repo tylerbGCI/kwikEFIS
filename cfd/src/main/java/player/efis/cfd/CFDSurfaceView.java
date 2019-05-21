@@ -40,8 +40,9 @@ public class CFDSurfaceView extends GLSurfaceView
     {
         super(context);
 
+        /*
         // Create an OpenGL ES 2.0 context.
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(2);  //2
 
         // Set the Renderer for drawing on the GLSurfaceView
         mRenderer = new CFDRenderer(context); // = new MyGLRenderer();  --b2
@@ -49,6 +50,7 @@ public class CFDSurfaceView extends GLSurfaceView
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        //*/
 
         /*
         Then just use this Renderer in your GLSurfaceView
@@ -57,12 +59,12 @@ public class CFDSurfaceView extends GLSurfaceView
         glSurfaceView.setRenderer(new BitmapRenderer(getResources()));
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         */
-        /*
+        ///*
         mRenderer = new CFDRenderer(context); // = new MyGLRenderer();  --b2
-        setEGLContextClientVersion(1);
+        setEGLContextClientVersion(1);  //1
         setRenderer(new BitmapRenderer(getResources()));
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        */
+        //*/
 
     }
 
