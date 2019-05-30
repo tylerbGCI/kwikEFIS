@@ -27,6 +27,7 @@ import player.gles20.Triangle;
 import player.ulib.*;
 
 import player.gles20.GLText;
+import player.gles20.GLBitmap;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -162,6 +163,8 @@ abstract public class EFISRenderer
     private String sDemoMsg;
 
     protected GLText glText;      // A GLText Instance
+    protected GLBitmap glBitmap;  // A GLBitmap Instance
+
     protected Context context;    // Context (from Activity)
 
     // Colors

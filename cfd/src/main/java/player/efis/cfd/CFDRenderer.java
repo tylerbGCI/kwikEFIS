@@ -19,7 +19,9 @@ package player.efis.cfd;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
 import player.efis.common.Apt;
@@ -32,6 +34,7 @@ import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
 import player.efis.common.Point;
+import player.gles20.GLBitmap;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -50,6 +53,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
@@ -57,47 +61,25 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
 
+    Bitmap bm1 = null;
+    Bitmap bm2 = null;
+
     public CFDRenderer(Context context)
     {
         super(context);
-        resources = context.getResources(); // bitmap
+        //resources = context.getResources(); // bitmap
     }
 
 
-    // Bitmap
-    private int[] textures;
-    private Resources resources;
 
-    /*public BitmapRenderer(Resources resources) { this.resources = resources; }*/
+    // Sprite code >>>> https://gamedev.stackexchange.com/questions/98767/opengl-es-2-0-2d-image-displaying
 
-    private static final float[] VERTEX_COORDINATES = new float[]
-            {
-                    -1.0f, +1.0f, 0.0f,
-                    +1.0f, +1.0f, 0.0f,
-                    -1.0f, -1.0f, 0.0f,
-                    +1.0f, -1.0f, 0.0f
-            };
-
-    private static final float[] TEXTURE_COORDINATES = new float[]
-            {
-                    0.0f, 0.0f,
-                    1.0f, 0.0f,
-                    0.0f, 1.0f,
-                    1.0f, 1.0f
-            };
-
-    private static final Buffer TEXCOORD_BUFFER = ByteBuffer.allocateDirect(TEXTURE_COORDINATES.length * 4)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer().put(TEXTURE_COORDINATES).rewind();
-    private static final Buffer VERTEX_BUFFER = ByteBuffer.allocateDirect(VERTEX_COORDINATES.length * 4)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer().put(VERTEX_COORDINATES).rewind();
-    // Bitmap
-
+    // https://stackoverflow.com/questions/47280918/opengl-es-draw-bitmap
 
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
     {
-        ///*
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -110,29 +92,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
+        glBitmap = new GLBitmap();
+
         roseTextScale = 1f;
-        //*/
-
-        /*
-        // Bitmap
-        textures = new int[1];
-        GLES20.glEnable(GL10.GL_TEXTURE_2D);
-        unused.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        unused.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-        GLES20.glGenTextures(1, textures, 0);
-        GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-
-        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-        GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-
-        //GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher), 0);
-        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, BitmapFactory.decodeResource(resources, R.drawable.ic_launcher), 0);
-        // Bitmap
-        //*/
-
     }
 
 
@@ -141,6 +103,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public void onDrawFrame(GL10 gl)
     {
         ctr++;
+
+        // Draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -151,21 +116,78 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        //if (ctr % 2 == 0) onDrawFramePfd(gl);
-        //if (ctr % 2 == 1) onDrawFrameMfd(gl);
-        //Bitmap bm = takeScreenshot(gl);*/
-        onDrawFramePfd(gl);
+        /*onDrawFramePfd(gl);
+        bm1 = saveScreen(gl, pixH2, pixH2);
         onDrawFrameMfd(gl);
+        bm2 = saveScreen(gl, 0, pixH2);*/
 
-        // bitmap
-        gl.glActiveTexture(GL10.GL_TEXTURE0);
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+        if (bm1 == null)
+            bm1 = saveScreen(gl, pixH2, pixH2);
+        if (bm2 == null)
+            bm2 = saveScreen(gl, 0, pixH2);
 
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, VERTEX_BUFFER);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, TEXCOORD_BUFFER);
-        gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
-        // bitmap
+        if (ctr % 2 == 0)
+        {
+            onDrawFramePfd(gl);
+            bm1 = saveScreen(gl, pixH2, pixH2);
+        }
+        if (ctr % 2 == 1)
+        {
+            onDrawFrameMfd(gl);
+            bm2 = saveScreen(gl, 0, pixH2);
+        }
 
+        //int mTextureDataHandle1 = loadTexture(context, bm1);
+        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        glBitmap.draw(loadTexture(context, bm1));
+
+        //int mTextureDataHandle2 = loadTexture(context, bm2);
+        GLES20.glViewport(0, 0, pixW, pixH2);
+        glBitmap.draw(loadTexture(context, bm2));
+
+        /*
+        if (ctr % 2 == 1) {
+            onDrawFrameMfd(gl);
+            bm2 = saveScreen(gl, 0, pixH2);
+        }
+        else {
+            int mTextureDataHandle2 = loadTexture(context, bm2);
+            GLES20.glViewport(0, 0, pixW, pixH2);
+            glBitmap.draw(mTextureDataHandle2);
+        }
+        */
+
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        /*
+        int mTextureDataHandle1 = loadTexture(context, bm1);
+        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        glBitmap.draw(mTextureDataHandle1);
+
+        int mTextureDataHandle2 = loadTexture(context, bm2);
+        GLES20.glViewport(0, 0, pixW, pixH2);
+        glBitmap.draw(mTextureDataHandle2);
+        */
+
+
+        //if (ctr % 2 == 1) {
+        /*if (ctr % 4 == 0) {
+            onDrawFrameMfd(gl);
+            bm2 = saveScreen(gl, pixH2, pixH2);
+        }
+        else {
+            mTextureDataHandle = loadTexture(context, bm2);
+            GLES20.glViewport(0, 0, pixW, pixH2);
+            glBitmap.draw(mTextureDataHandle);
+        }*/
+
+        //onDrawFramePfd(gl);
+        //onDrawFrameMfd(gl);
+
+        /*Bitmap bm = saveScreen(gl, 0, pixH2);
+        mTextureDataHandle = loadTexture(context, bm);
+        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        glBitmap.draw(mTextureDataHandle);*/
     }
 
 
@@ -455,6 +477,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    int mTextureDataHandle;
+
     @Override
     protected void renderUnserviceableDevice(float[] matrix)
     {
@@ -559,7 +583,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 selAltDec = -0.80f * pixH2;
                 selAltInc = -0.91f * pixH2;
 
-                lineC = -0.55f; 
+                lineC = -0.55f;
                 leftC = 0.6f;
                 spinnerStep = 0.1f;
                 spinnerTextScale = 1f;
@@ -689,7 +713,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 //
                 //  69%
                 //
-                //   Square
+                //   SquareA
                 //   4    3
                 //    +--+
                 //    |  |
@@ -749,7 +773,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // DMAP routines
     //
 
-    
     private void onDrawFrameMfd(GL10 gl)
     {
         GLES20.glViewport(0, 0, pixW, pixH2*99/100);
@@ -860,7 +883,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);  // fatFingerActive just for performance
+        // fatFingerActive just for performance
+        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
@@ -1239,7 +1263,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-
     public Bitmap takeScreenshot(GL10 mGL)
     {
         final int mWidth = pixW;
@@ -1262,77 +1285,121 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         return mBitmap;
     }
 
-
-    // ================================
-
-
-    public void renderToTexture()
+    public Bitmap saveScreen(GL10 mGL, int offset, int height)
     {
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+        final int mWidth = pixW;
+        final int mHeight = height;
 
-        // specify texture as color attachment
-        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
-        // attach render buffer as depth buffer
-        GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
-        // check status
-        int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
-        drawRender();
+        IntBuffer ib = IntBuffer.allocate(mWidth * mHeight);
+        IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
+        mGL.glReadPixels(0, offset, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
 
-        Bitmap bitmap = SavePixels(0,0,texW,texH);
-        //blur bitmap and get back a bluredBitmap not yet implemented
-        texture = TextureHelper.loadTexture(bluredBitmap, 128);
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture);
-
-        drawRender2();
-    }
-
-
-    // To create a bitmap I read pixels from the framebuffer because didn't find any other way to do it but I'm open for other methods
-    public static Bitmap SavePixels(int x, int y, int w, int h)
-    {
-        int b[]=new int[w*(y+h)];
-        int bt[]=new int[w*h];
-        IntBuffer ib=IntBuffer.wrap(b);
-        ib.position(0);
-        GLES20.glReadPixels(0, 0, w, h, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, ib);
-
-        for(int i=0, k=0; i<h; i++, k++)
-        {
-            for(int j=0; j<w; j++)
-            {
-                int pix=b[i*w+j];
-                int pb=(pix>>16)&0xff;
-                int pr=(pix<<16)&0x00ff0000;
-                int pix1=(pix&0xff00ff00) | pr | pb;
-                bt[(h-k-1)*w+j]=pix1;
+        // Convert upside down mirror-reversed image to right-side up normal
+        // image.
+        for (int i = 0; i < mHeight; i++) {
+            for (int j = 0; j < mWidth; j++) {
+                ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
             }
         }
-        Bitmap sb=Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-        return sb;
+        Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
+        mBitmap.copyPixelsFromBuffer(ibt);
+        return mBitmap;
     }
 
-    // Here is the bitmap to texture code:
-    public static int loadTexture(final Bitmap pics, int size)
+
+    //======================================
+
+    //-private static final String TAG = "MyGLRenderer";
+    //private Context context;
+    private Sprite sprite;
+    private SquareA squareA;
+
+    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
+    /*
+    private final float[] mMVPMatrix = new float[16];
+    private final float[] mProjectionMatrix = new float[16];
+    private final float[] mViewMatrix = new float[16];
+    */
+
+    /*public MyGLRenderer(Context ctx)
+    {
+        this.context = ctx;
+    }*/
+
+    /*@Override
+    public void onSurfaceCreated(GL10 unused, EGLConfig config)
+    {
+
+        // Set the background frame color
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        sprite = new Sprite(context);
+    }*/
+
+
+    /*@Override
+    public void onDrawFrame(GL10 unused)
+    {
+        sprite.draw(mMVPMatrix);
+    }*/
+
+    /*@Override
+    public void onSurfaceChanged(GL10 unused, int width, int height)
+    {
+        // Adjust the viewport based on geometry changes,
+        // such as screen rotation
+        GLES20.glViewport(0, 0, width, height);
+
+        float ratio = (float) width / height;
+
+        // this projection matrix is applied to object coordinates
+        // in the onDrawFrame() method
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 2, 7);
+
+        //final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, 1);
+        loadTexture(context, R.drawable.ic_launcher); //b2
+
+    }*/
+
+/*    public static int loadShader(int type, String shaderCode)
+    {
+
+        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        int shader = GLES20.glCreateShader(type);
+
+        // add the source code to the shader and compile it
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
+    }
+
+    public static void checkGlError(String glOperation)
+    {
+        int error;
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            Log.e(TAG, glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
+    }*/
+
+
+    //NEW
+    //public static int loadTexture(final Context context, final int resourceId)
+    public static int loadTexture(final Context context, Bitmap bitmap)
     {
         final int[] textureHandle = new int[1];
 
         GLES20.glGenTextures(1, textureHandle, 0);
 
-        if (textureHandle[0] != 0)
-        {
-            // Read in the resource
-            final Bitmap bitmap = pics;
+        if (textureHandle[0] != 0) {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false;   // No pre-scaling
 
-            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-            GLES20.glEnable(GLES20.GL_BLEND);
+            // Read in the resource
+            //final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
 
             // Bind to the texture in OpenGL
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
@@ -1345,73 +1412,16 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 
             // Recycle the bitmap, since its data has been loaded into OpenGL.
-            bitmap.recycle();
+            // bitmap.recycle();
         }
 
-        if (textureHandle[0] == 0)
-        {
+        if (textureHandle[0] == 0) {
             throw new RuntimeException("Error loading texture.");
         }
 
         return textureHandle[0];
     }
 
-    /**
-     * Saves][1] the current frame to disk as a PNG image.
-     */
-    public void saveFrame(String filename) throws IOException {
-        // glReadPixels gives us a ByteBuffer filled with what is essentially big-endian RGBA
-        // data (i.e. a byte of red, followed by a byte of green...).  To use the Bitmap
-        // constructor that takes an int[] array with pixel data, we need an int[] filled
-        // with little-endian ARGB data.
-        //
-        // If we implement this as a series of buf.get() calls, we can spend 2.5 seconds just
-        // copying data around for a 720p frame.  It's better to do a bulk get() and then
-        // rearrange the data in memory.  (For comparison, the PNG compress takes about 500ms
-        // for a trivial frame.)
-        //
-        // So... we set the ByteBuffer to little-endian, which should turn the bulk IntBuffer
-        // get() into a straight memcpy on most Android devices.  Our ints will hold ABGR data.
-        // Swapping B and R gives us ARGB.  We need about 30ms for the bulk get(), and another
-        // 270ms for the color swap.
-        //
-        // We can avoid the costly B/R swap here if we do it in the fragment shader (see
-        // http://stackoverflow.com/questions/21634450/ ).
-        //
-        // Having said all that... it turns out that the Bitmap#copyPixelsFromBuffer()
-        // method wants RGBA pixels, not ARGB, so if we create an empty bitmap and then
-        // copy pixel data in we can avoid the swap issue entirely, and just copy straight
-        // into the Bitmap from the ByteBuffer.
-        //
-        // Making this even more interesting is the upside-down nature of GL, which means
-        // our output will look upside-down relative to what appears on screen if the
-        // typical GL conventions are used.  (For ExtractMpegFrameTest, we avoid the issue
-        // by inverting the frame when we render it.)
-        //
-        // Allocating large buffers is expensive, so we really want mPixelBuf to be
-        // allocated ahead of time if possible.  We still get some allocations from the
-        // Bitmap / PNG creation.
-
-        mPixelBuf.rewind();
-        GLES20.glReadPixels(0, 0, mWidth, mHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
-                mPixelBuf);
-
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(new FileOutputStream(filename));
-            Bitmap bmp = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-            mPixelBuf.rewind();
-            bmp.copyPixelsFromBuffer(mPixelBuf);
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
-            bmp.recycle();
-        } finally {
-            if (bos != null) bos.close();
-        }
-        if (VERBOSE) {
-            Log.d(TAG, "Saved " + mWidth + "x" + mHeight + " frame as '" + filename + "'");
-        }
-    }
-
-
+    //======================================
 
 }
