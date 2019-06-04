@@ -867,7 +867,8 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Audio cautions and messages
         //
-        if (hasGps) {
+        if (false) {  // todo: no sounds for debugging
+        //if (hasGps) {
             try {
                 // We have new traffic
                 // TODO: 2018-08-31 Implement a suitable detection and reporting strategy

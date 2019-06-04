@@ -63,6 +63,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
     Bitmap bm1 = null;
     Bitmap bm2 = null;
+    int textureHandle1;
+    int textureHandle2;
 
     public CFDRenderer(Context context)
     {
@@ -116,16 +118,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        /*onDrawFramePfd(gl);
-        bm1 = saveScreen(gl, pixH2, pixH2);
-        onDrawFrameMfd(gl);
-        bm2 = saveScreen(gl, 0, pixH2);*/
 
-        if (bm1 == null)
-            bm1 = saveScreen(gl, pixH2, pixH2);
-        if (bm2 == null)
-            bm2 = saveScreen(gl, 0, pixH2);
-
+        /*
+        testing for buffering
         if (ctr % 2 == 0)
         {
             onDrawFramePfd(gl);
@@ -137,65 +132,25 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             bm2 = saveScreen(gl, 0, pixH2);
         }
 
-        //int mTextureDataHandle1 = loadTexture(context, bm1);
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
-        glBitmap.draw(loadTexture(context, bm1));
-
-        //int mTextureDataHandle2 = loadTexture(context, bm2);
-        GLES20.glViewport(0, 0, pixW, pixH2);
-        glBitmap.draw(loadTexture(context, bm2));
-
-        /*
-        if (ctr % 2 == 1) {
-            onDrawFrameMfd(gl);
-            bm2 = saveScreen(gl, 0, pixH2);
+        if (bm1 != null) {
+            GLES20.glViewport(0, pixH2, pixW, pixH2);
+            glBitmap.draw(loadTexture(context, bm1));
         }
-        else {
-            int mTextureDataHandle2 = loadTexture(context, bm2);
+        if (bm2 != null) {
             GLES20.glViewport(0, 0, pixW, pixH2);
-            glBitmap.draw(mTextureDataHandle2);
+            glBitmap.draw(loadTexture(context, bm2));
         }
         */
 
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
-        /*
-        int mTextureDataHandle1 = loadTexture(context, bm1);
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
-        glBitmap.draw(mTextureDataHandle1);
-
-        int mTextureDataHandle2 = loadTexture(context, bm2);
-        GLES20.glViewport(0, 0, pixW, pixH2);
-        glBitmap.draw(mTextureDataHandle2);
-        */
-
-
-        //if (ctr % 2 == 1) {
-        /*if (ctr % 4 == 0) {
-            onDrawFrameMfd(gl);
-            bm2 = saveScreen(gl, pixH2, pixH2);
-        }
-        else {
-            mTextureDataHandle = loadTexture(context, bm2);
-            GLES20.glViewport(0, 0, pixW, pixH2);
-            glBitmap.draw(mTextureDataHandle);
-        }*/
-
-        //onDrawFramePfd(gl);
-        //onDrawFrameMfd(gl);
-
-        /*Bitmap bm = saveScreen(gl, 0, pixH2);
-        mTextureDataHandle = loadTexture(context, bm);
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
-        glBitmap.draw(mTextureDataHandle);*/
+        onDrawFramePfd(gl);
+        onDrawFrameMfd(gl);
     }
 
 
     private void onDrawFramePfd(GL10 gl)
     {
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        //GLES20.glViewport(0, pixH2, pixW, pixH2);
         GLES20.glViewport(0, pixH2, pixW, pixH);
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         /*
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -247,8 +202,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
-            if ((AGLValue > 0) && (DemGTOPO30.demDataValid))
-                renderDEMTerrainPfd(scratch1);  // underground is not valid
+            // underground is not valid
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrainPfdCache(gl, scratch1);
         }
         else if (displayAHColors) renderAHColors(scratch1);
 
@@ -598,6 +553,26 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
+
+    protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
+    {
+        //if (bm1 != null)
+
+        if (ctr % 20 == 0) {
+            renderDEMTerrainPfd(matrix);
+            bm1 = saveScreen(gl, pixH2, pixH2);
+            textureHandle1 = loadTexture(context, bm1);
+            bm1.recycle();
+            bm1 = null;
+        }
+        else {
+            GLES20.glViewport(0, pixH2, pixW, pixH2);
+            glBitmap.draw(textureHandle1);
+            GLES20.glViewport(0, pixH2, pixW, pixH);
+        }
+    }
+
+
     protected void renderDEMTerrainPfd(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
@@ -884,7 +859,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
-        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
+        if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
@@ -977,6 +952,24 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
+    protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
+    {
+        //if (bm2 != null)
+
+        if (ctr % 20 == 10) {
+            renderDEMTerrainPfd(matrix);
+            bm2 = saveScreen(gl, 0, pixH2);
+            textureHandle2 = loadTexture(context, bm2);
+            bm2.recycle();
+            bm2 = null;
+        }
+        else {
+            GLES20.glViewport(0, 0, pixW, pixH2);
+            glBitmap.draw(textureHandle2);
+            GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
+        }
+    }
+
     protected void renderDEMTerrainMfd(float[] matrix)
     {
         float z, x1, y1, z1;
@@ -1263,28 +1256,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    public Bitmap takeScreenshot(GL10 mGL)
-    {
-        final int mWidth = pixW;
-        final int mHeight = pixH;
-
-        IntBuffer ib = IntBuffer.allocate(mWidth * mHeight);
-        IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
-        mGL.glReadPixels(0, 0, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
-
-        // Convert upside down mirror-reversed image to right-side up normal
-        // image.
-        for (int i = 0; i < mHeight; i++) {
-            for (int j = 0; j < mWidth; j++) {
-                ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
-            }
-        }
-        Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-        mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
-        mBitmap.copyPixelsFromBuffer(ibt);
-        return mBitmap;
-    }
-
     public Bitmap saveScreen(GL10 mGL, int offset, int height)
     {
         final int mWidth = pixW;
@@ -1308,85 +1279,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    //======================================
-
-    //-private static final String TAG = "MyGLRenderer";
-    //private Context context;
-    private Sprite sprite;
-    private SquareA squareA;
-
-    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-    /*
-    private final float[] mMVPMatrix = new float[16];
-    private final float[] mProjectionMatrix = new float[16];
-    private final float[] mViewMatrix = new float[16];
-    */
-
-    /*public MyGLRenderer(Context ctx)
-    {
-        this.context = ctx;
-    }*/
-
-    /*@Override
-    public void onSurfaceCreated(GL10 unused, EGLConfig config)
-    {
-
-        // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        sprite = new Sprite(context);
-    }*/
-
-
-    /*@Override
-    public void onDrawFrame(GL10 unused)
-    {
-        sprite.draw(mMVPMatrix);
-    }*/
-
-    /*@Override
-    public void onSurfaceChanged(GL10 unused, int width, int height)
-    {
-        // Adjust the viewport based on geometry changes,
-        // such as screen rotation
-        GLES20.glViewport(0, 0, width, height);
-
-        float ratio = (float) width / height;
-
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 2, 7);
-
-        //final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, 1);
-        loadTexture(context, R.drawable.ic_launcher); //b2
-
-    }*/
-
-/*    public static int loadShader(int type, String shaderCode)
-    {
-
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        int shader = GLES20.glCreateShader(type);
-
-        // add the source code to the shader and compile it
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
-
-        return shader;
-    }
-
-    public static void checkGlError(String glOperation)
-    {
-        int error;
-        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-            Log.e(TAG, glOperation + ": glError " + error);
-            throw new RuntimeException(glOperation + ": glError " + error);
-        }
-    }*/
-
-
-    //NEW
     //public static int loadTexture(final Context context, final int resourceId)
     public static int loadTexture(final Context context, Bitmap bitmap)
     {
@@ -1395,8 +1287,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         GLES20.glGenTextures(1, textureHandle, 0);
 
         if (textureHandle[0] != 0) {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inScaled = false;   // No pre-scaling
+            //final BitmapFactory.Options options = new BitmapFactory.Options();
+            //options.inScaled = false;   // No pre-scaling
 
             // Read in the resource
             //final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
