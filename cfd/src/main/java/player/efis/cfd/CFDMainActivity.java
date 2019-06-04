@@ -546,6 +546,8 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
 
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
+        bSimulatorActive = true; // TODO: 2019-06-04 REMOVE!!!
+
         bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
 

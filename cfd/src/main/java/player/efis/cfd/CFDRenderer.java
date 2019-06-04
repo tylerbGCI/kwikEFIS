@@ -16,12 +16,7 @@
 
 package player.efis.cfd;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
 import player.efis.common.Apt;
@@ -45,15 +40,12 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.util.Log;
 
 public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 {
@@ -61,10 +53,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
 
-    Bitmap bm1 = null;
-    Bitmap bm2 = null;
-    int textureHandle1;
-    int textureHandle2;
 
     public CFDRenderer(Context context)
     {
@@ -117,30 +105,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
-
-        /*
-        testing for buffering
-        if (ctr % 2 == 0)
-        {
-            onDrawFramePfd(gl);
-            bm1 = saveScreen(gl, pixH2, pixH2);
-        }
-        if (ctr % 2 == 1)
-        {
-            onDrawFrameMfd(gl);
-            bm2 = saveScreen(gl, 0, pixH2);
-        }
-
-        if (bm1 != null) {
-            GLES20.glViewport(0, pixH2, pixW, pixH2);
-            glBitmap.draw(loadTexture(context, bm1));
-        }
-        if (bm2 != null) {
-            GLES20.glViewport(0, 0, pixW, pixH2);
-            glBitmap.draw(loadTexture(context, bm2));
-        }
-        */
 
         onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
@@ -553,21 +517,19 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-
+    int frameSkip = 2; //500;
+    int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
-        //if (bm1 != null)
-
-        if (ctr % 20 == 0) {
+        if (ctr % frameSkip == 0) {
             renderDEMTerrainPfd(matrix);
-            bm1 = saveScreen(gl, pixH2, pixH2);
-            textureHandle1 = loadTexture(context, bm1);
-            bm1.recycle();
-            bm1 = null;
+            Bitmap bm = saveScreen(gl, pixH2, pixH2);
+            textureHandlePfd = loadTexture(bm);
+            bm.recycle();
         }
         else {
             GLES20.glViewport(0, pixH2, pixW, pixH2);
-            glBitmap.draw(textureHandle1);
+            glBitmap.draw(textureHandlePfd);
             GLES20.glViewport(0, pixH2, pixW, pixH);
         }
     }
@@ -860,7 +822,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
-        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
+        //if (displayAirspace) renderAirspaceMfd(mMVPMatrix); // moved to cache
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
         Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -952,20 +914,19 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
+    int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
-        //if (bm2 != null)
-
-        if (ctr % 20 == 10) {
-            renderDEMTerrainPfd(matrix);
-            bm2 = saveScreen(gl, 0, pixH2);
-            textureHandle2 = loadTexture(context, bm2);
-            bm2.recycle();
-            bm2 = null;
+        if (ctr % frameSkip == frameSkip/2) {
+            renderDEMTerrainMfd(matrix);
+            if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
+            Bitmap bm = saveScreen(gl, 0, pixH2);
+            textureHandleMfd = loadTexture(bm);
+            bm.recycle();
         }
         else {
             GLES20.glViewport(0, 0, pixW, pixH2);
-            glBitmap.draw(textureHandle2);
+            glBitmap.draw(textureHandleMfd);
             GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
         }
     }
@@ -1280,7 +1241,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
 
     //public static int loadTexture(final Context context, final int resourceId)
-    public static int loadTexture(final Context context, Bitmap bitmap)
+    //public static int loadTexture(final Context context, Bitmap bitmap)
+    public static int loadTexture(Bitmap bitmap)
     {
         final int[] textureHandle = new int[1];
 
