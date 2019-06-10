@@ -47,6 +47,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Debug;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -546,7 +547,7 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
 
         bSimulatorActive = settings.getBoolean("simulatorActive", false);
-        bSimulatorActive = true; // TODO: 2019-06-04 REMOVE!!!
+        //bSimulatorActive = true; // TODO: 2019-06-04 REMOVE!!!
 
         bStratuxActive = settings.getBoolean("stratuxActive", false);
         bHudMode = settings.getBoolean("displayMirror", false);
@@ -869,11 +870,11 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         //
         // Audio cautions and messages
         //
-        if (false) {  // todo: no sounds for debugging
+        if (false) {  // todo: no sounds for debugging REMOVE!!!
         //if (hasGps) {
             try {
                 // We have new traffic
-                // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
+                // Implement a suitable detection and reporting strategy
                 if (mStratux != null) {
                     if (mStratux.proximityAlert) {
                         if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();

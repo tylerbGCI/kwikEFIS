@@ -23,6 +23,7 @@ import player.efis.common.Apt;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
+import player.efis.common.DemRenderTask;
 import player.efis.common.EFISRenderer;
 import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
@@ -41,6 +42,7 @@ import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -178,7 +180,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(scratch1);        // TODO: 2018-08-31 Add control tof targets
+        if (true) renderTargets(scratch1);        // Add control tof targets sometime ...
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
         //GLES20.glViewport(0, 0, pixW, pixH);
@@ -517,21 +519,32 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    int frameSkip = 2; //500;
+    int frameSkipPfd = 11/10; //200; //500;
     int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
-        if (ctr % frameSkip == 0) {
-            renderDEMTerrainPfd(matrix);
+        if (ctr % frameSkipPfd == 0) {
+            /*renderDEMTerrainPfd(matrix);
             Bitmap bm = saveScreen(gl, pixH2, pixH2);
             textureHandlePfd = loadTexture(bm);
+            bm.recycle();*/
+
+            // For debug
+            ///*
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            //options.inScaled = false;   // No pre-scaling
+            // Read in the resource
+            //mTextureDataHandle = loadTexture(mActivityContext, R.drawable.ic_launcher);
+            final Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, options);
+            textureHandlePfd = loadTexture(bm);
             bm.recycle();
+            //*/
+
         }
-        else {
-            GLES20.glViewport(0, pixH2, pixW, pixH2);
-            glBitmap.draw(textureHandlePfd);
-            GLES20.glViewport(0, pixH2, pixW, pixH);
-        }
+
+        GLES20.glViewport(0, pixH2, pixW, pixH2);
+        glBitmap.draw(matrix, textureHandlePfd);
+        GLES20.glViewport(0, pixH2, pixW, pixH);
     }
 
 
@@ -914,21 +927,33 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
+    int frameSkipMfd = 101*4; //200; //500;
     int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
-        if (ctr % frameSkip == frameSkip/2) {
+        //if (ctr % frameSkip == frameSkip/2) {
+        if (ctr % frameSkipMfd == 0) {
+            /*renderDEMTerrainMfd(matrix);
+            renderAirspaceMfd(matrix);
+
+            if (demRenderTask == null) {
+                demRenderTask = new DemRenderTask("kwik");
+                demRenderTask.width = pixW;
+                demRenderTask.height = pixH2;
+                demRenderTask.gl = gl;
+                demRenderTask.execute();
+                int a = 10;
+            }*/
+
             renderDEMTerrainMfd(matrix);
-            if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
+            if (displayAirspace) renderAirspaceMfd(matrix);
             Bitmap bm = saveScreen(gl, 0, pixH2);
             textureHandleMfd = loadTexture(bm);
             bm.recycle();
         }
-        else {
-            GLES20.glViewport(0, 0, pixW, pixH2);
-            glBitmap.draw(textureHandleMfd);
-            GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
-        }
+        GLES20.glViewport(0, 0, pixW, pixH2);
+        glBitmap.draw(matrix, textureHandleMfd);
+        GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
     }
 
     protected void renderDEMTerrainMfd(float[] matrix)
@@ -1155,6 +1180,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             catch (Exception e) {
                 break;
             }
+
+            if (currApt.name == null) break;
 
             wptId = currApt.name;
             dme = UNavigation.calcDme(LatValue, LonValue, currApt.lat, currApt.lon); // in nm
