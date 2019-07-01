@@ -41,10 +41,10 @@ public class Square {
 
 	private final String fragmentShaderCode =
 			"precision mediump float;" +
-					"uniform vec4 vColor;" +
-					"void main() {" +
-					"  gl_FragColor = vColor;" +
-					"}";
+			"uniform vec4 vColor;" +
+			"void main() {" +
+			"  gl_FragColor = vColor;" +
+			"}";
 
 
 	private final FloatBuffer vertexBuffer;
@@ -148,7 +148,8 @@ public class Square {
 	 * @param mvpMatrix - The Model View Project matrix in which to draw
 	 * this shape.
 	 */
-	public void draw(float[] mvpMatrix) {
+	public void draw(float[] mvpMatrix) 
+	{
 		// Add program to OpenGL environment
 		GLES20.glUseProgram(mProgram);
 

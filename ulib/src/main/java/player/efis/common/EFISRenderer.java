@@ -16,6 +16,7 @@
 
 package player.efis.common;
 
+import java.nio.IntBuffer;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -27,14 +28,18 @@ import player.gles20.Triangle;
 import player.ulib.*;
 
 import player.gles20.GLText;
-import player.gles20.GLBitmap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.microedition.khronos.opengles.GL10;
 
 
 /**
@@ -163,7 +168,6 @@ abstract public class EFISRenderer
     private String sDemoMsg;
 
     protected GLText glText;      // A GLText Instance
-    protected GLBitmap glBitmap;  // A GLBitmap Instance
 
     protected Context context;    // Context (from Activity)
 
@@ -254,6 +258,10 @@ abstract public class EFISRenderer
             throw new RuntimeException(glOperation + ": glError " + error);
         }
     }
+
+
+
+
 
     //-------------------------------------------------------------------------
     //  Returns the rotation angle of the triangle shape (mTriangle).
@@ -710,8 +718,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 0.0f, z,
+                    +pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
                     -pixOverWidth, 0.0f, z
             };
             mSquare.SetVerts(squarePoly);
@@ -729,8 +737,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, 0.0f, z,
-                    pixOverWidth, 0.0f, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -2101,7 +2109,7 @@ abstract public class EFISRenderer
     //-------------------------------------------------------------------------
     // DemGTOPO30 Sky.
     //
-    protected void renderDEMSky(float[] matrix)
+    protected void renderDEMSky1(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 
@@ -2123,8 +2131,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, -overlap * pixPitchViewMultiplier, z,
-                    pixOverWidth, -overlap * pixPitchViewMultiplier, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -2132,7 +2140,64 @@ abstract public class EFISRenderer
         }
     }
 
+    protected void renderDEMSky(float[] matrix)
+    {
+        float pixPitchViewMultiplier, pixOverWidth, z;
 
+        pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
+        pixOverWidth = pixW2 * 1.80f;
+        z = zfloat;
+
+        // Sky - simple
+        // max: -0.05 to 180 pitch
+        float overlap;
+        if (AGLValue > 0) overlap = MSLValue/100000f;
+        else overlap = 0.0f;
+
+        overlap = 0.0f;  // maybe good idea?
+
+
+        // Earth
+        // Level to -180 pitch
+        // Handle Monochrome
+        //if (colorTheme == 2) mSquare.SetColor(0, 0.2f, 0, 1); //green
+        //else mSquare.SetColor(gamma * 0.30f, gamma * 0.20f, gamma * 0.10f, 1); //brown (3,2,1)
+        mSquare.SetColor(0, 0, 0, 1); //black
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
+                    -pixOverWidth, 0.0f, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+        // Sky
+        // Level to 180 pitch
+        // TODO: 2017-10-31 make parameterised
+
+        // Handle Monochrome
+        if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
+        else mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue (1,2,3)
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    //-pixOverWidth, 0.0f, z,
+                    //+pixOverWidth, 0.0f, z,
+                    -pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+
+    }
 
 
 
@@ -3401,7 +3466,6 @@ abstract public class EFISRenderer
         glText.drawCX("N", 0, 0.09f*pixM2);
         glText.end();
     }
-
 
 }
 

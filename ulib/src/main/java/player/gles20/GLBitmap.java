@@ -1,185 +1,196 @@
 package player.gles20;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
+import player.efis.common.EFISRenderer;
 
 public class GLBitmap
 {
-
-    private float[] vertices = {
-            -1f, -1f,
-            1f, -1f,
-            -1f, 1f,
-            1f, 1f
-    };
-
-    private float[] textureVertices = {
-            0f, 1f,
-            1f, 1f,
-            0f, 0f,
-            1f, 0f
-    };
-
-    /*
     private final String vertexShaderCode =
-            "attribute vec4 aPosition;" +
-                    "attribute vec2 aTexPosition;" +
-                    "varying vec2 vTexPosition;" +
-                    "void main() {" +
-                    "  gl_Position = aPosition;" +
-                    "  vTexPosition = aTexPosition;" +
-                    "}";
-
-    private final String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform sampler2D uTexture;" +
-                    "varying vec2 vTexPosition;" +
-                    "void main() {" +
-                    "  gl_FragColor = texture2D(uTexture, vTexPosition);" +
-                    "}";
-    */
-    /*
-    private final String vertexShaderCode =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
-                    "uniform mat4 uMVPMatrix;" +
+					"uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
+                    "attribute vec2 a_TextureCoordinates;" +
+                    "varying vec2 v_TextureCoordinates;" +
                     "void main() {" +
-                    // The matrix must be included as a modifier of gl_Position.
-                    // Note that the uMVPMatrix factor *must be first* in order
-                    // for the matrix multiplication product to be correct.
                     "  gl_Position = uMVPMatrix * vPosition;" +
-                    "}";
-    private final String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform vec4 vColor;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor;" +
-                    "}";
-
-    */
-    private final String vertexShaderCode =
-            "uniform mat4 uMVPMatrix;" +
-            "attribute vec4 vPosition;" +
-            "attribute vec4 aPosition;" +
-                    "attribute vec2 aTexPosition;" +
-                    "varying vec2 vTexPosition;" +
-                    "void main() {" +
-                    "  gl_Position = aPosition;" +
-                    //"  gl_Position = uMVPMatrix * vTexPosition;" +
-                    "  vTexPosition = aTexPosition;" +
+                    "  v_TextureCoordinates = a_TextureCoordinates;" +
                     "}";
 
     private final String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform sampler2D uTexture;" +
-                    "varying vec2 vTexPosition;" +
+					"precision mediump float;" +
+                    "uniform sampler2D u_TextureUnit;" +
+                    "varying vec2 v_TextureCoordinates;" +
                     "void main() {" +
-                    "  gl_FragColor = texture2D(uTexture, vTexPosition);" +
+                    "   gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);" +
                     "}";
 
-    private FloatBuffer vertexBuffer;
-    private FloatBuffer textureBuffer;
-
-    private int vertexShader;
-    private int fragmentShader;
-    private int mProgram;
-
-
-    // square ---
-    //private final FloatBuffer vertexBuffer;
-    //private final ShortBuffer drawListBuffer;
-    //private final int mProgram;
+    private final FloatBuffer vertexBuffer;
+    private final FloatBuffer textureBuffer;
+    private final ShortBuffer drawListBuffer;
+    private final int mProgram;
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
-
-    // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
+
     static float squareCoords[] = {
-            -0.5f,  0.5f, 0.0f,   // top left
-            -0.5f, -0.5f, 0.0f,   // bottom left
-            0.5f, -0.5f, 0.0f,   // bottom right
-            0.5f,  0.5f, 0.0f }; // top right
-    static float LineWidth = 1.0f;
-    private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
+            -1.0f, +1.0f, 0.0f,  // top left
+            +1.0f, +1.0f, 0.0f,  // top right
+            +1.0f, -1.0f, 0.0f,  // bottom right
+            -1.0f, -1.0f, 0.0f   // bottom left
+    };
 
-    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    final float[] textureCoords = {
+                    0.0f, 0.0f, // top left
+                    1.0f, 0.0f, // Top-right
+                    1.0f, 1.0f, // Bottom-right
+                    0.0f, 1.0f,  // Bottom-left
+            };
 
-    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
-    // square ---
+    // Use this for loaded bitmaps
+    final float[] textureCoords_bmp = {
+            0.0f, 1.0f, // top left
+            1.0f, 1.0f, // Top-right
+            1.0f, 0.0f, // Bottom-right
+            0.0f, 0.0f  // Bottom-left
+    };
 
 
+    public int textureDataHandle;
+    private int textureUniformHandle;
+    private int textureCoordinateHandle;
+
+    private final short drawOrder[] = {0, 1, 2, 0, 2, 3};
+	private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    float color[] = {0.2f, 0.709803922f, 0.898039216f, 1.0f};
 
 
+    public static int loadShader(int type, String shaderCode)
+    {
+
+        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
+        int shader = GLES20.glCreateShader(type);
+
+        // add the source code to the shader and compile it
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
+    }
+
+
+    public static int loadTexture(final Context context, final int resourceId)
+    {
+        final int[] textureHandle = new int[1];
+
+        GLES20.glGenTextures(1, textureHandle, 0);
+
+        if (textureHandle[0] != 0) {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false;   // No pre-scaling
+
+            // Read in the resource
+            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+
+            // Bind to the texture in OpenGL
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+
+            // Set filtering
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+
+            // Load the bitmap into the bound texture.
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+            // Recycle the bitmap, since its data has been loaded into OpenGL.
+            bitmap.recycle();
+        }
+
+        if (textureHandle[0] == 0) {
+            throw new RuntimeException("Error loading texture.");
+        }
+
+        return textureHandle[0];
+    }
+
+    /**
+     * Sets up the drawing object data for use in an OpenGL ES context.
+     */
     public GLBitmap()
     {
-        initializeBuffers();
-        initializeProgram();
-    }
-
-
-    private void initializeBuffers()
-    {
-        ByteBuffer buff = ByteBuffer.allocateDirect(vertices.length * 4);
-        buff.order(ByteOrder.nativeOrder());
-        vertexBuffer = buff.asFloatBuffer();
-        vertexBuffer.put(vertices);
+        // initialize vertex byte buffer for shape coordinates
+        ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4); // (# of coordinate values * 4 bytes per float)
+		// use the device hardware's native byte order
+        bb.order(ByteOrder.nativeOrder());
+		// create a floating point buffer from the ByteBuffer
+        vertexBuffer = bb.asFloatBuffer();
+		// add the coordinates to the FloatBuffer
+        vertexBuffer.put(squareCoords);
+		// set the buffer to read the first coordinate
         vertexBuffer.position(0);
 
-        buff = ByteBuffer.allocateDirect(textureVertices.length * 4);
-        buff.order(ByteOrder.nativeOrder());
-        textureBuffer = buff.asFloatBuffer();
-        textureBuffer.put(textureVertices);
+        // initialize byte buffer for the draw list
+        ByteBuffer dlb = ByteBuffer.allocateDirect(drawOrder.length * 2);   // (# of coordinate values * 2 bytes per short)
+        dlb.order(ByteOrder.nativeOrder());
+        drawListBuffer = dlb.asShortBuffer();
+        drawListBuffer.put(drawOrder);
+        drawListBuffer.position(0);
+
+        ByteBuffer texCoordinates = ByteBuffer.allocateDirect(textureCoords.length * 4);
+        texCoordinates.order(ByteOrder.nativeOrder());
+        textureBuffer = texCoordinates.asFloatBuffer();
+        textureBuffer.put(textureCoords);
         textureBuffer.position(0);
+
+
+        // prepare shaders and OpenGL program
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+
+        //textureDataHandle = loadTexture(c, R.drawable.air_hockey_surface);
+        //textureDataHandle = loadTexture(c, R.drawable.himax_poster_1);  // b2
+
+        mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
+        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
+        GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
     }
 
-    private void initializeProgram()
-    {
-        vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(vertexShader, vertexShaderCode);
-        GLES20.glCompileShader(vertexShader);
+	public void SetVerts(float[] verts) {
+		squareCoords = verts;
+		vertexBuffer.put(squareCoords);
+		vertexBuffer.position(0);
+	}
+	public void SetColor(float red, float green, float blue, float alpha) {
+		color[0] = red;
+		color[1] = green;
+		color[2] = blue;
+		color[3] = alpha;
+	}
+	public void SetWidth(float width) {
+		//LineWidth = width;
+	}
 
-        fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(fragmentShader, fragmentShaderCode);
-        GLES20.glCompileShader(fragmentShader);
-
-        mProgram = GLES20.glCreateProgram();
-        GLES20.glAttachShader(mProgram, vertexShader);
-        GLES20.glAttachShader(mProgram, fragmentShader);
-
-        GLES20.glLinkProgram(mProgram);
-    }
-
-    public void draw1(float[] mvpMatrix, int texture)
-    {
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-        GLES20.glUseProgram(mProgram);
-        //GLES20.glDisable(GLES20.GL_BLEND);  // causes the black background under text later
-
-        int positionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
-        int textureHandle = GLES20.glGetUniformLocation(mProgram, "uTexture");
-        int texturePositionHandle = GLES20.glGetAttribLocation(mProgram, "aTexPosition");
-
-        GLES20.glVertexAttribPointer(texturePositionHandle, 2, GLES20.GL_FLOAT, false, 0, textureBuffer);
-        GLES20.glEnableVertexAttribArray(texturePositionHandle);
-
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture);
-        GLES20.glUniform1i(textureHandle, 0);
-
-        GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-        GLES20.glEnableVertexAttribArray(positionHandle);
-
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);  // clearscreen
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
-    }
-
-
-    public void draw2(float[] mvpMatrix, int texture)
+	/**
+	 * Encapsulates the OpenGL ES instructions for drawing this shape.
+	 *
+	 * @param mvpMatrix - The Model View Project matrix in which to draw
+	 * this shape.
+	 */
+    public void draw(float[] mvpMatrix)
     {
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
@@ -187,79 +198,87 @@ public class GLBitmap
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
-
-        // Texture
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture);
-        GLES20.glUniform1i(mPositionHandle, 0);
-
-        //GLES20.glVertexAttribPointer(mPositionHandle, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-        //GLES20.glEnableVertexAttribArray(positionHandle);
-
-
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         // Prepare the triangle coordinate data
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,GLES20.GL_FLOAT, false,vertexStride, vertexBuffer);
+        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
 
-        // get handle to fragment shader's vColor member
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+        textureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TextureCoordinates");
+        GLES20.glVertexAttribPointer(textureCoordinateHandle, 2, GLES20.GL_FLOAT, false,
+                0, textureBuffer);
+        GLES20.glEnableVertexAttribArray(textureCoordinateHandle);
 
-        // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        textureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_TextureUnit");
+        EFISRenderer.checkGlError("glGetUniformLocation");
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureDataHandle);
+        GLES20.glUniform1i(textureUniformHandle, 0);
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        //EFISRenderer.checkGlError("glGetUniformLocation");
+        EFISRenderer.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-        //EFISRenderer.checkGlError("glUniformMatrix4fv");
+        EFISRenderer.checkGlError("glUniformMatrix4fv");
 
         // Draw the square
-        //GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
-
-        // Draw the bitmap
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
+}
 
+
+
+
+/*
     public void draw(float[] mvpMatrix, int texture)
     {
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+        textureDataHandle = texture;
+
+        // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
-        //GLES20.glDisable(GLES20.GL_BLEND);  // causes the black background under text later
 
-        int positionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
-        int textureHandle = GLES20.glGetUniformLocation(mProgram, "uTexture");
-        int texturePositionHandle = GLES20.glGetAttribLocation(mProgram, "aTexPosition");
+        // get handle to vertex shader's vPosition member
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
-        GLES20.glVertexAttribPointer(texturePositionHandle, 2, GLES20.GL_FLOAT, false, 0, textureBuffer);
-        GLES20.glEnableVertexAttribArray(texturePositionHandle);
+        // Enable a handle to the triangle vertices
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
 
+        // Prepare the triangle coordinate data
+        GLES20.glVertexAttribPointer(
+                mPositionHandle, COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT, false,
+                vertexStride, vertexBuffer);
+
+        textureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TextureCoordinates");
+        GLES20.glVertexAttribPointer(textureCoordinateHandle, 2, GLES20.GL_FLOAT, false, 0, textureBuffer);
+        GLES20.glEnableVertexAttribArray(textureCoordinateHandle);
+
+        textureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_TextureUnit");
+        MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture);
-        GLES20.glUniform1i(textureHandle, 0);
-
-        GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-        GLES20.glEnableVertexAttribArray(positionHandle);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureDataHandle);
+        GLES20.glUniform1i(textureUniformHandle, 0);
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        //EFISRenderer.checkGlError("glGetUniformLocation");
+        MyGLRenderer.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-        //EFISRenderer.checkGlError("glUniformMatrix4fv");
+        MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);  // clearscreen
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+        // Draw the square
+        GLES20.glDrawElements(
+                GLES20.GL_TRIANGLES, drawOrder.length,
+                GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
-
-
-}
-
+*/

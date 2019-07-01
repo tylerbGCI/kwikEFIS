@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 19
-    buildToolsVersion '25.0.0'
+    //buildToolsVersion '25.0.0'
 
     defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 10
         //applicationId 'player.efis.cfd'
         //minSdkVersion 9
         // We need to target 10 for the menu button
@@ -26,5 +28,7 @@ android {
 //}
 
 dependencies {
-    compile project(':ulib')
+    //compile project(':ulib')
+    // could also use api,
+    implementation project(':ulib')
 }

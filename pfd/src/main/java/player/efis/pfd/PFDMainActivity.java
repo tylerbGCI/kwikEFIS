@@ -596,6 +596,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         int rv = super.handleStratux();
 
         if (rv == STRATUX_OK) {
+            hasGps = true;
+            hasSpeed = true;
+
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
@@ -625,6 +628,9 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
         else if (rv == STRATUX_GPS) {
             // No GPS, but we may still have attitude
             // since all the fatal checks are prior
+            hasGps = false;
+            hasSpeed = false;
+
             mGLView.setServiceableDevice();
             mGLView.setServiceableAh();
 
@@ -634,7 +640,6 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setDisplayAirport(false);
             mGLView.setBannerMsg(true, " "); // "STRATUX GPS"
         }
-
         return rv;
     }
     

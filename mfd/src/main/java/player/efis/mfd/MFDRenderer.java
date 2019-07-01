@@ -55,6 +55,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -64,12 +65,16 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
-        roseTextScale = 2f;
+
+        roseTextScale = 1f;
     }
 
+    private int ctr;
     @Override
     public void onDrawFrame(GL10 gl)
     {
+        ctr++;
+
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -77,15 +82,18 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
         else
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Normal View
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         zfloat = 0;
 
-        if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);  // fatFingerActive just for performance
-        if (displayAirspace) renderAirspace(mMVPMatrix);
+        // fatFingerActive just for performance
+        //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
+        //if (displayAirspace) renderAirspace(mMVPMatrix);  // done in ccache above
+
+        if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
 
@@ -193,6 +201,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
+        //gl.glViewport(0, 0, width, height/2);
+
         // Adjust the viewport based on geometry changes, such as screen rotation
         GLES20.glViewport(0, 0, width, height);
 
@@ -381,6 +391,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (mMapZoom < 8) step *= 2;
 
         float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
+        float hgt = wid;
 
         for (dme = 0; dme <= range; dme = dme + step) { // DEM_HORIZON=20, was 30
             float _x1=0, _y1=0;
@@ -410,10 +421,10 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                     else if (agl_ft > 200) mSquare.SetColor(caution, caution, 0, 1f);  // Proximity notification
                     else mSquare.SetColor(caution, 0, 0, 1f);                          // Proximity warning
                     float[] squarePoly = {
-                            x1-wid, y1-wid, z,
-                            x1-wid, y1+wid, z,
-                            x1+wid, y1+wid, z,
-                            x1+wid, y1-wid, z
+                            x1-wid, y1-hgt, z,
+                            x1-wid, y1+hgt, z,
+                            x1+wid, y1+hgt, z,
+                            x1+wid, y1-hgt, z
                     };
                     mSquare.SetVerts(squarePoly);
                     mSquare.draw(matrix);
@@ -528,7 +539,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
     //---------------------------------------------------------------------------
-    // EFIS serviceability ... aka the Red X's
+    // DMAP serviceability ... aka the Red X's
     //
 
     // Artificial Horizon serviceability

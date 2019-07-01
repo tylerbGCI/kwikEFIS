@@ -1,9 +1,12 @@
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion 19
-    buildToolsVersion "25.0.0"
+    //buildToolsVersion "25.0.0"
 
     defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 10
+
         //applicationId 'player.efis.pfd'
         //minSdkVersion 9
         // We need to target 10 for the menu button
@@ -21,6 +24,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
 //dependencies {
 //    compile files('libs/vecmath.jar')
 //}

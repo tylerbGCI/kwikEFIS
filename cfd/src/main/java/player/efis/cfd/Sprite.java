@@ -21,7 +21,8 @@ public class Sprite
     private int mTextureUniformHandle;
     private int mTextureCoordinateHandle;
     private final int mTextureCoordinateDataSize = 2;
-    private int mTextureDataHandle;
+    //private int mTextureDataHandle;
+    int mTextureDataHandle;
 
     private final String vertexShaderCode =
             "attribute vec2 a_TexCoordinate;" +
@@ -29,8 +30,8 @@ public class Sprite
                     "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition * uMVPMatrix;" +
-                    "v_TexCoordinate = a_TexCoordinate;" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
+                    "  v_TexCoordinate = a_TexCoordinate;" +
                     "}";
 
     private final String fragmentShaderCode =
@@ -113,7 +114,7 @@ public class Sprite
         GLES20.glLinkProgram(shaderProgram);
 
         //Load the texture
-        mTextureDataHandle = loadTexture(mActivityContext, R.drawable.ic_launcher);
+        //mTextureDataHandle = loadTexture(mActivityContext, R.drawable.ic_launcher);
     }
 
     public void draw(float[] mvpMatrix)

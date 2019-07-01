@@ -16,21 +16,18 @@
 
 package player.efis.cfd;
 
-import java.nio.IntBuffer;
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
 import player.efis.common.Apt;
 import player.efis.common.DemColor;
 import player.efis.common.DemGTOPO30;
 import player.efis.common.AircraftData;
-import player.efis.common.DemRenderTask;
 import player.efis.common.EFISRenderer;
 import player.efis.common.Gpx;
 import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
 import player.efis.common.Point;
-import player.gles20.GLBitmap;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -41,12 +38,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
 public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
@@ -84,7 +77,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
-        glBitmap = new GLBitmap();
 
         roseTextScale = 1f;
     }
@@ -110,6 +102,13 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
+
+        // debugging
+        /*
+        Matrix.setRotateM(mRotationMatrix, 0, 10.0f, 0, 0, 1.0f);
+        Matrix.multiplyMM(scratch1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+        renderDEMTerrainPfdCache(gl, scratch1);
+        */
     }
 
 
@@ -169,7 +168,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
             // underground is not valid
-            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrainPfdCache(gl, scratch1);
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrainPfd(scratch1);
         }
         else if (displayAHColors) renderAHColors(scratch1);
 
@@ -519,32 +518,49 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    int frameSkipPfd = 11/10; //200; //500;
+    int frameSkipPfd = 8; //200; //500;
     int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
-        if (ctr % frameSkipPfd == 0) {
-            /*renderDEMTerrainPfd(matrix);
-            Bitmap bm = saveScreen(gl, pixH2, pixH2);
-            textureHandlePfd = loadTexture(bm);
-            bm.recycle();*/
-
-            // For debug
-            ///*
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            //options.inScaled = false;   // No pre-scaling
-            // Read in the resource
-            //mTextureDataHandle = loadTexture(mActivityContext, R.drawable.ic_launcher);
-            final Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, options);
-            textureHandlePfd = loadTexture(bm);
-            bm.recycle();
-            //*/
-
+        if (true /*!bCacheActive*/) {
+            renderDEMTerrainPfd(matrix);
+            return;
         }
 
-        GLES20.glViewport(0, pixH2, pixW, pixH2);
-        glBitmap.draw(matrix, textureHandlePfd);
-        GLES20.glViewport(0, pixH2, pixW, pixH);
+        /*
+        if (ctr % frameSkipPfd == 0) {
+            renderDEMTerrainPfd(matrix);
+            Bitmap bm = saveScreen(gl, pixH2, pixH2);
+            textureHandlePfd = loadTexture(bm);
+            bm.recycle();
+        }
+        */
+
+        // debug
+        /*
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;   // No pre-scaling
+        final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, options);
+        textureHandlePfd = loadTexture(bitmap);
+        bitmap.recycle();
+        //*/
+        // debug
+
+        /*
+        {
+            float x = 1.4f * pixW2;
+            float y = 1.4f * pixH2/2;
+            float[] squarePoly = {
+                    -x, -y , 0,
+                    +x, -y , 0,
+                    +x, +y, 0,
+                    -x, +y, 0
+            };
+            glBitmap.SetVerts(squarePoly);
+            glBitmap.textureDataHandle =  textureHandlePfd;
+            glBitmap.draw(matrix);
+        }
+        */
     }
 
 
@@ -569,11 +585,12 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
+        final float viewCone = 20; //25;
 
         mSquare.SetWidth(1);
 
         for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) {
-            for (demRelBrg = -25; demRelBrg < 25; demRelBrg = demRelBrg + 1) {
+            for (demRelBrg = -viewCone; demRelBrg < viewCone; demRelBrg = demRelBrg + 1) {
 
                 dme_ft = dme * 6080;
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));
@@ -736,7 +753,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
         else
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Normal View
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -834,8 +851,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
-        if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
-        //if (displayAirspace) renderAirspaceMfd(mMVPMatrix); // moved to cache
+        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
+        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
         Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
@@ -917,9 +934,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-
-
-
     //-------------------------------------------------------------------------
     // Render the Digital Elevation Model (DEM) - DMAP.
     //
@@ -927,33 +941,39 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    int frameSkipMfd = 101*4; //200; //500;
+    boolean bCacheActive = false;
+    int frameSkipMfd = 40;//*4; //200; //500;
     int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
-        //if (ctr % frameSkip == frameSkip/2) {
-        if (ctr % frameSkipMfd == 0) {
-            /*renderDEMTerrainMfd(matrix);
-            renderAirspaceMfd(matrix);
+        if (true /*!bCacheActive*/) {
+            renderDEMTerrainMfd(matrix);
+            return;
+        }
+        /*
 
-            if (demRenderTask == null) {
-                demRenderTask = new DemRenderTask("kwik");
-                demRenderTask.width = pixW;
-                demRenderTask.height = pixH2;
-                demRenderTask.gl = gl;
-                demRenderTask.execute();
-                int a = 10;
-            }*/
-
+        if (ctr % frameSkipMfd == frameSkipPfd/2) {
             renderDEMTerrainMfd(matrix);
             if (displayAirspace) renderAirspaceMfd(matrix);
             Bitmap bm = saveScreen(gl, 0, pixH2);
             textureHandleMfd = loadTexture(bm);
             bm.recycle();
         }
-        GLES20.glViewport(0, 0, pixW, pixH2);
-        glBitmap.draw(matrix, textureHandleMfd);
+
         GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
+        {
+            float y = pixH2/2;
+            float[] squarePoly = {
+                    -pixW2, -y , 0,
+                    +pixW2, -y , 0,
+                    +pixW2, +y, 0,
+                    -pixW2, +y, 0
+            };
+            glBitmap.SetVerts(squarePoly);
+            glBitmap.textureDataHandle =  textureHandleMfd;
+            glBitmap.draw(matrix);
+        }
+        */
     }
 
     protected void renderDEMTerrainMfd(float[] matrix)
@@ -974,7 +994,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         if (mMapZoom < 16) step *= 2;
         if (mMapZoom < 8) step *= 2;
-
 
         float wid = mMapZoom * step * 0.7071f; // optional  * 0.7071f;  // 1/sqrt(2)
         float hgt = 2*wid;
@@ -1243,6 +1262,11 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         ServiceableMap = false;
     }
 
+}
+
+
+/*
+moved to EFIS renderer (parent)
 
     public Bitmap saveScreen(GL10 mGL, int offset, int height)
     {
@@ -1250,25 +1274,29 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         final int mHeight = height;
 
         IntBuffer ib = IntBuffer.allocate(mWidth * mHeight);
-        IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
+        //b2- IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
         mGL.glReadPixels(0, offset, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
 
         // Convert upside down mirror-reversed image to right-side up normal
         // image.
-        for (int i = 0; i < mHeight; i++) {
-            for (int j = 0; j < mWidth; j++) {
-                ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
-            }
-        }
+        // b2
+        //for (int i = 0; i < mHeight; i++) {
+        //    for (int j = 0; j < mWidth; j++) {
+        //        ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
+        //    }
+        //}
+
         Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
         mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
-        mBitmap.copyPixelsFromBuffer(ibt);
+        //b2 - mBitmap.copyPixelsFromBuffer(ibt);
+        mBitmap.copyPixelsFromBuffer(ib);
         return mBitmap;
     }
 
 
     //public static int loadTexture(final Context context, final int resourceId)
     //public static int loadTexture(final Context context, Bitmap bitmap)
+    // could be moved to EFISRenderer
     public static int loadTexture(Bitmap bitmap)
     {
         final int[] textureHandle = new int[1];
@@ -1302,7 +1330,4 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         return textureHandle[0];
     }
-
-    //======================================
-
-}
+*/

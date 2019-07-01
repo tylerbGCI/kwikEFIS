@@ -2,9 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "25.0.0"
+    //buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId 'player.efis.data.usa.can'
+        minSdkVersion 9
+        targetSdkVersion 10
     }
     buildTypes {
         release {
@@ -21,5 +23,6 @@ android {
 }
 
 dependencies {
-    compile project(':data')
+    //compile project(':data')
+    implementation project(':data')
 }
