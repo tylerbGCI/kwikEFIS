@@ -6,6 +6,7 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 10
+
         //applicationId 'player.efis.cfd'
         //minSdkVersion 9
         // We need to target 10 for the menu button

@@ -33,8 +33,6 @@
 
     <!-- We need to target 10 for the menu button -->
     <!-- it is overridden in the gradle files -->
-    <uses-sdk
-        android:targetSdkVersion="10" />
     <!--
     <uses-sdk
         android:minSdkVersion="11"
