@@ -16,6 +16,7 @@
 
 package player.efis.cfd;
 
+import java.nio.IntBuffer;
 import java.util.Iterator;
 import player.efis.common.AirspaceClass;
 import player.efis.common.Apt;
@@ -28,6 +29,7 @@ import player.efis.common.OpenAir;
 import player.efis.common.OpenAirPoint;
 import player.efis.common.OpenAirRec;
 import player.efis.common.Point;
+import player.gles20.GLBitmap;
 import player.gles20.Line;
 import player.gles20.PolyLine;
 import player.gles20.Polygon;
@@ -38,8 +40,11 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import player.gles20.GLText;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
 public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
@@ -47,6 +52,9 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     private static final String TAG = "CFDRenderer";
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
+
+
+    protected GLBitmap glBitmap;
 
 
     public CFDRenderer(Context context)
@@ -77,6 +85,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
+
+        glBitmap = new GLBitmap();
 
         roseTextScale = 1f;
     }
@@ -518,7 +528,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    int frameSkipPfd = 8; //200; //500;
+    int frameSkipPfd = 4; //200; //500;
     int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
@@ -851,6 +861,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
+        //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
@@ -941,8 +952,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    boolean bCacheActive = false;
-    int frameSkipMfd = 40;//*4; //200; //500;
+    boolean bCacheActive = true;
+    int frameSkipMfd = 5;//*4; //200; //500;
     int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
@@ -950,14 +961,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderDEMTerrainMfd(matrix);
             return;
         }
-        /*
 
-        if (ctr % frameSkipMfd == frameSkipPfd/2) {
+        if (ctr % frameSkipMfd == 0) {
             renderDEMTerrainMfd(matrix);
-            if (displayAirspace) renderAirspaceMfd(matrix);
+            //if (displayAirspace) renderAirspaceMfd(matrix);
             Bitmap bm = saveScreen(gl, 0, pixH2);
             textureHandleMfd = loadTexture(bm);
             bm.recycle();
+            bm = null;
         }
 
         GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
@@ -973,7 +984,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             glBitmap.textureDataHandle =  textureHandleMfd;
             glBitmap.draw(matrix);
         }
-        */
+
     }
 
     protected void renderDEMTerrainMfd(float[] matrix)
@@ -1261,6 +1272,74 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         ServiceableMap = false;
     }
+
+
+
+    public Bitmap saveScreen(GL10 mGL, int offset, int height)
+    {
+        final int mWidth = pixW;
+        final int mHeight = height;
+
+        IntBuffer ib = IntBuffer.allocate(mWidth * mHeight);
+        //b2- IntBuffer ibt = IntBuffer.allocate(mWidth * mHeight);
+        mGL.glReadPixels(0, offset, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
+
+        // Convert upside down mirror-reversed image to right-side up normal
+        // image.
+        // b2
+        //for (int i = 0; i < mHeight; i++) {
+        //    for (int j = 0; j < mWidth; j++) {
+        //        ibt.put((mHeight - i - 1) * mWidth + j, ib.get(i * mWidth + j));
+        //    }
+        //}
+
+        Bitmap mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mBitmap.eraseColor(Color.argb(0, 255, 255, 255));
+        //b2 - mBitmap.copyPixelsFromBuffer(ibt);
+        mBitmap.copyPixelsFromBuffer(ib);
+        return mBitmap;
+    }
+
+
+    //public static int loadTexture(final Context context, final int resourceId)
+    //public static int loadTexture(final Context context, Bitmap bitmap)
+    // could be moved to EFISRenderer
+    public static int loadTexture(Bitmap bitmap)
+    {
+        final int[] textureHandle = new int[1];
+
+        GLES20.glGenTextures(1, textureHandle, 0);
+
+        if (textureHandle[0] != 0) {
+            //final BitmapFactory.Options options = new BitmapFactory.Options();
+            //options.inScaled = false;   // No pre-scaling
+
+            // Read in the resource
+            //final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+
+            // Bind to the texture in OpenGL
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+
+            // Set filtering
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+
+            // Load the bitmap into the bound texture.
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+            // Recycle the bitmap, since its data has been loaded into OpenGL.
+            // bitmap.recycle();
+        }
+
+        if (textureHandle[0] == 0) {
+            throw new RuntimeException("Error loading texture.");
+        }
+
+        return textureHandle[0];
+    }
+
+
+
 
 }
 
