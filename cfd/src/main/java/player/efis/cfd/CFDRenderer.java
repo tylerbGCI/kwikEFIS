@@ -113,12 +113,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
 
-        // debugging
-        /*
-        Matrix.setRotateM(mRotationMatrix, 0, 10.0f, 0, 0, 1.0f);
-        Matrix.multiplyMM(scratch1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
-        renderDEMTerrainPfdCache(gl, scratch1);
-        */
+
+
     }
 
 
@@ -213,42 +209,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
             renderFlightDirector(fdMatrix);
         }
-
-/* b1
-        // Remote Magnetic Inidicator - RMI
-        if (displayRMI) {
-            float xlx;
-            float xly;
-
-            // Add switch for orientation
-            if (Layout == layout_t.LANDSCAPE) {
-                // Landscape
-                xlx = -0.74f * pixW2; // top left 
-                xly = 0.50f * pixH2;  // top left  
-                roseScale = 0.44f;
-                GLES20.glViewport(0, 0, pixW, pixH);
-            }
-            else {
-                //Portrait
-                xlx = 0;
-                xly = -0.44f * pixH2;
-                roseScale = 0.52f;
-            }
-
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            // Create a rotation for the RMI
-            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
-            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            renderBearingTxt(mMVPMatrix);
-            renderFixedCompassMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-
-            renderCompassRose(rmiMatrix);
-            renderBearing(rmiMatrix);
-            renderAutoWptDetails(mMVPMatrix);
-            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
-        }
-        */
 
 
         if (Layout == layout_t.PORTRAIT) {
@@ -772,76 +732,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
-        /*
-        // Remote Magnetic Inidicator - RMI
-        if (displayRMI) {
-            float xlx;
-            float xly;
-
-            // Add switch for orientation
-            if (Layout == layout_t.LANDSCAPE) {
-                // Landscape
-                xlx = 0;               // top left
-                xly = -1.80f * pixH2;  // top left
-                roseScale = 1.9f;
-                GLES20.glViewport(0, pixH2, pixW, pixH);
-            }
-            else {
-                //Portrait
-                xlx = 0;
-                xly = -0.20f * pixH2;  
-                roseScale = 1.9f;
-            }
-
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            // Create a rotation for the RMI
-            Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
-            Matrix.multiplyMM(rmiMatrix, 0, mMVPMatrix, 0, mRmiRotationMatrix, 0);
-            renderFixedCompassMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-
-            renderCompassRose(rmiMatrix);
-            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
-        }
-
-        //-----------------------------
-        if (displayFlightDirector) {
-            if (autoZoomActive) setAutoZoom();
-            renderDctTrack(mMVPMatrix);
-            renderAutoWptDetails(mMVPMatrix);
-        }
-        renderMapScale(mMVPMatrix);  // do before the DI
-
-        if (displayTape == true) {
-            float xlx;
-            float xly;
-
-            //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
-			
-            xlx = 0.99f * pixW2;
-            xly = -0.6f * pixM2;
-			
-            Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
-            renderFixedALTMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, 0, xly, 0);
-            renderFixedRADALTMarkers(mMVPMatrix); // AGL
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-
-
-            xlx = -0.99f * pixW2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, 0, 0);
-            renderFixedASIMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -0, 0);
-			
-            xlx = 0;
-            xly = +0.90f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedDIMarkers(mMVPMatrix);
-            renderHDGValue(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-        }
-        */
-
         // Add switch for orientation
         float xlx;
         float xly;
@@ -863,6 +753,22 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // fatFingerActive just for performance
         //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
+
+        /*if (mMfdTask == null) {
+            mMfdTask = new MfdDrawFrameTask("kwik");
+            mMfdTask.matrix = mMVPMatrix;
+            //mMfdTask.execute();
+            mMfdTask.renderDEMTerrainMfd(mMVPMatrix);
+        }
+        else {
+            if (mMfdTask.isRunning == false) {
+                mMfdTask.cancel(true);
+                mMfdTask = null;
+            }
+        }*/
+
+
+
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
@@ -1337,9 +1243,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         return textureHandle[0];
     }
-
-
-
 
 }
 
