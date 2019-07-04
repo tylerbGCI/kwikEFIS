@@ -128,18 +128,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        /*
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            mGLView.setAutoZoomActive(false);
-            mGLView.zoomIn();
-            return true;
-        }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            mGLView.setAutoZoomActive(false);
-            mGLView.zoomOut();
-            return true;
-        }
-        */
         return super.onKeyDown(keyCode, event);
     }
 
@@ -576,6 +564,9 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         int rv = super.handleStratux();
 
         if (rv == STRATUX_OK) {
+            hasGps = true;
+            hasSpeed = true;
+
             mGLView.setServiceableDevice();
             mGLView.setServiceableDi();
             mGLView.setServiceableAsi();
@@ -770,7 +761,7 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (hasGps) {
             try {
                 // We have new traffic
-                // TODO: 2018-08-31 Implement a suitable detection and reporting strategy
+                // Implement a suitable detection and reporting strategy
                 if (mStratux != null) {
                     if (mStratux.proximityAlert) {
                         if (!mpCautionTraffic.isPlaying()) mpCautionTraffic.start();

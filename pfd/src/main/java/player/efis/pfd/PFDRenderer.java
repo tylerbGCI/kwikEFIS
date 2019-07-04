@@ -94,6 +94,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
         else {
             portraitOffset = 0.40f;  // the magic number for portrait offset
+
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
@@ -111,8 +112,8 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
-            if ((AGLValue > 0) && (DemGTOPO30.demDataValid))
-                renderDEMTerrain(scratch1);  // underground is not valid
+            // underground is not valid
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrain(scratch1);  
         }
         else if (displayAHColors) renderAHColors(scratch1);
 
@@ -121,7 +122,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(scratch1);        // TODO: 2018-08-31 Add control tof targets
+        if (true) renderTargets(scratch1);        // Add control tof targets sometime ...
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
 
         // Flight Director - FD
@@ -456,11 +457,12 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
+        final float viewCone = 20; //25;
 
         mSquare.SetWidth(1);
 
         for (dme = 0; dme <= DemGTOPO30.DEM_HORIZON; dme += step) {
-            for (demRelBrg = -25; demRelBrg < 25; demRelBrg = demRelBrg + 1) {
+            for (demRelBrg = -viewCone; demRelBrg < viewCone; demRelBrg = demRelBrg + 1) {
 
                 dme_ft = dme * 6080;
                 lat = LatValue + dme / 60 * UTrig.icos((int) (DIValue + demRelBrg));

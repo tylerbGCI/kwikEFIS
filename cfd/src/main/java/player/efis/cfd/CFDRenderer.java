@@ -60,15 +60,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     public CFDRenderer(Context context)
     {
         super(context);
-        //resources = context.getResources(); // bitmap
     }
 
-
-
     // Sprite code >>>> https://gamedev.stackexchange.com/questions/98767/opengl-es-2-0-2d-image-displaying
-
     // https://stackoverflow.com/questions/47280918/opengl-es-draw-bitmap
-
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config)
@@ -105,7 +100,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
         else
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Normal View
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -152,14 +147,12 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(scratch1, 0, 0, pitchTranslation, 0); // apply the pitch
         }
         else {
-            portraitOffset = 0.40f;  // the magic number for portrait offset
-            portraitOffset = -0.5f; //0.0f;  // the magic number for portrait offset
+            portraitOffset = -0.5f;  // the magic number for portrait offset
 
             // Slide pitch to current value adj for portrait
             float Adjust = pixH2 * portraitOffset;                           //portraitOffset set to 0.4
             Matrix.translateM(scratch1, 0, 0, pitchTranslation + Adjust, 0); // apply the pitch and offset
         }
-
 
         // Slide ALT to current value
         Matrix.translateM(altMatrix, 0, mMVPMatrix, 0, 0, -MSLTranslation, 0); // apply the altitude
@@ -253,13 +246,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderFixedRADALTMarkers(mMVPMatrix);   // AGL
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-
-            /*
-            xly = -0.5f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedRADALTMarkers(mMVPMatrix);   // AGL
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
-            */
 
             xlx = -1.10f * pixM2;
             xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
@@ -635,7 +621,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 //
                 //  69%
                 //
-                //   SquareA
+                //   Square
                 //   4    3
                 //    +--+
                 //    |  |

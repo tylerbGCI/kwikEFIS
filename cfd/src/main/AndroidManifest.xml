@@ -28,8 +28,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.cfd"
     android:installLocation="preferExternal"
-    android:versionCode="26"
-    android:versionName="0.2 beta 1" >
+    android:versionCode="27"
+    android:versionName="1.0" >
 
     <!-- We need to target 10 for the menu button -->
     <!-- it is overridden in the gradle files -->
