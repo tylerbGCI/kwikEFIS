@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 10
+        //targetSdkVersion 10
 
         //applicationId 'player.efis.cfd'
         //minSdkVersion 9
@@ -30,6 +30,5 @@ android {
 
 dependencies {
     //compile project(':ulib')
-    // could also use api,
     implementation project(':ulib')
 }

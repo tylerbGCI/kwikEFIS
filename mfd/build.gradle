@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 10
+        //targetSdkVersion 10
 
         //applicationId 'player.efis.mfd'
         //minSdkVersion 9
