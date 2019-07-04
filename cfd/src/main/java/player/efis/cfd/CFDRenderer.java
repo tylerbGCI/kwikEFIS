@@ -707,11 +707,19 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float xlx;
         float xly;
         if (Layout == layout_t.LANDSCAPE) {
+            // TODO: implement a suitable landscape view
+            // For now - Do nothing
+            /*
             // Landscape
             xlx = -0.74f * pixW2; // top left
             xly = 0.50f * pixH2;  // top left
             roseScale = 0.44f;
             GLES20.glViewport(0, 0, pixW, pixH);
+            */
+            // Temp ... keep Portrait layout
+            xlx = 0;
+            xly = pixH2/2;
+            roseScale = 0.52f;
         }
         else {
             //Portrait
