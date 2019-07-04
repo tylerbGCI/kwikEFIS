@@ -491,7 +491,7 @@ abstract public class EFISMainActivity extends Activity implements GpsStatus.Lis
         sim_ms = time.toMillis(true);
         float deltaT = (float) (sim_ms - _sim_ms) / 1000f / 1000f / 1.85f / 60f;  // in sec (fraction) and scaled from meters to nm to degree
 
-        ///*
+        /*
         //------------------------------------------------------------------------------------------
         // todo: Hardcoded for debugging
         //
