@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<!--
+    <PreferenceCategory android:title="AIRCRAFT" >
+        <ListPreference
+            android:defaultValue="0.75f"
+            android:entries="@array/ac_list_names"
+            android:entryValues="@array/ac_list_values"
+            android:key="AircraftModel"
+            android:summary="Select active aircraft model"
+            android:title="Aircraft" />
+    </PreferenceCategory>
+    -->
+    
+    <PreferenceCategory android:title="DATABASE" >
+        <ListPreference
+            android:defaultValue="RV8"
+            android:entries="@array/ac_list_names"
+            android:entryValues="@array/ac_list_values"
+            android:key="AircraftModel"
+            android:summary="Select active aircraft model"
+            android:title="Aircraft" />
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:defaultValue="true"
+        android:key="displayAirspaceX"
+        android:summary="Select Airspace"
+        android:title="Airspace"
+        android:persistent="false">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classA"
+            android:summary="Display class A airspace"
+            android:title="Class A" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classB"
+            android:summary="Display class B airspace"
+            android:title="Class B" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classC"
+            android:summary="Display class C airspace"
+            android:title="Class C" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classP"
+            android:summary="Display Prohibited airspace"
+            android:title="Prohibited" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classR"
+            android:summary="Display Restricted airspace"
+            android:title="Restricted" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classQ"
+            android:summary="Display Danger airspace"
+            android:title="Danger" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="classCTR"
+            android:summary="Display CTR airspace"
+            android:title="CTR" />
+    </PreferenceScreen>
+
+    <PreferenceCategory android:title="CONTROL" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="stratuxActive"
+            android:summary="Enable Stratux module"
+            android:title="Stratux" />
+
+        <PreferenceScreen
+            android:key="modeSelection"
+            android:title="System"
+            android:summary="Display and Operational settings"
+            android:persistent="false">
+
+            <PreferenceCategory android:title="DISPLAY" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="landscapeMode"
+                    android:summary="Select Landscape view"
+                    android:title="Landscape" />
+
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="displayMirror"
+                    android:summary="Mirror image for HUD usage"
+                    android:title="Mirror HUD" />
+            </PreferenceCategory>
+                    
+            <PreferenceCategory android:title="ADMIN" >
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="simulatorActive"
+                    android:summary="Simulate GPS movement for demonstration"
+                    android:title="Simulator" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="lockedMode"
+                    android:summary="Lock the exit on back button"
+                    android:title="Locked" />
+
+                <ListPreference
+                    android:defaultValue="0.15f"
+                    android:entries="@array/sensor_bias_names"
+                    android:entryValues="@array/sensor_bias_values"
+                    android:key="sensorBias"
+                    android:summary="Select the bank sensor/GPS bias"
+                    android:title="Bank Sensor" />
+
+                    <PreferenceScreen
+                    android:defaultValue="0.0"
+                    android:key="version"
+                    android:summary="0.0"
+                    android:title="Version" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- Moved to settings.xml     
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/color_theme_names"
+            android:entryValues="@array/color_theme_values"
+            android:key="colorTheme"
+            android:summary="Select color theme"
+            android:title="Theme" />
+            -->
+
+
+
+    </PreferenceCategory>
+</PreferenceScreen>
+

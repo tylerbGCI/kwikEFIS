@@ -204,8 +204,8 @@ public class AircraftData
                 // Generic business jet
                 Vs0 = 96;   // Stall, flap extended
                 Vs1 = 120;  // Stall, flap retracted - used for green arc
-                Vx = 200;    // Best angle climb - tbd
-                Vy = 250;    // Best rate climb
+                Vx = 200;   // Best angle climb - tbd
+                Vy = 250;   // Best rate climb
                 Vfe = 220;  // Flaps extension
                 Va = 155;   // Maneuvering
                 Vno = 418;  // Max structural cruise - tbd

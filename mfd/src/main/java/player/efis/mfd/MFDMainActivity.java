@@ -601,10 +601,11 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         }
         else if (rv == STRATUX_GPS) {
             // No GPS, the map is wholly reliant on GPS
+            hasGps = false;
+            hasSpeed = false;
             mGLView.setUnServiceableDevice();
             mGLView.setBannerMsg(true, "STRATUX GPS");
         }
-
         return rv;
     }
     
@@ -673,7 +674,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
                 mGpx.loadDatabase(gps_lat, gps_lon);
 
                 mGLView.setBannerMsg(true, "LOADING AIRSPACE");
-
                 mAirspace.loadDatabase(gps_lat, gps_lon);
                 mGLView.setBannerMsg(false, " ");
 
@@ -742,6 +742,8 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
             gps_course = (float) Math.toRadians(1); // debug
         }
         // end debug
+
+        float gps_dme = mGLView.mRenderer.mSelWptDme; // in nm
 
         //
         // Pass the values to mGLView for updating

@@ -16,6 +16,7 @@
 
 package player.efis.common;
 
+import java.nio.IntBuffer;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -29,11 +30,16 @@ import player.ulib.*;
 import player.gles20.GLText;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.microedition.khronos.opengles.GL10;
 
 
 /**
@@ -162,6 +168,7 @@ abstract public class EFISRenderer
     private String sDemoMsg;
 
     protected GLText glText;      // A GLText Instance
+
     protected Context context;    // Context (from Activity)
 
     // Colors
@@ -251,6 +258,10 @@ abstract public class EFISRenderer
             throw new RuntimeException(glOperation + ": glError " + error);
         }
     }
+
+
+
+
 
     //-------------------------------------------------------------------------
     //  Returns the rotation angle of the triangle shape (mTriangle).
@@ -556,7 +567,6 @@ abstract public class EFISRenderer
             String t = Integer.toString(i);
             {
                 mPolyLine.SetColor(foreShadeR, foreShadeG, foreShadeB, 1); // white
-
                 mPolyLine.SetWidth(wid);
                 float[] vertPoly = {
                         // in counterclockwise order:
@@ -708,8 +718,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
-                    pixOverWidth, 0.0f, z,
+                    +pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
                     -pixOverWidth, 0.0f, z
             };
             mSquare.SetVerts(squarePoly);
@@ -727,8 +737,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, 0.0f, z,
-                    pixOverWidth, 0.0f, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -1722,7 +1732,7 @@ abstract public class EFISRenderer
         pixPerDegree = pixM2 / PPD_DIV;
         z = zfloat;
 
-        float radius = 10 * pixM / 736; 
+        float radius = 10 * pixM / 736;
 
         float x1 = fpvX * pixPerDegree;
         float y1 = fpvY * pixPerDegree;
@@ -1875,7 +1885,7 @@ abstract public class EFISRenderer
         AptSeekRange = Math.min(AptSeekRange, MX_APT_SEEK_RNG);
     }
 
-    private void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
+    protected void renderAPTSymbol(float[] matrix, float x1, float y1, String wptId)
     {
         float radius = pixM / 70;
         float z = zfloat;
@@ -2099,7 +2109,7 @@ abstract public class EFISRenderer
     //-------------------------------------------------------------------------
     // DemGTOPO30 Sky.
     //
-    protected void renderDEMSky(float[] matrix)
+    protected void renderDEMSky1(float[] matrix)
     {
         float pixPitchViewMultiplier, pixOverWidth, z;
 
@@ -2121,8 +2131,8 @@ abstract public class EFISRenderer
         {
             float[] squarePoly = {
                     -pixOverWidth, -overlap * pixPitchViewMultiplier, z,
-                    pixOverWidth, -overlap * pixPitchViewMultiplier, z,
-                    pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
                     -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
             };
             mSquare.SetVerts(squarePoly);
@@ -2130,17 +2140,66 @@ abstract public class EFISRenderer
         }
     }
 
+    protected void renderDEMSky(float[] matrix)
+    {
+        float pixPitchViewMultiplier, pixOverWidth, z;
 
-    //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
-    //
-    // This is the meat and potatoes of the synthetic vision implementation
-    // The loops are very performance intensive, therefore all the hardcoded
-    // magic numbers
-    //
-    //protected void renderDEMTerrain(float[] matrix)
-    //{
-    //}
+        pixPitchViewMultiplier = 90.0f / pitchInView * pixH;
+        pixOverWidth = pixW2 * 1.80f;
+        z = zfloat;
+
+        // Sky - simple
+        // max: -0.05 to 180 pitch
+        float overlap;
+        if (AGLValue > 0) overlap = MSLValue/100000f;
+        else overlap = 0.0f;
+
+        overlap = 0.0f;  // maybe good idea?
+
+
+        // Earth
+        // Level to -180 pitch
+        // Handle Monochrome
+        //if (colorTheme == 2) mSquare.SetColor(0, 0.2f, 0, 1); //green
+        //else mSquare.SetColor(gamma * 0.30f, gamma * 0.20f, gamma * 0.10f, 1); //brown (3,2,1)
+        mSquare.SetColor(0, 0, 0, 1); //black
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    -pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -2.0f * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 0.0f, z,
+                    -pixOverWidth, 0.0f, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+        // Sky
+        // Level to 180 pitch
+        // TODO: 2017-10-31 make parameterised
+
+        // Handle Monochrome
+        if (colorTheme == 2) mSquare.SetColor(0, 0, 0, 1); //black
+        else mSquare.SetColor(gamma * 0.10f, gamma * 0.20f, gamma * 0.30f, 1); //blue (1,2,3)
+        mSquare.SetWidth(1);
+        {
+            float[] squarePoly = {
+                    //-pixOverWidth, 0.0f, z,
+                    //+pixOverWidth, 0.0f, z,
+                    -pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, -overlap * pixPitchViewMultiplier, z,
+                    +pixOverWidth, 2.0f * pixPitchViewMultiplier, z,
+                    -pixOverWidth, 2.0f * pixPitchViewMultiplier, z
+            };
+            mSquare.SetVerts(squarePoly);
+            mSquare.draw(matrix);
+        }
+
+
+    }
+
+
 
 
     // This is only good for debugging
@@ -2356,9 +2415,9 @@ abstract public class EFISRenderer
         mAutoWptBrg = brg;
     }
 
-    private float mSelWptBrg;             // Selected waypoint Bearing
-    protected float mSelWptRlb;           // Selected waypoint Relative bearing
-    protected float mSelWptDme;           // Selected waypoint Dme distance (nm)
+    public float mSelWptBrg;             // Selected waypoint Bearing
+    public float mSelWptRlb;           // Selected waypoint Relative bearing
+    public float mSelWptDme;           // Selected waypoint Dme distance (nm)
     private void setSelWptBrg(float brg)
     {
         mSelWptBrg = brg;
@@ -2486,7 +2545,7 @@ abstract public class EFISRenderer
         }
 
         // Calculate the relative bearing to the selected wpt
-        float dme = 6080 * UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in ft
+        float dme = UNavigation.calcDme(LatValue, LonValue, mWptSelLat, mWptSelLon); // in nm
         float relBrg = UNavigation.calcRelBrg(LatValue, LonValue, mWptSelLat, mWptSelLon, DIValue);
 
         // Calculate how many degrees of pitch to command
@@ -2512,7 +2571,7 @@ abstract public class EFISRenderer
         // Setting data in this renderer does not make much logical sense. This could be re-factored
         // Perhaps introduce a new function to explicitly handle "navigation"?
         setSelWptBrg(absBrg);
-        setSelWptDme(dme / 6080);
+        setSelWptDme(dme);  // todo: refactor out
         setSelWptRelBrg(relBrg);
     }
 
@@ -2739,35 +2798,41 @@ abstract public class EFISRenderer
 
                 Iterator<Apt> it = Gpx.aptList.iterator();
 
-                while (it.hasNext()) {
-                    Apt currApt = it.next();
+                try {
+                    while (it.hasNext()) {
+                        Apt currApt = it.next();
 
-                    // Look for a perfect match
-                    if (currApt.name.equals(String.valueOf(wpt))) {
-                        mWptSelName = currApt.name;
-                        mWptSelComment = currApt.cmt;
-                        mWptSelLat = currApt.lat;
-                        mWptSelLon = currApt.lon;
-                        break;
-                    }
-                    // Look for a partial match
-                    else if ((pos < 3) && currApt.name.startsWith(String.valueOf(wpt).substring(0, pos + 1))) {
-                        // We found a partial match, fill in the rest for a first guess
-                        for (int i = pos; i < 4; i++) wpt[i] = currApt.name.charAt(i);
-                        mWptSelName = currApt.name;
-                        mWptSelComment = currApt.cmt;
-                        mWptSelLat = currApt.lat;
-                        mWptSelLon = currApt.lon;
-                        break;
-                    }
-                    // No match at all
-                    else {
-                        mWptSelName = String.valueOf(wpt);
-                        mWptSelComment = " ";
-                        mWptSelLat = 0;
-                        mWptSelLon = 0;
+                        // Look for a perfect match
+                        if (currApt.name.equals(String.valueOf(wpt))) {
+                            mWptSelName = currApt.name;
+                            mWptSelComment = currApt.cmt;
+                            mWptSelLat = currApt.lat;
+                            mWptSelLon = currApt.lon;
+                            break;
+                        }
+                        // Look for a partial match
+                        else if ((pos < 3) && currApt.name.startsWith(String.valueOf(wpt).substring(0, pos + 1))) {
+                            // We found a partial match, fill in the rest for a first guess
+                            for (int i = pos; i < 4; i++) wpt[i] = currApt.name.charAt(i);
+                            mWptSelName = currApt.name;
+                            mWptSelComment = currApt.cmt;
+                            mWptSelLat = currApt.lat;
+                            mWptSelLon = currApt.lon;
+                            break;
+                        }
+                        // No match at all
+                        else {
+                            mWptSelName = String.valueOf(wpt);
+                            mWptSelComment = " ";
+                            mWptSelLat = 0;
+                            mWptSelLon = 0;
+                        }
                     }
                 }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 // The selected waypoint has changed
                 // Update the OBS as well
                 mObsValue = UNavigation.calcAbsBrg(LatValue, LonValue, mWptSelLat, mWptSelLon);
@@ -3102,7 +3167,8 @@ abstract public class EFISRenderer
         //
         glText.begin(foreShadeR * theta, theta * tapeShadeG, theta * foreShadeB, 1.0f, matrix); // purple'ish
         glText.setScale(scale);
-        glText.drawC(mWptSelName, 0, 0.12f * roseRadius, 0);
+        //glText.drawC(mWptSelName, 0, -0.35f * roseRadius, 0.35f * roseRadius); //0.12, 0
+        glText.drawC(mWptSelName, 0.20f * roseRadius, -0.35f * roseRadius, 0); //0.12, 0
         glText.end();
 
         //
@@ -3110,7 +3176,8 @@ abstract public class EFISRenderer
         //
         glText.begin(foreShadeR * theta, foreShadeG * theta, backShadeB, 1.0f, matrix); // yellow
         glText.setScale(scale);
-        glText.drawC(mAutoWpt, 0, -0.12f * roseRadius, 0);
+        //glText.drawC(mAutoWpt, 0, -0.35f * roseRadius, -0.35f * roseRadius);
+        glText.drawC(mAutoWpt, -0.20f * roseRadius, -0.35f * roseRadius, 0);
         glText.end();
     }
 
@@ -3399,7 +3466,6 @@ abstract public class EFISRenderer
         glText.drawCX("N", 0, 0.09f*pixM2);
         glText.end();
     }
-
 
 }
 
