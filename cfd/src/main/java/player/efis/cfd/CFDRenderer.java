@@ -492,11 +492,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
-        if (true /*!bCacheActive*/) {
-            renderDEMTerrainPfd(matrix);
-            return;
-        }
-
         /*
         if (ctr % frameSkipPfd == 0) {
             renderDEMTerrainPfd(matrix);
@@ -505,16 +500,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             bm.recycle();
         }
         */
-
-        // debug
-        /*
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;   // No pre-scaling
-        final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher, options);
-        textureHandlePfd = loadTexture(bitmap);
-        bitmap.recycle();
-        //*/
-        // debug
 
         /*
         {
@@ -858,19 +843,13 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    boolean bCacheActive = true;
-    int frameSkipMfd = 5;//*4; //200; //500;
+    boolean bCacheActive = false;
+    int frameSkipMfd = 5;
     int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
-        if (true /*!bCacheActive*/) {
-            renderDEMTerrainMfd(matrix);
-            return;
-        }
-
         if (ctr % frameSkipMfd == 0) {
             renderDEMTerrainMfd(matrix);
-            //if (displayAirspace) renderAirspaceMfd(matrix);
             Bitmap bm = saveScreen(gl, 0, pixH2);
             textureHandleMfd = loadTexture(bm);
             bm.recycle();
@@ -890,7 +869,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             glBitmap.textureDataHandle =  textureHandleMfd;
             glBitmap.draw(matrix);
         }
-
     }
 
     protected void renderDEMTerrainMfd(float[] matrix)
