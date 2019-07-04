@@ -1,7 +1,7 @@
 Changelog
 =========
 
-REL_27 (under test)
+REL_27 (2019-07-05)
 ------------------
 * First version of Kwik Composite
 * Implement altitude discrimination to target display
