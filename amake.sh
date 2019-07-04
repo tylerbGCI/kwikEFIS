@@ -5,6 +5,8 @@
 
 # ./gradlew clean
 rm ./apk/kwik-efis.apk
+rm ./apk/kwik-dmap.apk
+rm ./apk/kwik-comp.apk
 rm ./apk/kwik-efis-datapac-zar.aus.apk
 rm ./apk/kwik-efis-datapac-usa.can.apk
 rm ./apk/kwik-efis-datapac-eur.rus.apk
@@ -14,16 +16,15 @@ rm ./apk/kwik-efis-datapac-pan.arg.apk
 #./gradlew build
 ./gradlew assemble
 
-cp ./pfd/build/outputs/apk/pfd-debug.apk ./apk/kwik-efis.apk
-cp ./mfd/build/outputs/apk/mfd-debug.apk ./apk/kwik-dmap.apk
-cp ./data.zar.aus/build/outputs/apk/data.zar.aus-debug.apk ./apk/kwik-efis-datapac-zar.aus.apk
-cp ./data.usa.can/build/outputs/apk/data.usa.can-debug.apk ./apk/kwik-efis-datapac-usa.can.apk
-cp ./data.eur.rus/build/outputs/apk/data.eur.rus-debug.apk ./apk/kwik-efis-datapac-eur.rus.apk
-cp ./data.sah.jap/build/outputs/apk/data.sah.jap-debug.apk ./apk/kwik-efis-datapac-sah.jap.apk
-cp ./data.pan.arg/build/outputs/apk/data.pan.arg-debug.apk ./apk/kwik-efis-datapac-pan.arg.apk
+cp ./pfd/build/outputs/apk/debug/pfd-debug.apk ./apk/kwik-efis.apk
+cp ./mfd/build/outputs/apk/debug/mfd-debug.apk ./apk/kwik-dmap.apk
+cp ./cfd/build/outputs/apk/debug/cfd-debug.apk ./apk/kwik-comp.apk
+cp ./data.zar.aus/build/outputs/apk/debug/data.zar.aus-debug.apk ./apk/kwik-efis-datapac-zar.aus.apk
+cp ./data.usa.can/build/outputs/apk/debug/data.usa.can-debug.apk ./apk/kwik-efis-datapac-usa.can.apk
+cp ./data.eur.rus/build/outputs/apk/debug/data.eur.rus-debug.apk ./apk/kwik-efis-datapac-eur.rus.apk
+cp ./data.sah.jap/build/outputs/apk/debug/data.sah.jap-debug.apk ./apk/kwik-efis-datapac-sah.jap.apk
+cp ./data.pan.arg/build/outputs/apk/debug/data.pan.arg-debug.apk ./apk/kwik-efis-datapac-pan.arg.apk
 cp ./CHANGELOG.md ./apk/CHANGELOG.md
-
-exit
 
 cd ./apk
 
@@ -78,7 +79,25 @@ then
     #adb -s 758f9cc3 install -r ./kwik-efis-datapac-eur.rus.apk
 fi
 
+if [ ! -z $1 ] && [ $1 == '-bv' ] 
+then
+    echo 'blackview bv6000s'
+    adb devices
+    
+    #gsm nexus 7
+    adb -s CQAA5L8S599DSWDQ uninstall player.efis.pfd
+    adb -s CQAA5L8S599DSWDQ uninstall player.efis.mfd
+    adb -s CQAA5L8S599DSWDQ uninstall player.efis.cfd
+    
+    adb -s CQAA5L8S599DSWDQ install -r ./kwik-efis.apk
+    adb -s CQAA5L8S599DSWDQ install -r ./kwik-dmap.apk
+    adb -s CQAA5L8S599DSWDQ install -r ./kwik-comp.apk
+    
+    #adb -s 758f9cc3 install -r ./kwik-efis-datapac-zar.aus.apk
+    #adb -s 758f9cc3 install -r ./kwik-efis-datapac-usa.can.apk
+    #adb -s 758f9cc3 install -r ./kwik-efis-datapac-eur.rus.apk
+fi
 
 
-pskill java
-pskill adb
+#pskill java
+#pskill adb
