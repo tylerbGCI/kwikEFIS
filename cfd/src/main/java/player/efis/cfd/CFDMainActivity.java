@@ -627,7 +627,7 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAh();
             mGLView.setServiceableMap();
             mGLView.setDisplayAirport(true);
-            updateFPV();  
+            updateFPV();
             mGLView.setBannerMsg(false, " ");
         }
         else if (rv == STRATUX_SERVICE) {
@@ -802,7 +802,6 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAlt();
             mGLView.setServiceableAh();
             mGLView.setServiceableMap();
-			
             mGLView.setDisplayAirport(true);
             hasGps = true;
             hasSpeed = true;
@@ -857,9 +856,9 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         mGLView.setVSI((int) Unit.MeterPerSecond.toFeetPerMinute(gps_rateOfClimb));  // in fpm
         mGLView.setTurn((sensorBias) * gyro_rateOfTurn + (1 - sensorBias) * gps_rateOfTurn);
         mGLView.setHeading((float) Math.toDegrees(gps_course));  // in degrees
-        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));   // in Feet
-        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));        // in Feet
-        mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));  // in knots
+        mGLView.setALT((int) Unit.Meter.toFeet(gps_altitude));    // in Feet
+        mGLView.setAGL((int) Unit.Meter.toFeet(gps_agl));         // in Feet
+        mGLView.setASI(Unit.MeterPerSecond.toKnots(gps_speed));   // in knots
         mGLView.setLatLon(gps_lat, gps_lon);
         mGLView.setBatteryPct(batteryPct);                       // in percentage
 
@@ -888,7 +887,8 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // We are stalling, advise captain "Crash" of his imminent flight emergency
                 if (hasSpeed
                         && (gps_speed < 3 + AircraftData.Vs0 / 2) // m/s, warn 3 m/s before stall
-                        && (gps_agl > 0)) {
+                        && (gps_speed > 3)                        // m/s, warn only when faster than 3 m/s
+                        && (gps_agl > 10)) {                      // meters 
                     if (!mpStall.isPlaying()) mpStall.start();
                 }
 

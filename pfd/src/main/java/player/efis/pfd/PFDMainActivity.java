@@ -605,9 +605,7 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableAlt();
             mGLView.setServiceableAh();
             mGLView.setDisplayAirport(true);
-            if (hasSpeed) {
-                updateFPV();
-            }
+            updateFPV();
             mGLView.setBannerMsg(false, " ");
         }
         else if (rv == STRATUX_SERVICE) {
@@ -862,11 +860,12 @@ public class PFDMainActivity extends EFISMainActivity implements Listener, Senso
                 // We are stalling, advise captain "Crash" of his imminent flight emergency
                 if (hasSpeed
                         && (gps_speed < 3 + AircraftData.Vs0 / 2) // m/s, warn 3 m/s before stall
-                        && (gps_agl > 0)) {
+                        && (gps_speed > 3)                        // m/s, warn only when faster than 3 m/s
+                        && (gps_agl > 10)) {                      // meters 
                     if (!mpStall.isPlaying()) mpStall.start();
                 }
 
-                // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick of that
+                // Sigh ... Now, we are plummeting to the ground, inform the prick on the stick
                 if (gps_rateOfClimb < -10) { // m ~ 2000 fpm //gps_rateOfClimb * 196.8504f for fpm
                     if (!mpSinkRate.isPlaying()) mpSinkRate.start();
                 }
