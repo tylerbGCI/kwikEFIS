@@ -70,7 +70,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -81,7 +80,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Create the GLText
         glText = new GLText(context.getAssets());
 
-        glBitmap = new GLBitmap();
+        //glBitmap = new GLBitmap();  // We want the app to crash if glBitmap is used.
 
         roseTextScale = 1f;
     }
@@ -96,30 +95,17 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        // Set the camera position (View matrix)
-        if (displayMirror)
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
-        else
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, +3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);   // Normal View
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
         onDrawFramePfd(gl);
         onDrawFrameMfd(gl);
-
-
-
     }
 
 
     private void onDrawFramePfd(GL10 gl)
     {
-        //GLES20.glViewport(0, pixH2, pixW, pixH2);
         GLES20.glViewport(0, pixH2, pixW, pixH);
-        /*
+
         // Draw background color
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -129,7 +115,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        //*/
 
         // Create a rotation for the horizon
         Matrix.setRotateM(mRotationMatrix, 0, rollRotation, 0, 0, 1.0f);
@@ -681,14 +666,15 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // DMAP routines
     //
 
+    //---------------------------------------------------------------
+    // Multi-Function-Display Drawing (DMAP)
+    //
     private void onDrawFrameMfd(GL10 gl)
     {
-        GLES20.glViewport(0, 0, pixW, pixH2*99/100);
         GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
 
         // Draw background color
         //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -1150,7 +1136,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         ServiceableMap = false;
     }
-
 
 
     public Bitmap saveScreen(GL10 mGL, int offset, int height)

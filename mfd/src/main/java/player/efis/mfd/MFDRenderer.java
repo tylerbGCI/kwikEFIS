@@ -91,9 +91,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // fatFingerActive just for performance
         //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
-        //if (displayAirspace) renderAirspace(mMVPMatrix);  // done in ccache above
-
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);
+        if (displayAirspace) renderAirspaceMfd(mMVPMatrix);  
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
 
@@ -438,7 +437,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //-------------------------------------------------------------------------
     // Airspace
     //
-    protected void renderAirspace(float[] matrix)
+    protected void renderAirspaceMfd(float[] matrix)
     {
         float z;
         float x1, y1;
