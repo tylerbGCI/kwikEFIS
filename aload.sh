@@ -44,7 +44,6 @@ then
     adb -s $DROIDDEVICE install -r ./kwik-comp.apk
 
     #adb -s $DROIDDEVICE install -r ./kwik-efis-datapac-zar.aus.apk
-    #adb -s $DROIDDEVICE install -r ./kwik-efis-datapac-zar.aus.apk
     #adb -s $DROIDDEVICE install -r ./kwik-efis-datapac-usa.can.apk
     #adb -s $DROIDDEVICE install -r ./kwik-efis-datapac-eur.rus.apk
 fi
