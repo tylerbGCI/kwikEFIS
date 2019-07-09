@@ -69,15 +69,29 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         roseTextScale = 1f;
     }
 
-    private int ctr;
-    @Override
-    public void onDrawFrame(GL10 gl)
+	private int ctr;
+	@Override
+	public void onDrawFrame(GL10 gl)
     {
         ctr++;
 
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
+        onDrawFrameMfd(gl);
+    }
+	
+	
+    //===========================================================================
+    //---------------------------------------------------------------------------
+    // DMAP routines
+    //
+
+    //---------------------------------------------------------------
+    // Multi-Function-Display Drawing (DMAP)
+    //
+    private void onDrawFrameMfd(GL10 gl)
+    {
         // Set the camera position (View matrix)
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
@@ -90,7 +104,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         // fatFingerActive just for performance
-        //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
         if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);  
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch

@@ -85,7 +85,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         roseTextScale = 1f;
     }
 
-
     private int ctr;
     @Override
     public void onDrawFrame(GL10 gl)
@@ -459,7 +458,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    int frameSkipPfd = 4; //200; //500;
+    int frameSkipPfd = 4; 
     int textureHandlePfd;
     protected void renderDEMTerrainPfdCache(GL10 gl, float[] matrix)
     {
@@ -470,9 +469,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             textureHandlePfd = loadTexture(bm);
             bm.recycle();
         }
-        */
 
-        /*
         {
             float x = 1.4f * pixW2;
             float y = 1.4f * pixH2/2;
@@ -661,7 +658,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
 
     //===========================================================================
-
     //---------------------------------------------------------------------------
     // DMAP routines
     //
@@ -671,10 +667,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     private void onDrawFrameMfd(GL10 gl)
     {
-        GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
-
-        // Draw background color
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glViewport(0, -101/100*pixH2, pixW, pixH);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -684,14 +677,12 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        //*/
-        //displayAirspace = true;  // hardcode for now
 
         zfloat = 0;
 
-        // Add switch for orientation
         float xlx;
         float xly;
+        // Add switch for orientation
         if (Layout == layout_t.LANDSCAPE) {
             // TODO: implement a suitable landscape view
             // For now - Do nothing
@@ -716,27 +707,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
-        //if (displayDEM && !fatFingerActive) renderDEMTerrainMfdCache(gl, mMVPMatrix);
         if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
-
-        /*if (mMfdTask == null) {
-            mMfdTask = new MfdDrawFrameTask("kwik");
-            mMfdTask.matrix = mMVPMatrix;
-            //mMfdTask.execute();
-            mMfdTask.renderDEMTerrainMfd(mMVPMatrix);
-        }
-        else {
-            if (mMfdTask.isRunning == false) {
-                mMfdTask.cancel(true);
-                mMfdTask = null;
-            }
-        }*/
-
-
-
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
-        if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
+        if (true) renderTargets(mMVPMatrix);           // TODO: 2018-08-31 Add control of targets
         Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
         // use RMI from PFD
@@ -828,6 +802,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     int textureHandleMfd;
     protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
     {
+		/*
         if (ctr % frameSkipMfd == 0) {
             renderDEMTerrainMfd(matrix);
             Bitmap bm = saveScreen(gl, 0, pixH2);
@@ -849,6 +824,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             glBitmap.textureDataHandle =  textureHandleMfd;
             glBitmap.draw(matrix);
         }
+		*/
     }
 
     protected void renderDEMTerrainMfd(float[] matrix)
