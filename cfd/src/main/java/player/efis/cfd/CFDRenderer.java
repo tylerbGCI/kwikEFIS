@@ -237,7 +237,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
+            //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
 
             xlx = 0;
             xly = +0.90f * pixH2;
@@ -260,20 +260,27 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
         */
 
-        /* b1
-        if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
+        ///* b1
+        //if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         //if (!ServiceableAh) renderUnserviceablePage(mMVPMatrix);
+
+        // exploit the spacing hack from pfd to position
+        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
+        if (bBannerActive) renderBannerMsg(mMVPMatrix);
+
+        GLES20.glViewport(0, pixH2, pixW, pixH2);  //
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) {
             renderUnserviceableDi(mMVPMatrix);
-            renderUnserviceableCompassRose(mMVPMatrix);
+            //renderUnserviceableCompassRose(mMVPMatrix);
         }
-        */
+        //*/
+        //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
 
-        if (bBannerActive) renderBannerMsg(mMVPMatrix);
-        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
+        //if (bBannerActive) renderBannerMsg(mMVPMatrix);
+        //if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
 
         /*b1
         // Do this last so that every else wil be dimmed for fatfinger entry
@@ -757,15 +764,16 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
 
-        /* b1
-        if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
+        GLES20.glViewport(0, 0, pixW, pixH2);
+        ///*
+        //if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         if (!ServiceableMap) renderUnserviceablePage(mMVPMatrix);
-        if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
+        /*if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) renderUnserviceableDi(mMVPMatrix);
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
-        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
-        */
+        if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);*/
+        //*/
 
         //renderACSymbol(mMVPMatrix);
 
