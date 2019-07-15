@@ -94,17 +94,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        onDrawFramePfd(gl);
-        onDrawFrameMfd(gl);
+        DrawFramePfd(gl);
+        DrawFrameMfd(gl);
     }
 
 
-    private void onDrawFramePfd(GL10 gl)
+    private void DrawFramePfd(GL10 gl)
     {
         GLES20.glViewport(0, pixH2, pixW, pixH);
-
-        // Draw background color
-        //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -157,16 +154,11 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         renderPitchMarkers(scratch1);
 
-        //GLES20.glViewport(0, pixH2, pixW, pixH2);
-
         // FPV only means anything if we have speed and rate of climb, ie altitude
         if (displayFPV) renderFPV(scratch1);      // must be on the same matrix as the Pitch
         if (displayAirport) renderAPT(scratch1);  // must be on the same matrix as the Pitch
         if (true) renderTargets(scratch1);        // Add control tof targets sometime ...
         if (displayHITS) renderHITS(scratch1);    // will not keep in the viewport
-
-        //GLES20.glViewport(0, 0, pixW, pixH);
-
 
         // Flight Director - FD
         if (displayFlightDirector) {
@@ -202,7 +194,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         if (Layout == layout_t.LANDSCAPE)
             GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
         else
-            //GLES20.glViewport(pixW / 100, pixH * 40 / 100, pixW - pixW / 50, pixH - pixH * 42 / 100); // Portrait
               GLES20.glViewport(pixW / 100, pixH2*105/100, pixW - pixW / 50, pixH2*90/100); // Portrait
 
         if (displayTape) {
@@ -237,8 +228,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedASIMarkers(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
-
             xlx = 0;
             xly = +0.90f * pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -247,49 +236,16 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
 
-
-        //-----------------------------
-        /*b1
-        renderTurnMarkers(mMVPMatrix);
-        renderSlipBall(mMVPMatrix);
-        renderGForceValue(mMVPMatrix);
-
-        if (displayInfoPage) {
-            renderAncillaryDetails(mMVPMatrix);
-            renderBatteryPct(mMVPMatrix);
-        }
-        */
-
-        ///* b1
-        //if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
-        //if (!ServiceableAh) renderUnserviceablePage(mMVPMatrix);
-
-        // exploit the spacing hack from pfd to position
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
-        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
 
+        if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);  // exploit the spacing hack from pfd to position
         GLES20.glViewport(0, pixH2, pixW, pixH2);  //
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) {
             renderUnserviceableDi(mMVPMatrix);
-            //renderUnserviceableCompassRose(mMVPMatrix);
         }
-        //*/
-        //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
-
-        //if (bBannerActive) renderBannerMsg(mMVPMatrix);
-        //if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
-
-        /*b1
-        // Do this last so that every else wil be dimmed for fatfinger entry
-        if (displayFlightDirector || displayRMI || displayHITS) {
-            renderSelWptDetails(mMVPMatrix);
-            renderSelWptValue(mMVPMatrix);
-            renderSelAltValue(mMVPMatrix);
-        }
-        */
     }
 
     @Override
@@ -330,9 +286,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float ratio = (float) width / height;
         //Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest
         Matrix.frustumM(mProjectionMatrix, 0, -ratio * pixH2, ratio * pixH2, -pixH2, pixH2, 2.99f, 75f); //hack for Samsung G2
-
-        // Create the GLText
-        // --debug glText = new GLText(context.getAssets()); - moved to onsurfacecreated
 
         // Load the font from file (set size + padding), creates the texture
         // NOTE: after a successful call to this the font is ready for rendering!
@@ -658,6 +611,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         ServiceableAh = true;
     }
+
     public void setUnServiceableAh()
     {
         ServiceableAh = false;
@@ -672,7 +626,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
     //
-    private void onDrawFrameMfd(GL10 gl)
+    private void DrawFrameMfd(GL10 gl)
     {
         GLES20.glViewport(0, -101/100*pixH2, pixW, pixH);
 

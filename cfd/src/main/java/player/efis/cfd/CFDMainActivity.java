@@ -654,6 +654,7 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
             mGLView.setServiceableDevice();
             mGLView.setServiceableAh();
 
+            mGLView.setUnServiceableMap();  // map needs GPS
             mGLView.setUnServiceableDi();   // also does the rose
             mGLView.setUnServiceableAsi();
             mGLView.setUnServiceableAlt();
@@ -710,6 +711,8 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
         float deltaA, fpvX = 0, fpvY = 0;
         if (hasGps) {
             mGLView.setServiceableDevice();
+            mGLView.setServiceableMap();
+
             if (gps_speed > 5) {
                 // Testing shows that reasonable value is sensorBias of 75% gps and 25% gyro on most older devices,
                 // if the gyro and accelerometer are good quality and stable, use sensorBias of 100%
@@ -730,6 +733,8 @@ public class CFDMainActivity extends EFISMainActivity implements Listener, Senso
             // No GPS no speed ... no idea what the AH is
             //forceBlankScreen();
             mGLView.setUnServiceableDevice();
+            mGLView.setUnServiceableMap();    // map needs GPS
+
         }
 		
         // for debug - set to true
