@@ -16,27 +16,9 @@
     limitations under the License.
 -->
 
-<!--
- Versioning scheme
-   android:versionCode is incremented on every new viable build
-   android:versionName="a.b"
-      where:
-        a - is a major update. Typically incorporating a new feature or significant change
-        b - is a minor update. Typically incorporating a bugfix or a data update
- -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="player.efis.pfd"
-    android:installLocation="preferExternal"
-    android:versionCode="27"
-    android:versionName="4.4" >
-
-    <!-- We need to target 10 for the menu button -->
-    <!-- it is overridden in the gradle files -->
-    <!--
-    <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="18" />    -->
+    android:installLocation="preferExternal">
 
     <!-- Tell the system this app requires OpenGL ES 2.0. -->
     <uses-feature
