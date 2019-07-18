@@ -14,20 +14,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<!--
- Versioning scheme
-   android:versionCode is incremented on every new viable build
-   android:versionName="a.b"
-      where:
-        a - is a major update. Typically incorporating a new feature or significant change
-        b - is a minor update. Typically incorporating a bugfix or a data update
- -->
 
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="player.efis.data.sah.jap"
-          android:installLocation="preferExternal"
-          android:versionCode="3"
-          android:versionName="1.2" >
+          package="player.efis.data"
+          android:installLocation="preferExternal">
 
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
