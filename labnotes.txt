@@ -69,4 +69,6 @@ sudo passwd root
 Step 2 - allow root login
 just go to /etc/ssh/sshd_config change the line as below
 PermitRootLogin yes #(i just added this to the bottom of the file)
-
+---------------------------
+C:\Android\android-sdk\platform-tools>set ADB_TRACE=1
+C:\Android\android-sdk\platform-tools>adb start-server

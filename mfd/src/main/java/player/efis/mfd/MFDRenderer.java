@@ -55,7 +55,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     {
         // Set the background frame color
         GLES20.glClearColor(backShadeR, backShadeG, backShadeB, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         mTriangle = new Triangle();
         mSquare = new Square();
@@ -65,32 +64,27 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
-
         roseTextScale = 1f;
     }
 
-	private int ctr;
-	@Override
-	public void onDrawFrame(GL10 gl)
+    @Override
+    public void onDrawFrame(GL10 gl)
     {
-        ctr++;
-
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        onDrawFrameMfd(gl);
+        DrawFrameMfd(gl);
     }
 	
 	
     //===========================================================================
-    //---------------------------------------------------------------------------
     // DMAP routines
-    //
+    //===========================================================================
 
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
     //
-    private void onDrawFrameMfd(GL10 gl)
+    private void DrawFrameMfd(GL10 gl)
     {
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -104,7 +98,9 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         zfloat = 0;
 
         // fatFingerActive just for performance
-        if (displayDEM && !fatFingerActive) renderDEMTerrain(mMVPMatrix);
+        if (displayDEM && !fatFingerActive) {
+			renderDEMTerrain(mMVPMatrix);
+		}
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);  
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);        // TODO: 2018-08-31 Add control of targets
@@ -213,8 +209,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
-        //gl.glViewport(0, 0, width, height/2);
-
         // Adjust the viewport based on geometry changes, such as screen rotation
         GLES20.glViewport(0, 0, width, height);
 
@@ -271,7 +265,12 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         renderUnserviceableAsi(matrix);
     }
 
-
+    //
+    // project
+    //
+    // relbrg in degrees
+    // dme in nm
+    // elev in m
     @Override
     protected Point project(float relbrg, float dme)
     {
@@ -279,7 +278,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 mMapZoom * dme * UTrig.icos(90-(int)relbrg),
                 mMapZoom * dme * UTrig.isin(90-(int)relbrg)
         );
-    } // end of project
+    }
 
     @Override
     protected Point project(float relbrg, float dme, float elev)

@@ -68,6 +68,16 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
+        DrawFramePfd(gl);
+    }
+
+    //---------------------------------------------------------------
+    // Primary-Flight-Display Drawing (EFIS)
+    //
+    public void DrawFramePfd(GL10 gl)
+    {
+
+
         // Set the camera position (View matrix)
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
@@ -108,6 +118,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
+        // fatFingerActive just for performance
         if (displayDEM && !fatFingerActive) {
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
@@ -430,7 +441,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
     //-------------------------------------------------------------------------
-    // Render the Digital Elevation Model (DEM).
+    // Render the Digital Elevation Model (DEM) - EFIS.
     //
     // This is the meat and potatoes of the synthetic vision implementation
     // The loops are very performance intensive, therefore all the hardcoded
