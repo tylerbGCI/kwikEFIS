@@ -101,7 +101,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
     private void DrawFramePfd(GL10 gl)
     {
-        GLES20.glViewport(0, pixH2, pixW, pixH);
+        if (Layout == layout_t.PORTRAIT)
+            GLES20.glViewport(0, pixH2, pixW, pixH);
+        else
+            GLES20.glViewport(0, 0, pixW2, pixH);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -182,19 +185,23 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         if (Layout == layout_t.PORTRAIT) {
             // Slide pitch to current value adj for portrait
-            int Adjust = (int) (pixH2 * portraitOffset);
-            GLES20.glViewport(0,  Adjust, pixW, pixH); // Portrait //
+            // int Adjust = (int) (pixH2 * portraitOffset);
+            // GLES20.glViewport(0,  Adjust, pixW, pixH); // Portrait //
+            GLES20.glViewport(0, pixH/4, pixW, pixH);  // moved from below
         }
-
-        GLES20.glViewport(0, pixH/4, pixW, pixH);
+        else {
+            GLES20.glViewport(-pixW/4, 0, pixW, pixH);
+        }
         renderFixedHorizonMarkers();
         renderRollMarkers(scratch2);
 
         //-----------------------------
-        if (Layout == layout_t.LANDSCAPE)
-            GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
+        if (Layout == layout_t.PORTRAIT)
+            GLES20.glViewport(pixW / 100, pixH2*105/100, pixW - pixW / 50, pixH2*90/100); // Portrait
         else
-              GLES20.glViewport(pixW / 100, pixH2*105/100, pixW - pixW / 50, pixH2*90/100); // Portrait
+            //GLES20.glViewport(pixW / 30, pixH / 30, pixW - pixW / 15, pixH - pixH / 15); //Landscape
+            GLES20.glViewport(-pixW/4, 0, pixW, pixH); //Landscape
+            //GLES20.glViewport(-pixW/4, 0, pixW - pixW / 15, pixH - pixH / 15); //Landscape
 
         if (displayTape) {
             renderALTMarkers(altMatrix);
@@ -203,44 +210,75 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         }
 
         {
-            int Adjust = (int) (pixH2 * portraitOffset);
-            GLES20.glViewport(0, 0, pixW, pixH); // Portrait //
-
             float xlx;
             float xly;
 
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
+            if (Layout == layout_t.PORTRAIT) {
+                // Portrait
+                GLES20.glViewport(0, 0, pixW, pixH);
 
-            xlx = 1.14f * pixM2;
-            xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedALTMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+                xlx = 1.14f * pixM2;
+                xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedALTMarkers(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            xly = 0.1f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedRADALTMarkers(mMVPMatrix);   // AGL
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+                xly = 0.1f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedRADALTMarkers(mMVPMatrix);   // AGL
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            xlx = -1.10f * pixM2;
-            xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedASIMarkers(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+                xlx = -1.10f * pixM2;
+                xly = pixH2/2; // half of tape viewport //-0.7f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedASIMarkers(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
-            xlx = 0;
-            xly = +0.90f * pixH2;
-            Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
-            renderFixedDIMarkers(mMVPMatrix);
-            renderHDGValue(mMVPMatrix);
-            Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+                xlx = 0;
+                xly = +0.90f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedDIMarkers(mMVPMatrix);
+                renderHDGValue(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            }
+            else {
+                //Landscape
+                GLES20.glViewport(-pixW/4, 0, pixW, pixH); //Landscape
+
+                xlx = pixM2; // 1.14f * pixM2;
+                xly = 0; // half of tape viewport //-0.7f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedALTMarkers(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+                xly = -0.5f * pixM2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedRADALTMarkers(mMVPMatrix);   // AGL
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+                xlx = -1.0f * pixM2;
+                xly = 0; // half of tape viewport //-0.7f * pixH2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedASIMarkers(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+
+                xlx = 0;
+                xly = +0.90f * pixM2;
+                Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
+                renderFixedDIMarkers(mMVPMatrix);
+                renderHDGValue(mMVPMatrix);
+                Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
+            }
         }
 
         if (bSimulatorActive) renderSimulatorActive(mMVPMatrix);
         if (bBannerActive) renderBannerMsg(mMVPMatrix);
 
         if (!ServiceableAh) renderUnserviceableAh(mMVPMatrix);  // exploit the spacing hack from pfd to position
-        GLES20.glViewport(0, pixH2, pixW, pixH2);  //
+        if (Layout == layout_t.PORTRAIT)
+            GLES20.glViewport(0, pixH2, pixW, pixH2);
+
         if (!ServiceableAlt) renderUnserviceableAlt(mMVPMatrix);
         if (!ServiceableAsi) renderUnserviceableAsi(mMVPMatrix);
         if (!ServiceableDi) {
@@ -628,7 +666,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     //
     private void DrawFrameMfd(GL10 gl)
     {
-        GLES20.glViewport(0, -101/100*pixH2, pixW, pixH);
+        //GLES20.glViewport(0, -101 / 100 * pixH2, pixW, pixH);
 
         // Set the camera position (View matrix)
         if (displayMirror)
@@ -644,26 +682,18 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float xlx;
         float xly;
         // Add switch for orientation
-        if (Layout == layout_t.LANDSCAPE) {
-            // TODO: implement a suitable landscape view
-            // For now - Do nothing
-            /*
-            // Landscape
-            xlx = -0.74f * pixW2; // top left
-            xly = 0.50f * pixH2;  // top left
-            roseScale = 0.44f;
-            GLES20.glViewport(0, 0, pixW, pixH);
-            */
-            // Temp ... keep Portrait layout
-            xlx = 0;
-            xly = pixH2/2;
-            roseScale = 0.52f;
-        }
-        else {
+        if (Layout == layout_t.PORTRAIT) {
             //Portrait
             xlx = 0;
             xly = pixH2/2;
             roseScale = 0.52f;
+            GLES20.glViewport(0, -101 / 100 * pixH2, pixW, pixH);
+        }
+        else {
+            xlx = -pixW2/2;
+            xly =  0;
+            roseScale = 0.52f;
+            GLES20.glViewport(pixW2, 0, pixW, pixH);
         }
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
@@ -686,8 +716,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedCompassMarkers(mMVPMatrix);
             renderACSymbol(mMVPMatrix);
 
-            if (autoZoomActive) setAutoZoom();
-            renderDctTrack(mMVPMatrix);
+            //if (autoZoomActive) setAutoZoom();
+            //renderDctTrack(mMVPMatrix);
+
+            if (displayFlightDirector) {
+                if (autoZoomActive) setAutoZoom();
+                renderDctTrack(mMVPMatrix);
+            }
+
 
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
@@ -696,15 +732,14 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             //GLES20.glViewport(0, 0, pixW, pixH);  // fullscreen
         }
 
-
-
         //-----------------------------
         if (displayInfoPage) {
             xlx = 0;
-            xly = pixH2;
+            xly = 0.75f*pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
+            if (displayFlightDirector) renderAutoWptDetails(mMVPMatrix);
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
 
             // North Que
@@ -718,7 +753,12 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             Matrix.translateM(mMVPMatrix, 0, -xlx, -xly, 0);
         }
 
-        GLES20.glViewport(0, 0, pixW, pixH2);
+        if (Layout == layout_t.PORTRAIT)
+            GLES20.glViewport(0, 0, pixW, pixH2);
+        else
+            GLES20.glViewport(pixW2/2, 0, pixW, pixH);
+
+
         ///*
         //if (!ServiceableDevice) renderUnserviceableDevice(mMVPMatrix);
         if (!ServiceableMap) renderUnserviceablePage(mMVPMatrix);
@@ -745,9 +785,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderSelWptDetails(mMVPMatrix);
             renderSelWptValue(mMVPMatrix);
             renderSelAltValue(mMVPMatrix);
-
-            renderAutoWptDetails(mMVPMatrix);
-
         }
     }
 
