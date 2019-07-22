@@ -734,7 +734,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         //-----------------------------
         if (displayInfoPage) {
-<<<<<<< HEAD
             if (Layout == layout_t.PORTRAIT) {
               // Portrait
               xlx = 0;
@@ -746,10 +745,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
               xly = 0; 
             }
 
-=======
-            xlx = 0;
-            xly = 0.75f*pixH2;
->>>>>>> 059bd896454ce7fe05978abfd61387b4ce7ecbc9
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);
