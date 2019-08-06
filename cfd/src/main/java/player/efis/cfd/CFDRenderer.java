@@ -99,7 +99,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
-    private void DrawFramePfd(GL10 gl)
+    private void  DrawFramePfd(GL10 gl)
     {
         if (Layout == layout_t.PORTRAIT)
             GLES20.glViewport(0, pixH2, pixW, pixH);
