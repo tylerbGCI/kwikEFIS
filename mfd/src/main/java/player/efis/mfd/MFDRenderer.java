@@ -76,10 +76,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         DrawFrameMfd(gl);
     }
 	
-	
-    //===========================================================================
-    // DMAP routines
-    //===========================================================================
 
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
