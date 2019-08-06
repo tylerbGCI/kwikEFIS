@@ -54,7 +54,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     protected boolean ServiceableMap;      // Flag to indicate Map failure
 
 
-    protected GLBitmap glBitmap;
+    //protected GLBitmap glBitmap;
 
 
     public CFDRenderer(Context context)
@@ -98,8 +98,10 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         DrawFrameMfd(gl);
     }
 
-
-    private void  DrawFramePfd(GL10 gl)
+    //---------------------------------------------------------------
+    // Primary-Flight-Display Drawing (EFIS)
+    //
+    private void DrawFramePfd(GL10 gl)
     {
         if (Layout == layout_t.PORTRAIT)
             GLES20.glViewport(0, pixH2, pixW, pixH);
@@ -146,6 +148,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
+        // fatFingerActive just for performance
         if (displayDEM && !fatFingerActive) {
             // Make the blue sky for the DEM.
             // Note: it extends a little below the horizon when AGL is positive
@@ -289,7 +292,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
-        gl.glViewport(0, 0, width, height/2);
+        //gl.glViewport(0, 0, width, height/2); ??b2
 
         // Adjust the viewport based on geometry changes, such as screen rotation
         GLES20.glViewport(0, 0, width, height);
@@ -335,7 +338,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    int mTextureDataHandle;
+    //int mTextureDataHandle;
 
     @Override
     protected void renderUnserviceableDevice(float[] matrix)
@@ -506,7 +509,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-        final float viewCone = 20; //25;
+        final float viewCone = 25; //25;
 
         mSquare.SetWidth(1);
 
@@ -655,12 +658,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         ServiceableAh = false;
     }
 
-
-    //===========================================================================
-    // DMAP routines
-    //===========================================================================
-
-
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
     //
@@ -734,17 +731,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         //-----------------------------
         if (displayInfoPage) {
-            if (Layout == layout_t.PORTRAIT) {
-              // Portrait
-              xlx = 0;
-              xly = pixH2;
-            }
-            else  {
-              // Landscape
-              xlx = 0;
-              xly = 0; 
-            }
-
+            xlx = 0;
+            xly = 0.75f*pixH2;
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             renderAncillaryDetails(mMVPMatrix);
             renderBatteryPct(mMVPMatrix);

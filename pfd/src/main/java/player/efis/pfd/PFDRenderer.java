@@ -315,9 +315,6 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         //Matrix.frustumM(mProjectionMatrix, 0, -ratio*pixH2, ratio*pixH2, -pixH2, pixH2, 3f, 7f); // all the rest
         Matrix.frustumM(mProjectionMatrix, 0, -ratio * pixH2, ratio * pixH2, -pixH2, pixH2, 2.99f, 75f); //hack for Samsung G2
 
-        // Create the GLText
-        // --debug glText = new GLText(context.getAssets()); - moved to onsurfacecreated
-
         // Load the font from file (set size + padding), creates the texture
         // NOTE: after a successful call to this the font is ready for rendering!
         // glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
@@ -432,7 +429,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
                 selAltDec = -0.80f * pixH2;
                 selAltInc = -0.91f * pixH2;
 
-                lineC = -0.55f; 
+                lineC = -0.55f;
                 leftC = 0.6f;
                 spinnerStep = 0.1f;
                 spinnerTextScale = 1f;
@@ -468,7 +465,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         float caution;
         final float cautionMin = 0.2f;
         final float IASValueThreshold = AircraftData.Vx; //1.5f * Vs0;
-        final float viewCone = 20; //25;
+        final float viewCone = 25; //25;
 
         mSquare.SetWidth(1);
 
