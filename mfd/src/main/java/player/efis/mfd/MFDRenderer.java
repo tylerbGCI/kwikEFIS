@@ -75,7 +75,43 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         DrawFrameMfd(gl);
     }
-	
+
+
+/*
+ninelima@yahoo.com
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.7-Mobility Email: (MingW32)
+
+mQENBE0lygcBCADOwYhbGnXlfjtGeWdxRu6yNVSek6H5ZcgsAxD1C9RbVZ+iEDhD
+/+u2KmaTWYmUzKP4UqrzNHa3OBZ34+Y+hfzxybCGAb2KxFf89S019jlXpJ/t1xTx
+/cFx3U08a0jvl4Jcg+mXRMjAnYJuN8BAnubKOwZymAx0D2EwpHh9tPCSINMd2rAM
+Ac9HUuneeuZFt2ZrIlDzyztxkfw+Vv8k6MPPZGDB9CiZAcRNneggDlA/u+THMRBy
+MkoLtEulbjanAYmRQGY7V4aN7yOkCOakF1BDPCvyluYxlZaBc1Dvx2XdnGRODgrS
+Ejn1YJddoSf2RsHjl5R6NV6VDTla5P6slX47ABEBAAG0JE5pbmUgTGltYSAoMTIz
+KSA8bmluZWxpbWFAeWFob28uY29tPokBOAQTAQIAIgUCTSXKBwIbAwYLCQgHAwIG
+FQgCCQoLBBYCAwECHgECF4AACgkQOcgn69ZgK8cSOggAyH7LIzHBTb56OTTpkA6g
+FffnroLd/BQcZV87y1oAxIjJ4CCujb1r56CCpNdujQVB1twrzxc3LS6sM4vaXy6e
+AbxvbSKjA19XZzvMpel8TbER2A1/daArby+Orkk/LOAK3W+ZHdXY9BYMBZ0puB28
+HpS0Eg9XDgVQAgYbVwBSSKx2swfb3Ri2hDMjp4M4ZGOjSXK8VJKaecDgxdcJLhrb
+WU7fdMDsUJIkjzvYRypiEPO1oRwbfR3Di7CSln4arwbztdgznvhIah8gqIGH8XVZ
+s9mXaGFFNQUOiGYqk9sfmKNx7FLic4kGzpmnMkvLsTiHPRaTeC5eeBtMul1UrtaI
+37kBDQRNJcoHAQgAtAXUyq2+mXKoSIjdTgcjhSX2rbW6LSfX11xCnj4qFc+ya7/+
+wB1McFqAFp2zIsjYS1F+ny0H2ov/OPFsy4QeVIfZObSxXcXwDujSTDKIubdpMMTs
+/4uJxI26A95LDxBsY887UgJllyTh6e8Ps51dPH/9Wh7kPopk2wHGmV6uoQoNnquw
+LUekXSSXM0ePd0dnX0RVy63MUojOcNOGs9+cNeShlg0tOgbweWKLIG2+VcFKneuN
+J1NUjHhF252l7U3552clKIE3TCHV1XWDKtmG6zqtFWg3JIOHnrw46P1rq5xc85vX
+b+oAP/dw/Yw7jWtOw7QIevBpaHzS1lfrwCxzkQARAQABiQEfBBgBAgAJBQJNJcoH
+AhsMAAoJEDnIJ+vWYCvHuk4IAMkYUuGRIHm6zyUYpmQbM3Se7C34QYb710PRXCyY
+gNq33NfCn/dn5iNjnauXmFcv5ZyWUGiqoGInzKkzQMrCvnFURLvQ3s4mx7i5GTMN
+1yCqTtTOCxJmF72r53IGISXXjxledfb7O5Pwh/EG7k6F/tzPxWRZ4n5pDQspoI+C
+jehkRzzPhrOFQzdoruAv/sJWrhSZhRBt25w3VOfd640toePH5URmh1Zn76AAxat1
+H06iCvbYnpywTDH8Z8Y66fyCkL5AjYy/H28FEkDw0iQDfVbeICEnZzMpxEV5Fb8w
+ay8jq8SJcuQ2mpCJ+l8VP4WYOz1YFhNGXgZpl1sEvVjc2jE=
+=5RxY
+-----END PGP PUBLIC KEY BLOCK-----
+*/
+
 
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
@@ -93,9 +129,27 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         zfloat = 0;
 
+        float xlx;
+        float xly;
+
+        // Add switch for orientation
+        if (Layout == layout_t.PORTRAIT) {
+            //Portrait
+            xlx = 0;
+            xly = -0.20f * pixH2;
+            roseScale = 1.9f;
+        }
+        else {
+            // Landscape
+            xlx = 0;               // top left
+            xly = -1.80f * pixH2;  // top left
+            roseScale = 1.9f;
+            GLES20.glViewport(0, pixH2, pixW, pixH);
+        }
+
         // fatFingerActive just for performance
         if (displayDEM && !fatFingerActive) {
-			renderDEMTerrain(mMVPMatrix);
+			renderDEMTerrainMfd(mMVPMatrix);
 		}
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);  
         if (displayAirport) renderAPT(mMVPMatrix);  // must be on the same matrix as the Pitch
@@ -103,23 +157,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Remote Magnetic Inidicator - RMI
         if (displayRMI) {
-            float xlx;
-            float xly;
-
-            // Add switch for orientation
-            if (Layout == layout_t.LANDSCAPE) {
-                // Landscape
-                xlx = 0;               // top left
-                xly = -1.80f * pixH2;  // top left
-                roseScale = 1.9f;
-                GLES20.glViewport(0, pixH2, pixW, pixH);
-            }
-            else {
-                //Portrait
-                xlx = 0;
-                xly = -0.20f * pixH2;  
-                roseScale = 1.9f;
-            }
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             // Create a rotation for the RMI
@@ -141,9 +178,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         renderMapScale(mMVPMatrix);  // do before the DI
 
         if (displayTape == true) {
-            float xlx;
-            float xly;
-
             //if (displayTape == true) renderFixedVSIMarkers(mMVPMatrix); // todo: maybe later
 			
             xlx = 0.99f * pixW2;
@@ -175,8 +209,8 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderBatteryPct(mMVPMatrix);
 
             // North Que
-            float xlx = -0.84f * pixW2;
-            float xly = +0.88f * pixH2;
+            xlx = -0.84f * pixW2;
+            xly = +0.88f * pixH2;
 
             Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
             Matrix.setRotateM(mRmiRotationMatrix, 0, DIValue, 0, 0, 1);  // compass rose rotation
@@ -286,25 +320,6 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     } // end of project
 
 
-/*    {
-        float pixPerDegree = pixM / pitchInView;
-
-        // note: we take apt elevation into account
-        //float y1 = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - z1 * 3.28084f, dme_ft)) * pixPerDegree);
-
-        float dme_ft = dme * 6080;
-        float y = (float) (-Math.toDegrees(UTrig.fastArcTan2(MSLValue - elev * 3.28084f, dme_ft)) * pixPerDegree);
-
-        //relbrg = 0; //bugbug
-
-        return new Point(
-                (float) (+pixPerDegree * relbrg),
-                (float) y
-        );
-    } // end of project
-*/
-
-
     //-------------------------------------------------------------------------
     // Set the spinner control parameters
     //
@@ -378,7 +393,7 @@ public class MFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    protected void renderDEMTerrain(float[] matrix)
+    protected void renderDEMTerrainMfd(float[] matrix)
     {
         float z, x1, y1, z1;
         float lat, lon;

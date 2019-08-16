@@ -53,10 +53,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     protected boolean ServiceableAh;      // Flag to indicate AH failure
     protected boolean ServiceableMap;      // Flag to indicate Map failure
 
-
-    //protected GLBitmap glBitmap;
-
-
     public CFDRenderer(Context context)
     {
         super(context);
@@ -79,18 +75,12 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         // Create the GLText
         glText = new GLText(context.getAssets());
-
-        //glBitmap = new GLBitmap();  // We want the app to crash if glBitmap is used.
-
         roseTextScale = 1f;
     }
 
-    private int ctr;
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        ctr++;
-
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -188,8 +178,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         if (Layout == layout_t.PORTRAIT) {
             // Slide pitch to current value adj for portrait
-            // int Adjust = (int) (pixH2 * portraitOffset);
-            // GLES20.glViewport(0,  Adjust, pixW, pixH); // Portrait //
             GLES20.glViewport(0, pixH/4, pixW, pixH);  // moved from below
         }
         else {
@@ -292,8 +280,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
-        //gl.glViewport(0, 0, width, height/2); ??b2
-
         // Adjust the viewport based on geometry changes, such as screen rotation
         GLES20.glViewport(0, 0, width, height);
 
@@ -337,8 +323,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
-
-    //int mTextureDataHandle;
 
     @Override
     protected void renderUnserviceableDevice(float[] matrix)
@@ -658,13 +642,48 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
         ServiceableAh = false;
     }
 
+
+/*
+ninelima@yahoo.com
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.7-Mobility Email: (MingW32)
+
+mQENBE0lygcBCADOwYhbGnXlfjtGeWdxRu6yNVSek6H5ZcgsAxD1C9RbVZ+iEDhD
+/+u2KmaTWYmUzKP4UqrzNHa3OBZ34+Y+hfzxybCGAb2KxFf89S019jlXpJ/t1xTx
+/cFx3U08a0jvl4Jcg+mXRMjAnYJuN8BAnubKOwZymAx0D2EwpHh9tPCSINMd2rAM
+Ac9HUuneeuZFt2ZrIlDzyztxkfw+Vv8k6MPPZGDB9CiZAcRNneggDlA/u+THMRBy
+MkoLtEulbjanAYmRQGY7V4aN7yOkCOakF1BDPCvyluYxlZaBc1Dvx2XdnGRODgrS
+Ejn1YJddoSf2RsHjl5R6NV6VDTla5P6slX47ABEBAAG0JE5pbmUgTGltYSAoMTIz
+KSA8bmluZWxpbWFAeWFob28uY29tPokBOAQTAQIAIgUCTSXKBwIbAwYLCQgHAwIG
+FQgCCQoLBBYCAwECHgECF4AACgkQOcgn69ZgK8cSOggAyH7LIzHBTb56OTTpkA6g
+FffnroLd/BQcZV87y1oAxIjJ4CCujb1r56CCpNdujQVB1twrzxc3LS6sM4vaXy6e
+AbxvbSKjA19XZzvMpel8TbER2A1/daArby+Orkk/LOAK3W+ZHdXY9BYMBZ0puB28
+HpS0Eg9XDgVQAgYbVwBSSKx2swfb3Ri2hDMjp4M4ZGOjSXK8VJKaecDgxdcJLhrb
+WU7fdMDsUJIkjzvYRypiEPO1oRwbfR3Di7CSln4arwbztdgznvhIah8gqIGH8XVZ
+s9mXaGFFNQUOiGYqk9sfmKNx7FLic4kGzpmnMkvLsTiHPRaTeC5eeBtMul1UrtaI
+37kBDQRNJcoHAQgAtAXUyq2+mXKoSIjdTgcjhSX2rbW6LSfX11xCnj4qFc+ya7/+
+wB1McFqAFp2zIsjYS1F+ny0H2ov/OPFsy4QeVIfZObSxXcXwDujSTDKIubdpMMTs
+/4uJxI26A95LDxBsY887UgJllyTh6e8Ps51dPH/9Wh7kPopk2wHGmV6uoQoNnquw
+LUekXSSXM0ePd0dnX0RVy63MUojOcNOGs9+cNeShlg0tOgbweWKLIG2+VcFKneuN
+J1NUjHhF252l7U3552clKIE3TCHV1XWDKtmG6zqtFWg3JIOHnrw46P1rq5xc85vX
+b+oAP/dw/Yw7jWtOw7QIevBpaHzS1lfrwCxzkQARAQABiQEfBBgBAgAJBQJNJcoH
+AhsMAAoJEDnIJ+vWYCvHuk4IAMkYUuGRIHm6zyUYpmQbM3Se7C34QYb710PRXCyY
+gNq33NfCn/dn5iNjnauXmFcv5ZyWUGiqoGInzKkzQMrCvnFURLvQ3s4mx7i5GTMN
+1yCqTtTOCxJmF72r53IGISXXjxledfb7O5Pwh/EG7k6F/tzPxWRZ4n5pDQspoI+C
+jehkRzzPhrOFQzdoruAv/sJWrhSZhRBt25w3VOfd640toePH5URmh1Zn76AAxat1
+H06iCvbYnpywTDH8Z8Y66fyCkL5AjYy/H28FEkDw0iQDfVbeICEnZzMpxEV5Fb8w
+ay8jq8SJcuQ2mpCJ+l8VP4WYOz1YFhNGXgZpl1sEvVjc2jE=
+=5RxY
+-----END PGP PUBLIC KEY BLOCK-----
+*/
+
+
     //---------------------------------------------------------------
     // Multi-Function-Display Drawing (DMAP)
     //
     private void DrawFrameMfd(GL10 gl)
     {
-        //GLES20.glViewport(0, -101 / 100 * pixH2, pixW, pixH);
-
         // Set the camera position (View matrix)
         if (displayMirror)
             Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);  // Mirrored View
@@ -678,6 +697,7 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
 
         float xlx;
         float xly;
+
         // Add switch for orientation
         if (Layout == layout_t.PORTRAIT) {
             //Portrait
@@ -687,15 +707,18 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             GLES20.glViewport(0, -101 / 100 * pixH2, pixW, pixH);
         }
         else {
-            xlx = -pixW2/2;
-            xly =  0;
+            // Landscape
+            xlx = -pixW2/2; 
+            xly =  0;       
             roseScale = 0.52f;
             GLES20.glViewport(pixW2, 0, pixW, pixH);
         }
 
         Matrix.translateM(mMVPMatrix, 0, xlx, xly, 0);
         // fatFingerActive just for performance
-        if (displayDEM && !fatFingerActive) renderDEMTerrainMfd(mMVPMatrix);
+        if (displayDEM && !fatFingerActive) {
+            renderDEMTerrainMfd(mMVPMatrix);
+        }
         if (displayAirspace) renderAirspaceMfd(mMVPMatrix);
         if (displayAirport) renderAPTMfd(mMVPMatrix);  // must be on the same matrix as the Pitch
         if (true) renderTargets(mMVPMatrix);           // TODO: 2018-08-31 Add control of targets
@@ -713,9 +736,8 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             renderFixedCompassMarkers(mMVPMatrix);
             renderACSymbol(mMVPMatrix);
 
-            //if (autoZoomActive) setAutoZoom();
-            //renderDctTrack(mMVPMatrix);
 
+        //-----------------------------
             if (displayFlightDirector) {
                 if (autoZoomActive) setAutoZoom();
                 renderDctTrack(mMVPMatrix);
@@ -786,6 +808,30 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     }
 
 
+    //
+    // project
+    //
+    // relbrg in degrees
+    // dme in nm
+    // elev in m
+    protected Point projectMfd(float relbrg, float dme)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    }
+
+    protected Point projectMfd(float relbrg, float dme, float elev)
+    {
+        return new Point(
+                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
+                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
+        );
+    } // end of project
+
+
+
     //-------------------------------------------------------------------------
     // Render the Digital Elevation Model (DEM) - DMAP.
     //
@@ -793,36 +839,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    boolean bCacheActive = false;
-    int frameSkipMfd = 5;
-    int textureHandleMfd;
-    protected void renderDEMTerrainMfdCache(GL10 gl, float[] matrix)
-    {
-		/*
-        if (ctr % frameSkipMfd == 0) {
-            renderDEMTerrainMfd(matrix);
-            Bitmap bm = saveScreen(gl, 0, pixH2);
-            textureHandleMfd = loadTexture(bm);
-            bm.recycle();
-            bm = null;
-        }
-
-        GLES20.glViewport(0, -pixH2*101/100, pixW, pixH);
-        {
-            float y = pixH2/2;
-            float[] squarePoly = {
-                    -pixW2, -y , 0,
-                    +pixW2, -y , 0,
-                    +pixW2, +y, 0,
-                    -pixW2, +y, 0
-            };
-            glBitmap.SetVerts(squarePoly);
-            glBitmap.textureDataHandle =  textureHandleMfd;
-            glBitmap.draw(matrix);
-        }
-		*/
-    }
-
     protected void renderDEMTerrainMfd(float[] matrix)
     {
         float z, x1, y1, z1;
@@ -989,23 +1005,6 @@ public class CFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             }
         }
     }
-
-
-    protected Point projectMfd(float relbrg, float dme)
-    {
-        return new Point(
-                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
-                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
-        );
-    } // end of project
-
-    protected Point projectMfd(float relbrg, float dme, float elev)
-    {
-        return new Point(
-                mMapZoom * dme * UTrig.icos(90-(int)relbrg),
-                mMapZoom * dme * UTrig.isin(90-(int)relbrg)
-        );
-    } // end of project
 
 
     //

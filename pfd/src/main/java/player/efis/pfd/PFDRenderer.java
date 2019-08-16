@@ -124,7 +124,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
             // Note: it extends a little below the horizon when AGL is positive
             renderDEMSky(scratch1);
             // underground is not valid
-            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrain(scratch1);  
+            if ((AGLValue > 0) && (DemGTOPO30.demDataValid)) renderDEMTerrainPfd(scratch1);  
         }
         else if (displayAHColors) renderAHColors(scratch1);
 
@@ -444,7 +444,7 @@ public class PFDRenderer extends EFISRenderer implements GLSurfaceView.Renderer
     // The loops are very performance intensive, therefore all the hardcoded
     // magic numbers
     //
-    protected void renderDEMTerrain(float[] matrix)
+    protected void renderDEMTerrainPfd(float[] matrix)
     {
         float z, pixPerDegree, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, zav;
         float lat, lon;

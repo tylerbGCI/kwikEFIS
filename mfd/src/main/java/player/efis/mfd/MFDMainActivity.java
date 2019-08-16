@@ -196,7 +196,6 @@ public class MFDMainActivity extends EFISMainActivity implements Listener, Senso
         if (mGLView.mRenderer.mAltSelName.length() != 5) mGLView.mRenderer.mWptSelName = "00000";
 
         mAirspace = new OpenAir(this);
-        //mAirspace.loadDatabase(gps_lat, gps_lon);  // let the timer do it
 
         createMediaPlayer();
         mGLView.setTheme(colorTheme);
