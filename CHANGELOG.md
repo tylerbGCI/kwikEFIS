@@ -1,6 +1,16 @@
 Changelog
 =========
 
+REL_28 (2019-08-25)
+------------------
+* Implement side by side display for COMP in landscape view
+* Refactor for code consistency - alignment cfd to pfd & mfd
+* Merge TacoTheDank branch
+* Clear issues: 39
+* Release EFIS v4.5
+* Release DMAP v2.6
+* Release COMP v1.1
+
 REL_27 (2019-07-05)
 ------------------
 * First version of Kwik Composite

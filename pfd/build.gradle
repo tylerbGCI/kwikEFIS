@@ -17,7 +17,7 @@ android {
         // a - is a major update (typically incorporating a new feature or significant change)
         // b - is a minor update (typically incorporating a bugfix or a data update)
         versionCode 28
-        versionName "4.5 beta"
+        versionName "4.5"
     }
 
     buildTypes {
